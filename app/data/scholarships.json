@@ -1,0 +1,329 @@
+{
+  "_dataset_notice": "CURATED SEED DATASET: All scholarship entries in this file are real, nationally available US programs from identifiable sponsoring organizations. Every field must be independently verified before production use. Fields marked VERIFY are intentionally incomplete placeholders. Do not show VERIFY values to end users without review.",
+  "scholarships": [
+    {
+      "id": "coca-cola-scholars",
+      "name": "Coca-Cola Scholars Program",
+      "sponsor": "Coca-Cola Scholars Foundation",
+      "award_amount": 20000,
+      "deadline": "VERIFY",
+      "url": "https://www.coca-colascholarsfoundation.org/apply/",
+      "eligibility": {
+        "min_gpa": "VERIFY",
+        "fields_of_study": [],
+        "grade_levels": ["high_school_senior"],
+        "demographics": [],
+        "states": "any",
+        "essay_required": true,
+        "citizenship_requirement": "us_citizen_or_permanent_resident"
+      },
+      "description": "Merit-based scholarship for high school seniors planning to pursue postsecondary education. Recognizes leadership, service, and academic achievement."
+    },
+    {
+      "id": "gates-scholarship",
+      "name": "The Gates Scholarship",
+      "sponsor": "Bill & Melinda Gates Foundation",
+      "award_amount": "full cost of attendance (last-dollar scholarship)",
+      "deadline": "VERIFY",
+      "url": "https://www.thegatesscholarship.org/",
+      "eligibility": {
+        "min_gpa": 3.3,
+        "fields_of_study": [],
+        "grade_levels": ["high_school_senior"],
+        "demographics": ["minority", "pell_eligible", "first_generation"],
+        "states": "any",
+        "essay_required": true,
+        "citizenship_requirement": "us_citizen_national_or_permanent_resident"
+      },
+      "description": "Highly selective last-dollar scholarship for outstanding minority high school seniors from low-income households. Covers full cost of attendance not already met by financial aid."
+    },
+    {
+      "id": "jack-kent-cooke-college",
+      "name": "Jack Kent Cooke Foundation College Scholarship Program",
+      "sponsor": "Jack Kent Cooke Foundation",
+      "award_amount": "up to $55,000 per year",
+      "deadline": "VERIFY",
+      "url": "https://www.jkcf.org/our-scholarships/college-scholarship-program/",
+      "eligibility": {
+        "min_gpa": 3.5,
+        "fields_of_study": [],
+        "grade_levels": ["high_school_senior"],
+        "demographics": ["financial_need"],
+        "states": "any",
+        "essay_required": true,
+        "citizenship_requirement": "VERIFY"
+      },
+      "description": "Supports high-achieving high school seniors with financial need who seek to attend the nation's best four-year colleges and universities."
+    },
+    {
+      "id": "dell-scholars",
+      "name": "Dell Scholars Program",
+      "sponsor": "Michael & Susan Dell Foundation",
+      "award_amount": "20000 plus laptop and textbook credits",
+      "deadline": "VERIFY",
+      "url": "https://www.dellscholars.org/",
+      "eligibility": {
+        "min_gpa": 2.4,
+        "fields_of_study": [],
+        "grade_levels": ["high_school_senior"],
+        "demographics": ["pell_eligible", "first_generation"],
+        "states": "any",
+        "essay_required": true,
+        "citizenship_requirement": "us_citizen_or_permanent_resident"
+      },
+      "description": "College readiness and completion program for students who demonstrate grit, potential, and financial need. Includes scholarship funds and individualized support."
+    },
+    {
+      "id": "horatio-alger-national",
+      "name": "Horatio Alger National Scholarship",
+      "sponsor": "Horatio Alger Association of Distinguished Americans",
+      "award_amount": 25000,
+      "deadline": "VERIFY",
+      "url": "https://scholars.horatioalger.org/",
+      "eligibility": {
+        "min_gpa": 2.0,
+        "fields_of_study": [],
+        "grade_levels": ["high_school_senior"],
+        "demographics": ["financial_adversity"],
+        "states": "any",
+        "essay_required": true,
+        "citizenship_requirement": "us_citizen"
+      },
+      "description": "Awarded to high school seniors who have faced and overcome significant obstacles, demonstrate financial need, and are committed to pursuing higher education."
+    },
+    {
+      "id": "davidson-fellows",
+      "name": "Davidson Fellows Scholarship",
+      "sponsor": "Davidson Institute for Talent Development",
+      "award_amount": "50000, 25000, or 10000 depending on project category",
+      "deadline": "VERIFY",
+      "url": "https://www.davidsongifted.org/gifted-programs/fellows-scholarship/",
+      "eligibility": {
+        "min_gpa": "VERIFY",
+        "fields_of_study": ["science", "technology", "engineering", "mathematics", "literature", "music", "philosophy", "outside_the_box"],
+        "grade_levels": ["high_school", "middle_school"],
+        "demographics": ["gifted"],
+        "states": "any",
+        "essay_required": true,
+        "citizenship_requirement": "us_citizen_or_permanent_resident"
+      },
+      "description": "Recognizes students 18 or younger who have completed significant projects in science, technology, engineering, mathematics, literature, music, philosophy, or outside the box."
+    },
+    {
+      "id": "regeneron-sts",
+      "name": "Regeneron Science Talent Search",
+      "sponsor": "Society for Science",
+      "award_amount": "VERIFY (tiered competition awards up to $250000 for top prize)",
+      "deadline": "VERIFY",
+      "url": "https://www.societyforscience.org/regeneron-sts/",
+      "eligibility": {
+        "min_gpa": "VERIFY",
+        "fields_of_study": ["science", "engineering", "mathematics", "research"],
+        "grade_levels": ["high_school_senior"],
+        "demographics": [],
+        "states": "any",
+        "essay_required": true,
+        "citizenship_requirement": "VERIFY"
+      },
+      "description": "Premier science and math competition for high school seniors conducting original research. Students submit research reports and compete for awards at the national level."
+    },
+    {
+      "id": "national-merit",
+      "name": "National Merit Scholarship Program",
+      "sponsor": "National Merit Scholarship Corporation",
+      "award_amount": 2500,
+      "deadline": "VERIFY (PSAT/NMSQT qualifying year)",
+      "url": "https://www.nationalmerit.org/",
+      "eligibility": {
+        "min_gpa": "VERIFY",
+        "fields_of_study": [],
+        "grade_levels": ["high_school_junior"],
+        "demographics": [],
+        "states": "any",
+        "essay_required": false,
+        "citizenship_requirement": "us_citizen_or_permanent_resident"
+      },
+      "description": "Academic competition entered by taking the PSAT/NMSQT in the designated year of high school. Semifinalists and finalists compete for National Merit and corporate-sponsored scholarships."
+    },
+    {
+      "id": "burger-king-scholars",
+      "name": "Burger King Scholars Program",
+      "sponsor": "Burger King Foundation",
+      "award_amount": "1000 to 50000",
+      "deadline": "VERIFY",
+      "url": "https://burgerking.scholarsapply.org/",
+      "eligibility": {
+        "min_gpa": 2.5,
+        "fields_of_study": [],
+        "grade_levels": ["high_school_senior"],
+        "demographics": [],
+        "states": "any",
+        "essay_required": false,
+        "citizenship_requirement": "us_citizen_or_permanent_resident"
+      },
+      "description": "Merit-based awards for high school seniors, Burger King employees, and their families who plan to enroll in accredited two- or four-year colleges."
+    },
+    {
+      "id": "elks-mvs",
+      "name": "Elks Most Valuable Student Scholarship",
+      "sponsor": "Elks National Foundation",
+      "award_amount": "4000 to 50000",
+      "deadline": "VERIFY",
+      "url": "https://www.elks.org/scholars/scholarships/mvs.cfm",
+      "eligibility": {
+        "min_gpa": "VERIFY",
+        "fields_of_study": [],
+        "grade_levels": ["high_school_senior"],
+        "demographics": [],
+        "states": "any",
+        "essay_required": true,
+        "citizenship_requirement": "us_citizen"
+      },
+      "description": "Four-year scholarships for high school seniors based on scholarship, leadership, and financial need. Funded by the Elks National Foundation."
+    },
+    {
+      "id": "ron-brown-scholar",
+      "name": "Ron Brown Scholar Program",
+      "sponsor": "Ron Brown Scholar Program",
+      "award_amount": "40000 (10000 per year for four years)",
+      "deadline": "VERIFY",
+      "url": "https://ronbrown.org/",
+      "eligibility": {
+        "min_gpa": "VERIFY",
+        "fields_of_study": [],
+        "grade_levels": ["high_school_senior"],
+        "demographics": ["african_american"],
+        "states": "any",
+        "essay_required": true,
+        "citizenship_requirement": "us_citizen_or_permanent_resident"
+      },
+      "description": "Scholarship and leadership development for academically talented African American high school seniors with demonstrated leadership, community service, and financial need."
+    },
+    {
+      "id": "hsf-scholar",
+      "name": "Hispanic Scholarship Fund Scholar Program",
+      "sponsor": "Hispanic Scholarship Fund",
+      "award_amount": "500 to 5000 (varies by award)",
+      "deadline": "VERIFY",
+      "url": "https://www.hsf.net/scholarship",
+      "eligibility": {
+        "min_gpa": "VERIFY",
+        "fields_of_study": [],
+        "grade_levels": ["high_school_senior", "college_undergraduate", "college_graduate"],
+        "demographics": ["hispanic_latino"],
+        "states": "any",
+        "essay_required": true,
+        "citizenship_requirement": "us_citizen_permanent_resident_or_daca"
+      },
+      "description": "Scholarships for students of Hispanic heritage pursuing higher education. Open to high school seniors and current college students."
+    },
+    {
+      "id": "questbridge-match",
+      "name": "QuestBridge National College Match",
+      "sponsor": "QuestBridge",
+      "award_amount": "full four-year scholarship to partner college (varies by school)",
+      "deadline": "VERIFY",
+      "url": "https://www.questbridge.org/high-school-students/national-college-match",
+      "eligibility": {
+        "min_gpa": "VERIFY",
+        "fields_of_study": [],
+        "grade_levels": ["high_school_senior"],
+        "demographics": ["financial_need", "first_generation"],
+        "states": "any",
+        "essay_required": true,
+        "citizenship_requirement": "us_citizen_or_permanent_resident"
+      },
+      "description": "Connects high-achieving, low-income high school seniors with full four-year scholarships at QuestBridge partner colleges through a national matching process."
+    },
+    {
+      "id": "foot-locker-scholar-athletes",
+      "name": "Foot Locker Scholar Athletes Program",
+      "sponsor": "Foot Locker Foundation",
+      "award_amount": 20000,
+      "deadline": "VERIFY",
+      "url": "https://www.footlockerscholarathletes.com/",
+      "eligibility": {
+        "min_gpa": 3.0,
+        "fields_of_study": [],
+        "grade_levels": ["high_school_senior"],
+        "demographics": ["student_athlete"],
+        "states": "any",
+        "essay_required": true,
+        "citizenship_requirement": "us_citizen_or_permanent_resident"
+      },
+      "description": "Honors student-athletes who demonstrate exceptional academic ability, strong leadership skills, and passionate community involvement."
+    },
+    {
+      "id": "cameron-impact",
+      "name": "Cameron Impact Scholarship",
+      "sponsor": "Bryan Cameron Education Foundation",
+      "award_amount": "full tuition and qualified educational expenses",
+      "deadline": "VERIFY",
+      "url": "https://www.bryancameroneducationfoundation.org/",
+      "eligibility": {
+        "min_gpa": 3.7,
+        "fields_of_study": [],
+        "grade_levels": ["high_school_senior"],
+        "demographics": [],
+        "states": "any",
+        "essay_required": true,
+        "citizenship_requirement": "us_citizen"
+      },
+      "description": "Merit-based scholarship for high school seniors who demonstrate excellence in academics, extracurricular activities, leadership, and community service."
+    },
+    {
+      "id": "apia-scholars",
+      "name": "APIA Scholars Program",
+      "sponsor": "Asian & Pacific Islander American Scholarship Fund",
+      "award_amount": "one-time awards (amount varies)",
+      "deadline": "VERIFY",
+      "url": "https://apiascholars.org/scholarship/",
+      "eligibility": {
+        "min_gpa": "VERIFY",
+        "fields_of_study": [],
+        "grade_levels": ["high_school_senior", "college_undergraduate"],
+        "demographics": ["asian_pacific_islander"],
+        "states": "any",
+        "essay_required": true,
+        "citizenship_requirement": "us_citizen_permanent_resident_or_national"
+      },
+      "description": "Scholarships for Asian American and Pacific Islander students with financial need who are enrolling or continuing at accredited U.S. postsecondary institutions."
+    },
+    {
+      "id": "posse-foundation",
+      "name": "POSSE Foundation Scholars Program",
+      "sponsor": "POSSE Foundation",
+      "award_amount": "full-tuition leadership scholarship at partner college",
+      "deadline": "VERIFY",
+      "url": "https://www.possefoundation.org/",
+      "eligibility": {
+        "min_gpa": "VERIFY",
+        "fields_of_study": [],
+        "grade_levels": ["high_school_senior"],
+        "demographics": ["leadership", "first_generation"],
+        "states": "VERIFY",
+        "essay_required": true,
+        "citizenship_requirement": "us_citizen_or_permanent_resident"
+      },
+      "description": "Leadership development program that selects diverse cohorts of public high school students and sends them to partner colleges with full-tuition scholarships."
+    },
+    {
+      "id": "goldwater-scholarship",
+      "name": "Barry Goldwater Scholarship",
+      "sponsor": "Barry Goldwater Scholarship and Excellence in Education Foundation",
+      "award_amount": "up to 7500 per year",
+      "deadline": "VERIFY",
+      "url": "https://goldwater.scholarsapply.org/",
+      "eligibility": {
+        "min_gpa": "VERIFY",
+        "fields_of_study": ["natural_sciences", "engineering", "mathematics"],
+        "grade_levels": ["college_sophomore", "college_junior"],
+        "demographics": [],
+        "states": "any",
+        "essay_required": true,
+        "citizenship_requirement": "us_citizen_permanent_resident_or_us_national"
+      },
+      "description": "Premier undergraduate award for students pursuing research careers in the natural sciences, engineering, and mathematics. Nominated by participating institutions."
+    }
+  ]
+}

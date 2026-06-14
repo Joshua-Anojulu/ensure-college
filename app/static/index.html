@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scholarships4U</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Syne:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <div>
+          <p class="brand-name">Scholarships4U</p>
+          <p class="brand-tag">Find scholarships that fit your profile</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="main">
+    <section class="intro panel">
+      <h1>Build your profile</h1>
+      <p class="intro-copy">
+        Tell us where you are in school, what you plan to study, and a few details about your background.
+        We rank scholarships by fit and show you exactly why each one matched.
+      </p>
+    </section>
+
+    <form id="profile-form" class="profile-form panel" novalidate>
+      <div class="form-grid">
+        <div class="field">
+          <label for="gpa">GPA</label>
+          <input type="number" id="gpa" name="gpa" min="0" max="4" step="0.1" required
+                 placeholder="e.g. 3.8" inputmode="decimal">
+          <span class="field-hint">On a 4.0 scale</span>
+        </div>
+
+        <div class="field">
+          <label for="grade-level">Grade level</label>
+          <select id="grade-level" name="grade_level" required>
+            <option value="">Select grade level</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="citizenship">Citizenship</label>
+          <select id="citizenship" name="citizenship" required>
+            <option value="">Select citizenship</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="state">State</label>
+          <select id="state" name="state" required>
+            <option value="">Select state</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="financial-need">Financial need level</label>
+          <select id="financial-need" name="financial_need_level" required>
+            <option value="">Select level</option>
+          </select>
+        </div>
+
+        <div class="field field-full">
+          <fieldset id="fields-of-study-group">
+            <legend>Fields of study</legend>
+            <p class="field-hint">Pick every broad area that fits your plans. Select at least one.</p>
+            <div id="fields-of-study" class="checkbox-grid"></div>
+          </fieldset>
+        </div>
+
+        <div class="field field-full">
+          <fieldset id="demographic-tags-group">
+            <legend>Demographic tags <span class="optional">(optional)</span></legend>
+            <p class="field-hint">Select any that apply. Leave blank if none fit.</p>
+            <div id="demographic-tags" class="checkbox-grid"></div>
+          </fieldset>
+        </div>
+
+        <div class="field field-full">
+          <label for="target-schools">Target schools <span class="optional">(optional)</span></label>
+          <input type="text" id="target-schools" name="target_schools"
+                 placeholder="Comma-separated, e.g. UT Austin, Rice University">
+        </div>
+
+        <div class="field field-full">
+          <label for="activities">Activities <span class="optional">(optional)</span></label>
+          <input type="text" id="activities" name="activities"
+                 placeholder="Comma-separated, e.g. debate team, robotics club">
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn-primary" id="submit-btn">Find scholarships</button>
+      </div>
+
+      <div id="form-error" class="form-error" role="alert" hidden></div>
+    </form>
+
+    <section id="results-section" class="results-section" hidden>
+      <div class="results-header">
+        <h2>Your matches</h2>
+        <p id="results-summary" class="results-summary"></p>
+      </div>
+
+      <div id="loading" class="loading" hidden>
+        <div class="loading-spinner" aria-hidden="true"></div>
+        <p>Finding scholarships that fit your profile...</p>
+      </div>
+
+      <div id="results-empty" class="results-empty panel" hidden>
+        <h3>No scholarships matched this profile</h3>
+        <p>Try broadening your field selections, checking a different grade level, or adding demographic tags that apply to you. You can also lower restrictions by picking more fields of study.</p>
+      </div>
+
+      <div id="results-container"></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Scholarship data is a curated seed set. Confirm every deadline and requirement on the official sponsor page before you apply.</p>
+  </footer>
+
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
