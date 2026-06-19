@@ -1,22 +1,37 @@
-/* Ledger Light: cool paper, ink navy, mint path bars, amber urgency */
+/* Nebula Dark: near-black canvas, frosted glass, teal-cyan glow */
 
 :root {
-  --ink: #0f1d2e;
-  --paper: #f4f6f8;
-  --surface: #ffffff;
-  --mint: #1a8a7d;
-  --mint-soft: #b8e0db;
-  --mint-faint: #e8f5f3;
-  --amber: #c4772d;
-  --amber-bg: #fdf3e7;
-  --slate: #5c6b7a;
-  --border: #d8e0e8;
-  --error: #b42318;
-  --error-bg: #fef2f2;
-  --radius: 10px;
-  --shadow: 0 4px 24px rgba(15, 29, 46, 0.07);
+  --bg: #0a0e16;
+  --ink: #e8eef6;
+  --paper: #0e1420;
+  --surface: rgba(255, 255, 255, 0.04);
+  --surface-solid: #121a28;
+  --surface-2: rgba(255, 255, 255, 0.08);
+  --mint: #2dd4bf;
+  --mint-2: #38e0c8;
+  --mint-soft: #5eead4;
+  --mint-faint: rgba(45, 212, 191, 0.12);
+  --accent-1: #14b8a6;
+  --accent-2: #22d3ee;
+  --accent-grad: linear-gradient(135deg, #14b8a6 0%, #22d3ee 100%);
+  --amber: #fbbf24;
+  --amber-bg: rgba(251, 191, 36, 0.13);
+  --slate: #97a6ba;
+  --slate-dim: #64748b;
+  --border: rgba(255, 255, 255, 0.09);
+  --border-strong: rgba(255, 255, 255, 0.17);
+  --error: #f87171;
+  --error-bg: rgba(248, 113, 113, 0.12);
+  --radius: 14px;
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 24px 60px rgba(0, 0, 0, 0.6);
+  --glow: 0 0 24px rgba(45, 212, 191, 0.28);
   --font-display: "Syne", system-ui, sans-serif;
   --font-body: "IBM Plex Sans", system-ui, sans-serif;
+}
+
+html {
+  color-scheme: dark;
 }
 
 *,
@@ -53,8 +68,21 @@ body {
   font-size: 1rem;
   line-height: 1.55;
   color: var(--ink);
-  background: var(--paper);
+  background: var(--bg);
   min-height: 100vh;
+}
+
+/* Fixed glow mesh behind content (cheaper than background-attachment: fixed). */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    radial-gradient(55rem 38rem at 12% -8%, rgba(34, 211, 238, 0.1), transparent 60%),
+    radial-gradient(50rem 38rem at 105% 2%, rgba(45, 212, 191, 0.1), transparent 55%),
+    radial-gradient(45rem 40rem at 50% 118%, rgba(99, 102, 241, 0.1), transparent 60%);
 }
 
 .skip-link {
@@ -1036,5 +1064,330 @@ input[type="checkbox"]:focus {
 
   .card-top {
     flex-direction: column;
+  }
+}
+
+/* ============================================================
+   Nebula Dark: glow + glass enhancements (appended last so the
+   cascade upgrades each component and overrides light remnants)
+   ============================================================ */
+
+::selection {
+  background: rgba(45, 212, 191, 0.3);
+  color: #fff;
+}
+
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border: 3px solid transparent;
+  background-clip: content-box;
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.22);
+  background-clip: content-box;
+}
+
+/* Header: sticky frosted glass with a hairline glow */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  padding: 0.9rem 1.5rem;
+  background: rgba(10, 14, 22, 0.72);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 1px 0 rgba(45, 212, 191, 0.12), 0 8px 30px rgba(0, 0, 0, 0.35);
+}
+
+.brand-mark {
+  width: 8px;
+  height: 2.4rem;
+  background: var(--accent-grad);
+  border-radius: 4px;
+  box-shadow: 0 0 18px rgba(34, 211, 238, 0.6);
+}
+
+.brand-name {
+  background: linear-gradient(90deg, #ffffff, #7dd3fc);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.btn-ghost {
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+}
+.btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--mint);
+  color: #fff;
+}
+.btn-ghost-solid,
+.btn-ghost-solid:hover {
+  background: var(--accent-grad);
+  border: none;
+  color: #04201d;
+  font-weight: 700;
+  box-shadow: 0 6px 20px rgba(34, 211, 238, 0.28);
+}
+
+.saved-count {
+  background: var(--accent-grad);
+  color: #04201d;
+  font-weight: 700;
+}
+
+/* Panels: glass with a faint top highlight */
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px) saturate(130%);
+  -webkit-backdrop-filter: blur(12px) saturate(130%);
+}
+
+/* Hero */
+.intro {
+  position: relative;
+  overflow: hidden;
+}
+.intro::before {
+  content: "";
+  position: absolute;
+  top: -45%;
+  right: -8%;
+  width: 22rem;
+  height: 22rem;
+  background: radial-gradient(circle, rgba(34, 211, 238, 0.18), transparent 65%);
+  pointer-events: none;
+}
+.intro h1 {
+  position: relative;
+  font-size: 2.3rem;
+  line-height: 1.12;
+  background: linear-gradient(118deg, #ffffff 0%, #7dd3fc 45%, #5eead4 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Inputs */
+input[type="number"],
+input[type="text"],
+input[type="email"],
+input[type="password"],
+select,
+textarea {
+  background: var(--surface-solid);
+  border: 1px solid var(--border);
+  color: var(--ink);
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+input::placeholder,
+textarea::placeholder {
+  color: var(--slate-dim);
+}
+input[type="number"]:focus,
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--mint);
+  box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.18);
+}
+
+/* Primary button: gradient + glow + lift */
+.btn-primary,
+.btn-primary:hover {
+  background: var(--accent-grad);
+  color: #04201d;
+  font-weight: 700;
+  border-radius: 10px;
+}
+.btn-primary {
+  box-shadow: 0 8px 24px rgba(34, 211, 238, 0.22);
+  transition: transform 0.16s ease, box-shadow 0.22s ease, filter 0.2s ease;
+}
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 36px rgba(34, 211, 238, 0.4);
+  filter: brightness(1.06);
+}
+
+/* Secondary button */
+.btn-secondary {
+  background: rgba(45, 212, 191, 0.07);
+  color: var(--mint);
+  border: 1px solid rgba(45, 212, 191, 0.4);
+  border-radius: 8px;
+  transition: background 0.18s ease, border-color 0.18s ease, box-shadow 0.2s ease;
+}
+.btn-secondary:hover {
+  background: rgba(45, 212, 191, 0.15);
+  border-color: var(--mint);
+  box-shadow: var(--glow);
+}
+
+/* Save button */
+.btn-save {
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--ink);
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+}
+.btn-save:hover {
+  border-color: var(--mint);
+  color: #fff;
+}
+.btn-save.is-saved {
+  background: rgba(45, 212, 191, 0.14);
+  color: var(--mint);
+  border-color: var(--mint);
+  box-shadow: var(--glow);
+}
+
+.link-button,
+.card-link {
+  color: var(--mint);
+}
+
+/* Filter bar: glass */
+.results-filters {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Tier heading: gradient underline for strong */
+.tier-heading {
+  border-bottom: 1px solid var(--border);
+}
+.tier-heading:not(.possible) {
+  border-bottom: 2px solid;
+  border-image: linear-gradient(90deg, var(--mint), transparent) 1;
+}
+
+/* Match cards: glass, hover lift + glow, gradient edge, gentle entrance */
+.match-card {
+  /* No backdrop-filter here: result lists can be long, and dozens of blur
+     layers are expensive. Use a solid translucent fill for the same look. */
+  background: rgba(18, 26, 40, 0.55);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  transition: transform 0.2s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  animation: cardIn 0.4s ease both;
+}
+.match-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-lg), 0 0 0 1px rgba(45, 212, 191, 0.12);
+}
+.match-card.strong .path-bar {
+  background: var(--accent-grad);
+  box-shadow: 0 0 20px rgba(45, 212, 191, 0.55);
+}
+.match-card.possible .path-bar {
+  background: linear-gradient(180deg, rgba(94, 234, 212, 0.55), rgba(94, 234, 212, 0.12));
+}
+
+@keyframes cardIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Score pill */
+.card-score {
+  background: var(--accent-grad);
+  color: #04201d;
+  font-weight: 700;
+  border-radius: 999px;
+  box-shadow: 0 0 16px rgba(45, 212, 191, 0.28);
+}
+
+/* Badges as glowing pills */
+.badge-closing {
+  background: var(--amber-bg);
+  color: var(--amber);
+  border: 1px solid rgba(251, 191, 36, 0.35);
+  border-radius: 999px;
+}
+.badge-unverified {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--slate);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+}
+
+/* Tracked-card status accents */
+.match-card.status-awarded {
+  border-color: rgba(45, 212, 191, 0.5);
+  box-shadow: var(--shadow), 0 0 0 1px rgba(45, 212, 191, 0.25);
+}
+
+/* Error surfaces */
+.form-error,
+.essay-advice-error {
+  background: var(--error-bg);
+  border: 1px solid rgba(248, 113, 113, 0.4);
+  color: var(--error);
+  border-radius: 8px;
+}
+
+/* Modal: dark blurred backdrop */
+.modal-overlay {
+  background: rgba(4, 7, 12, 0.66);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.modal-card {
+  box-shadow: var(--shadow-lg);
+}
+
+/* Essay advice panel */
+.essay-advice-panel {
+  background: var(--paper);
+  border-color: var(--border);
+}
+
+/* Spinner */
+.loading-spinner {
+  border-color: rgba(255, 255, 255, 0.14);
+  border-top-color: var(--mint);
+}
+
+/* Footer divider */
+.site-footer {
+  border-top: 1px solid var(--border);
+  margin-top: 1rem;
+}
+
+@media (max-width: 640px) {
+  .intro h1 {
+    font-size: 1.6rem;
+  }
+  .site-header {
+    padding: 0.75rem 1rem;
   }
 }
