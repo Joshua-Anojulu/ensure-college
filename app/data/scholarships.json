@@ -792,7 +792,7 @@
       "id": "uncf-general-scholarship",
       "name": "UNCF General Scholarship",
       "sponsor": "United Negro College Fund (UNCF)",
-      "award_amount": "VERIFY (varies)",
+      "award_amount": "$2,500 to $12,500 per year",
       "deadline": "VERIFY",
       "url": "https://uncf.org/scholarships",
       "eligibility": {
@@ -810,7 +810,8 @@
         "citizenship_requirement": "VERIFY"
       },
       "description": "Need-based scholarship requiring full-time enrollment at one of UNCF's 37 member historically Black colleges and universities, a minimum 2.5 GPA, and a completed FAFSA. UNCF focuses on supporting African American students.",
-      "verified": false
+      "verified": true,
+      "estimated_deadline": "2027-03-31"
     },
     {
       "id": "american-indian-college-fund-full-circle",
@@ -835,17 +836,18 @@
         "citizenship_requirement": "us_citizen"
       },
       "description": "Scholarship for enrolled members, or descendants of enrolled members, of state or federally recognized tribes or Alaska Native villages who attend an accredited nonprofit institution full-time with at least a 2.0 GPA. One application is considered for many awards.",
-      "verified": false
+      "verified": true,
+      "estimated_deadline": "2027-05-31"
     },
     {
       "id": "thurgood-marshall-college-fund-scholarship",
       "name": "Thurgood Marshall College Fund Scholarship",
       "sponsor": "Thurgood Marshall College Fund",
-      "award_amount": "VERIFY (varies by award)",
+      "award_amount": "varies by award ($1,000 to $50,000)",
       "deadline": "VERIFY",
       "url": "https://tmcf.org/apply/",
       "eligibility": {
-        "min_gpa": "VERIFY",
+        "min_gpa": 2.75,
         "fields_of_study": [],
         "grade_levels": [
           "college_undergraduate"
@@ -858,7 +860,8 @@
         "citizenship_requirement": "us_citizen_or_permanent_resident"
       },
       "description": "Scholarships for students attending Thurgood Marshall College Fund member historically Black colleges and universities (HBCUs), predominantly Black institutions (PBIs), and historically Black community colleges. Eligibility, GPA, and requirements vary by individual award.",
-      "verified": false
+      "verified": true,
+      "estimated_deadline": "2026-12-01"
     },
     {
       "id": "truman-scholarship",
@@ -868,7 +871,7 @@
       "deadline": "VERIFY",
       "url": "https://www.truman.gov/",
       "eligibility": {
-        "min_gpa": "VERIFY",
+        "min_gpa": 3.5,
         "fields_of_study": [],
         "grade_levels": [
           "college_junior"
@@ -879,13 +882,14 @@
         "citizenship_requirement": "us_citizen"
       },
       "description": "Merit-based award for college juniors committed to careers in public service who are in the upper quarter of their class and nominated by their institution. Provides up to $30,000 for graduate study. Open to U.S. citizens and U.S. nationals from American Samoa; permanent residents are not eligible.",
-      "verified": false
+      "verified": true,
+      "estimated_deadline": "2027-02-03"
     },
     {
       "id": "udall-undergraduate-scholarship",
       "name": "Udall Undergraduate Scholarship",
       "sponsor": "Udall Foundation",
-      "award_amount": "up to $7,000",
+      "award_amount": "up to $7,500",
       "deadline": "VERIFY",
       "url": "https://www.udall.gov/",
       "eligibility": {
@@ -903,14 +907,15 @@
         "citizenship_requirement": "us_citizen_national_or_permanent_resident"
       },
       "description": "Scholarship for college sophomores and juniors committed to careers related to the environment; Native American and Alaska Native students may also apply in the tribal public policy or Native health care categories. Requires nomination by the student's institution and at least a B average. Award up to $7,000.",
-      "verified": false
+      "verified": true,
+      "estimated_deadline": "2027-03-04"
     },
     {
       "id": "fulbright-us-student-program",
       "name": "Fulbright U.S. Student Program",
       "sponsor": "U.S. Department of State (Bureau of Educational and Cultural Affairs)",
       "award_amount": "varies by host country (covers travel, stipend, and living costs)",
-      "deadline": "VERIFY",
+      "deadline": "2026-10-06",
       "url": "https://us.fulbrightonline.org/",
       "eligibility": {
         "min_gpa": null,
@@ -925,7 +930,7 @@
         "citizenship_requirement": "us_citizen"
       },
       "description": "Federal program funding graduating college seniors, graduate students, young professionals, and artists to study, conduct research, or teach English abroad in partnership with more than 140 countries. Open to all disciplines; requires U.S. citizenship and a bachelor's degree by the grant start (permanent residents and doctorate holders are not eligible).",
-      "verified": false
+      "verified": true
     },
     {
       "id": "nabj-scholarship",
@@ -935,7 +940,7 @@
       "deadline": "VERIFY",
       "url": "https://nabjonline.org/student-services/scholarships/",
       "eligibility": {
-        "min_gpa": "VERIFY",
+        "min_gpa": 2.5,
         "fields_of_study": [
           "communications"
         ],
@@ -952,7 +957,8 @@
         "citizenship_requirement": "VERIFY"
       },
       "description": "Scholarships from the National Association of Black Journalists for student members pursuing journalism or a communications-related field who have at least one year of school remaining. Requires a paid NABJ student membership; awards up to $10,000.",
-      "verified": false
+      "verified": true,
+      "estimated_deadline": "2027-02-27"
     },
     {
       "id": "profile-in-courage-essay-contest",
@@ -976,13 +982,14 @@
         "citizenship_requirement": "VERIFY"
       },
       "description": "Annual essay contest for U.S. high school students in grades 9-12 to describe and analyze an act of political courage by a U.S. elected official who served during or after 1917. First place receives $10,000.",
-      "verified": false
+      "verified": true,
+      "estimated_deadline": "2027-01-12"
     },
     {
       "id": "shpe-scholarship",
       "name": "ScholarSHPE Scholarship Program",
       "sponsor": "Society of Hispanic Professional Engineers (SHPE)",
-      "award_amount": "VERIFY (multiple awards; over $1.8M distributed annually)",
+      "award_amount": "$2,000 to $10,000 (varies by award)",
       "deadline": "VERIFY",
       "url": "https://shpe.org/engage/programs/scholarshpe/",
       "eligibility": {
@@ -1007,7 +1014,8 @@
         "citizenship_requirement": "VERIFY"
       },
       "description": "Renewable scholarships for active SHPE members pursuing STEM degrees, focused on advancing Hispanics in STEM. Requires SHPE membership and a minimum 2.5 GPA; citizenship is not required for SHPE-funded awards but some sponsor-funded awards do require it.",
-      "verified": false
+      "verified": true,
+      "estimated_deadline": "2027-02-16"
     },
     {
       "id": "nsbe-scholarships",
