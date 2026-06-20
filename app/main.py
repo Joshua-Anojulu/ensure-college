@@ -45,10 +45,30 @@ load_dotenv()
 
 STATIC_DIR = Path(__file__).parent / "static"
 
-# A stable default keeps logins working across local restarts. Production must
-# override this with a real secret set in the host's environment variables.
+# A stable default keeps logins working across local restarts. In production the
+# app refuses to boot with a guessable key (see _resolve_session_secret).
 DEV_SESSION_SECRET = "dev-only-insecure-session-secret-change-me"
-SESSION_SECRET = os.getenv("SESSION_SECRET", DEV_SESSION_SECRET)
+
+
+def _resolve_session_secret() -> str:
+    secret = os.getenv("SESSION_SECRET", "").strip()
+    # A Postgres database or Render's platform variable means this is a real
+    # deployment, where signing session cookies with a guessable key would let
+    # anyone forge a logged-in session.
+    in_production = bool(os.getenv("RENDER")) or os.getenv("DATABASE_URL", "").startswith(
+        "postgres"
+    )
+    if not secret or secret == DEV_SESSION_SECRET:
+        if in_production:
+            raise RuntimeError(
+                "SESSION_SECRET must be set to a strong, unique value in production. "
+                "Set it in your host's environment variables and redeploy."
+            )
+        return DEV_SESSION_SECRET
+    return secret
+
+
+SESSION_SECRET = _resolve_session_secret()
 SESSION_COOKIE_SECURE = os.getenv("SESSION_COOKIE_SECURE", "").lower() in {"1", "true", "yes"}
 
 
