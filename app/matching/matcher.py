@@ -235,6 +235,7 @@ def _evaluate_scholarship(
 
     required_fields = scholarship.eligibility.fields_of_study
     matched_fields = _matching_fields(student.intended_majors, required_fields)
+    field_mismatch = bool(required_fields) and not matched_fields
     if not required_fields:
         breakdown.field_of_study = WEIGHT_FIELD_OF_STUDY_OPEN
         reasons.append("Open to all fields of study (weaker fit signal, partial score)")
@@ -244,6 +245,7 @@ def _evaluate_scholarship(
             reasons.append(f"Field of study overlap: {field}")
     else:
         reasons.append("No field of study overlap")
+        reasons.append("May not match this scholarship's field of study, check eligibility")
 
     required_demographics = scholarship.eligibility.demographics
     matched_demographics = _matching_demographics(
@@ -285,6 +287,12 @@ def _evaluate_scholarship(
         + breakdown.financial_need,
         2,
     )
+    match_tier = _match_tier(breakdown.total)
+    # Fields listed in the dataset can be either firm eligibility rules or a
+    # sponsor preference. Keep those opportunities visible, but never present
+    # a field-mismatched result as a strong match.
+    if field_mismatch and match_tier == "strong":
+        match_tier = "possible"
 
     return MatchResult(
         scholarship_id=scholarship.id,
@@ -298,7 +306,7 @@ def _evaluate_scholarship(
         essay_required=scholarship.eligibility.essay_required,
         closing_soon=closing_soon,
         score=breakdown.total,
-        match_tier=_match_tier(breakdown.total),
+        match_tier=match_tier,
         match_reasons=reasons,
         score_breakdown=breakdown,
     )

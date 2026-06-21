@@ -59,6 +59,7 @@ const filterNoEssay = document.getElementById("filter-no-essay");
 const filterFieldMatch = document.getElementById("filter-field-match");
 const filterDemographicMatch = document.getElementById("filter-demographic-match");
 const filterClosingSoon = document.getElementById("filter-closing-soon");
+const filterVerifiedOnly = document.getElementById("filter-verified-only");
 const filterClear = document.getElementById("filter-clear");
 
 document.addEventListener("DOMContentLoaded", init);
@@ -100,6 +101,7 @@ function wireFilterControls() {
   filterFieldMatch.addEventListener("change", rerenderResults);
   filterDemographicMatch.addEventListener("change", rerenderResults);
   filterClosingSoon.addEventListener("change", rerenderResults);
+  filterVerifiedOnly.addEventListener("change", rerenderResults);
   filterClear.addEventListener("click", resetFilters);
 }
 
@@ -112,6 +114,7 @@ function resetFilters() {
   filterFieldMatch.checked = false;
   filterDemographicMatch.checked = false;
   filterClosingSoon.checked = false;
+  filterVerifiedOnly.checked = false;
   rerenderResults();
 }
 
@@ -147,6 +150,9 @@ function applyResultFilters(results) {
       return false;
     }
     if (filterClosingSoon.checked && !r.closing_soon) {
+      return false;
+    }
+    if (filterVerifiedOnly.checked && !r.verified) {
       return false;
     }
     return true;

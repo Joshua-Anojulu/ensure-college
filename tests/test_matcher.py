@@ -191,6 +191,25 @@ class TestMatchTier:
         assert result is not None
         assert result.match_tier == "possible"
 
+    def test_field_mismatch_caps_an_otherwise_strong_match_at_possible(self):
+        student = make_student(
+            intended_majors=["literature"],
+            activities=["robotics", "debate"],
+            financial_need_level="high",
+        )
+        scholarship = make_scholarship(
+            description="A need-based award for financial need, robotics, and debate.",
+        )
+        result = match_one(student, scholarship)
+
+        assert result is not None
+        assert result.score == pytest.approx(45.0)
+        assert result.match_tier == "possible"
+        assert (
+            "May not match this scholarship's field of study, check eligibility"
+            in result.match_reasons
+        )
+
 
 class TestClosingSoon:
     def test_deadline_within_30_days_sets_closing_soon(self):
