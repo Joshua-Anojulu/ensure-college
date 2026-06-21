@@ -42,3 +42,7 @@ class MatchResult(BaseModel):
     )
     match_reasons: list[str]
     score_breakdown: ScoreBreakdown
+    eligible_schools: list[str] = Field(
+        default_factory=list,
+        description="Institution names this award is restricted to; empty if not school-specific.",
+    )

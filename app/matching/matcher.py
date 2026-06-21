@@ -355,6 +355,7 @@ def _evaluate_scholarship(
         match_tier=match_tier,
         match_reasons=reasons,
         score_breakdown=breakdown,
+        eligible_schools=[school.name for school in scholarship.eligibility.eligible_schools],
     )
 
 

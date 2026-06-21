@@ -275,6 +275,25 @@ class TestTargetSchoolMatching:
         assert result.verification_source_url == "https://example.org/official-source"
         assert result.last_verified_at == date(2026, 6, 21)
 
+    def test_eligible_schools_are_carried_to_result(self):
+        scholarship = make_scholarship(
+            eligibility={
+                "eligible_schools": [
+                    {"name": "The University of Texas at Austin", "aliases": ["UT Austin"]}
+                ]
+            }
+        )
+        result = match_one(make_student(target_schools=[]), scholarship)
+
+        assert result is not None
+        assert result.eligible_schools == ["The University of Texas at Austin"]
+
+    def test_non_school_specific_award_has_empty_eligible_schools(self):
+        result = match_one(make_student(), make_scholarship())
+
+        assert result is not None
+        assert result.eligible_schools == []
+
 
 class TestClosingSoon:
     def test_deadline_within_30_days_sets_closing_soon(self):

@@ -1205,6 +1205,7 @@ function matchToCard(match) {
     closing_soon: match.closing_soon,
     score: match.score,
     score_breakdown: match.score_breakdown,
+    eligible_schools: match.eligible_schools || [],
     match_reasons: match.match_reasons || [],
   };
 }
@@ -1222,6 +1223,7 @@ function scholarshipToCard(scholarship) {
     verification_source_url: scholarship.verification?.source_url || null,
     last_verified_at: scholarship.verification?.last_verified_at || null,
     closing_soon: computeClosingSoon(scholarship.deadline),
+    eligible_schools: (scholarship.eligibility?.eligible_schools || []).map((s) => s.name),
     score: null,
     match_reasons: [],
   };
@@ -1280,6 +1282,16 @@ function buildCard(card, tierClass) {
   }
   if (!card.verified) {
     badges.appendChild(makeBadge("Unverified data", "badge-unverified"));
+  }
+  if (card.eligible_schools && card.eligible_schools.length > 0) {
+    const targetMatched = card.score_breakdown && card.score_breakdown.target_school > 0;
+    if (targetMatched) {
+      badges.appendChild(makeBadge("★ At your target school", "badge-school-match"));
+    } else {
+      badges.appendChild(
+        makeBadge("Only at " + schoolBadgeLabel(card.eligible_schools), "badge-school")
+      );
+    }
   }
 
   body.appendChild(top);
@@ -1473,6 +1485,13 @@ function buildVerificationSource(card) {
     wrap.appendChild(link);
   }
   return wrap;
+}
+
+function schoolBadgeLabel(schools) {
+  if (schools.length === 1) {
+    return schools[0];
+  }
+  return `${schools[0]} +${schools.length - 1}`;
 }
 
 function makeBadge(text, className) {

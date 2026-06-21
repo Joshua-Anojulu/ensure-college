@@ -61,6 +61,10 @@ def init_db() -> None:
     """Bring the configured database to the latest Alembic revision."""
 
     config = Config(str(PROJECT_ROOT / "alembic.ini"))
+    # Resolve the migration scripts by absolute path so init works regardless of
+    # the process's current working directory (alembic.ini's script_location is
+    # relative, which only works when launched from the project root).
+    config.set_main_option("script_location", str(PROJECT_ROOT / "alembic"))
     config.set_main_option("sqlalchemy.url", DATABASE_URL)
     command.upgrade(config, "head")
 

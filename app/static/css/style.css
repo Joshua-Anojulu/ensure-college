@@ -731,6 +731,8 @@ textarea:focus {
 .score-chip { border: 1px solid var(--line); color: var(--ink-soft); background: var(--paper-soft); }
 .badge-closing { color: #8c641c; background: var(--sun-soft); }
 .badge-unverified { color: var(--muted); background: #eef2ee; }
+.badge-school { color: var(--forest-dark); background: var(--leaf-strong); letter-spacing: 0; }
+.badge-school-match { color: #fff; background: var(--forest); letter-spacing: 0; }
 
 .verification-source {
   display: flex;
