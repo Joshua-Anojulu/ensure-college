@@ -46,3 +46,17 @@ class TestRateLimitEndpoint:
             assert client.post("/auth/login", json=payload).status_code == 429
         finally:
             _login_limit.limiter.clear()
+
+    def test_delete_account_returns_429_when_over_limit(self, client, monkeypatch):
+        monkeypatch.setenv("RATE_LIMIT_ENABLED", "true")
+        from app.api.auth_routes import _delete_limit
+
+        _delete_limit.limiter.clear()
+        monkeypatch.setattr(_delete_limit.limiter, "max_requests", 1)
+        try:
+            # The limiter runs before the authentication dependency, so this
+            # does not need a real account to verify the endpoint is protected.
+            assert client.post("/auth/delete-account", json={"password": "password123"}).status_code == 401
+            assert client.post("/auth/delete-account", json={"password": "password123"}).status_code == 429
+        finally:
+            _delete_limit.limiter.clear()

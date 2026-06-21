@@ -711,6 +711,7 @@ textarea:focus {
 .match-card:hover { border-color: #b8cdbb; box-shadow: var(--shadow); transform: translateY(-2px); }
 .match-card.strong .path-bar { background: var(--forest); }
 .match-card.possible .path-bar { background: var(--sun); }
+.match-card.saved .path-bar { background: var(--line-strong); }
 .path-bar { min-height: 100%; }
 
 .card-body { display: flex; padding: 1.25rem 1.35rem 1.35rem 1.12rem; flex-direction: column; gap: 0.75rem; }
@@ -809,8 +810,13 @@ textarea:focus {
 .tracker-label { color: var(--muted); font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
 .tracker-status { min-height: 2.35rem; padding: 0.45rem 0.55rem; border: 1px solid var(--line-strong); border-radius: var(--radius-sm); color: var(--ink); background: var(--paper); }
 .tracker-notes { min-height: 2.35rem; padding: 0.5rem; border: 1px solid var(--line-strong); border-radius: var(--radius-sm); color: var(--ink); background: var(--paper); }
-.match-card.status-awarded { border-color: var(--leaf-strong); }
-.match-card.status-rejected { opacity: 0.68; }
+.match-card.saved.status-interested .path-bar { background: #9aa9a0; }
+.match-card.saved.status-drafting .path-bar { background: var(--sun); }
+.match-card.saved.status-submitted .path-bar { background: #4f83a8; }
+.match-card.saved.status-awarded { border-color: var(--leaf-strong); }
+.match-card.saved.status-awarded .path-bar { background: var(--forest); }
+.match-card.saved.status-rejected { border-color: #ecc5c3; }
+.match-card.saved.status-rejected .path-bar { background: var(--rose); }
 .export-ics { margin-left: auto; border: 1px solid var(--line); }
 
 .btn-danger { padding: 0.62rem 0.9rem; border: 1px solid #e6aeab; color: var(--rose); background: #fff; }

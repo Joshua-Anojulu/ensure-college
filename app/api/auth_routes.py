@@ -24,6 +24,7 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 _signup_limit = rate_limiter(10, 60, "signup")
 _login_limit = rate_limiter(20, 60, "login")
 _password_limit = rate_limiter(10, 60, "password")
+_delete_limit = rate_limiter(5, 60, "delete_account")
 
 
 def _normalize_email(email: str) -> str:
@@ -104,7 +105,7 @@ def change_password(
     return {"ok": True}
 
 
-@router.post("/delete-account")
+@router.post("/delete-account", dependencies=[Depends(_delete_limit)])
 def delete_account(
     request: Request,
     body: DeleteAccountRequest,

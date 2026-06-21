@@ -775,7 +775,10 @@ function renderSaved(items) {
     if (!item.scholarship) {
       continue;
     }
-    const card = buildCard(scholarshipToCard(item.scholarship), "strong");
+    // A saved item is part of the application tracker, not a fresh match for
+    // the current profile. Give it neutral tracker styling instead of claiming
+    // it is a strong match.
+    const card = buildCard(scholarshipToCard(item.scholarship), "saved");
     card.classList.add(`status-${item.status || "interested"}`);
     card.appendChild(buildTrackerControls(item, card));
     savedContainer.appendChild(card);

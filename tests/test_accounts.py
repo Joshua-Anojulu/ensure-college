@@ -258,6 +258,30 @@ class TestApplicationTracker:
         assert response.status_code == 401
 
 
+class TestStudentJourney:
+    def test_signup_match_save_track_and_export_calendar(self, client):
+        assert signup(client).status_code == 201
+
+        matches = client.post("/match", json=VALID_PROFILE)
+        assert matches.status_code == 200
+        results = matches.json()
+        assert results
+
+        scholarship_id = results[0]["scholarship_id"]
+        assert client.post(f"/account/saved/{scholarship_id}").status_code == 201
+        tracked = client.patch(
+            f"/account/saved/{scholarship_id}",
+            json={"status": "drafting", "notes": "Outline in progress"},
+        )
+        assert tracked.status_code == 200
+        assert tracked.json()["status"] == "drafting"
+
+        calendar = client.get("/account/saved/calendar.ics")
+        assert calendar.status_code == 200
+        assert calendar.headers["content-type"].startswith("text/calendar")
+        assert "BEGIN:VCALENDAR" in calendar.text
+
+
 class TestAccountManagement:
     def test_change_password_then_login_with_new(self, client):
         signup(client)
