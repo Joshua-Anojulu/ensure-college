@@ -517,7 +517,7 @@ input[type="file"]::file-selector-button {
 
 .field-full { grid-column: 1 / -1; }
 
-.field label,
+.field > label,
 fieldset legend {
   display: block;
   margin-bottom: 0.4rem;

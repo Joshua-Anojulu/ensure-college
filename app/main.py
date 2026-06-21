@@ -115,7 +115,9 @@ def _find_scholarship(scholarships: list[Scholarship], scholarship_id: str) -> S
 
 @app.get("/")
 def serve_index() -> FileResponse:
-    return FileResponse(STATIC_DIR / "index.html")
+    # Always revalidate the HTML so the ?v cache-busting on CSS/JS stays reliable;
+    # a stale cached page would keep requesting old asset versions.
+    return FileResponse(STATIC_DIR / "index.html", headers={"Cache-Control": "no-cache"})
 
 
 @app.get("/health")
