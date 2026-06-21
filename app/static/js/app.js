@@ -86,6 +86,7 @@ async function init() {
   wireFilterControls();
   wireResumeImport();
   wireSettings();
+  wireAgeGate();
   await loadSession();
 }
 
@@ -315,6 +316,26 @@ function summarizeExtraction(profile) {
 /* ---------- Account settings ---------- */
 
 const settingsModal = document.getElementById("settings-modal");
+
+function wireAgeGate() {
+  const gate = document.getElementById("age-gate");
+  if (!gate || localStorage.getItem("site_consent") === "yes") {
+    return;
+  }
+  const agree = document.getElementById("age-gate-agree");
+  const cont = document.getElementById("age-gate-continue");
+  agree.addEventListener("change", () => {
+    cont.disabled = !agree.checked;
+  });
+  cont.addEventListener("click", () => {
+    if (!agree.checked) {
+      return;
+    }
+    localStorage.setItem("site_consent", "yes");
+    gate.hidden = true;
+  });
+  gate.hidden = false;
+}
 
 function wireSettings() {
   const openBtn = document.getElementById("open-settings");

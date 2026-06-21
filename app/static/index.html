@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/static/css/style.css?v=20260621-9">
+  <link rel="stylesheet" href="/static/css/style.css?v=20260621-10">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -350,8 +350,27 @@
 
   <footer class="site-footer">
     <p>Scholarships4U helps you narrow the search. Confirm every deadline and requirement on the official sponsor page before you apply.</p>
+    <p class="footer-links"><a href="/privacy">Privacy</a> &middot; <a href="/terms">Terms</a></p>
   </footer>
 
-  <script src="/static/js/app.js?v=20260621-9"></script>
+  <div id="age-gate" class="modal-overlay age-gate" hidden>
+    <div class="modal-card panel" role="dialog" aria-modal="true" aria-labelledby="age-gate-title">
+      <h2 id="age-gate-title">Before you start</h2>
+      <p>
+        Scholarships4U is a personal, educational project. The matcher uses the profile details you enter
+        (including optional demographic and financial-need information), and the optional AI features send
+        your inputs to Anthropic's API. Please review our
+        <a href="/privacy" target="_blank" rel="noopener">Privacy Policy</a> and
+        <a href="/terms" target="_blank" rel="noopener">Terms</a>.
+      </p>
+      <label class="age-gate-check">
+        <input type="checkbox" id="age-gate-agree" />
+        <span>I am 13 or older and I agree to the Privacy Policy and Terms.</span>
+      </label>
+      <button type="button" class="btn-primary" id="age-gate-continue" disabled>Continue</button>
+    </div>
+  </div>
+
+  <script src="/static/js/app.js?v=20260621-10"></script>
 </body>
 </html>

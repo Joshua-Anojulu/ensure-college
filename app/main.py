@@ -120,6 +120,16 @@ def serve_index() -> FileResponse:
     return FileResponse(STATIC_DIR / "index.html", headers={"Cache-Control": "no-cache"})
 
 
+@app.get("/privacy")
+def serve_privacy() -> FileResponse:
+    return FileResponse(STATIC_DIR / "privacy.html", headers={"Cache-Control": "no-cache"})
+
+
+@app.get("/terms")
+def serve_terms() -> FileResponse:
+    return FileResponse(STATIC_DIR / "terms.html", headers={"Cache-Control": "no-cache"})
+
+
 @app.get("/health")
 def health() -> dict[str, str]:
     info = {"status": "ok"}
