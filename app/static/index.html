@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/static/css/style.css?v=20260621-16">
+  <link rel="stylesheet" href="/static/css/style.css?v=20260621-17">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -77,6 +77,49 @@
       <p class="auth-switch">
         <span id="auth-switch-text">New here?</span>
         <button type="button" class="link-button" id="auth-switch-btn">Create an account</button>
+      </p>
+      <p class="auth-recovery" id="auth-recovery">
+        <button type="button" class="link-button" id="open-password-reset">Forgot your password?</button>
+      </p>
+    </div>
+  </div>
+
+  <div id="password-reset-modal" class="modal-overlay" hidden>
+    <div class="modal-card panel" role="dialog" aria-modal="true" aria-labelledby="password-reset-title">
+      <div class="modal-head">
+        <h2 id="password-reset-title">Reset your password</h2>
+        <button type="button" class="modal-close" id="password-reset-close" aria-label="Close">&times;</button>
+      </div>
+      <p class="modal-intro" id="password-reset-intro">
+        Enter your email and we'll send a one-time reset link.
+      </p>
+
+      <form id="password-reset-request-form" class="auth-form" novalidate>
+        <div class="field">
+          <label for="password-reset-email">Email</label>
+          <input type="email" id="password-reset-email" autocomplete="email" required>
+        </div>
+        <div id="password-reset-request-error" class="form-error" role="alert" hidden></div>
+        <div id="password-reset-request-success" class="form-success" role="status" hidden></div>
+        <button type="submit" class="btn-primary" id="password-reset-request-submit">Email reset link</button>
+      </form>
+
+      <form id="password-reset-confirm-form" class="auth-form" novalidate hidden>
+        <div class="field">
+          <label for="password-reset-new-password">New password</label>
+          <input type="password" id="password-reset-new-password" autocomplete="new-password" required>
+          <span class="field-hint">At least 8 characters.</span>
+        </div>
+        <div class="field">
+          <label for="password-reset-confirm-password">Confirm new password</label>
+          <input type="password" id="password-reset-confirm-password" autocomplete="new-password" required>
+        </div>
+        <div id="password-reset-confirm-error" class="form-error" role="alert" hidden></div>
+        <button type="submit" class="btn-primary" id="password-reset-confirm-submit">Set new password</button>
+      </form>
+
+      <p class="auth-switch">
+        <button type="button" class="link-button" id="password-reset-back">Back to log in</button>
       </p>
     </div>
   </div>
@@ -371,6 +414,6 @@
     </div>
   </div>
 
-  <script src="/static/js/app.js?v=20260621-16"></script>
+  <script src="/static/js/app.js?v=20260621-17"></script>
 </body>
 </html>

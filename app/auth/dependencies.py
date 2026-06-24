@@ -9,6 +9,14 @@ from app.db.database import get_db
 from app.db.models import User
 
 SESSION_USER_KEY = "user_id"
+SESSION_AUTH_VERSION_KEY = "auth_version"
+
+
+def set_authenticated_session(request: Request, user: User) -> None:
+    """Start a session tied to the user's current credential version."""
+    request.session.clear()
+    request.session[SESSION_USER_KEY] = user.id
+    request.session[SESSION_AUTH_VERSION_KEY] = user.auth_version
 
 
 def get_optional_user(request: Request, db: Session = Depends(get_db)) -> User | None:
@@ -19,9 +27,11 @@ def get_optional_user(request: Request, db: Session = Depends(get_db)) -> User |
         return None
 
     user = db.get(User, user_id)
-    if user is None:
-        # The session points at a user that no longer exists; clear it.
-        request.session.pop(SESSION_USER_KEY, None)
+    session_version = request.session.get(SESSION_AUTH_VERSION_KEY)
+    if user is None or session_version != user.auth_version:
+        # Password changes invalidate other signed cookies immediately.
+        request.session.clear()
+        return None
     return user
 
 

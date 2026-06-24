@@ -1,9 +1,13 @@
+from datetime import timedelta
+
 import pytest
 from fastapi.testclient import TestClient
 
+from app.auth.email import EmailDeliveryError
+from app.auth.password_reset import hash_reset_token, utcnow
 from app.auth.security import hash_password, verify_password
-from app.db.database import engine
-from app.db.models import Base
+from app.db.database import SessionLocal, engine
+from app.db.models import Base, PasswordResetToken
 from app.main import app
 
 VALID_PROFILE = {
@@ -36,6 +40,18 @@ def client():
 
 def signup(client, email="student@example.com", password="password123"):
     return client.post("/auth/signup", json={"email": email, "password": password})
+
+
+def capture_password_reset_email(monkeypatch):
+    """Pretend email is configured and retain reset tokens for endpoint tests."""
+    delivered: list[tuple[str, str]] = []
+    monkeypatch.setattr("app.api.auth_routes.password_reset_email_is_configured", lambda: True)
+
+    def capture(recipient: str, token: str) -> None:
+        delivered.append((recipient, token))
+
+    monkeypatch.setattr("app.api.auth_routes.send_password_reset_email", capture)
+    return delivered
 
 
 class TestPasswordHashing:
@@ -313,6 +329,103 @@ class TestStudentJourney:
         assert calendar.status_code == 200
         assert calendar.headers["content-type"].startswith("text/calendar")
         assert "BEGIN:VCALENDAR" in calendar.text
+
+
+class TestPasswordReset:
+    def test_request_is_generic_and_stores_only_a_token_hash(self, client, monkeypatch):
+        delivered = capture_password_reset_email(monkeypatch)
+        signup(client)
+
+        known = client.post("/auth/password-reset/request", json={"email": "student@example.com"})
+        unknown = client.post("/auth/password-reset/request", json={"email": "nobody@example.com"})
+
+        assert known.status_code == unknown.status_code == 200
+        assert known.json() == unknown.json()
+        assert len(delivered) == 1
+        recipient, raw_token = delivered[0]
+        assert recipient == "student@example.com"
+
+        with SessionLocal() as db:
+            record = db.query(PasswordResetToken).one()
+            assert record.token_hash == hash_reset_token(raw_token)
+            assert record.token_hash != raw_token
+
+    def test_confirm_sets_new_password_starts_session_and_consumes_token(self, client, monkeypatch):
+        delivered = capture_password_reset_email(monkeypatch)
+        signup(client)
+        client.post("/auth/logout")
+        client.post("/auth/password-reset/request", json={"email": "student@example.com"})
+        raw_token = delivered[0][1]
+
+        reset = client.post(
+            "/auth/password-reset/confirm",
+            json={"token": raw_token, "new_password": "newpassword456"},
+        )
+        assert reset.status_code == 200
+        assert client.get("/auth/me").status_code == 200
+
+        client.post("/auth/logout")
+        old_login = client.post(
+            "/auth/login", json={"email": "student@example.com", "password": "password123"}
+        )
+        new_login = client.post(
+            "/auth/login", json={"email": "student@example.com", "password": "newpassword456"}
+        )
+        assert old_login.status_code == 401
+        assert new_login.status_code == 200
+
+        reused = client.post(
+            "/auth/password-reset/confirm",
+            json={"token": raw_token, "new_password": "anotherpassword456"},
+        )
+        assert reused.status_code == 400
+
+    def test_expired_token_is_rejected(self, client, monkeypatch):
+        delivered = capture_password_reset_email(monkeypatch)
+        signup(client)
+        client.post("/auth/password-reset/request", json={"email": "student@example.com"})
+        raw_token = delivered[0][1]
+
+        with SessionLocal() as db:
+            record = db.query(PasswordResetToken).one()
+            record.expires_at = utcnow() - timedelta(seconds=1)
+            db.commit()
+
+        reset = client.post(
+            "/auth/password-reset/confirm",
+            json={"token": raw_token, "new_password": "newpassword456"},
+        )
+        assert reset.status_code == 400
+
+    def test_delivery_failure_does_not_leave_a_usable_token(self, client, monkeypatch):
+        monkeypatch.setattr("app.api.auth_routes.password_reset_email_is_configured", lambda: True)
+
+        def fail_delivery(recipient: str, token: str) -> None:
+            raise EmailDeliveryError("test delivery failure")
+
+        monkeypatch.setattr("app.api.auth_routes.send_password_reset_email", fail_delivery)
+        signup(client)
+        response = client.post("/auth/password-reset/request", json={"email": "student@example.com"})
+        assert response.status_code == 503
+        with SessionLocal() as db:
+            assert db.query(PasswordResetToken).count() == 0
+
+    def test_reset_invalidates_other_active_sessions(self, client, monkeypatch):
+        delivered = capture_password_reset_email(monkeypatch)
+        signup(client)
+
+        with TestClient(app) as other_client:
+            login = other_client.post(
+                "/auth/login", json={"email": "student@example.com", "password": "password123"}
+            )
+            assert login.status_code == 200
+            client.post("/auth/password-reset/request", json={"email": "student@example.com"})
+            reset = client.post(
+                "/auth/password-reset/confirm",
+                json={"token": delivered[0][1], "new_password": "newpassword456"},
+            )
+            assert reset.status_code == 200
+            assert other_client.get("/auth/me").status_code == 401
 
 
 class TestAccountManagement:

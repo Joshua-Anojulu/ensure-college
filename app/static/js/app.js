@@ -13,6 +13,7 @@ let lastResults = null;
 let currentUser = null;
 const savedIds = new Set();
 let authMode = "login";
+let passwordResetToken = null;
 
 const form = document.getElementById("profile-form");
 const formError = document.getElementById("form-error");
@@ -44,6 +45,23 @@ const authError = document.getElementById("auth-error");
 const authSubmit = document.getElementById("auth-submit");
 const authSwitchText = document.getElementById("auth-switch-text");
 const authSwitchBtn = document.getElementById("auth-switch-btn");
+const authRecovery = document.getElementById("auth-recovery");
+const openPasswordResetBtn = document.getElementById("open-password-reset");
+const passwordResetModal = document.getElementById("password-reset-modal");
+const passwordResetClose = document.getElementById("password-reset-close");
+const passwordResetTitle = document.getElementById("password-reset-title");
+const passwordResetIntro = document.getElementById("password-reset-intro");
+const passwordResetRequestForm = document.getElementById("password-reset-request-form");
+const passwordResetConfirmForm = document.getElementById("password-reset-confirm-form");
+const passwordResetEmail = document.getElementById("password-reset-email");
+const passwordResetRequestError = document.getElementById("password-reset-request-error");
+const passwordResetRequestSuccess = document.getElementById("password-reset-request-success");
+const passwordResetRequestSubmit = document.getElementById("password-reset-request-submit");
+const passwordResetNewPassword = document.getElementById("password-reset-new-password");
+const passwordResetConfirmPassword = document.getElementById("password-reset-confirm-password");
+const passwordResetConfirmError = document.getElementById("password-reset-confirm-error");
+const passwordResetConfirmSubmit = document.getElementById("password-reset-confirm-submit");
+const passwordResetBack = document.getElementById("password-reset-back");
 
 const savedSection = document.getElementById("saved-section");
 const savedSummary = document.getElementById("saved-summary");
@@ -83,6 +101,7 @@ async function init() {
 
   form.addEventListener("submit", handleSubmit);
   wireAuthControls();
+  wirePasswordReset();
   wireFilterControls();
   wireResumeImport();
   wireSettings();
@@ -494,6 +513,32 @@ function wireAuthControls() {
   authForm.addEventListener("submit", handleAuthSubmit);
 }
 
+function wirePasswordReset() {
+  openPasswordResetBtn.addEventListener("click", () => openPasswordResetModal());
+  passwordResetClose.addEventListener("click", closePasswordResetModal);
+  passwordResetBack.addEventListener("click", () => {
+    closePasswordResetModal();
+    openAuthModal("login");
+  });
+  passwordResetModal.addEventListener("click", (event) => {
+    if (event.target === passwordResetModal) {
+      closePasswordResetModal();
+    }
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && !passwordResetModal.hidden) {
+      closePasswordResetModal();
+    }
+  });
+  passwordResetRequestForm.addEventListener("submit", handlePasswordResetRequest);
+  passwordResetConfirmForm.addEventListener("submit", handlePasswordResetConfirm);
+
+  const token = new URLSearchParams(window.location.search).get("reset_token");
+  if (token) {
+    openPasswordResetModal(token);
+  }
+}
+
 function openAuthModal(mode, message) {
   authMode = mode;
   const isLogin = mode === "login";
@@ -507,6 +552,7 @@ function openAuthModal(mode, message) {
   authSwitchText.textContent = isLogin ? "New here?" : "Already have an account?";
   authSwitchBtn.textContent = isLogin ? "Create an account" : "Log in";
   authPasswordHint.hidden = isLogin;
+  authRecovery.hidden = !isLogin;
   authPassword.setAttribute(
     "autocomplete",
     isLogin ? "current-password" : "new-password"
@@ -521,6 +567,127 @@ function closeAuthModal() {
   authModal.hidden = true;
   authForm.reset();
   hideAuthError();
+}
+
+function openPasswordResetModal(token = null) {
+  closeAuthModal();
+  passwordResetToken = token;
+  const confirming = Boolean(passwordResetToken);
+  passwordResetTitle.textContent = confirming ? "Choose a new password" : "Reset your password";
+  passwordResetIntro.textContent = confirming
+    ? "Choose a new password for your Scholarships4U account."
+    : "Enter your email and we'll send a one-time reset link.";
+  passwordResetRequestForm.hidden = confirming;
+  passwordResetConfirmForm.hidden = !confirming;
+  hidePasswordResetMessages();
+  passwordResetModal.hidden = false;
+  (confirming ? passwordResetNewPassword : passwordResetEmail).focus();
+}
+
+function closePasswordResetModal() {
+  passwordResetModal.hidden = true;
+  passwordResetRequestForm.reset();
+  passwordResetConfirmForm.reset();
+  passwordResetToken = null;
+  hidePasswordResetMessages();
+  const url = new URL(window.location.href);
+  if (url.searchParams.has("reset_token")) {
+    url.searchParams.delete("reset_token");
+    window.history.replaceState({}, "", `${url.pathname}${url.search}${url.hash}`);
+  }
+}
+
+function hidePasswordResetMessages() {
+  passwordResetRequestError.hidden = true;
+  passwordResetRequestError.textContent = "";
+  passwordResetRequestSuccess.hidden = true;
+  passwordResetRequestSuccess.textContent = "";
+  passwordResetConfirmError.hidden = true;
+  passwordResetConfirmError.textContent = "";
+}
+
+function showPasswordResetRequestError(message) {
+  passwordResetRequestSuccess.hidden = true;
+  passwordResetRequestError.textContent = message;
+  passwordResetRequestError.hidden = false;
+}
+
+function showPasswordResetConfirmError(message) {
+  passwordResetConfirmError.textContent = message;
+  passwordResetConfirmError.hidden = false;
+}
+
+async function handlePasswordResetRequest(event) {
+  event.preventDefault();
+  hidePasswordResetMessages();
+  const email = passwordResetEmail.value.trim();
+  if (!email) {
+    showPasswordResetRequestError("Enter your email.");
+    return;
+  }
+
+  passwordResetRequestSubmit.disabled = true;
+  try {
+    const response = await fetch("/auth/password-reset/request", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      showPasswordResetRequestError(
+        extractError(data, "Could not request a reset link. Please try again.")
+      );
+      return;
+    }
+    passwordResetRequestSuccess.textContent =
+      data.message || "If an account exists for that email, a reset link will arrive shortly.";
+    passwordResetRequestSuccess.hidden = false;
+  } catch (err) {
+    showPasswordResetRequestError("Could not reach the server. Check your connection and try again.");
+    console.error(err);
+  } finally {
+    passwordResetRequestSubmit.disabled = false;
+  }
+}
+
+async function handlePasswordResetConfirm(event) {
+  event.preventDefault();
+  passwordResetConfirmError.hidden = true;
+  passwordResetConfirmError.textContent = "";
+  const password = passwordResetNewPassword.value;
+  const confirmation = passwordResetConfirmPassword.value;
+  if (password.length < 8) {
+    showPasswordResetConfirmError("Choose a password with at least 8 characters.");
+    return;
+  }
+  if (password !== confirmation) {
+    showPasswordResetConfirmError("Those passwords do not match.");
+    return;
+  }
+
+  passwordResetConfirmSubmit.disabled = true;
+  try {
+    const response = await fetch("/auth/password-reset/confirm", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token: passwordResetToken, new_password: password }),
+    });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      showPasswordResetConfirmError(
+        extractError(data, "Could not reset your password. Request a new link and try again.")
+      );
+      return;
+    }
+    closePasswordResetModal();
+    await loadSession();
+  } catch (err) {
+    showPasswordResetConfirmError("Could not reach the server. Check your connection and try again.");
+    console.error(err);
+  } finally {
+    passwordResetConfirmSubmit.disabled = false;
+  }
 }
 
 function showAuthError(message) {

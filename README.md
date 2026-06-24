@@ -102,10 +102,17 @@ This repo includes a [`render.yaml`](render.yaml) for [Render](https://render.co
    - A free Postgres database, wired to the web service as `DATABASE_URL`.
    - A generated `SESSION_SECRET`.
    - `SESSION_COOKIE_SECURE=true` so session cookies are sent only over HTTPS.
-3. In the Render dashboard, set the one remaining secret under **Environment Variables**:
+3. In the Render dashboard, set these secrets under **Environment Variables**:
    - `ANTHROPIC_API_KEY` = your Anthropic API key
+   - `RESEND_API_KEY` = a Resend API key for transactional email
+   - `EMAIL_FROM` = a sender address verified in Resend, such as `Scholarships4U <hello@yourdomain.com>`
+   - `PUBLIC_APP_URL` = the public HTTPS URL for the app, such as `https://scholarships4u.onrender.com`
 
-Do not commit the API key. Set it only in the host's environment variable UI. The app reads `DATABASE_URL` and switches from SQLite to Postgres automatically, so saved accounts persist across deploys.
+Do not commit API keys. Set them only in the host's environment variable UI. The app reads `DATABASE_URL` and switches from SQLite to Postgres automatically, so saved accounts persist across deploys.
+
+### Password-reset email
+
+Password reset uses Resend over its HTTPS API. The app stores only a SHA-256 hash of each one-time reset token, expires tokens after one hour, uses the same response for known and unknown email addresses, and invalidates other active sessions after a successful reset. Until the three email settings above are configured, the reset form safely reports that it is temporarily unavailable instead of pretending an email was sent.
 
 The free Postgres plan and free web service are enough for a demo. On the free tier the database can expire after a period of inactivity, so treat saved data as non-critical.
 
@@ -138,6 +145,8 @@ uvicorn app.main:app --host 0.0.0.0 --port $PORT
 | `POST` | `/auth/logout` | End the session |
 | `GET` | `/auth/me` | Current logged-in user |
 | `POST` | `/auth/change-password` | Change password (requires login) |
+| `POST` | `/auth/password-reset/request` | Send a one-time reset link without revealing whether the email exists |
+| `POST` | `/auth/password-reset/confirm` | Consume a valid reset token and set a new password |
 | `POST` | `/auth/delete-account` | Delete account and all saved data |
 | `GET` | `/account/profile` | Get the saved profile |
 | `PUT` | `/account/profile` | Save or update the profile |
@@ -230,7 +239,7 @@ scholarship-matcher/
 - The scholarship dataset is a **curated set** (122 programs, including a small school-specific pilot), not a comprehensive directory.
 - Some fields are marked `VERIFY` and must be confirmed on each sponsor's official page before you rely on them. See [Scholarship data and verification](#scholarship-data-and-verification) for how entries are confirmed over time.
 - Essay advice is generated guidance, not a guarantee of admission or funding.
-- Accounts support change password and account deletion, but there is no email verification or password reset flow (which would need an email provider), so this is suited to a demo rather than production use.
+- Password reset is available once the Resend sender, key, and public app URL are configured. Email verification is still not implemented, so this is suited to a demo rather than production use.
 - The age and terms notice is a browser-stored acknowledgment, not age verification or parental consent. This is not a production-ready service for children under 13.
 - Sensitive endpoints (login, signup, password change, and the AI features) are rate limited per client IP. The limiter is in-memory, which suits a single-instance deploy; multi-instance hosting would need a shared store such as Redis.
 - On the free Postgres tier, saved data should be treated as non-critical because the database can expire after inactivity.
@@ -241,7 +250,7 @@ scholarship-matcher/
 - Expand and fully verify the scholarship dataset
 - Expand the school-specific scholarship pilot with verified institution records
 - Live data integration with sponsor feeds or APIs
-- Account improvements: email verification and password reset
+- Account improvement: email verification
 
 ---
 
