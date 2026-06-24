@@ -16,16 +16,15 @@
         ],
         "demographics": [],
         "states": "any",
-        "essay_required": true,
+        "essay_required": false,
         "citizenship_requirement": "us_citizen_national_or_permanent_resident"
       },
       "description": "Merit-based scholarship for high school seniors planning to pursue postsecondary education. Recognizes leadership, service, and academic achievement.",
       "verified": true,
       "verification": {
         "source_url": "https://www.coca-colascholarsfoundation.org/apply/",
-        "last_verified_at": null,
-        "provenance_recorded_at": "2026-06-21",
-        "notes": "Official sponsor URL recorded on June 21, 2026; this was not a new fact-by-fact audit."
+        "last_verified_at": "2026-06-21",
+        "notes": "Apply page: $20,000 award, 3.0 GPA minimum, Phase 1 open Aug 3–Sept 30 (2027 cohort opens Aug 3, 2026), U.S. citizen/national/PR or eligible federal-aid statuses; Phase 1 requires no essays."
       }
     },
     {
@@ -41,24 +40,18 @@
         "grade_levels": [
           "high_school_senior"
         ],
-        "demographics": [
-          "african_american",
-          "hispanic_latino",
-          "native_american",
-          "asian_pacific_islander"
-        ],
+        "demographics": [],
         "states": "any",
         "essay_required": true,
         "citizenship_requirement": "us_citizen_or_permanent_resident"
       },
-      "description": "Highly selective last-dollar scholarship for outstanding minority high school seniors from low-income households. Covers full cost of attendance not already met by financial aid. Applicants must be Pell-eligible.",
+      "description": "Highly selective last-dollar scholarship for outstanding high school seniors from low-income households. Covers full cost of attendance not already met by financial aid. Applicants must be Pell-eligible.",
       "verified": true,
       "estimated_deadline": "2026-09-15",
       "verification": {
-        "source_url": "https://www.thegatesscholarship.org/",
-        "last_verified_at": null,
-        "provenance_recorded_at": "2026-06-21",
-        "notes": "Official sponsor URL recorded on June 21, 2026; this was not a new fact-by-fact audit."
+        "source_url": "https://www.thegatesscholarship.org/scholarship",
+        "last_verified_at": "2026-06-21",
+        "notes": "Scholarship page: last-dollar full COA award, 3.3 weighted GPA minimum, U.S. citizen or permanent resident, Pell-eligible senior; 2025 cycle closed Sept 15 — next deadline not yet published."
       }
     },
     {
@@ -69,7 +62,7 @@
       "deadline": "2026-11-11",
       "url": "https://www.jkcf.org/our-scholarships/college-scholarship-program/",
       "eligibility": {
-        "min_gpa": 3.5,
+        "min_gpa": 3.75,
         "fields_of_study": [],
         "grade_levels": [
           "high_school_senior"
@@ -82,10 +75,9 @@
       "description": "Supports high-achieving high school seniors with financial need who seek to attend the nation's best four-year colleges and universities. Citizenship requirement: confirm on the sponsor site.",
       "verified": true,
       "verification": {
-        "source_url": "https://www.jkcf.org/our-scholarships/college-scholarship-program/",
-        "last_verified_at": null,
-        "provenance_recorded_at": "2026-06-21",
-        "notes": "Official sponsor URL recorded on June 21, 2026; this was not a new fact-by-fact audit."
+        "source_url": "https://www.jkcf.org/faq/am-i-eligible-to-apply-to-the-cooke-college-scholarship-program/",
+        "last_verified_at": "2026-06-21",
+        "notes": "JKCF eligibility FAQ: up to $55,000/year, 3.75 unweighted GPA minimum, 2027 cohort application Aug 19–Nov 11, 2026; must attend U.S. high school four years — citizenship not explicitly stated."
       }
     },
     {
@@ -104,16 +96,15 @@
         "demographics": [],
         "states": "any",
         "essay_required": true,
-        "citizenship_requirement": "us_citizen_or_permanent_resident"
+        "citizenship_requirement": "VERIFY"
       },
       "description": "College readiness and completion program for students who demonstrate grit, potential, and financial need. Includes scholarship funds and individualized support.",
       "verified": true,
       "estimated_deadline": "2027-02-15",
       "verification": {
-        "source_url": "https://www.dellscholars.org/",
-        "last_verified_at": null,
-        "provenance_recorded_at": "2026-06-21",
-        "notes": "Official sponsor URL recorded on June 21, 2026; this was not a new fact-by-fact audit."
+        "source_url": "https://www.dellscholars.org/students/",
+        "last_verified_at": "2026-06-21",
+        "notes": "Students page: $20,000 plus laptop and textbook credits, 2.4 GPA minimum, Pell Grant eligible senior in approved college-readiness program; prior cycle Dec 15–Feb 15 — next dates not yet published."
       }
     },
     {
@@ -122,26 +113,25 @@
       "sponsor": "Horatio Alger Association of Distinguished Americans",
       "award_amount": 25000,
       "deadline": "VERIFY",
-      "url": "https://scholars.horatioalger.org/",
+      "url": "https://horatioalger.org/scholarships-and-services/undergraduate-scholarships/",
       "eligibility": {
         "min_gpa": 2.0,
         "fields_of_study": [],
         "grade_levels": [
-          "high_school_senior"
+          "high_school_junior"
         ],
         "demographics": [],
         "states": "any",
         "essay_required": true,
         "citizenship_requirement": "us_citizen"
       },
-      "description": "Awarded to high school seniors who have faced and overcome significant obstacles, demonstrate financial need, and are committed to pursuing higher education.",
+      "description": "105 national awards of $25,000 for high school juniors who have overcome adversity, demonstrate financial need (AGI $100,000 or lower), and plan to pursue a bachelor's degree.",
       "verified": true,
-      "estimated_deadline": "2026-10-25",
+      "estimated_deadline": "2027-03-01",
       "verification": {
-        "source_url": "https://scholars.horatioalger.org/",
-        "last_verified_at": null,
-        "provenance_recorded_at": "2026-06-21",
-        "notes": "Official sponsor URL recorded on June 21, 2026; this was not a new fact-by-fact audit."
+        "source_url": "https://horatioalger.org/scholarships-and-services/undergraduate-scholarships/",
+        "last_verified_at": "2026-06-21",
+        "notes": "Undergraduate scholarships page: 105×$25,000 National Scholarship, 2.0 GPA minimum, U.S. citizen, junior standing; toolkit shows junior application closes March 1 — next cycle not yet published."
       }
     },
     {
