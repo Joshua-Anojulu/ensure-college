@@ -308,7 +308,7 @@
       "name": "Hispanic Scholarship Fund Scholar Program",
       "sponsor": "Hispanic Scholarship Fund",
       "award_amount": "500 to 5000 (varies by award)",
-      "deadline": "2027-02-15",
+      "deadline": "VERIFY",
       "url": "https://www.hsf.net/scholarship",
       "eligibility": {
         "min_gpa": 3.0,
@@ -327,11 +327,11 @@
       },
       "description": "Scholarships for students of Hispanic heritage pursuing higher education. Open to high school seniors and current college students.",
       "verified": true,
+      "estimated_deadline": "2027-02-15",
       "verification": {
         "source_url": "https://www.hsf.net/scholarship",
-        "last_verified_at": null,
-        "provenance_recorded_at": "2026-06-21",
-        "notes": "Official sponsor URL recorded on June 21, 2026; this was not a new fact-by-fact audit."
+        "last_verified_at": "2026-06-21",
+        "notes": "Scholarship page: $500–$5k awards, 3.0 GPA (HS) / 2.5 (college), U.S. citizen/PR/DACA, Hispanic heritage, FAFSA required; 2026 cycle closed Feb 15 — next deadline not yet published."
       }
     },
     {
@@ -339,8 +339,8 @@
       "name": "QuestBridge National College Match",
       "sponsor": "QuestBridge",
       "award_amount": "full four-year scholarship to partner college (varies by school)",
-      "deadline": "2026-09-30",
-      "url": "https://www.questbridge.org/high-school-students/national-college-match",
+      "deadline": "2026-10-01",
+      "url": "https://www.questbridge.org/apply-to-college/programs/national-college-match",
       "eligibility": {
         "min_gpa": null,
         "fields_of_study": [],
@@ -350,15 +350,14 @@
         "demographics": [],
         "states": "any",
         "essay_required": true,
-        "citizenship_requirement": "us_citizen_permanent_resident_or_daca"
+        "citizenship_requirement": "VERIFY"
       },
       "description": "Connects high-achieving, low-income high school seniors with full four-year scholarships at QuestBridge partner colleges through a national matching process.",
       "verified": true,
       "verification": {
-        "source_url": "https://www.questbridge.org/high-school-students/national-college-match",
-        "last_verified_at": null,
-        "provenance_recorded_at": "2026-06-21",
-        "notes": "Official sponsor URL recorded on June 21, 2026; this was not a new fact-by-fact audit."
+        "source_url": "https://www.questbridge.org/apply-to-college/programs/national-college-match/apply/dates-and-deadlines",
+        "last_verified_at": "2026-06-21",
+        "notes": "Dates page: Oct 1 application deadline (11:59pm PT), senior, full partner-college scholarship; open to U.S. high school seniors and U.S. citizens/PR abroad — no absolute GPA cutoff."
       }
     },
     {
@@ -395,7 +394,7 @@
       "sponsor": "Bryan Cameron Education Foundation",
       "award_amount": "full tuition and qualified educational expenses",
       "deadline": "VERIFY",
-      "url": "https://www.bryancameroneducationfoundation.org/",
+      "url": "https://www.bryancameroneducationfoundation.org/faq",
       "eligibility": {
         "min_gpa": 3.7,
         "fields_of_study": [],
@@ -411,10 +410,9 @@
       "verified": true,
       "estimated_deadline": "2027-05-01",
       "verification": {
-        "source_url": "https://www.bryancameroneducationfoundation.org/",
-        "last_verified_at": null,
-        "provenance_recorded_at": "2026-06-21",
-        "notes": "Official sponsor URL recorded on June 21, 2026; this was not a new fact-by-fact audit."
+        "source_url": "https://www.bryancameroneducationfoundation.org/faq",
+        "last_verified_at": "2026-06-21",
+        "notes": "FAQ: 15 awards, full tuition and qualified educational expenses, 3.7 unweighted GPA, U.S. citizen; Class of 2027 closed May 1 2026 — next cycle deadline not yet published."
       }
     },
     {
@@ -422,30 +420,26 @@
       "name": "APIA Scholars Program",
       "sponsor": "Asian & Pacific Islander American Scholarship Fund",
       "award_amount": "$2,500 to $20,000 (one-year or multi-year)",
-      "deadline": "VERIFY",
+      "deadline": "2027-01-15",
       "url": "https://apiascholars.org/scholarship/",
       "eligibility": {
-        "min_gpa": "VERIFY",
+        "min_gpa": null,
         "fields_of_study": [],
         "grade_levels": [
           "high_school_senior",
           "college_undergraduate"
         ],
-        "demographics": [
-          "asian_pacific_islander"
-        ],
+        "demographics": [],
         "states": "any",
         "essay_required": true,
         "citizenship_requirement": "us_citizen_permanent_resident_or_national"
       },
-      "description": "Scholarships for Asian American and Pacific Islander students with financial need who are enrolling or continuing at accredited U.S. postsecondary institutions.",
+      "description": "Scholarships for undergraduate students with financial need who are enrolling or continuing at accredited U.S. postsecondary institutions.",
       "verified": true,
-      "estimated_deadline": "2027-01-15",
       "verification": {
         "source_url": "https://apiascholars.org/scholarship/",
-        "last_verified_at": null,
-        "provenance_recorded_at": "2026-06-21",
-        "notes": "Official sponsor URL recorded on June 21, 2026; this was not a new fact-by-fact audit."
+        "last_verified_at": "2026-06-21",
+        "notes": "Scholarship page: $2,500–$20,000, no GPA minimum (removed), citizen/national/PR or Pacific compact states, undergrad; 2027-2028 cycle opens Nov 15 2026, closes Jan 15 2027 5pm EST."
       }
     },
     {
