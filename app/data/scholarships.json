@@ -2421,7 +2421,13 @@
         "citizenship_requirement": "VERIFY"
       },
       "description": "For enrolled members of U.S. federally recognized Tribes or Alaska Native corporations pursuing vocational, undergraduate, graduate, or professional degrees at accredited nonprofit institutions.",
-      "verified": false
+      "verified": true,
+      "estimated_deadline": "2027-03-31",
+      "verification": {
+        "source_url": "https://cobellscholar.org/our-scholarships/",
+        "last_verified_at": "2026-06-21",
+        "notes": "Merit-based awards disbursed per unmet need; enrolled federally recognized Tribe/Alaska Native Corp member; ug/grad apps Dec 15–Mar 31 (2026 cycle closed)."
+      }
     },
     {
       "id": "native-forward-scholars-fund",
@@ -2445,14 +2451,20 @@
         "citizenship_requirement": "VERIFY"
       },
       "description": "For enrolled members or descendants of U.S. federally or state-recognized American Indian Tribes or Alaska Native groups pursuing undergraduate, graduate, or professional degrees; requires a Tribal Eligibility Certificate and FAFSA.",
-      "verified": false
+      "verified": true,
+      "estimated_deadline": "2027-06-01",
+      "verification": {
+        "source_url": "https://www.nativeforward.org/scholarship-finder/",
+        "last_verified_at": "2026-06-21",
+        "notes": "Multiple tribal-citizen scholarships (Direct, Wells Fargo, etc.); Tribal Eligibility Certificate + FAFSA; homepage announces June 1 application deadline — 2026 cycle closed."
+      }
     },
     {
       "id": "paul-daisy-soros-new-americans",
       "name": "Paul & Daisy Soros Fellowships for New Americans",
       "sponsor": "Paul & Daisy Soros Fellowships for New Americans",
       "award_amount": "up to $90,000 (over up to two years)",
-      "deadline": "VERIFY",
+      "deadline": "2026-10-29",
       "url": "https://pdsoros.org/application-process/",
       "eligibility": {
         "min_gpa": null,
@@ -2466,13 +2478,18 @@
         "citizenship_requirement": "us_citizen_permanent_resident_or_daca"
       },
       "description": "Merit-based fellowship for New Americans (immigrants or the children of immigrants, including naturalized citizens, green-card holders, refugees/asylees, and DACA recipients), age 30 or younger, pursuing a full-time U.S. graduate or professional degree.",
-      "verified": false
+      "verified": true,
+      "verification": {
+        "source_url": "https://pdsoros.org/eligibility/",
+        "last_verified_at": "2026-06-21",
+        "notes": "2027 Fellowship open; due Oct 29 2026 2pm ET; New Americans age ≤30; up to ~$90k (tuition + stipend over two years); citizen/PR/refugee/asylee/DACA-eligible."
+      }
     },
     {
       "id": "thedream-us-national-scholarship",
       "name": "TheDream.US National Scholarship",
       "sponsor": "TheDream.US",
-      "award_amount": "up to $16,500 (associate) or up to $33,000 (bachelor's)",
+      "award_amount": "up to $33,000 (bachelor's; plus up to $6,000 stipend)",
       "deadline": "VERIFY",
       "url": "https://www.thedream.us/scholarships/national-scholarship/",
       "eligibility": {
@@ -2488,17 +2505,23 @@
         "citizenship_requirement": "VERIFY"
       },
       "description": "For first-generation immigrant students who are undocumented (with or without DACA or TPS), came to the U.S. before age 16 and before Nov. 1, 2020, and attend a partner college; funds tuition and fees at one of TheDream.US Partner Colleges.",
-      "verified": false
+      "verified": true,
+      "estimated_deadline": "2027-02-28",
+      "verification": {
+        "source_url": "https://www.thedream.us/scholarships/national-scholarship/faqs/",
+        "last_verified_at": "2026-06-21",
+        "notes": "Undocumented Dreamers only (with/without DACA/TPS); 2.5 GPA; up to $33k bachelor's + stipend; 2026-27 closed Feb 28 2026 — next round opens Nov 1 2026."
+      }
     },
     {
       "id": "pat-tillman-foundation-scholarship",
       "name": "Tillman Scholars Program",
       "sponsor": "Pat Tillman Foundation",
-      "award_amount": "VERIFY (award amounts vary)",
+      "award_amount": "VERIFY (avg ~$10,000/year; tuition, books, living)",
       "deadline": "VERIFY",
       "url": "https://pattillmanfoundation.org/apply/",
       "eligibility": {
-        "min_gpa": "VERIFY",
+        "min_gpa": null,
         "fields_of_study": [],
         "grade_levels": [
           "college_undergraduate",
@@ -2510,7 +2533,13 @@
         "citizenship_requirement": "VERIFY"
       },
       "description": "For U.S. military veterans, active-duty service members (including National Guard/Reserve), and current or surviving military spouses enrolled full-time in an undergraduate, graduate, or professional degree; child dependents are not eligible.",
-      "verified": false
+      "verified": true,
+      "estimated_deadline": "2027-02-28",
+      "verification": {
+        "source_url": "https://pattillmanfoundation.org/apply/",
+        "last_verified_at": "2026-06-21",
+        "notes": "2026 class closed; up to 60 scholars/year; veterans, active duty, spouses, surviving spouses; full-time U.S. accredited program; apps open Dec 1 — deadline varies Nov–Feb."
+      }
     },
     {
       "id": "amvets-national-scholarships",
@@ -2532,13 +2561,19 @@
         "citizenship_requirement": "us_citizen"
       },
       "description": "For U.S. citizen veterans and active-duty/Guard/Reserve service members, as well as the spouses, children, and grandchildren of veterans or active-duty members, pursuing an undergraduate degree; demonstrated financial need required.",
-      "verified": false
+      "verified": true,
+      "estimated_deadline": "2027-04-30",
+      "verification": {
+        "source_url": "https://apply.mykaleidoscope.com/program/AMVETSchildrenandgrandchildren26",
+        "last_verified_at": "2026-06-21",
+        "notes": "$4,000 awards (children/spouses/veterans); $12,000 WD-40 skilled-trades track; U.S. citizen; apply Jan–Apr 30 — 2026 cycle closed."
+      }
     },
     {
       "id": "scholarships-for-military-children",
       "name": "Scholarships for Military Children",
       "sponsor": "Fisher House Foundation",
-      "award_amount": "VERIFY",
+      "award_amount": "$2,000 (500 awards)",
       "deadline": "VERIFY",
       "url": "https://www.fisherhouse.org/programs/scholarship-programs/scholarships-for-military-children/",
       "eligibility": {
@@ -2554,13 +2589,18 @@
         "citizenship_requirement": "VERIFY"
       },
       "description": "For unmarried military dependent children under age 23 with a valid Uniformed Services ID card whose sponsor is active duty, reserve/guard, retired, or deceased; for full-time undergraduate study (high school applicants 3.0 GPA, college applicants 2.5 GPA).",
-      "verified": false
+      "verified": true,
+      "verification": {
+        "source_url": "https://www.fisherhouse.org/programs/scholarship-programs/scholarships-for-military-children/",
+        "last_verified_at": "2026-06-21",
+        "notes": "500×$2,000; unmarried dependent under 23 with USID; HS applicants 3.0 GPA, college 2.5 GPA; 2026-27 closed — 2027-28 opens Dec 2026."
+      }
     },
     {
       "id": "folds-of-honor-higher-education",
       "name": "Folds of Honor Higher Education Scholarship",
       "sponsor": "Folds of Honor Foundation",
-      "award_amount": "up to $5,000 per academic year",
+      "award_amount": "VERIFY (unmet need; max $2,500/term full-time)",
       "deadline": "VERIFY",
       "url": "https://foldsofhonor.org/scholarships/",
       "eligibility": {
@@ -2577,7 +2617,13 @@
         "citizenship_requirement": "VERIFY"
       },
       "description": "For the spouses and dependent children of U.S. service members who have fallen or have a service-connected disability (VA rating of at least 10%); awarded based on unmet financial need for postsecondary study.",
-      "verified": false
+      "verified": true,
+      "estimated_deadline": "2027-03-31",
+      "verification": {
+        "source_url": "https://foldsofhonor.org/scholarships/",
+        "last_verified_at": "2026-06-21",
+        "notes": "Spouses/dependents of fallen or disabled (≥10% VA) service members; unmet-need awards; window Feb 1–Mar 31 annually — 2026 cycle closed."
+      }
     },
     {
       "id": "dav-jesse-brown-memorial-youth",
@@ -2599,14 +2645,20 @@
         "citizenship_requirement": "VERIFY"
       },
       "description": "For youth volunteers age 21 or younger who have completed at least 100 lifetime volunteer hours serving veterans through DAV or the DAV Auxiliary; usable at any accredited institution of higher learning.",
-      "verified": false
+      "verified": true,
+      "estimated_deadline": "2027-02-28",
+      "verification": {
+        "source_url": "https://www.dav.org/get-involved/volunteer/dav-scholarships/",
+        "last_verified_at": "2026-06-21",
+        "notes": "$140k pool annually ($30k top award); age ≤21, ≥100 DAV/Auxiliary volunteer hours; 2026 deadline Feb 28 closed."
+      }
     },
     {
       "id": "point-foundation-flagship",
       "name": "Point Foundation Flagship Scholarship",
       "sponsor": "Point Foundation",
-      "award_amount": "VERIFY",
-      "deadline": "VERIFY",
+      "award_amount": "VERIFY (need-based; renewable up to 4 years)",
+      "deadline": "2026-11-20",
       "url": "https://pointfoundation.org/scholarships/flagship",
       "eligibility": {
         "min_gpa": 3.3,
@@ -2622,7 +2674,12 @@
         "citizenship_requirement": "VERIFY"
       },
       "description": "For LGBTQ+ and ally students (at least a high school senior) enrolled full-time in a bachelor's, graduate, or professional degree at an accredited, not-for-profit U.S. college or university; requires a connection and commitment to the LGBTQ+ community.",
-      "verified": false
+      "verified": true,
+      "verification": {
+        "source_url": "https://pointfoundation.org/scholarships/flagship",
+        "last_verified_at": "2026-06-21",
+        "notes": "LGBTQ+ and ally students; 3.3 GPA; opens Sept 10, closes Nov 20 2026 8pm ET for fall 2026 term; need-based renewable award."
+      }
     },
     {
       "id": "jacl-national-scholarship",
