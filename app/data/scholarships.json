@@ -474,7 +474,7 @@
       "sponsor": "Barry Goldwater Scholarship and Excellence in Education Foundation",
       "award_amount": "up to $7,500 per year",
       "deadline": "VERIFY",
-      "url": "https://goldwater.scholarsapply.org/",
+      "url": "https://goldwaterscholarship.gov/eligibility/",
       "eligibility": {
         "min_gpa": 3.0,
         "fields_of_study": [
@@ -495,9 +495,9 @@
       "verified": true,
       "estimated_deadline": "2027-01-29",
       "verification": {
-        "source_url": "https://goldwater.scholarsapply.org/",
+        "source_url": "https://goldwaterscholarship.gov/eligibility/",
         "last_verified_at": "2026-06-21",
-        "notes": "Goldwater site: sophomores/juniors in STEM, institution-nominated; research essay required; last Friday in January nomination deadline (5 PM CT) — 2026 cycle complete; next estimated Jan 29 2027."
+        "notes": "Eligibility page: 3.0 GPA, U.S. citizen/national/territories, STEM sophomores/juniors; institution nomination; research essay; last Friday in January nomination deadline — 2026 cycle complete."
       }
     },
     {
@@ -721,7 +721,7 @@
       "name": "SWE Scholarship Program",
       "sponsor": "Society of Women Engineers",
       "award_amount": "up to $20,000 (average about $4,500)",
-      "deadline": "2027-03-31",
+      "deadline": "VERIFY",
       "url": "https://swe.org/scholarships/",
       "eligibility": {
         "min_gpa": "VERIFY",
@@ -744,9 +744,8 @@
       "verified": true,
       "verification": {
         "source_url": "https://swe.org/scholarships/",
-        "last_verified_at": null,
-        "provenance_recorded_at": "2026-06-21",
-        "notes": "Official sponsor URL recorded on June 21, 2026; this was not a new fact-by-fact audit."
+        "last_verified_at": "2026-06-21",
+        "notes": "SWE scholarships page: 2026-27 applications closed on audit date; 2027-28 cycle not yet open; women in ABET-accredited engineering/technology/computing programs."
       }
     },
     {
@@ -776,9 +775,8 @@
       "verified": true,
       "verification": {
         "source_url": "https://buildyourfuture.withgoogle.com/scholarships",
-        "last_verified_at": null,
-        "provenance_recorded_at": "2026-06-21",
-        "notes": "Official sponsor URL recorded on June 21, 2026; this was not a new fact-by-fact audit."
+        "last_verified_at": "2026-06-21",
+        "notes": "Official scholarships landing page returned no published 2026-27 cycle, deadline, or eligibility details on audit date."
       }
     },
     {
@@ -795,6 +793,7 @@
           "nursing"
         ],
         "grade_levels": [
+          "college_undergraduate",
           "college_graduate"
         ],
         "demographics": [],
@@ -816,7 +815,7 @@
       "sponsor": "AICPA Foundation",
       "award_amount": "$5,000 to $10,000",
       "deadline": "VERIFY",
-      "url": "https://www.thiswaytocpa.com/education/aicpa-legacy-scholarships/",
+      "url": "https://www.thiswaytocpa.com/education/aicpa-legacy-scholarships/future-cpas-scholarship/",
       "eligibility": {
         "min_gpa": 3.0,
         "fields_of_study": [
@@ -835,9 +834,9 @@
       "verified": true,
       "estimated_deadline": "2027-03-15",
       "verification": {
-        "source_url": "https://www.thiswaytocpa.com/education/aicpa-legacy-scholarships/",
+        "source_url": "https://www.thiswaytocpa.com/education/aicpa-legacy-scholarships/future-cpas-scholarship/",
         "last_verified_at": "2026-06-21",
-        "notes": "AICPA page: $5,000–$10,000 accounting scholarships via single application; 3.0 GPA; U.S. citizen or permanent resident; full-time enrollment — next cycle deadline not published."
+        "notes": "Future CPAs page: 3.0 GPA, U.S. citizen or PR; 2026-27 cycle closed Mar 15 2026 — next window Dec 1 2026 through Mar 15 2027."
       }
     },
     {
@@ -846,7 +845,7 @@
       "sponsor": "James Madison Memorial Fellowship Foundation",
       "award_amount": "up to $24,000",
       "deadline": "VERIFY",
-      "url": "https://www.jamesmadison.gov/",
+      "url": "https://www.jamesmadison.gov/foundation-information/quick-facts",
       "eligibility": {
         "min_gpa": "VERIFY",
         "fields_of_study": [
@@ -867,9 +866,9 @@
       "verified": true,
       "estimated_deadline": "2027-03-02",
       "verification": {
-        "source_url": "https://www.jamesmadison.gov/",
+        "source_url": "https://www.jamesmadison.gov/foundation-information/quick-facts",
         "last_verified_at": "2026-06-21",
-        "notes": "Homepage: $24,000 graduate fellowships for secondary teachers of the American Constitution; 2027 application referenced — subpages (eligibility/deadline) returned 404 during audit."
+        "notes": "Quick facts: $24,000 fellowships for teachers, college seniors, and graduates pursuing secondary teaching of American history, government, or civics; 2027 app opens June 1 2026, deadline Mar 2 2027."
       }
     },
     {
@@ -927,16 +926,15 @@
         "demographics": [],
         "states": "any",
         "essay_required": true,
-        "citizenship_requirement": "VERIFY"
+        "citizenship_requirement": "us_citizen"
       },
-      "description": "Department of Defense scholarship-for-service covering full tuition, an annual stipend, and summer internships for students in STEM fields. Recipients commit to post-graduation civilian employment with the DoD. Requires U.S. citizenship (or select allied countries), a 3.0 GPA, and ability to obtain a security clearance.",
+      "description": "Department of Defense scholarship-for-service covering full tuition, an annual stipend, and summer internships for students in STEM fields. Recipients commit to post-graduation civilian employment with the DoD. Requires U.S. citizenship, a 3.0 GPA, and ability to obtain a security clearance.",
       "verified": true,
       "estimated_deadline": "2026-12-04",
       "verification": {
-        "source_url": "https://www.smartscholarship.org/",
-        "last_verified_at": null,
-        "provenance_recorded_at": "2026-06-21",
-        "notes": "Official sponsor URL recorded on June 21, 2026; this was not a new fact-by-fact audit."
+        "source_url": "https://www.smartscholarship.org/sys_attachment.do?sys_id=8179e64b1bdc871060e7a798624bcbc2",
+        "last_verified_at": "2026-06-21",
+        "notes": "Official DoW SMART program PDF: U.S. citizen, 3.0 GPA, STEM degree, security-clearance eligible, service commitment; applications open annually Aug 1 — close date not confirmed on fetched materials."
       }
     },
     {
