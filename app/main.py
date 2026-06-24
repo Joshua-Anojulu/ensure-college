@@ -5,9 +5,11 @@ from pathlib import Path
 from dotenv import load_dotenv
 from fastapi import Depends, FastAPI, File, Form, HTTPException, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, HTMLResponse, PlainTextResponse, Response
 from fastapi.staticfiles import StaticFiles
+from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.middleware.sessions import SessionMiddleware
+from starlette.requests import Request as StarletteRequest
 
 from app.api.account_routes import router as account_router
 from app.api.auth_routes import router as auth_router
@@ -51,15 +53,38 @@ STATIC_DIR = Path(__file__).parent / "static"
 # app refuses to boot with a guessable key (see _resolve_session_secret).
 DEV_SESSION_SECRET = "dev-only-insecure-session-secret-change-me"
 
+_OG_IMAGE_PATH = "/static/og-image.svg"
+_SITEMAP_PATHS = ("/", "/privacy", "/terms")
+_SECURITY_HEADERS = {
+    "X-Content-Type-Options": "nosniff",
+    "X-Frame-Options": "DENY",
+    "Referrer-Policy": "strict-origin-when-cross-origin",
+    "Permissions-Policy": "camera=(), microphone=(), geolocation=()",
+    "Content-Security-Policy": (
+        "default-src 'self'; "
+        "script-src 'self'; "
+        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
+        "font-src 'self' https://fonts.gstatic.com; "
+        "img-src 'self' data:; "
+        "connect-src 'self'; "
+        "frame-ancestors 'none'; "
+        "base-uri 'self'; "
+        "form-action 'self'"
+    ),
+}
+
+
+def is_production_deploy() -> bool:
+    """True when running on Render or against a Postgres DATABASE_URL."""
+    return bool(os.getenv("RENDER")) or os.getenv("DATABASE_URL", "").startswith("postgres")
+
 
 def _resolve_session_secret() -> str:
     secret = os.getenv("SESSION_SECRET", "").strip()
     # A Postgres database or Render's platform variable means this is a real
     # deployment, where signing session cookies with a guessable key would let
     # anyone forge a logged-in session.
-    in_production = bool(os.getenv("RENDER")) or os.getenv("DATABASE_URL", "").startswith(
-        "postgres"
-    )
+    in_production = is_production_deploy()
     if not secret or secret == DEV_SESSION_SECRET:
         if in_production:
             raise RuntimeError(
@@ -72,6 +97,25 @@ def _resolve_session_secret() -> str:
 
 SESSION_SECRET = _resolve_session_secret()
 SESSION_COOKIE_SECURE = os.getenv("SESSION_COOKIE_SECURE", "").lower() in {"1", "true", "yes"}
+_DOCS_ENABLED = not is_production_deploy()
+
+
+class SecurityHeadersMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: StarletteRequest, call_next):
+        response = await call_next(request)
+        for header, value in _SECURITY_HEADERS.items():
+            response.headers.setdefault(header, value)
+        return response
+
+
+def _public_base_url(request: Request) -> str:
+    env = os.getenv("PUBLIC_APP_URL", "").strip().rstrip("/")
+    return env or str(request.base_url).rstrip("/")
+
+
+def _absolute_og_image_urls(html: str, base_url: str) -> str:
+    absolute = f"{base_url}{_OG_IMAGE_PATH}"
+    return html.replace(f'content="{_OG_IMAGE_PATH}"', f'content="{absolute}"')
 
 
 @asynccontextmanager
@@ -85,7 +129,12 @@ app = FastAPI(
     title="Scholarships4U",
     description="Match students to scholarships with transparent, explainable scoring.",
     lifespan=lifespan,
+    docs_url="/docs" if _DOCS_ENABLED else None,
+    redoc_url="/redoc" if _DOCS_ENABLED else None,
+    openapi_url="/openapi.json" if _DOCS_ENABLED else None,
 )
+
+app.add_middleware(SecurityHeadersMiddleware)
 
 app.add_middleware(
     SessionMiddleware,
@@ -114,10 +163,39 @@ def _find_scholarship(scholarships: list[Scholarship], scholarship_id: str) -> S
 
 
 @app.get("/")
-def serve_index() -> FileResponse:
+def serve_index(request: Request) -> HTMLResponse:
     # Always revalidate the HTML so the ?v cache-busting on CSS/JS stays reliable;
     # a stale cached page would keep requesting old asset versions.
-    return FileResponse(STATIC_DIR / "index.html", headers={"Cache-Control": "no-cache"})
+    html = (STATIC_DIR / "index.html").read_text(encoding="utf-8")
+    html = _absolute_og_image_urls(html, _public_base_url(request))
+    return HTMLResponse(html, headers={"Cache-Control": "no-cache"})
+
+
+@app.get("/robots.txt", response_class=PlainTextResponse)
+def robots_txt(request: Request) -> PlainTextResponse:
+    base = _public_base_url(request)
+    return PlainTextResponse(
+        f"User-agent: *\nAllow: /\nDisallow: /docs\nDisallow: /redoc\nSitemap: {base}/sitemap.xml\n",
+        media_type="text/plain",
+    )
+
+
+@app.get("/sitemap.xml", response_class=Response)
+def sitemap_xml(request: Request) -> Response:
+    base = _public_base_url(request)
+    urls = "\n".join(
+        f"  <url><loc>{base}{path if path != '/' else ''}/</loc></url>"
+        if path == "/"
+        else f"  <url><loc>{base}{path}</loc></url>"
+        for path in _SITEMAP_PATHS
+    )
+    body = (
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+        f"{urls}\n"
+        "</urlset>\n"
+    )
+    return Response(content=body, media_type="application/xml")
 
 
 @app.get("/privacy")

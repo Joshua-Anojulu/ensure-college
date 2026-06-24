@@ -2,7 +2,7 @@
 
 import pytest
 
-from app.main import DEV_SESSION_SECRET, _resolve_session_secret
+from app.main import DEV_SESSION_SECRET, _resolve_session_secret, is_production_deploy
 
 
 def test_production_requires_session_secret(monkeypatch):
@@ -38,3 +38,21 @@ def test_local_falls_back_to_dev_default(monkeypatch):
     monkeypatch.setenv("DATABASE_URL", "sqlite:///local.db")
     monkeypatch.delenv("SESSION_SECRET", raising=False)
     assert _resolve_session_secret() == DEV_SESSION_SECRET
+
+
+def test_is_production_deploy_on_render(monkeypatch):
+    monkeypatch.setenv("RENDER", "true")
+    monkeypatch.delenv("DATABASE_URL", raising=False)
+    assert is_production_deploy() is True
+
+
+def test_is_production_deploy_on_postgres_url(monkeypatch):
+    monkeypatch.delenv("RENDER", raising=False)
+    monkeypatch.setenv("DATABASE_URL", "postgresql://user:pass@host/db")
+    assert is_production_deploy() is True
+
+
+def test_is_production_deploy_false_locally(monkeypatch):
+    monkeypatch.delenv("RENDER", raising=False)
+    monkeypatch.setenv("DATABASE_URL", "sqlite:///local.db")
+    assert is_production_deploy() is False
