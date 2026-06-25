@@ -1565,7 +1565,7 @@ function buildTierSection(title, matches, tierClass) {
 
   const heading = document.createElement("h3");
   heading.className = `tier-heading ${tierClass === "possible" ? "possible" : ""}`;
-  heading.textContent = title;
+  heading.innerHTML = `${escapeHtml(title)} <span class="tier-count">${matches.length}</span>`;
   section.appendChild(heading);
 
   for (const [index, match] of matches.entries()) {
@@ -1629,6 +1629,131 @@ function computeClosingSoon(deadline) {
   return diffDays >= 0 && diffDays <= 30;
 }
 
+// Turns raw enum tokens that leak into reason strings (e.g. "high_school_senior")
+// into readable text without disturbing the rest of the sentence.
+function humanizeReason(text) {
+  return String(text).replace(/[a-z0-9]+(?:_[a-z0-9]+)+/gi, (token) => token.replace(/_/g, " "));
+}
+
+function deadlineParts(deadline, estimated) {
+  if (deadline === "rolling") {
+    return { value: "Rolling", note: "Applications accepted anytime" };
+  }
+  if (!deadline || deadline === "VERIFY" || String(deadline).startsWith("VERIFY")) {
+    if (estimated) {
+      return { value: formatVerifiedDate(estimated), note: "Estimated \u2014 confirm on sponsor site" };
+    }
+    return { value: "Not listed", note: "Confirm on sponsor site" };
+  }
+  return { value: formatVerifiedDate(deadline), note: "" };
+}
+
+// Circular fit gauge: gives every match a single, scannable anchor and fills
+// the horizontal space the old flat layout left empty.
+function buildFitRing(score, tierClass) {
+  const pct = Math.max(0, Math.min(100, Math.round(score)));
+  const r = 26;
+  const circ = Number((2 * Math.PI * r).toFixed(2));
+  const dash = Number(((pct / 100) * circ).toFixed(2));
+  const label = tierClass === "possible" ? "Possible fit" : "Strong fit";
+
+  const wrap = document.createElement("div");
+  wrap.className = "fit-ring";
+  wrap.setAttribute("role", "img");
+  wrap.setAttribute("aria-label", `Fit score ${pct} out of 100 \u2014 ${label}`);
+  wrap.innerHTML =
+    '<div class="fit-ring-dial">' +
+    '<svg class="fit-ring-svg" viewBox="0 0 64 64" aria-hidden="true">' +
+    `<circle class="fit-ring-track" cx="32" cy="32" r="${r}"></circle>` +
+    `<circle class="fit-ring-value" cx="32" cy="32" r="${r}" transform="rotate(-90 32 32)" style="--circ:${circ};--dash:${dash}"></circle>` +
+    "</svg>" +
+    '<div class="fit-ring-num"><strong>0</strong><span>fit</span></div>' +
+    "</div>" +
+    `<span class="fit-ring-label">${label}</span>`;
+
+  const numEl = wrap.querySelector(".fit-ring-num strong");
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    numEl.textContent = String(pct);
+  } else {
+    const start = performance.now();
+    const duration = 850;
+    const step = (now) => {
+      const t = Math.min(1, (now - start) / duration);
+      const eased = 1 - Math.pow(1 - t, 3);
+      numEl.textContent = String(Math.round(eased * pct));
+      if (t < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }
+  return wrap;
+}
+
+function buildStatRow(card) {
+  const row = document.createElement("div");
+  row.className = "card-stats";
+
+  const award = document.createElement("div");
+  award.className = "stat stat-award";
+  award.innerHTML =
+    '<span class="stat-label">Award</span>' +
+    `<span class="stat-value">${escapeHtml(formatAward(card.award_amount))}</span>`;
+  row.appendChild(award);
+
+  const dl = deadlineParts(card.deadline, card.estimated_deadline);
+  const deadline = document.createElement("div");
+  deadline.className = "stat stat-deadline";
+  if (card.closing_soon) {
+    deadline.classList.add("stat-urgent");
+    if (!dl.note) dl.note = "Closing soon";
+  }
+  deadline.innerHTML =
+    '<span class="stat-label">Deadline</span>' +
+    `<span class="stat-value">${escapeHtml(dl.value)}</span>` +
+    (dl.note ? `<span class="stat-note">${escapeHtml(dl.note)}</span>` : "");
+  row.appendChild(deadline);
+
+  return row;
+}
+
+// Humanized, scannable reasons. Long lists collapse to the top few with a
+// toggle so the card stays calm instead of dumping a wall of bullets.
+function buildReasons(reasons) {
+  const wrap = document.createElement("div");
+  wrap.className = "reasons";
+
+  const heading = document.createElement("p");
+  heading.className = "reasons-heading";
+  heading.textContent = "Why this matched";
+  wrap.appendChild(heading);
+
+  const list = document.createElement("ul");
+  list.className = "reason-list";
+  const VISIBLE = 4;
+  reasons.forEach((reason, index) => {
+    const li = document.createElement("li");
+    li.textContent = humanizeReason(reason);
+    if (index >= VISIBLE) li.classList.add("reason-hidden");
+    list.appendChild(li);
+  });
+  wrap.appendChild(list);
+
+  if (reasons.length > VISIBLE) {
+    const hidden = reasons.length - VISIBLE;
+    const toggle = document.createElement("button");
+    toggle.type = "button";
+    toggle.className = "reasons-toggle";
+    toggle.textContent = `Show ${hidden} more reason${hidden === 1 ? "" : "s"}`;
+    toggle.addEventListener("click", () => {
+      const open = wrap.classList.toggle("reasons-open");
+      toggle.textContent = open
+        ? "Show fewer reasons"
+        : `Show ${hidden} more reason${hidden === 1 ? "" : "s"}`;
+    });
+    wrap.appendChild(toggle);
+  }
+  return wrap;
+}
+
 function buildCard(card, tierClass) {
   const article = document.createElement("article");
   article.className = `match-card ${tierClass}`;
@@ -1640,28 +1765,30 @@ function buildCard(card, tierClass) {
   const body = document.createElement("div");
   body.className = "card-body";
 
-  const top = document.createElement("div");
-  top.className = "card-top";
+  const header = document.createElement("div");
+  header.className = "card-header";
+
+  const headline = document.createElement("div");
+  headline.className = "card-headline";
 
   const title = document.createElement("h4");
   title.className = "card-title";
   title.textContent = card.name;
-  top.appendChild(title);
+  headline.appendChild(title);
+
+  if (card.sponsor) {
+    const sponsor = document.createElement("p");
+    sponsor.className = "card-sponsor";
+    sponsor.textContent = card.sponsor;
+    headline.appendChild(sponsor);
+  }
+  header.appendChild(headline);
 
   if (typeof card.score === "number") {
-    const score = document.createElement("span");
-    score.className = "card-score";
-    score.textContent = `Fit score: ${card.score}`;
-    top.appendChild(score);
+    header.appendChild(buildFitRing(card.score, tierClass));
   }
 
-  const meta = document.createElement("dl");
-  meta.className = "card-meta";
-  meta.innerHTML = `
-    <div><dt>Sponsor</dt><dd>${escapeHtml(card.sponsor)}</dd></div>
-    <div><dt>Award</dt><dd>${escapeHtml(formatAward(card.award_amount))}</dd></div>
-    <div><dt>Deadline</dt><dd>${escapeHtml(formatDeadline(card.deadline, card.estimated_deadline))}</dd></div>
-  `;
+  const stats = buildStatRow(card);
 
   const badges = document.createElement("div");
   badges.className = "badge-row";
@@ -1682,8 +1809,8 @@ function buildCard(card, tierClass) {
     }
   }
 
-  body.appendChild(top);
-  body.appendChild(meta);
+  body.appendChild(header);
+  body.appendChild(stats);
   const provenance = buildVerificationSource(card);
   if (provenance) {
     body.appendChild(provenance);
@@ -1697,22 +1824,7 @@ function buildCard(card, tierClass) {
   }
 
   if (card.match_reasons && card.match_reasons.length > 0) {
-    const reasons = document.createElement("div");
-    reasons.className = "reasons";
-    const details = document.createElement("details");
-    details.open = true;
-    const summary = document.createElement("summary");
-    summary.textContent = "Why this matched";
-    const list = document.createElement("ul");
-    for (const reason of card.match_reasons) {
-      const li = document.createElement("li");
-      li.textContent = reason;
-      list.appendChild(li);
-    }
-    details.appendChild(summary);
-    details.appendChild(list);
-    reasons.appendChild(details);
-    body.appendChild(reasons);
+    body.appendChild(buildReasons(card.match_reasons));
   }
 
   const link = document.createElement("a");
@@ -1721,7 +1833,10 @@ function buildCard(card, tierClass) {
   link.target = "_blank";
   link.rel = "noopener noreferrer";
   link.textContent = "View and apply";
-  body.appendChild(link);
+
+  const footer = document.createElement("div");
+  footer.className = "card-footer";
+  footer.appendChild(link);
 
   const actions = document.createElement("div");
   actions.className = "card-actions";
@@ -1815,7 +1930,8 @@ function buildCard(card, tierClass) {
   );
   actions.appendChild(reviewBtn);
 
-  body.appendChild(actions);
+  footer.appendChild(actions);
+  body.appendChild(footer);
   body.appendChild(adviceLoading);
   body.appendChild(adviceError);
   body.appendChild(advicePanel);
