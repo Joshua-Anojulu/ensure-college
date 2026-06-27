@@ -255,7 +255,15 @@ function applyResultFilters(results) {
   const minScore = Number(filterMinScore.value) || 0;
   const quality = filterQuality.value;
   return results.filter((r) => {
-    if (quality !== "all" && r.match_tier !== quality) {
+    const requiresSpecialCheck = Boolean(r.requires_special_check);
+    if (quality === "special" && !requiresSpecialCheck) {
+      return false;
+    }
+    if (
+      quality !== "all" &&
+      quality !== "special" &&
+      (r.match_tier !== quality || requiresSpecialCheck)
+    ) {
       return false;
     }
     if (r.score < minScore) {
@@ -1653,8 +1661,10 @@ function renderResults(results) {
   }
 
   resultsEmpty.hidden = true;
-  const strong = filtered.filter((r) => r.match_tier === "strong");
-  const possible = filtered.filter((r) => r.match_tier === "possible");
+  const regular = filtered.filter((r) => !r.requires_special_check);
+  const special = filtered.filter((r) => r.requires_special_check);
+  const strong = regular.filter((r) => r.match_tier === "strong");
+  const possible = regular.filter((r) => r.match_tier === "possible");
 
   const shownAll = filtered.length === results.length;
   resultsSummary.textContent = shownAll
@@ -1669,16 +1679,35 @@ function renderResults(results) {
       buildTierSection("Possible matches", possible, "possible")
     );
   }
+  if (special.length > 0) {
+    resultsContainer.appendChild(
+      buildTierSection(
+        "Special opportunities to check",
+        special,
+        "special",
+        "These may be worthwhile, but they require a niche condition like a nomination, membership, finalist status, or affiliation that this profile cannot verify yet."
+      )
+    );
+  }
 }
 
-function buildTierSection(title, matches, tierClass) {
+function buildTierSection(title, matches, tierClass, description = "") {
   const section = document.createElement("div");
   section.className = "tier-section";
 
   const heading = document.createElement("h3");
-  heading.className = `tier-heading ${tierClass === "possible" ? "possible" : ""}`;
+  heading.className = `tier-heading ${
+    tierClass === "possible" || tierClass === "special" ? tierClass : ""
+  }`;
   heading.innerHTML = `${escapeHtml(title)} <span class="tier-count">${matches.length}</span>`;
   section.appendChild(heading);
+
+  if (description) {
+    const note = document.createElement("p");
+    note.className = "tier-note";
+    note.textContent = description;
+    section.appendChild(note);
+  }
 
   for (const [index, match] of matches.entries()) {
     const card = buildCard(matchToCard(match), tierClass);
@@ -1936,6 +1965,8 @@ function matchToCard(match) {
     score: match.score,
     score_breakdown: match.score_breakdown,
     eligible_schools: match.eligible_schools || [],
+    requires_special_check: Boolean(match.requires_special_check),
+    special_requirements: match.special_requirements || [],
     match_reasons: match.match_reasons || [],
   };
 }
@@ -1954,6 +1985,8 @@ function scholarshipToCard(scholarship) {
     last_verified_at: scholarship.verification?.last_verified_at || null,
     closing_soon: computeClosingSoon(scholarship.deadline),
     eligible_schools: (scholarship.eligibility?.eligible_schools || []).map((s) => s.name),
+    requires_special_check: Boolean(scholarship.eligibility?.special_requirements?.length),
+    special_requirements: scholarship.eligibility?.special_requirements || [],
     score: null,
     match_reasons: [],
   };
@@ -1997,7 +2030,12 @@ function buildFitRing(score, tierClass) {
   const r = 26;
   const circ = Number((2 * Math.PI * r).toFixed(2));
   const dash = Number(((pct / 100) * circ).toFixed(2));
-  const label = tierClass === "possible" ? "Possible fit" : "Strong fit";
+  const label =
+    tierClass === "special"
+      ? "Check eligibility"
+      : tierClass === "possible"
+      ? "Possible fit"
+      : "Strong fit";
 
   const wrap = document.createElement("div");
   wrap.className = "fit-ring";
@@ -2096,6 +2134,32 @@ function buildReasons(reasons) {
   return wrap;
 }
 
+function buildSpecialRequirements(requirements) {
+  const wrap = document.createElement("div");
+  wrap.className = "special-requirements";
+
+  const heading = document.createElement("p");
+  heading.className = "special-requirements-heading";
+  heading.textContent = "Special eligibility to verify";
+  wrap.appendChild(heading);
+
+  const list = document.createElement("ul");
+  list.className = "special-requirements-list";
+  for (const requirement of requirements) {
+    const li = document.createElement("li");
+    const label = document.createElement("strong");
+    label.textContent = requirement.label || "Extra eligibility check";
+    li.appendChild(label);
+    if (requirement.details) {
+      li.appendChild(document.createTextNode(` — ${requirement.details}`));
+    }
+    list.appendChild(li);
+  }
+  wrap.appendChild(list);
+
+  return wrap;
+}
+
 function buildCard(card, tierClass) {
   const article = document.createElement("article");
   article.className = `match-card ${tierClass}`;
@@ -2140,6 +2204,9 @@ function buildCard(card, tierClass) {
   if (!card.verified) {
     badges.appendChild(makeBadge("Unverified data", "badge-unverified"));
   }
+  if (card.requires_special_check) {
+    badges.appendChild(makeBadge("Special eligibility", "badge-special"));
+  }
   if (card.eligible_schools && card.eligible_schools.length > 0) {
     const targetMatched = card.score_breakdown && card.score_breakdown.target_school > 0;
     if (targetMatched) {
@@ -2165,6 +2232,10 @@ function buildCard(card, tierClass) {
     body.appendChild(badges);
   }
 
+  if (card.special_requirements && card.special_requirements.length > 0) {
+    body.appendChild(buildSpecialRequirements(card.special_requirements));
+  }
+
   if (card.match_reasons && card.match_reasons.length > 0) {
     body.appendChild(buildReasons(card.match_reasons));
   }
@@ -2174,7 +2245,7 @@ function buildCard(card, tierClass) {
   link.href = card.url;
   link.target = "_blank";
   link.rel = "noopener noreferrer";
-  link.textContent = "View and apply";
+  link.textContent = card.requires_special_check ? "Check sponsor page" : "View and apply";
 
   const footer = document.createElement("div");
   footer.className = "card-footer";

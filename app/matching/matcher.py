@@ -374,6 +374,7 @@ def _evaluate_scholarship(
         2,
     )
     match_tier = _match_tier(breakdown.total)
+    special_requirements = scholarship.eligibility.special_requirements
     # Fields listed in the dataset can be either firm eligibility rules or a
     # sponsor preference. Keep those opportunities visible, but never present
     # a field-mismatched result as a strong match.
@@ -381,6 +382,13 @@ def _evaluate_scholarship(
         match_tier = "possible"
     if school_mismatch and match_tier == "strong":
         match_tier = "possible"
+    if special_requirements:
+        reasons.append(
+            "Special eligibility to check: "
+            + "; ".join(requirement.label for requirement in special_requirements)
+        )
+        if match_tier == "strong":
+            match_tier = "possible"
 
     return MatchResult(
         scholarship_id=scholarship.id,
@@ -408,6 +416,8 @@ def _evaluate_scholarship(
         match_reasons=reasons,
         score_breakdown=breakdown,
         eligible_schools=[school.name for school in scholarship.eligibility.eligible_schools],
+        requires_special_check=bool(special_requirements),
+        special_requirements=special_requirements,
     )
 
 

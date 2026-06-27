@@ -35,6 +35,8 @@ MATCH_RESULT_FIELDS = {
     "essay_required",
     "closing_soon",
     "match_tier",
+    "requires_special_check",
+    "special_requirements",
 }
 
 VOCABULARY_FIELDS = {
@@ -147,9 +149,12 @@ class TestMatchEndpoint:
             assert by_id["ron-brown-scholar"]["score"] == 35.0
             assert by_id["ron-brown-scholar"]["match_tier"] == "strong"
 
-        # The top-ranked result is in the strong tier at the maximum score.
-        assert results[0]["match_tier"] == "strong"
-        assert results[0]["score"] == max(scores)
+        # Special-check opportunities can retain a high raw score, but they are
+        # not ordinary Strong matches. Among normal results, the best option
+        # should still land in the strong tier.
+        normal_results = [r for r in results if not r["requires_special_check"]]
+        assert normal_results
+        assert normal_results[0]["match_tier"] == "strong"
 
         # Among results tied at the open-to-all score (10), the matcher orders
         # confirmed upcoming deadlines first, then alphabetically by name. Restrict

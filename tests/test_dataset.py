@@ -1,9 +1,11 @@
 """Guards on the curated scholarship dataset. These keep structural quality green
 as entries are edited or verified over time."""
 
+import json
 from datetime import timedelta
+from pathlib import Path
 
-from app.data.loader import load_scholarships
+from app.data.loader import DEFAULT_SPECIAL_REQUIREMENTS_PATH, load_scholarships
 from scripts.validate_dataset import audit_dataset
 
 
@@ -54,6 +56,31 @@ def test_checklist_programs_meet_expansion_goal():
 def test_ids_are_unique():
     ids = [s.id for s in load_scholarships()]
     assert len(ids) == len(set(ids))
+
+
+def test_special_requirements_sidecar_targets_existing_scholarships():
+    scholarships = load_scholarships()
+    ids = {s.id for s in scholarships}
+    raw = json.loads(Path(DEFAULT_SPECIAL_REQUIREMENTS_PATH).read_text(encoding="utf-8"))
+    sidecar_ids = set(raw["requirements"])
+
+    assert sidecar_ids
+    assert sidecar_ids.issubset(ids)
+
+
+def test_ieee_presidents_is_marked_as_special_check():
+    by_id = {s.id: s for s in load_scholarships()}
+    ieee = by_id["ieee-presidents-scholarship"]
+
+    assert ieee.eligibility.special_requirements
+    assert any(
+        requirement.kind == "competition_or_finalist"
+        for requirement in ieee.eligibility.special_requirements
+    )
+    assert any(
+        requirement.kind == "no_direct_application"
+        for requirement in ieee.eligibility.special_requirements
+    )
 
 
 def test_audit_reports_reverification_queue():

@@ -1,0 +1,383 @@
+{
+  "_dataset_notice": "Sidecar list of niche eligibility gates the current profile form cannot verify. These requirements keep opportunities visible while preventing them from appearing as ordinary Strong matches.",
+  "requirements": {
+    "national-merit": [
+      {
+        "kind": "competition_or_finalist",
+        "label": "PSAT/NMSQT competition path",
+        "details": "Students enter through the PSAT/NMSQT in the designated high-school year and compete through semifinalist/finalist stages."
+      }
+    ],
+    "posse-foundation": [
+      {
+        "kind": "nomination",
+        "label": "Nomination required",
+        "details": "Students must be nominated through the Posse process before participating in selection."
+      },
+      {
+        "kind": "institution_channel",
+        "label": "Recruitment-city process",
+        "details": "Eligibility depends on Posse recruitment city and partner-college channels."
+      }
+    ],
+    "goldwater-scholarship": [
+      {
+        "kind": "nomination",
+        "label": "Institution nomination required",
+        "details": "Applicants must be nominated by their college or university before the national Goldwater application."
+      }
+    ],
+    "stamps-scholars": [
+      {
+        "kind": "institution_channel",
+        "label": "Partner-school selection",
+        "details": "Students are considered through participating Stamps partner colleges; eligibility and process vary by institution."
+      }
+    ],
+    "forty-acres-scholars-program": [
+      {
+        "kind": "no_direct_application",
+        "label": "No separate scholarship application",
+        "details": "Students are considered through the UT Austin admissions timeline rather than a standalone Forty Acres application."
+      },
+      {
+        "kind": "institution_channel",
+        "label": "UT Austin admission path",
+        "details": "Eligibility depends on applying to UT Austin by the sponsor's required admission deadline."
+      }
+    ],
+    "tamu-opportunity-award": [
+      {
+        "kind": "institution_channel",
+        "label": "Texas A&M admission path",
+        "details": "Students are considered through the Texas A&M admission and scholarship process, including the required admissions materials."
+      }
+    ],
+    "georgia-tech-gold-scholars": [
+      {
+        "kind": "no_direct_application",
+        "label": "No separate scholarship application",
+        "details": "Students are considered through Georgia Tech first-year admission by the Early Action deadline."
+      }
+    ],
+    "ut-dallas-aes": [
+      {
+        "kind": "no_direct_application",
+        "label": "Admission application is the scholarship application",
+        "details": "First-time freshmen are considered through the UT Dallas admission application rather than a separate AES form."
+      }
+    ],
+    "cmu-pathway-program": [
+      {
+        "kind": "institution_channel",
+        "label": "CMU financial-aid process",
+        "details": "Eligibility depends on admission to Carnegie Mellon and completing the required financial-aid forms."
+      }
+    ],
+    "national-ffa-scholarship": [
+      {
+        "kind": "membership",
+        "label": "FFA membership required",
+        "details": "Applicants must be FFA members or meet the program's FFA alumni pathway."
+      }
+    ],
+    "aicpa-foundation-legacy-scholarships": [
+      {
+        "kind": "membership",
+        "label": "AICPA student affiliate membership required",
+        "details": "Applicants need AICPA student affiliate membership in addition to accounting-program eligibility."
+      }
+    ],
+    "uncf-general-scholarship": [
+      {
+        "kind": "institution_channel",
+        "label": "UNCF member-school channel",
+        "details": "Many opportunities require enrollment at a UNCF member institution or have award-specific school rules."
+      }
+    ],
+    "thurgood-marshall-college-fund-scholarship": [
+      {
+        "kind": "institution_channel",
+        "label": "TMCF school channel",
+        "details": "Awards commonly depend on attending a TMCF member school, PBI, or historically Black community college."
+      }
+    ],
+    "truman-scholarship": [
+      {
+        "kind": "nomination",
+        "label": "Institution nomination required",
+        "details": "Applicants must be nominated by their institution's Truman Faculty Representative."
+      }
+    ],
+    "udall-undergraduate-scholarship": [
+      {
+        "kind": "nomination",
+        "label": "Institution nomination required",
+        "details": "Students apply through a campus nomination process before national review."
+      }
+    ],
+    "nsbe-scholarships": [
+      {
+        "kind": "membership",
+        "label": "NSBE membership required",
+        "details": "Applicants generally need active NSBE membership and a verified member profile."
+      }
+    ],
+    "shpe-scholarship": [
+      {
+        "kind": "membership",
+        "label": "SHPE membership required",
+        "details": "Applicants must be active SHPE members; some sponsor-funded awards can add further eligibility limits."
+      }
+    ],
+    "ieee-presidents-scholarship": [
+      {
+        "kind": "competition_or_finalist",
+        "label": "ISEF finalist only",
+        "details": "The award is for Regeneron ISEF finalists whose projects align with IEEE fields of interest."
+      },
+      {
+        "kind": "no_direct_application",
+        "label": "No separate application",
+        "details": "Students are considered through IEEE judging at ISEF, not through a standalone scholarship application."
+      }
+    ],
+    "aises-at-anderson-memorial-scholarship": [
+      {
+        "kind": "membership",
+        "label": "AISES membership required",
+        "details": "Applicants must be AISES members."
+      },
+      {
+        "kind": "tribal_affiliation",
+        "label": "Indigenous eligibility required",
+        "details": "Eligibility includes Tribal citizenship, descendant status, or other documented Indigenous affiliation listed by AISES."
+      }
+    ],
+    "american-indian-college-fund-full-circle": [
+      {
+        "kind": "tribal_affiliation",
+        "label": "Tribal affiliation required",
+        "details": "Applicants must be enrolled members, or descendants of enrolled members, of qualifying state or federally recognized Tribes or Alaska Native villages."
+      }
+    ],
+    "princess-grace-awards": [
+      {
+        "kind": "nomination",
+        "label": "School or organization nomination",
+        "details": "Applicants are typically submitted through an eligible nominating school or organization."
+      }
+    ],
+    "sigma-tau-delta-scholarships": [
+      {
+        "kind": "membership",
+        "label": "Sigma Tau Delta membership required",
+        "details": "Applicants must be active members of a Sigma Tau Delta chapter."
+      }
+    ],
+    "prssa-prsa-foundation-scholarships": [
+      {
+        "kind": "membership",
+        "label": "PRSSA membership usually required",
+        "details": "Most listed PRSSA/PRSA Foundation awards require active PRSSA membership."
+      }
+    ],
+    "deca-scholarships": [
+      {
+        "kind": "membership",
+        "label": "DECA membership required",
+        "details": "Applicants must be current DECA members."
+      }
+    ],
+    "fbla-scholarships": [
+      {
+        "kind": "membership",
+        "label": "FBLA membership required",
+        "details": "Applicants must be active FBLA members."
+      }
+    ],
+    "nfmc-competitions-and-awards": [
+      {
+        "kind": "membership",
+        "label": "NFMC membership may be required",
+        "details": "Many NFMC competitions and awards require membership or category-specific affiliation."
+      }
+    ],
+    "phi-alpha-theta-scholarships": [
+      {
+        "kind": "membership",
+        "label": "Phi Alpha Theta membership required",
+        "details": "Applicants must be members of the Phi Alpha Theta history honor society."
+      }
+    ],
+    "pdk-educational-foundation-scholarship": [
+      {
+        "kind": "membership",
+        "label": "Education-organization membership required",
+        "details": "Eligibility requires membership in Educators Rising, Educators Rising Collegiate, Pi Lambda Theta, or PDK."
+      }
+    ],
+    "psi-chi-undergraduate-scholarship": [
+      {
+        "kind": "membership",
+        "label": "Psi Chi membership required",
+        "details": "Applicants must be active undergraduate members of Psi Chi."
+      }
+    ],
+    "acm-sighpc-computational-data-science-fellowship": [
+      {
+        "kind": "nomination",
+        "label": "Graduate advisor nomination required",
+        "details": "Students must be nominated by their graduate research advisor before fellowship review."
+      }
+    ],
+    "astronaut-scholarship": [
+      {
+        "kind": "nomination",
+        "label": "Faculty nomination required",
+        "details": "Students must be nominated by faculty through an Astronaut Scholarship Foundation partner university."
+      },
+      {
+        "kind": "institution_channel",
+        "label": "Partner university required",
+        "details": "Eligibility depends on attending a participating ASF partner university."
+      }
+    ],
+    "cas-trust-scholarship": [
+      {
+        "kind": "membership",
+        "label": "CAS Student Central membership and exam required",
+        "details": "Applicants must hold CAS Student Central membership and have sat for at least one actuarial exam."
+      }
+    ],
+    "aiaa-foundation-undergraduate-scholarship": [
+      {
+        "kind": "membership",
+        "label": "AIAA student membership required",
+        "details": "Applicants must be AIAA student members pursuing an eligible aerospace-related path."
+      }
+    ],
+    "aacn2-pathway-critical-care-nursing-scholarship": [
+      {
+        "kind": "institution_channel",
+        "label": "AACN member-school program required",
+        "details": "Applicants must be in an eligible entry-level BSN program at an AACN member school and near graduation."
+      }
+    ],
+    "quill-and-scroll-journalism-scholarships": [
+      {
+        "kind": "competition_or_finalist",
+        "label": "Some awards require contest-winner status",
+        "details": "Several Quill and Scroll scholarship options require being a national contest winner or inducted senior member."
+      },
+      {
+        "kind": "membership",
+        "label": "Some awards require Quill and Scroll membership",
+        "details": "Students should check the specific award rules before treating this as a normal open application."
+      }
+    ],
+    "cobell-scholarship": [
+      {
+        "kind": "tribal_affiliation",
+        "label": "Tribal affiliation required",
+        "details": "Applicants must be enrolled members of U.S. federally recognized Tribes or Alaska Native corporations."
+      }
+    ],
+    "native-forward-scholars-fund": [
+      {
+        "kind": "tribal_affiliation",
+        "label": "Tribal eligibility documentation required",
+        "details": "Applicants must provide a Tribal Eligibility Certificate or qualifying Native affiliation documentation."
+      }
+    ],
+    "thedream-us-national-scholarship": [
+      {
+        "kind": "institution_channel",
+        "label": "Partner-college enrollment required",
+        "details": "Students must attend or plan to attend a TheDream.US partner college."
+      }
+    ],
+    "pat-tillman-foundation-scholarship": [
+      {
+        "kind": "military_affiliation",
+        "label": "Military service or spouse affiliation required",
+        "details": "Eligibility is limited to veterans, active-duty service members, and current or surviving military spouses."
+      }
+    ],
+    "amvets-national-scholarships": [
+      {
+        "kind": "military_affiliation",
+        "label": "Veteran or military-family affiliation required",
+        "details": "Eligibility depends on veteran, active-duty, spouse, child, or grandchild affiliation."
+      }
+    ],
+    "scholarships-for-military-children": [
+      {
+        "kind": "military_affiliation",
+        "label": "Military dependent ID required",
+        "details": "Applicants must be unmarried dependent children with a valid Uniformed Services ID."
+      }
+    ],
+    "folds-of-honor-higher-education": [
+      {
+        "kind": "military_affiliation",
+        "label": "Military spouse/dependent affiliation required",
+        "details": "Eligibility is limited to spouses and dependent children of qualifying service members."
+      }
+    ],
+    "dav-jesse-brown-memorial-youth": [
+      {
+        "kind": "family_or_affiliation",
+        "label": "DAV volunteer service required",
+        "details": "Applicants must have at least 100 lifetime volunteer hours serving veterans through DAV or DAV Auxiliary."
+      }
+    ],
+    "jacl-national-scholarship": [
+      {
+        "kind": "membership",
+        "label": "JACL membership required",
+        "details": "Applicants must hold an individual, student, or youth JACL membership."
+      }
+    ],
+    "knights-of-columbus-pro-deo-pro-patria": [
+      {
+        "kind": "family_or_affiliation",
+        "label": "Knights of Columbus affiliation required",
+        "details": "Applicants must be a qualifying Knights of Columbus member, child of a member, or Columbian Squire."
+      }
+    ],
+    "carson-scholars": [
+      {
+        "kind": "nomination",
+        "label": "School nomination required",
+        "details": "Students must be nominated by a school official and cannot self-apply."
+      }
+    ],
+    "rotary-global-grant-scholarship": [
+      {
+        "kind": "nomination",
+        "label": "Rotary club/district sponsorship required",
+        "details": "Applicants need endorsement and sponsorship through a Rotary club or district process."
+      }
+    ],
+    "elks-legacy-awards": [
+      {
+        "kind": "family_or_affiliation",
+        "label": "Elks family affiliation required",
+        "details": "Applicants must be the child, grandchild, step-relative, or legal ward of a qualifying Elks member."
+      }
+    ],
+    "churchill-scholarship": [
+      {
+        "kind": "nomination",
+        "label": "Institution nomination required",
+        "details": "Applicants must be nominated by a participating U.S. institution."
+      },
+      {
+        "kind": "institution_channel",
+        "label": "Participating institution required",
+        "details": "Only students from participating institutions can use the U.S. nomination process."
+      }
+    ]
+  }
+}

@@ -915,6 +915,8 @@ textarea:focus {
 .tier-section { display: flex; flex-direction: column; gap: 0.75rem; }
 .tier-heading { margin: 0.65rem 0 0; color: var(--ink-soft); font-size: 0.9rem; font-weight: 700; }
 .tier-heading.possible { color: var(--muted); }
+.tier-heading.special { color: #d9c8ff; }
+.tier-note { max-width: 82ch; margin: -0.35rem 0 0.15rem; color: var(--muted); font-size: 0.82rem; line-height: 1.5; }
 
 .match-card {
   position: relative;
@@ -931,6 +933,7 @@ textarea:focus {
 .match-card:hover { border-color: rgba(107, 220, 255, 0.44); box-shadow: var(--shadow), 0 0 34px rgba(107, 220, 255, 0.08); transform: translateY(-3px); }
 .match-card.strong .path-bar { background: linear-gradient(180deg, var(--cyan), var(--forest-dark)); }
 .match-card.possible .path-bar { background: linear-gradient(180deg, #f0c476, var(--sun)); }
+.match-card.special .path-bar { background: linear-gradient(180deg, var(--violet), #f0c476); }
 .match-card.saved .path-bar { background: linear-gradient(180deg, rgba(175, 194, 245, 0.5), rgba(175, 194, 245, 0.18)); }
 .path-bar { min-height: 100%; }
 
@@ -950,12 +953,14 @@ textarea:focus {
 .fit-ring-value { fill: none; stroke-width: 6; stroke-linecap: round; stroke-dasharray: var(--circ); stroke-dashoffset: calc(var(--circ) - var(--dash)); }
 .match-card.strong .fit-ring-value { stroke: var(--forest); }
 .match-card.possible .fit-ring-value { stroke: var(--sun); }
+.match-card.special .fit-ring-value { stroke: var(--violet); }
 .fit-ring-num { position: absolute; inset: 0; display: grid; place-content: center; gap: 0.04rem; text-align: center; line-height: 1; }
 .fit-ring-num strong { font-family: var(--font-display); font-size: 1.25rem; font-weight: 600; color: var(--ink); }
 .fit-ring-num span { font-size: 0.52rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted-light); }
 .fit-ring-label { font-size: 0.66rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; white-space: nowrap; }
 .match-card.strong .fit-ring-label { color: var(--forest); }
 .match-card.possible .fit-ring-label { color: var(--sun); }
+.match-card.special .fit-ring-label { color: #d9c8ff; }
 html.motion-ready .fit-ring-value { stroke-dashoffset: var(--circ); animation: ring-draw 900ms 140ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
 @keyframes ring-draw { to { stroke-dashoffset: calc(var(--circ) - var(--dash)); } }
 
@@ -972,6 +977,7 @@ html.motion-ready .fit-ring-value { stroke-dashoffset: var(--circ); animation: r
 
 .tier-count { display: inline-grid; min-width: 1.4rem; height: 1.4rem; padding: 0 0.4rem; place-content: center; border-radius: 999px; background: rgba(107, 220, 255, 0.1); color: var(--cyan); font-family: var(--font-body); font-size: 0.72rem; font-weight: 700; vertical-align: 0.12em; }
 .tier-heading.possible .tier-count { background: var(--sun-soft); color: #ffd48a; }
+.tier-heading.special .tier-count { background: rgba(139, 108, 255, 0.18); color: #d9c8ff; }
 
 .score-breakdown,
 .badge-row { display: flex; flex-wrap: wrap; gap: 0.38rem; }
@@ -982,6 +988,18 @@ html.motion-ready .fit-ring-value { stroke-dashoffset: var(--circ); animation: r
 .badge-unverified { color: var(--muted); background: rgba(255, 255, 255, 0.06); }
 .badge-school { color: #d8e6ff; background: rgba(139, 108, 255, 0.18); letter-spacing: 0; }
 .badge-school-match { color: #07101c; background: linear-gradient(135deg, var(--cyan), var(--violet)); letter-spacing: 0; }
+.badge-special { color: #f4eaff; background: rgba(139, 108, 255, 0.22); letter-spacing: 0; }
+
+.special-requirements {
+  padding: 0.82rem 0.9rem;
+  border: 1px solid rgba(139, 108, 255, 0.34);
+  border-radius: var(--radius-sm);
+  background: linear-gradient(180deg, rgba(139, 108, 255, 0.14), rgba(242, 179, 92, 0.055));
+}
+.special-requirements-heading { margin: 0 0 0.45rem; color: #d9c8ff; font-size: 0.74rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
+.special-requirements-list { margin: 0; padding-left: 1.05rem; color: var(--ink-soft); font-size: 0.79rem; line-height: 1.48; }
+.special-requirements-list li + li { margin-top: 0.35rem; }
+.special-requirements-list strong { color: var(--ink); }
 
 /* Legal pages */
 .brand-link { text-decoration: none; color: inherit; }

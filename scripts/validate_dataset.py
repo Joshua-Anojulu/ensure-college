@@ -150,6 +150,9 @@ def audit_dataset(scholarships: list[Scholarship], today: date | None = None) ->
         "total": len(scholarships),
         "verified": verified,
         "unverified": len(scholarships) - verified,
+        "special_requirements": sum(
+            1 for s in scholarships if s.eligibility.special_requirements
+        ),
         "estimated_deadlines": estimated,
         "with_provenance": with_provenance,
         "verified_with_audit_date": verified_with_audit_date,
@@ -176,6 +179,7 @@ def main() -> int:
     print(f"Scholarships: {stats['total']}")
     print(f"  verified:   {stats['verified']}")
     print(f"  unverified: {stats['unverified']}")
+    print(f"  special-check lane: {stats['special_requirements']}")
     print(f"  estimated deadlines: {stats['estimated_deadlines']}")
     print(f"  records with official source: {stats['with_provenance']}")
     print(f"  verified records with audit date: {stats['verified_with_audit_date']}")

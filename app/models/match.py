@@ -3,6 +3,8 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
+from app.models.scholarship import SpecialRequirement
+
 
 class ScoreBreakdown(BaseModel):
     """Points contributed by each scored factor (gates are not included)."""
@@ -38,7 +40,10 @@ class MatchResult(BaseModel):
     )
     score: float = Field(description="Sum of fit-related score_breakdown components.")
     match_tier: Literal["strong", "possible"] = Field(
-        description="Frontend grouping band: strong for high-confidence fits, possible for weaker fits.",
+        description=(
+            "Frontend grouping band: strong for high-confidence fits, possible for "
+            "weaker fits or opportunities with extra eligibility checks."
+        ),
     )
     match_reasons: list[str]
     score_breakdown: ScoreBreakdown
@@ -46,3 +51,8 @@ class MatchResult(BaseModel):
         default_factory=list,
         description="Institution names this award is restricted to; empty if not school-specific.",
     )
+    requires_special_check: bool = Field(
+        default=False,
+        description="True when niche eligibility requirements need manual confirmation.",
+    )
+    special_requirements: list[SpecialRequirement] = Field(default_factory=list)

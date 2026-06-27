@@ -45,6 +45,23 @@ class ApplicationRequirement(BaseModel):
     source_url: HttpUrl | None = None
 
 
+class SpecialRequirement(BaseModel):
+    """A niche eligibility condition the current profile form cannot verify."""
+
+    kind: Literal[
+        "competition_or_finalist",
+        "nomination",
+        "membership",
+        "family_or_affiliation",
+        "military_affiliation",
+        "tribal_affiliation",
+        "institution_channel",
+        "no_direct_application",
+    ]
+    label: str = Field(min_length=1, max_length=120)
+    details: str = Field(min_length=1, max_length=400)
+
+
 class Eligibility(BaseModel):
     """Rules used by the matching algorithm to score student fit."""
 
@@ -75,6 +92,13 @@ class Eligibility(BaseModel):
         description=(
             "Institutions where this award is available. Empty means the award is not "
             "school-specific."
+        ),
+    )
+    special_requirements: list[SpecialRequirement] = Field(
+        default_factory=list,
+        description=(
+            "Niche eligibility gates not captured by the profile form, such as "
+            "membership, nomination, finalist status, or military/tribal affiliation."
         ),
     )
 

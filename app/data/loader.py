@@ -5,7 +5,15 @@ from app.models.program import SummerProgram
 from app.models.scholarship import Scholarship
 
 DEFAULT_DATA_PATH = Path(__file__).parent / "scholarships.json"
+DEFAULT_SPECIAL_REQUIREMENTS_PATH = Path(__file__).parent / "special_requirements.json"
 DEFAULT_PROGRAMS_PATH = Path(__file__).parent / "summer_programs.json"
+
+
+def _load_special_requirements(path: Path = DEFAULT_SPECIAL_REQUIREMENTS_PATH) -> dict[str, list[dict]]:
+    if not path.exists():
+        return {}
+    raw = json.loads(path.read_text(encoding="utf-8"))
+    return raw.get("requirements", {})
 
 
 def load_scholarships(path: Path | None = None) -> list[Scholarship]:
@@ -15,6 +23,14 @@ def load_scholarships(path: Path | None = None) -> list[Scholarship]:
     """
     data_path = path or DEFAULT_DATA_PATH
     raw = json.loads(data_path.read_text(encoding="utf-8"))
+    if path is None:
+        special_requirements = _load_special_requirements()
+        for entry in raw["scholarships"]:
+            requirements = special_requirements.get(entry["id"])
+            if requirements:
+                eligibility = entry.setdefault("eligibility", {})
+                existing = eligibility.get("special_requirements", [])
+                eligibility["special_requirements"] = [*existing, *requirements]
     return [Scholarship.model_validate(entry) for entry in raw["scholarships"]]
 
 

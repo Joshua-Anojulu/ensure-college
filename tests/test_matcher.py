@@ -279,6 +279,31 @@ class TestMatchTier:
             in result.match_reasons
         )
 
+    def test_special_requirement_caps_strong_match_and_flags_manual_check(self):
+        student = make_student()
+        scholarship = make_scholarship(
+            eligibility={
+                "fields_of_study": ["engineering"],
+                "demographics": ["african_american"],
+                "special_requirements": [
+                    {
+                        "kind": "competition_or_finalist",
+                        "label": "ISEF finalist only",
+                        "details": "Must already be a Regeneron ISEF finalist.",
+                    }
+                ],
+            },
+        )
+
+        result = match_one(student, scholarship)
+
+        assert result is not None
+        assert result.score == pytest.approx(65.0)
+        assert result.match_tier == "possible"
+        assert result.requires_special_check is True
+        assert result.special_requirements[0].label == "ISEF finalist only"
+        assert any("Special eligibility to check" in reason for reason in result.match_reasons)
+
 
 class TestTargetSchoolMatching:
     def test_target_school_alias_adds_points_and_reason(self):
