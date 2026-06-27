@@ -1,4 +1,4 @@
-"""Audit app/data/scholarships.json for structural and vocabulary issues.
+"""Audit app/data/scholarships.json and app/data/summer_programs.json.
 
 Run:  python scripts/validate_dataset.py
 
@@ -18,8 +18,9 @@ from pathlib import Path
 # Allow running as a plain script: python scripts/validate_dataset.py
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from app.data.loader import load_scholarships  # noqa: E402
+from app.data.loader import load_scholarships, load_summer_programs  # noqa: E402
 from app.matching.matcher import _parse_iso_deadline  # noqa: E402
+from app.models.program import SummerProgram  # noqa: E402
 from app.models.scholarship import Scholarship  # noqa: E402
 from app.vocabulary import (  # noqa: E402
     DEMOGRAPHIC_TAG_VALUES,
@@ -171,10 +172,95 @@ def audit_dataset(scholarships: list[Scholarship], today: date | None = None) ->
     }
 
 
+def audit_programs(programs: list[SummerProgram], today: date | None = None) -> dict:
+    """Return structural errors/warnings for the elite summer-program catalog."""
+    today = today or date.today()
+    errors: list[str] = []
+    warnings: list[str] = []
+    verify_counts: Counter[str] = Counter()
+
+    ids = [p.id for p in programs]
+    for pid, count in Counter(ids).items():
+        if count > 1:
+            errors.append(f"program {pid}: duplicate id appears {count} times")
+
+    for program in programs:
+        if not _deadline_ok(program.deadline):
+            errors.append(f"program {program.id}: unparseable deadline {program.deadline!r}")
+        if (
+            program.estimated_deadline is not None
+            and _parse_iso_deadline(program.estimated_deadline) is None
+        ):
+            errors.append(
+                f"program {program.id}: invalid estimated_deadline "
+                f"{program.estimated_deadline!r} (must be an ISO date)"
+            )
+
+        elig = program.eligibility
+        if isinstance(elig.min_gpa, (int, float)) and not 0.0 <= float(elig.min_gpa) <= 4.0:
+            errors.append(f"program {program.id}: min_gpa out of range ({elig.min_gpa})")
+        for field in elig.fields_of_study:
+            if field not in FIELD_OF_STUDY_VALUES:
+                warnings.append(f"program {program.id}: field_of_study not in vocabulary: {field!r}")
+        for tag in elig.demographics:
+            if tag not in DEMOGRAPHIC_TAG_VALUES:
+                warnings.append(f"program {program.id}: demographic not in vocabulary: {tag!r}")
+        for grade in elig.grade_levels:
+            if grade not in GRADE_LEVEL_VALUES:
+                warnings.append(f"program {program.id}: grade_level not in vocabulary: {grade!r}")
+        if isinstance(elig.states, list):
+            for state in elig.states:
+                if state.upper() not in STATE_CODE_VALUES:
+                    warnings.append(f"program {program.id}: state not a valid code: {state!r}")
+
+        requirement_ids = [requirement.id for requirement in program.application_requirements]
+        for requirement_id, count in Counter(requirement_ids).items():
+            if count > 1:
+                errors.append(
+                    f"program {program.id}: duplicate application requirement id "
+                    f"{requirement_id!r}"
+                )
+
+        if program.verification is not None:
+            if (
+                program.verification.last_verified_at is not None
+                and program.verification.last_verified_at > today
+            ):
+                errors.append(
+                    f"program {program.id}: last_verified_at is in the future "
+                    f"({program.verification.last_verified_at})"
+                )
+            if not program.verified:
+                warnings.append(f"program {program.id}: has verification metadata but verified is false")
+
+        if program.deadline.startswith("VERIFY"):
+            verify_counts["deadline"] += 1
+        if elig.citizenship_requirement == "VERIFY":
+            verify_counts["citizenship"] += 1
+        if program.program_format == "VERIFY":
+            verify_counts["program_format"] += 1
+        if program.cost_category == "VERIFY":
+            verify_counts["cost_category"] += 1
+
+    stats = {
+        "total": len(programs),
+        "verified": sum(1 for p in programs if p.verified),
+        "unverified": sum(1 for p in programs if not p.verified),
+        "with_checklists": sum(1 for p in programs if p.application_requirements),
+        "checklist_steps": sum(len(p.application_requirements) for p in programs),
+        "estimated_deadlines": sum(1 for p in programs if p.estimated_deadline),
+        "verify_placeholders": dict(verify_counts),
+    }
+    return {"errors": errors, "warnings": warnings, "stats": stats}
+
+
 def main() -> int:
     scholarships = load_scholarships()
+    programs = load_summer_programs()
     report = audit_dataset(scholarships)
+    program_report = audit_programs(programs)
     stats = report["stats"]
+    program_stats = program_report["stats"]
 
     print(f"Scholarships: {stats['total']}")
     print(f"  verified:   {stats['verified']}")
@@ -193,6 +279,17 @@ def main() -> int:
     for field, count in sorted(stats["verify_placeholders"].items()):
         print(f"  {field:12} {count}")
 
+    print("\nSummer programs:")
+    print(f"  total:      {program_stats['total']}")
+    print(f"  verified:   {program_stats['verified']}")
+    print(f"  unverified: {program_stats['unverified']}")
+    print(f"  with application checklists: {program_stats['with_checklists']}")
+    print(f"  checklist steps: {program_stats['checklist_steps']}")
+    print(f"  estimated deadlines: {program_stats['estimated_deadlines']}")
+    print("  VERIFY placeholders:")
+    for field, count in sorted(program_stats["verify_placeholders"].items()):
+        print(f"    {field:14} {count}")
+
     queue = report["needs_reverification_ids"]
     if queue:
         print(f"\nRe-verification queue ({len(queue)}):")
@@ -201,16 +298,19 @@ def main() -> int:
         if len(queue) > 50:
             print(f"  ... and {len(queue) - 50} more")
 
-    if report["warnings"]:
-        print(f"\nWarnings ({len(report['warnings'])}):")
-        for warning in report["warnings"][:50]:
-            print(f"  - {warning}")
-        if len(report["warnings"]) > 50:
-            print(f"  ... and {len(report['warnings']) - 50} more")
+    warnings = [*report["warnings"], *program_report["warnings"]]
+    errors = [*report["errors"], *program_report["errors"]]
 
-    if report["errors"]:
-        print(f"\nERRORS ({len(report['errors'])}):")
-        for error in report["errors"]:
+    if warnings:
+        print(f"\nWarnings ({len(warnings)}):")
+        for warning in warnings[:50]:
+            print(f"  - {warning}")
+        if len(warnings) > 50:
+            print(f"  ... and {len(warnings) - 50} more")
+
+    if errors:
+        print(f"\nERRORS ({len(errors)}):")
+        for error in errors:
             print(f"  - {error}")
         return 1
 

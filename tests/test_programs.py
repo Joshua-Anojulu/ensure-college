@@ -35,6 +35,8 @@ def test_programs_dataset_loads_and_is_verified():
         assert program.verified is True
         assert program.verification is not None
         assert program.verification.last_verified_at is not None
+        requirement_ids = [requirement.id for requirement in program.application_requirements]
+        assert len(requirement_ids) == len(set(requirement_ids))
 
 
 def test_stem_junior_matches_free_program_with_financial_bonus():
@@ -53,7 +55,18 @@ def test_grade_level_gates_out_a_non_junior():
     senior = _profile(grade_level="high_school_senior", intended_majors=["science"])
     ids = {r.program_id for r in match_programs(senior, programs, today=REF_DATE)}
     assert "mites-summer" not in ids  # MITES is juniors only
-    assert "summer-science-program" in ids  # SSP is rising seniors
+    assert "summer-science-program" not in ids  # SSP is current juniors / rising seniors
+
+
+def test_junior_matches_ssp_and_programs_include_checklists():
+    programs = load_summer_programs()
+    junior = _profile(grade_level="high_school_junior", intended_majors=["science"])
+    by_id = {r.program_id: r for r in match_programs(junior, programs, today=REF_DATE)}
+
+    assert "summer-science-program" in by_id
+    assert by_id["summer-science-program"].application_requirements
+    assert by_id["mites-summer"].essay_required is True
+    assert by_id["promys"].essay_required is True
 
 
 def test_broad_legacy_high_school_profile_does_not_match_junior_only_program():

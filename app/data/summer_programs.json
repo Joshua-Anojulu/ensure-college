@@ -19,16 +19,59 @@
         "grade_levels": ["high_school_junior"],
         "demographics": [],
         "states": "any",
-        "essay_required": false,
+        "essay_required": true,
         "citizenship_requirement": "us_citizen_or_permanent_resident"
       },
       "description": "A free six-week residential STEM program at MIT for high school juniors, with coursework in math, life sciences, physics, humanities, and a project-based elective. Students apply online during the fall of their junior year; the program actively encourages applications from underrepresented and underserved students.",
-      "application_requirements": [],
+      "application_requirements": [
+        {
+          "id": "online_application",
+          "label": "Create or resume the online MITES application",
+          "details": "MITES Summer and MITES Semester share one application; applicants can choose one or both national programs.",
+          "required": true,
+          "source_url": "https://mites.mit.edu/discover-mites/apply-to-mites/prepare-your-application-mites-summer-and-mites-semester/"
+        },
+        {
+          "id": "academic_info_transcript",
+          "label": "Enter academic information and upload an unofficial transcript",
+          "details": "The transcript should include GPA and completed courses from 9th and 10th grades plus first-quarter 11th-grade courses if available.",
+          "required": true,
+          "source_url": "https://mites.mit.edu/discover-mites/apply-to-mites/prepare-your-application-mites-summer-and-mites-semester/"
+        },
+        {
+          "id": "short_answers",
+          "label": "Complete the six short-answer responses",
+          "details": "Most short responses have a maximum of 300 words; one MITES-fit prompt is listed as 400 words max.",
+          "required": true,
+          "source_url": "https://mites.mit.edu/discover-mites/apply-to-mites/prepare-your-application-mites-summer-and-mites-semester/"
+        },
+        {
+          "id": "extracurricular_activities",
+          "label": "Report extracurricular activities",
+          "details": "MITES uses this section to understand applicants' interests and passions outside the classroom.",
+          "required": true,
+          "source_url": "https://mites.mit.edu/discover-mites/apply-to-mites/prepare-your-application-mites-summer-and-mites-semester/"
+        },
+        {
+          "id": "recommendation_requests",
+          "label": "Send three recommendation requests",
+          "details": "MITES requires one math/science teacher, one humanities teacher, and one school counselor or administrator recommendation through the online portal.",
+          "required": true,
+          "source_url": "https://mites.mit.edu/discover-mites/apply-to-mites/prepare-your-application-mites-summer-and-mites-semester/"
+        },
+        {
+          "id": "test_scores_optional",
+          "label": "Submit standardized test scores if available",
+          "details": "Test scores are not required, but MITES says applicants are strongly encouraged to submit at least one available standardized-test score.",
+          "required": false,
+          "source_url": "https://mites.mit.edu/discover-mites/apply-to-mites/prepare-your-application-mites-summer-and-mites-semester/"
+        }
+      ],
       "verified": true,
       "verification": {
         "source_url": "https://mites.mit.edu/discover-mites/mites-summer/",
         "last_verified_at": "2026-06-26",
-        "notes": "Official MITES Summer page: entirely free (students pay only transportation), residential at MIT, six weeks late June to early August, eligible to high school juniors who are U.S. citizens or permanent residents. A specific application deadline is not published (students apply during the fall of junior year), so deadline is kept as VERIFY."
+        "notes": "Official MITES Summer and MITES application pages: entirely free except transportation, residential at MIT, six weeks late June to early August, eligible to high school juniors who are U.S. citizens or permanent residents. Application checklist source confirms online application, transcript, short answers, activities, recommendations, and optional test scores. A dated upcoming-cycle deadline is not published, so deadline remains VERIFY."
       }
     },
     {
@@ -47,19 +90,62 @@
       "eligibility": {
         "min_gpa": null,
         "fields_of_study": ["science", "research", "natural_sciences"],
-        "grade_levels": ["high_school_senior"],
+        "grade_levels": ["high_school_junior"],
         "demographics": [],
         "states": "any",
         "essay_required": false,
-        "citizenship_requirement": "VERIFY"
+        "citizenship_requirement": "any"
       },
       "description": "A five-week residential research experience for rising high school seniors, with team-based research in astrophysics, biochemistry, bacterial genomics, or synthetic chemistry across multiple host college campuses. Need-based financial aid is offered.",
-      "application_requirements": [],
+      "application_requirements": [
+        {
+          "id": "online_application",
+          "label": "Submit the online SSP application",
+          "details": "The 2026 process used separate international and domestic deadlines; applications are submitted through SSP's application portal.",
+          "required": true,
+          "source_url": "https://ssp.org/application/"
+        },
+        {
+          "id": "choose_project",
+          "label": "Choose one research project",
+          "details": "Applicants must choose one project when registering and may not apply to more than one project after the deadline.",
+          "required": true,
+          "source_url": "https://ssp.org/faqs/"
+        },
+        {
+          "id": "coursework_readiness",
+          "label": "Confirm required coursework by project",
+          "details": "Relevant coursework must be taken for credit and a grade and completed by June; requirements vary by research area.",
+          "required": true,
+          "source_url": "https://ssp.org/getting-started/"
+        },
+        {
+          "id": "recommendation_form",
+          "label": "Request at least one science or math educator recommendation",
+          "details": "SSP requires one recommendation from a math or science educator; a second recommendation is not required but is highly preferred.",
+          "required": true,
+          "source_url": "https://ssp.org/faqs/"
+        },
+        {
+          "id": "transcript",
+          "label": "Track transcript submission in the portal",
+          "details": "SSP's FAQ tells applicants to use the status page to confirm required parts and references transcript-page errors for incomplete applications.",
+          "required": true,
+          "source_url": "https://ssp.org/faqs/"
+        },
+        {
+          "id": "financial_aid_after_admission",
+          "label": "Request financial aid after admission if needed",
+          "details": "Financial aid is requested after admission decisions; SSP says need is not considered in admissions.",
+          "required": false,
+          "source_url": "https://ssp.org/fees-financial-aid/"
+        }
+      ],
       "verified": true,
       "verification": {
-        "source_url": "https://ssp.org/",
+        "source_url": "https://ssp.org/application/",
         "last_verified_at": "2026-06-26",
-        "notes": "Official SSP site: five-week residential research program for rising high school seniors in astrophysics, biochemistry, bacterial genomics, or synthetic chemistry at multiple host campuses; a Fees & Financial Aid section indicates aid is offered. The specific tuition amount, application deadline, and any citizenship requirement were not stated on the homepage and are kept as VERIFY."
+        "notes": "Official SSP pages: five-week residential research program for current high-school juniors/rising seniors; applications define domestic and international applicants, so citizenship is open. Fees page confirms tuition-based cost with need-based aid and potential stipends. The 2026 deadlines are published but the next cycle is not, so deadline remains VERIFY."
       }
     },
     {
@@ -71,26 +157,63 @@
       "cost": "Tuition-based; need-based aid available up to full cost",
       "cost_category": "paid",
       "selectivity": "Highly competitive (admit rate not published)",
-      "program_format": "VERIFY",
+      "program_format": "residential",
       "location": "Boston, MA (Boston University)",
       "program_dates": "About six weeks in summer",
       "deadline": "VERIFY",
+      "estimated_deadline": "2026-02-27",
       "eligibility": {
         "min_gpa": null,
         "fields_of_study": ["mathematics"],
         "grade_levels": ["high_school"],
         "demographics": [],
         "states": "any",
-        "essay_required": false,
+        "essay_required": true,
         "citizenship_requirement": "any"
       },
       "description": "An intensive mathematics program at Boston University for strongly motivated high school students from the U.S. and around the world, focused on deep exploratory problem-solving. Need-based financial aid is available up to the full cost of participation.",
-      "application_requirements": [],
+      "application_requirements": [
+        {
+          "id": "problem_set",
+          "label": "Upload problem-set solutions as one PDF",
+          "details": "PROMYS asks applicants to submit solutions to a challenging problem set; handwritten solutions must be scanned legibly and converted to PDF.",
+          "required": true,
+          "source_url": "https://promys.org/programs/promys/for-students/application/"
+        },
+        {
+          "id": "transcript",
+          "label": "Upload a school transcript or report card",
+          "details": "PROMYS accepts an unofficial copy; homeschooled students should upload a description of courses and studies undertaken.",
+          "required": true,
+          "source_url": "https://promys.org/programs/promys/for-students/application/"
+        },
+        {
+          "id": "application_form",
+          "label": "Complete the online application form and short answers",
+          "details": "The form asks for personal short answers and summaries of problem-set solutions in text boxes.",
+          "required": true,
+          "source_url": "https://promys.org/programs/promys/for-students/application/"
+        },
+        {
+          "id": "teacher_recommendation",
+          "label": "Request a mathematics teacher recommendation",
+          "details": "Applicants enter the recommender's name and email in Submittable; PROMYS says the teacher form must be received for consideration.",
+          "required": true,
+          "source_url": "https://promys.org/programs/promys/for-students/application/"
+        },
+        {
+          "id": "financial_aid_form",
+          "label": "Have a parent or guardian complete the financial aid form if applicable",
+          "details": "Applicants seeking financial aid trigger a parent/guardian form through Submittable; PROMYS lists a separate 2026 financial-aid deadline.",
+          "required": false,
+          "source_url": "https://promys.org/programs/promys/for-students/application/"
+        }
+      ],
       "verified": true,
       "verification": {
-        "source_url": "https://promys.org/",
+        "source_url": "https://promys.org/programs/promys/for-students/",
         "last_verified_at": "2026-06-26",
-        "notes": "Official PROMYS site: mathematics program at Boston University open to motivated high school students from the U.S. and internationally (no citizenship requirement), with need-based aid up to full cost. The residential format and the next application deadline were not confirmed on the page fetched and are kept as VERIFY."
+        "notes": "Official PROMYS student/application pages: six-week residential mathematics program at Boston University for high-school students from the U.S. and around the world; 2026 dates/deadline, eligibility, cost, financial aid, and application components are published. Upcoming-cycle deadline remains VERIFY; 2026-02-27 is stored as the prior-cycle estimate."
       }
     }
   ]
