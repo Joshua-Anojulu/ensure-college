@@ -1,0 +1,97 @@
+{
+  "programs": [
+    {
+      "id": "mites-summer",
+      "name": "MITES Summer",
+      "host": "Massachusetts Institute of Technology (MIT)",
+      "subject": "STEM (math, science, engineering)",
+      "url": "https://mites.mit.edu/discover-mites/mites-summer/",
+      "cost": "Free (all program costs covered; students pay only transportation to MIT)",
+      "cost_category": "free",
+      "selectivity": "Highly competitive (admit rate not published)",
+      "program_format": "residential",
+      "location": "Cambridge, MA",
+      "program_dates": "About six weeks, late June to early August",
+      "deadline": "VERIFY",
+      "eligibility": {
+        "min_gpa": null,
+        "fields_of_study": ["science", "engineering", "mathematics"],
+        "grade_levels": ["high_school_junior"],
+        "demographics": [],
+        "states": "any",
+        "essay_required": false,
+        "citizenship_requirement": "us_citizen_or_permanent_resident"
+      },
+      "description": "A free six-week residential STEM program at MIT for high school juniors, with coursework in math, life sciences, physics, humanities, and a project-based elective. Students apply online during the fall of their junior year; the program actively encourages applications from underrepresented and underserved students.",
+      "application_requirements": [],
+      "verified": true,
+      "verification": {
+        "source_url": "https://mites.mit.edu/discover-mites/mites-summer/",
+        "last_verified_at": "2026-06-26",
+        "notes": "Official MITES Summer page: entirely free (students pay only transportation), residential at MIT, six weeks late June to early August, eligible to high school juniors who are U.S. citizens or permanent residents. A specific application deadline is not published (students apply during the fall of junior year), so deadline is kept as VERIFY."
+      }
+    },
+    {
+      "id": "summer-science-program",
+      "name": "Summer Science Program (SSP)",
+      "host": "Summer Science Program, Inc.",
+      "subject": "Hands-on science research",
+      "url": "https://ssp.org/",
+      "cost": "Tuition-based; need-based financial aid available",
+      "cost_category": "paid",
+      "selectivity": "Highly competitive (admit rate not published)",
+      "program_format": "residential",
+      "location": "Multiple U.S. host campuses",
+      "program_dates": "About five weeks in summer",
+      "deadline": "VERIFY",
+      "eligibility": {
+        "min_gpa": null,
+        "fields_of_study": ["science", "research", "natural_sciences"],
+        "grade_levels": ["high_school_senior"],
+        "demographics": [],
+        "states": "any",
+        "essay_required": false,
+        "citizenship_requirement": "VERIFY"
+      },
+      "description": "A five-week residential research experience for rising high school seniors, with team-based research in astrophysics, biochemistry, bacterial genomics, or synthetic chemistry across multiple host college campuses. Need-based financial aid is offered.",
+      "application_requirements": [],
+      "verified": true,
+      "verification": {
+        "source_url": "https://ssp.org/",
+        "last_verified_at": "2026-06-26",
+        "notes": "Official SSP site: five-week residential research program for rising high school seniors in astrophysics, biochemistry, bacterial genomics, or synthetic chemistry at multiple host campuses; a Fees & Financial Aid section indicates aid is offered. The specific tuition amount, application deadline, and any citizenship requirement were not stated on the homepage and are kept as VERIFY."
+      }
+    },
+    {
+      "id": "promys",
+      "name": "PROMYS (Program in Mathematics for Young Scientists)",
+      "host": "Boston University",
+      "subject": "Mathematics",
+      "url": "https://promys.org/",
+      "cost": "Tuition-based; need-based aid available up to full cost",
+      "cost_category": "paid",
+      "selectivity": "Highly competitive (admit rate not published)",
+      "program_format": "VERIFY",
+      "location": "Boston, MA (Boston University)",
+      "program_dates": "About six weeks in summer",
+      "deadline": "VERIFY",
+      "eligibility": {
+        "min_gpa": null,
+        "fields_of_study": ["mathematics"],
+        "grade_levels": ["high_school"],
+        "demographics": [],
+        "states": "any",
+        "essay_required": false,
+        "citizenship_requirement": "any"
+      },
+      "description": "An intensive mathematics program at Boston University for strongly motivated high school students from the U.S. and around the world, focused on deep exploratory problem-solving. Need-based financial aid is available up to the full cost of participation.",
+      "application_requirements": [],
+      "verified": true,
+      "verification": {
+        "source_url": "https://promys.org/",
+        "last_verified_at": "2026-06-26",
+        "notes": "Official PROMYS site: mathematics program at Boston University open to motivated high school students from the U.S. and internationally (no citizenship requirement), with need-based aid up to full cost. The residential format and the next application deadline were not confirmed on the page fetched and are kept as VERIFY."
+      }
+    }
+  ]
+}

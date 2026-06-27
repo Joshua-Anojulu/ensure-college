@@ -13,7 +13,7 @@ from starlette.requests import Request as StarletteRequest
 
 from app.api.account_routes import router as account_router
 from app.api.auth_routes import router as auth_router
-from app.data.loader import load_scholarships
+from app.data.loader import load_scholarships, load_summer_programs
 from app.db.database import init_db
 from app.essay.advice import (
     EssayAdviceError,
@@ -22,6 +22,7 @@ from app.essay.advice import (
 )
 from app.llm import AIFeatureError
 from app.matching.matcher import match_scholarships
+from app.matching.program_matcher import match_programs
 from app.models.essay import (
     EssayAdviceRequest,
     EssayAdviceResponse,
@@ -29,6 +30,7 @@ from app.models.essay import (
     EssayReviewResponse,
 )
 from app.models.match import MatchResult
+from app.models.program import ProgramMatchResult, SummerProgram
 from app.models.resume import ResumeExtractionResponse
 from app.models.scholarship import Scholarship
 from app.models.student import StudentProfile
@@ -122,6 +124,7 @@ def _absolute_og_image_urls(html: str, base_url: str) -> str:
 async def lifespan(app: FastAPI):
     init_db()
     app.state.scholarships = load_scholarships()
+    app.state.programs = load_summer_programs()
     yield
 
 
@@ -233,6 +236,17 @@ def get_scholarships(request: Request) -> list[Scholarship]:
 def match_student(request: Request, student: StudentProfile) -> list[MatchResult]:
     scholarships: list[Scholarship] = request.app.state.scholarships
     return match_scholarships(student, scholarships)
+
+
+@app.get("/programs")
+def get_programs(request: Request) -> list[SummerProgram]:
+    return request.app.state.programs
+
+
+@app.post("/programs/match")
+def match_summer_programs(request: Request, student: StudentProfile) -> list[ProgramMatchResult]:
+    programs: list[SummerProgram] = request.app.state.programs
+    return match_programs(student, programs)
 
 
 @app.post(
