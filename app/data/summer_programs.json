@@ -2070,6 +2070,504 @@
         "last_verified_at": "2026-06-21",
         "notes": "Official Wharton Global Youth Moneyball Academy page: residential analytics program; shares Global Youth application timeline with other on-campus programs."
       }
+    },
+    {
+      "id": "rockefeller-ssrp",
+      "name": "Rockefeller University SSRP",
+      "host": "The Rockefeller University",
+      "subject": "Biomedical research",
+      "url": "https://www.rockefeller.edu/outreach/ssrp/",
+      "cost": "Free (stipend provided)",
+      "cost_category": "stipend",
+      "selectivity": "Highly competitive",
+      "program_format": "commuter",
+      "location": "New York, NY",
+      "program_dates": "Seven weeks in summer",
+      "deadline": "VERIFY",
+      "estimated_deadline": "2027-01-02",
+      "eligibility": {
+        "min_gpa": null,
+        "fields_of_study": [
+          "science",
+          "research",
+          "health_medicine"
+        ],
+        "grade_levels": [
+          "high_school_junior",
+          "high_school_senior"
+        ],
+        "demographics": [],
+        "states": "any",
+        "essay_required": true,
+        "citizenship_requirement": "VERIFY"
+      },
+      "description": "Free seven-week biomedical research program in New York City for high school juniors and seniors age 16 or older. Jan 2, 2026 deadline has passed; next cycle estimated January 2, 2027.",
+      "application_requirements": [
+        {
+          "id": "ssrp-online-application",
+          "label": "Submit the SSRP online application",
+          "details": "Apply through the Rockefeller SSRP portal when the cycle opens.",
+          "required": true,
+          "source_url": "https://www.rockefeller.edu/outreach/ssrp/"
+        }
+      ],
+      "verified": true,
+      "verification": {
+        "source_url": "https://www.rockefeller.edu/outreach/ssrp/",
+        "last_verified_at": "2026-06-21",
+        "notes": "Official Rockefeller SSRP page: free 7-week NYC program, juniors/seniors 16+, Jan 2 2026 deadline passed."
+      }
+    },
+    {
+      "id": "cshl-partners-for-the-future",
+      "name": "CSHL Partners for the Future",
+      "host": "Cold Spring Harbor Laboratory",
+      "subject": "Biomedical research",
+      "url": "https://www.cshl.edu/education/partners-for-the-future/",
+      "cost": "Free research program",
+      "cost_category": "free",
+      "selectivity": "Highly selective; school nomination required",
+      "program_format": "commuter",
+      "location": "Long Island, NY",
+      "program_dates": "September through March research year",
+      "deadline": "VERIFY",
+      "eligibility": {
+        "min_gpa": null,
+        "fields_of_study": [
+          "science",
+          "research",
+          "health_medicine"
+        ],
+        "grade_levels": [
+          "high_school_senior"
+        ],
+        "demographics": [],
+        "states": [
+          "NY"
+        ],
+        "essay_required": true,
+        "citizenship_requirement": "VERIFY",
+        "special_requirements": [
+          {
+            "kind": "nomination",
+            "label": "Science chair nomination required",
+            "details": "Long Island high school seniors must be nominated by their school's science department chair before applying."
+          }
+        ]
+      },
+      "description": "Long Island high school seniors conduct mentored research at Cold Spring Harbor Laboratory from September through March after nomination by their school's science department chair.",
+      "application_requirements": [
+        {
+          "id": "science-chair-nomination",
+          "label": "Secure science department chair nomination",
+          "details": "The school's science chair must nominate the student before the student completes the application.",
+          "required": true,
+          "source_url": "https://www.cshl.edu/education/partners-for-the-future/"
+        },
+        {
+          "id": "student-application",
+          "label": "Complete the student application after nomination",
+          "details": "Nominated seniors submit the Partners for the Future application through CSHL.",
+          "required": true,
+          "source_url": "https://www.cshl.edu/education/partners-for-the-future/"
+        }
+      ],
+      "verified": true,
+      "verification": {
+        "source_url": "https://www.cshl.edu/education/partners-for-the-future/",
+        "last_verified_at": "2026-06-21",
+        "notes": "Official CSHL page: Long Island seniors, school science chair nomination, Sep–Mar research year."
+      }
+    },
+    {
+      "id": "mdibl-high-school-summer-fellowship",
+      "name": "MDI Biological Laboratory High School Summer Fellowship",
+      "host": "MDI Biological Laboratory",
+      "subject": "Biomedical and environmental research",
+      "url": "https://www.mdibl.org/education/high-school/",
+      "cost": "Stipend provided",
+      "cost_category": "stipend",
+      "selectivity": "Highly selective (up to 10 fellows)",
+      "program_format": "hybrid",
+      "location": "Bar Harbor, ME",
+      "program_dates": "Seven weeks in summer",
+      "deadline": "VERIFY",
+      "eligibility": {
+        "min_gpa": null,
+        "fields_of_study": [
+          "science",
+          "research",
+          "health_medicine"
+        ],
+        "grade_levels": [
+          "high_school_junior",
+          "high_school_senior"
+        ],
+        "demographics": [],
+        "states": "any",
+        "essay_required": true,
+        "citizenship_requirement": "VERIFY"
+      },
+      "description": "Seven-week paid research fellowship for up to 10 high school students. Commuters must be age 16+; residential participants must be age 18+.",
+      "application_requirements": [
+        {
+          "id": "mdibl-application",
+          "label": "Submit the MDIBL high school fellowship application",
+          "details": "Apply through the official MDIBL high school education page when the cycle opens.",
+          "required": true,
+          "source_url": "https://www.mdibl.org/education/high-school/"
+        }
+      ],
+      "verified": true,
+      "verification": {
+        "source_url": "https://www.mdibl.org/education/high-school/",
+        "last_verified_at": "2026-06-21",
+        "notes": "Official MDIBL FAQ: up to 10 fellows, 7 weeks, stipend, age 16 commuter/18 resident."
+      }
+    },
+    {
+      "id": "jhu-cty-on-campus-summer",
+      "name": "Johns Hopkins CTY On-Campus Summer Programs",
+      "host": "Johns Hopkins Center for Talented Youth (CTY)",
+      "subject": "Academic enrichment (multiple subjects)",
+      "url": "https://cty.jhu.edu/programs/on-campus",
+      "cost": "Tuition-based; financial aid available",
+      "cost_category": "paid",
+      "selectivity": "Varies by course; test-score eligibility for many courses",
+      "program_format": "hybrid",
+      "location": "Multiple U.S. campuses",
+      "program_dates": "Multi-week summer sessions",
+      "deadline": "VERIFY",
+      "eligibility": {
+        "min_gpa": null,
+        "fields_of_study": [],
+        "grade_levels": [
+          "middle_school",
+          "high_school_freshman",
+          "high_school_sophomore",
+          "high_school_junior",
+          "high_school_senior"
+        ],
+        "demographics": [],
+        "states": "any",
+        "essay_required": false,
+        "citizenship_requirement": "any",
+        "special_requirements": [
+          {
+            "kind": "competition_or_finalist",
+            "label": "Test-score eligibility for many courses",
+            "details": "Many CTY courses require qualifying scores on approved grade-level tests or CTY's own assessments before registration."
+          }
+        ]
+      },
+      "description": "Day and residential summer courses for grades 2–12 at multiple campuses. Many courses require qualifying test scores or CTY eligibility assessments.",
+      "application_requirements": [
+        {
+          "id": "cty-eligibility",
+          "label": "Establish CTY eligibility",
+          "details": "Submit qualifying test scores or complete CTY's eligibility process before enrolling in score-gated courses.",
+          "required": true,
+          "source_url": "https://cty.jhu.edu/programs/on-campus"
+        },
+        {
+          "id": "course-registration",
+          "label": "Register for on-campus summer courses",
+          "details": "Enroll in chosen day or residential courses through the CTY registration portal.",
+          "required": true,
+          "source_url": "https://cty.jhu.edu/programs/on-campus"
+        }
+      ],
+      "verified": true,
+      "verification": {
+        "source_url": "https://cty.jhu.edu/programs/on-campus",
+        "last_verified_at": "2026-06-21",
+        "notes": "Official CTY page: grades 2–12 day/residential, test-score eligibility for many courses."
+      }
+    },
+    {
+      "id": "northwestern-ctd-summer",
+      "name": "Northwestern CTD Summer Programs",
+      "host": "Northwestern University Center for Talent Development (CTD)",
+      "subject": "Academic enrichment (multiple subjects)",
+      "url": "https://www.ctd.northwestern.edu/summer",
+      "cost": "Tuition-based; financial aid available",
+      "cost_category": "paid",
+      "selectivity": "Varies by program",
+      "program_format": "hybrid",
+      "location": "Evanston, IL and online",
+      "program_dates": "Multi-week summer sessions",
+      "deadline": "VERIFY",
+      "eligibility": {
+        "min_gpa": null,
+        "fields_of_study": [],
+        "grade_levels": [
+          "middle_school",
+          "high_school_freshman",
+          "high_school_sophomore",
+          "high_school_junior",
+          "high_school_senior"
+        ],
+        "demographics": [],
+        "states": "any",
+        "essay_required": false,
+        "citizenship_requirement": "any"
+      },
+      "description": "PreK–12 summer enrichment with day, residential, and online options through Northwestern CTD. Course eligibility varies by grade and assessment pathway.",
+      "application_requirements": [
+        {
+          "id": "ctd-application",
+          "label": "Apply or register through CTD",
+          "details": "Submit the CTD summer application or registration for chosen day, residential, or online programs.",
+          "required": true,
+          "source_url": "https://www.ctd.northwestern.edu/summer"
+        }
+      ],
+      "verified": true,
+      "verification": {
+        "source_url": "https://www.ctd.northwestern.edu/summer",
+        "last_verified_at": "2026-06-21",
+        "notes": "Official Northwestern CTD page: grades preK–12 day/residential/online summer programs."
+      }
+    },
+    {
+      "id": "georgia-tech-ceismc-summer-peaks",
+      "name": "Georgia Tech CEISMC Summer PEAKS",
+      "host": "Georgia Tech CEISMC",
+      "subject": "STEM enrichment",
+      "url": "https://expandedlearning.ceismc.gatech.edu/",
+      "cost": "$400–$550",
+      "cost_category": "paid",
+      "selectivity": "Open enrollment (course-dependent)",
+      "program_format": "commuter",
+      "location": "Atlanta, GA",
+      "program_dates": "One-week summer sessions",
+      "deadline": "VERIFY",
+      "eligibility": {
+        "min_gpa": null,
+        "fields_of_study": [
+          "science",
+          "engineering",
+          "technology",
+          "mathematics"
+        ],
+        "grade_levels": [
+          "high_school_freshman",
+          "high_school_sophomore",
+          "high_school_junior",
+          "high_school_senior"
+        ],
+        "demographics": [],
+        "states": "any",
+        "essay_required": false,
+        "citizenship_requirement": "any"
+      },
+      "description": "One-week STEM enrichment programs at Georgia Tech for rising high school freshmen through seniors. Tuition is typically $400–$550 per session.",
+      "application_requirements": [
+        {
+          "id": "peaks-registration",
+          "label": "Register for Summer PEAKS sessions",
+          "details": "Enroll through the CEISMC expanded learning portal when registration opens.",
+          "required": true,
+          "source_url": "https://expandedlearning.ceismc.gatech.edu/"
+        }
+      ],
+      "verified": true,
+      "verification": {
+        "source_url": "https://expandedlearning.ceismc.gatech.edu/",
+        "last_verified_at": "2026-06-21",
+        "notes": "Official CEISMC page: rising grades 9–12, $400–$550 per session."
+      }
+    },
+    {
+      "id": "georgia-tech-summer-institute",
+      "name": "Georgia Tech Summer Institute (GTSI)",
+      "host": "Georgia Tech CEISMC",
+      "subject": "STEM residential institute",
+      "url": "https://expandedlearning.ceismc.gatech.edu/summer-institute",
+      "cost": "Free for qualifying students",
+      "cost_category": "free",
+      "selectivity": "Highly selective; nomination-style admission",
+      "program_format": "residential",
+      "location": "Atlanta, GA",
+      "program_dates": "June 22–26, 2026 (example session)",
+      "deadline": "VERIFY",
+      "eligibility": {
+        "min_gpa": null,
+        "fields_of_study": [
+          "science",
+          "engineering",
+          "technology",
+          "mathematics"
+        ],
+        "grade_levels": [
+          "high_school_junior"
+        ],
+        "demographics": [],
+        "states": [
+          "GA"
+        ],
+        "essay_required": true,
+        "citizenship_requirement": "VERIFY",
+        "special_requirements": [
+          {
+            "kind": "institution_channel",
+            "label": "School metrics and nomination-style selection",
+            "details": "Rising 11th graders must meet free/reduced lunch, top 10% class rank, and precalculus readiness criteria through school-based selection."
+          }
+        ]
+      },
+      "description": "Selective residential STEM institute for rising Georgia 11th graders who qualify through free/reduced lunch status, top 10% class standing, and precalculus readiness. Example 2026 session runs June 22–26.",
+      "application_requirements": [
+        {
+          "id": "school-selection-process",
+          "label": "Apply through the school-based selection process",
+          "details": "Students are identified through school metrics including lunch status, class rank, and math readiness.",
+          "required": true,
+          "source_url": "https://expandedlearning.ceismc.gatech.edu/summer-institute"
+        }
+      ],
+      "verified": true,
+      "verification": {
+        "source_url": "https://expandedlearning.ceismc.gatech.edu/summer-institute",
+        "last_verified_at": "2026-06-21",
+        "notes": "Official CEISMC Summer Institute page: rising 11th, residential June 22–26 2026, free/reduced lunch + top 10% + precalc, nomination-style selective admission."
+      }
+    },
+    {
+      "id": "wharton-data-science-academy",
+      "name": "Wharton Data Science Academy",
+      "host": "Wharton Global Youth Program (University of Pennsylvania)",
+      "subject": "Data science and business analytics",
+      "url": "https://globalyouth.wharton.upenn.edu/programs-services/data-science-academy/",
+      "cost": "Tuition-based residential program",
+      "cost_category": "paid",
+      "selectivity": "Competitive",
+      "program_format": "residential",
+      "location": "Philadelphia, PA",
+      "program_dates": "Three weeks in summer",
+      "deadline": "VERIFY",
+      "estimated_deadline": "2027-01-28",
+      "eligibility": {
+        "min_gpa": null,
+        "fields_of_study": [
+          "business",
+          "computer_science",
+          "mathematics"
+        ],
+        "grade_levels": [
+          "high_school_sophomore",
+          "high_school_junior"
+        ],
+        "demographics": [],
+        "states": "any",
+        "essay_required": true,
+        "citizenship_requirement": "any"
+      },
+      "description": "Three-week residential data science program at Wharton for grades 10–11. Priority deadline was January 28, 2026; next cycle estimated January 28, 2027.",
+      "application_requirements": [
+        {
+          "id": "wharton-dsa-application",
+          "label": "Submit the Wharton Data Science Academy application",
+          "details": "Apply through the Global Youth portal when the cycle opens.",
+          "required": true,
+          "source_url": "https://globalyouth.wharton.upenn.edu/programs-services/data-science-academy/"
+        }
+      ],
+      "verified": true,
+      "verification": {
+        "source_url": "https://globalyouth.wharton.upenn.edu/programs-services/data-science-academy/",
+        "last_verified_at": "2026-06-21",
+        "notes": "Official Wharton Global Youth page: grades 10–11, 3 weeks, priority Jan 28 2026; est 2027-01-28 next cycle."
+      }
+    },
+    {
+      "id": "wharton-essentials-of-finance",
+      "name": "Wharton Essentials of Finance",
+      "host": "Wharton Global Youth Program (University of Pennsylvania)",
+      "subject": "Finance and business",
+      "url": "https://globalyouth.wharton.upenn.edu/programs-services/essentials-of-finance/",
+      "cost": "Tuition-based residential program",
+      "cost_category": "paid",
+      "selectivity": "Competitive",
+      "program_format": "residential",
+      "location": "Philadelphia, PA",
+      "program_dates": "Two weeks in summer",
+      "deadline": "VERIFY",
+      "estimated_deadline": "2027-01-28",
+      "eligibility": {
+        "min_gpa": null,
+        "fields_of_study": [
+          "business",
+          "mathematics"
+        ],
+        "grade_levels": [
+          "high_school_freshman",
+          "high_school_sophomore",
+          "high_school_junior"
+        ],
+        "demographics": [],
+        "states": "any",
+        "essay_required": true,
+        "citizenship_requirement": "any"
+      },
+      "description": "Two-week residential finance program at Wharton for grades 9–11. 2026 applications were closed at verification; next cycle estimated January 28, 2027.",
+      "application_requirements": [
+        {
+          "id": "wharton-eof-application",
+          "label": "Submit the Wharton Essentials of Finance application",
+          "details": "Apply through the Global Youth portal when the cycle opens.",
+          "required": true,
+          "source_url": "https://globalyouth.wharton.upenn.edu/programs-services/essentials-of-finance/"
+        }
+      ],
+      "verified": true,
+      "verification": {
+        "source_url": "https://globalyouth.wharton.upenn.edu/programs-services/essentials-of-finance/",
+        "last_verified_at": "2026-06-21",
+        "notes": "Official Wharton Global Youth page: grades 9–11, 2 weeks, 2026 apps closed; est 2027-01-28 next cycle."
+      }
+    },
+    {
+      "id": "harvard-secondary-school-program",
+      "name": "Harvard Secondary School Program",
+      "host": "Harvard Summer School",
+      "subject": "Credit-bearing college courses",
+      "url": "https://summer.harvard.edu/programs/secondary-school-program/",
+      "cost": "Tuition-based; financial aid available",
+      "cost_category": "paid",
+      "selectivity": "Selective admission",
+      "program_format": "hybrid",
+      "location": "Cambridge, MA",
+      "program_dates": "Four- or seven-week credit-bearing sessions",
+      "deadline": "VERIFY",
+      "eligibility": {
+        "min_gpa": null,
+        "fields_of_study": [],
+        "grade_levels": [
+          "high_school_junior",
+          "high_school_senior"
+        ],
+        "demographics": [],
+        "states": "any",
+        "essay_required": true,
+        "citizenship_requirement": "any"
+      },
+      "description": "Credit-bearing Harvard Summer School program offering four- or seven-week sessions for motivated high school students age 16 or older by June 20 of the program year.",
+      "application_requirements": [
+        {
+          "id": "ssp-application",
+          "label": "Submit the Secondary School Program application",
+          "details": "Apply through Harvard Summer School when the cycle opens; include transcript and required materials.",
+          "required": true,
+          "source_url": "https://summer.harvard.edu/programs/secondary-school-program/"
+        }
+      ],
+      "verified": true,
+      "verification": {
+        "source_url": "https://summer.harvard.edu/programs/secondary-school-program/",
+        "last_verified_at": "2026-06-21",
+        "notes": "Official Harvard Summer School page: credit-bearing 4 or 7 weeks, age 16+ by Jun 20."
+      }
     }
   ]
 }

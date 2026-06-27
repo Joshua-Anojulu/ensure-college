@@ -6099,6 +6099,821 @@
         "last_verified_at": "2026-06-21",
         "notes": "Official PTK competitive scholarships page lists New Century Transfer Pathway among member-only awards."
       }
+    },
+    {
+      "id": "asme-mechanical-engineering-scholarships",
+      "name": "ASME Mechanical Engineering Scholarships",
+      "sponsor": "American Society of Mechanical Engineers (ASME)",
+      "award_amount": "Varies by award (typically $1,000–$13,000)",
+      "deadline": "VERIFY",
+      "estimated_deadline": "2027-03-15",
+      "url": "https://www.asme.org/asme-programs/students-and-faculty/scholarships",
+      "eligibility": {
+        "min_gpa": "VERIFY",
+        "fields_of_study": [
+          "engineering"
+        ],
+        "grade_levels": [
+          "high_school_senior",
+          "college_undergraduate",
+          "college_graduate"
+        ],
+        "demographics": [],
+        "states": "any",
+        "essay_required": true,
+        "citizenship_requirement": "VERIFY"
+      },
+      "description": "Universal ASME scholarship application for high school seniors and college students pursuing mechanical engineering or mechanical engineering technology at ABET-accredited or substantially equivalent programs. One application is used for all eligible ASME awards; ASME student membership is required.",
+      "application_requirements": [
+        {
+          "id": "asme-universal-application",
+          "label": "Complete the ASME universal online scholarship application",
+          "details": "Apply at go.asme.org/scholarships when the cycle opens; ASME student membership is required to log in.",
+          "required": true,
+          "source_url": "https://www.asme.org/asme-programs/students-and-faculty/scholarships"
+        },
+        {
+          "id": "asme-student-membership",
+          "label": "Hold ASME student membership",
+          "details": "Applicants must be ASME student members to access and submit the universal scholarship application.",
+          "required": true,
+          "source_url": "https://www.asme.org/asme-programs/students-and-faculty/scholarships"
+        }
+      ],
+      "verified": true,
+      "verification": {
+        "source_url": "https://www.asme.org/asme-programs/students-and-faculty/scholarships",
+        "last_verified_at": "2026-06-21",
+        "notes": "Official ASME page: one universal application for HS seniors and college ME/MET students; membership required; 2026-27 cycle closed at verification."
+      }
+    },
+    {
+      "id": "ieee-lance-stafford-larson-student-award",
+      "name": "IEEE Lance Stafford Larson Student Award",
+      "sponsor": "IEEE",
+      "award_amount": 500,
+      "deadline": "VERIFY",
+      "url": "https://students.ieee.org/awards-scholarships/lance-stafford-larson-student-award/",
+      "eligibility": {
+        "min_gpa": null,
+        "fields_of_study": [
+          "computer_science"
+        ],
+        "grade_levels": [
+          "college_undergraduate",
+          "college_graduate"
+        ],
+        "demographics": [],
+        "states": "any",
+        "essay_required": true,
+        "citizenship_requirement": "any"
+      },
+      "description": "$500 award for IEEE student members who submit the winning paper in the annual Lance Stafford Larson Student Paper Contest, open October 1–31 each year to undergraduate and graduate students in computer science and related IEEE fields.",
+      "application_requirements": [
+        {
+          "id": "ieee-student-membership",
+          "label": "Hold IEEE student membership",
+          "details": "Applicants must be IEEE student members at the time of paper submission.",
+          "required": true,
+          "source_url": "https://students.ieee.org/awards-scholarships/lance-stafford-larson-student-award/"
+        },
+        {
+          "id": "larson-paper-contest",
+          "label": "Submit a contest paper during the October window",
+          "details": "Enter the annual paper contest October 1–31; winners are selected from submitted papers.",
+          "required": true,
+          "source_url": "https://students.ieee.org/awards-scholarships/lance-stafford-larson-student-award/"
+        }
+      ],
+      "verified": true,
+      "verification": {
+        "source_url": "https://students.ieee.org/awards-scholarships/lance-stafford-larson-student-award/",
+        "last_verified_at": "2026-06-21",
+        "notes": "Official IEEE Students page: $500 award, IEEE student membership required, annual paper contest Oct 1–31, undergrad and grad computer science students."
+      }
+    },
+    {
+      "id": "wells-fargo-stacey-milbern-scholarship",
+      "name": "Wells Fargo Stacey Milbern Scholarship",
+      "sponsor": "Wells Fargo (Scholarship America)",
+      "award_amount": "$2,500 full-time / $1,250 part-time",
+      "deadline": "VERIFY",
+      "url": "https://www.scholarshipamerica.org/scholarship/pwdscholarship/",
+      "eligibility": {
+        "min_gpa": 3.0,
+        "fields_of_study": [],
+        "grade_levels": [
+          "high_school_senior",
+          "college_undergraduate"
+        ],
+        "demographics": [],
+        "states": "any",
+        "essay_required": true,
+        "citizenship_requirement": "us_citizen_or_permanent_resident"
+      },
+      "description": "Scholarships for students with a documented disability pursuing an undergraduate degree at an accredited two- or four-year college or vocational program. Requires 3.0 GPA and U.S. citizenship or permanent residency.",
+      "application_requirements": [
+        {
+          "id": "scholarship-america-application",
+          "label": "Complete the Scholarship America online application",
+          "details": "Apply through the official Scholarship America portal when the cycle opens.",
+          "required": true,
+          "source_url": "https://www.scholarshipamerica.org/scholarship/pwdscholarship/"
+        }
+      ],
+      "verified": true,
+      "verification": {
+        "source_url": "https://www.scholarshipamerica.org/scholarship/pwdscholarship/",
+        "last_verified_at": "2026-06-21",
+        "notes": "Official Scholarship America page: $2,500 full-time / $1,250 part-time, disability eligibility, 3.0 GPA, U.S. citizen or permanent resident; next-cycle deadline not published at verification."
+      }
+    },
+    {
+      "id": "wells-fargo-veterans-scholarship",
+      "name": "Wells Fargo Veterans Scholarship",
+      "sponsor": "Wells Fargo (Scholarship America)",
+      "award_amount": "up to $5,000 (renewable)",
+      "deadline": "VERIFY",
+      "url": "https://www.scholarshipamerica.org/scholarship/wellsfargoveterans/",
+      "eligibility": {
+        "min_gpa": null,
+        "fields_of_study": [],
+        "grade_levels": [
+          "high_school_senior",
+          "college_undergraduate"
+        ],
+        "demographics": [],
+        "states": "any",
+        "essay_required": true,
+        "citizenship_requirement": "us_citizen_or_permanent_resident"
+      },
+      "description": "Renewable scholarships up to $5,000 per year for U.S. veterans, spouses of disabled veterans, and widows/widowers of service members who died in service or from service-connected disabilities.",
+      "application_requirements": [
+        {
+          "id": "scholarship-america-application",
+          "label": "Complete the Scholarship America online application",
+          "details": "Apply through the official Wells Fargo Veterans Scholarship portal when the cycle opens.",
+          "required": true,
+          "source_url": "https://www.scholarshipamerica.org/scholarship/wellsfargoveterans/"
+        }
+      ],
+      "verified": true,
+      "verification": {
+        "source_url": "https://www.scholarshipamerica.org/scholarship/wellsfargoveterans/",
+        "last_verified_at": "2026-06-21",
+        "notes": "Official Scholarship America page: up to $5,000 renewable for veterans, veteran spouses, and qualifying widows/widowers; next-cycle deadline not published at verification."
+      }
+    },
+    {
+      "id": "discover-scholarship-sweepstakes",
+      "name": "Discover Scholarship Sweepstakes",
+      "sponsor": "Discover Financial Services",
+      "award_amount": 5000,
+      "deadline": "VERIFY",
+      "url": "https://www.discover.com/scholarships/",
+      "eligibility": {
+        "min_gpa": null,
+        "fields_of_study": [],
+        "grade_levels": [
+          "high_school",
+          "college_undergraduate"
+        ],
+        "demographics": [],
+        "states": "any",
+        "essay_required": false,
+        "citizenship_requirement": "VERIFY"
+      },
+      "description": "No-essay monthly $5,000 sweepstakes open to U.S. residents age 18 or older, including U.S. territories. Official rules describe rolling monthly entry periods through August 2026.",
+      "application_requirements": [
+        {
+          "id": "discover-sweepstakes-entry",
+          "label": "Submit a monthly sweepstakes entry",
+          "details": "Enter online at discover.com/scholarships during the active monthly entry period; no essay required.",
+          "required": true,
+          "source_url": "https://www.discover.com/scholarships/"
+        }
+      ],
+      "verified": true,
+      "verification": {
+        "source_url": "https://www.discover.com/scholarships/",
+        "last_verified_at": "2026-06-21",
+        "notes": "Official Discover page: $5,000 monthly no-essay sweepstakes, age 18+, U.S. residents including territories; rolling monthly periods through Aug 2026 per official rules."
+      }
+    },
+    {
+      "id": "ams-first-year-undergraduate-scholarship",
+      "name": "AMS First-Year Undergraduate Scholarship",
+      "sponsor": "American Meteorological Society (AMS)",
+      "award_amount": "$5,000 split over freshman and sophomore years",
+      "deadline": "VERIFY",
+      "estimated_deadline": "2027-02-06",
+      "url": "https://www.ametsoc.org/index.cfm/ams/in-your-community/students/ams-scholarships/ams-first-year-undergraduate-scholarship/",
+      "eligibility": {
+        "min_gpa": 3.0,
+        "fields_of_study": [
+          "natural_sciences",
+          "environmental_science",
+          "science"
+        ],
+        "grade_levels": [
+          "high_school_senior"
+        ],
+        "demographics": [],
+        "states": "any",
+        "essay_required": true,
+        "citizenship_requirement": "us_citizen_or_permanent_resident"
+      },
+      "description": "$5,000 scholarship split across freshman and sophomore years for high school seniors planning to study atmospheric, oceanic, or hydrologic sciences. Requires 3.0 GPA and U.S. citizenship or permanent residency.",
+      "application_requirements": [
+        {
+          "id": "ams-online-application",
+          "label": "Complete the AMS online scholarship application",
+          "details": "Apply through the AMS scholarship portal when the cycle opens; 2026 cycle closed February 6.",
+          "required": true,
+          "source_url": "https://www.ametsoc.org/index.cfm/ams/in-your-community/students/ams-scholarships/ams-first-year-undergraduate-scholarship/"
+        }
+      ],
+      "verified": true,
+      "verification": {
+        "source_url": "https://www.ametsoc.org/index.cfm/ams/in-your-community/students/ams-scholarships/ams-first-year-undergraduate-scholarship/",
+        "last_verified_at": "2026-06-21",
+        "notes": "Official AMS page: $5,000 split over freshman+sophomore, atmospheric/oceanic/hydrologic sciences, 3.0 GPA, U.S. citizen/PR, HS seniors; 2026 cycle closed Feb 6."
+      }
+    },
+    {
+      "id": "ams-senior-named-scholarships",
+      "name": "AMS Senior Named Scholarships",
+      "sponsor": "American Meteorological Society (AMS)",
+      "award_amount": "$2,000–$10,000",
+      "deadline": "VERIFY",
+      "estimated_deadline": "2027-04-01",
+      "url": "https://www.ametsoc.org/ams/about-ams/ams-awards-honors/ams-named-scholarships/",
+      "eligibility": {
+        "min_gpa": 3.0,
+        "fields_of_study": [
+          "natural_sciences",
+          "environmental_science",
+          "science"
+        ],
+        "grade_levels": [
+          "college_junior"
+        ],
+        "demographics": [],
+        "states": "any",
+        "essay_required": true,
+        "citizenship_requirement": "us_citizen_or_permanent_resident"
+      },
+      "description": "Named scholarships of $2,000–$10,000 for college juniors entering their final undergraduate year and pursuing degrees in atmospheric sciences or related fields. Requires 3.0 GPA and U.S. citizenship or permanent residency.",
+      "application_requirements": [
+        {
+          "id": "ams-named-scholarship-application",
+          "label": "Apply for AMS senior named scholarships",
+          "details": "Submit the AMS application for senior named scholarships when the cycle opens.",
+          "required": true,
+          "source_url": "https://www.ametsoc.org/ams/about-ams/ams-awards-honors/ams-named-scholarships/"
+        }
+      ],
+      "verified": true,
+      "verification": {
+        "source_url": "https://www.ametsoc.org/ams/about-ams/ams-awards-honors/ams-named-scholarships/",
+        "last_verified_at": "2026-06-21",
+        "notes": "Official AMS page: $2,000–$10,000 named awards, college juniors entering final year, atmospheric sciences, 3.0 GPA, U.S. citizen/PR."
+      }
+    },
+    {
+      "id": "aiche-john-j-mcketta-undergraduate-scholarship",
+      "name": "AIChE John J. McKetta Undergraduate Scholarship",
+      "sponsor": "American Institute of Chemical Engineers (AIChE)",
+      "award_amount": 5000,
+      "deadline": "VERIFY",
+      "estimated_deadline": "2027-06-15",
+      "url": "https://www.aiche.org/community/awards/undergraduate-scholarship-awards/john-j-mcketta-undergraduate-scholarship",
+      "eligibility": {
+        "min_gpa": 3.0,
+        "fields_of_study": [
+          "engineering"
+        ],
+        "grade_levels": [
+          "college_junior",
+          "college_senior"
+        ],
+        "demographics": [],
+        "states": "any",
+        "essay_required": true,
+        "citizenship_requirement": "VERIFY"
+      },
+      "description": "$5,000 scholarship for rising chemical engineering juniors and seniors with a declared chemical engineering major and career interest in chemical engineering practice. Requires 3.0 GPA.",
+      "application_requirements": [
+        {
+          "id": "aiche-online-application",
+          "label": "Complete the AIChE online scholarship application",
+          "details": "Apply through the AIChE student scholarships portal by the annual June 15 deadline.",
+          "required": true,
+          "source_url": "https://www.aiche.org/community/awards/undergraduate-scholarship-awards/john-j-mcketta-undergraduate-scholarship"
+        }
+      ],
+      "verified": true,
+      "verification": {
+        "source_url": "https://www.aiche.org/community/awards/undergraduate-scholarship-awards/john-j-mcketta-undergraduate-scholarship",
+        "last_verified_at": "2026-06-21",
+        "notes": "Official AIChE page: $5,000, chemical engineering CPI career, rising junior/senior, 3.0 GPA, June 15 deadline."
+      }
+    },
+    {
+      "id": "aiche-donald-f-othmer-scholarship-awards",
+      "name": "AIChE Donald F. Othmer Scholarship Awards",
+      "sponsor": "American Institute of Chemical Engineers (AIChE)",
+      "award_amount": "$1,000 (15 awards)",
+      "deadline": "VERIFY",
+      "estimated_deadline": "2027-06-15",
+      "url": "https://www.aiche.org/community/awards/undergraduate-scholarship-awards/donald-f-othmer-scholarship-awards",
+      "eligibility": {
+        "min_gpa": null,
+        "fields_of_study": [
+          "engineering"
+        ],
+        "grade_levels": [
+          "college_undergraduate"
+        ],
+        "demographics": [],
+        "states": "any",
+        "essay_required": false,
+        "citizenship_requirement": "VERIFY"
+      },
+      "description": "Fifteen $1,000 scholarships for chemical engineering undergraduates nominated only by their AIChE student chapter advisor. Students cannot apply directly without chapter nomination.",
+      "application_requirements": [
+        {
+          "id": "chapter-advisor-nomination",
+          "label": "Receive nomination from AIChE student chapter advisor",
+          "details": "Only AIChE student chapter advisors may nominate eligible chemical engineering undergraduates.",
+          "required": true,
+          "source_url": "https://www.aiche.org/community/awards/undergraduate-scholarship-awards/donald-f-othmer-scholarship-awards"
+        }
+      ],
+      "verified": true,
+      "verification": {
+        "source_url": "https://www.aiche.org/community/awards/undergraduate-scholarship-awards/donald-f-othmer-scholarship-awards",
+        "last_verified_at": "2026-06-21",
+        "notes": "Official AIChE page: $1,000 × 15 awards, chapter advisor nomination only, June 15 deadline."
+      }
+    },
+    {
+      "id": "aiche-mac-minority-scholarship-awards",
+      "name": "AIChE Minority Affairs Committee (MAC) Scholarship Awards",
+      "sponsor": "American Institute of Chemical Engineers (AIChE)",
+      "award_amount": "$1,000 (renewable)",
+      "deadline": "VERIFY",
+      "estimated_deadline": "2027-06-15",
+      "url": "https://www.aiche.org/community/awards/minority-affairs-communitys-scholarship-awards",
+      "eligibility": {
+        "min_gpa": null,
+        "fields_of_study": [
+          "engineering"
+        ],
+        "grade_levels": [
+          "college_undergraduate"
+        ],
+        "demographics": [],
+        "states": "any",
+        "essay_required": true,
+        "citizenship_requirement": "VERIFY"
+      },
+      "description": "Renewable $1,000 scholarships for chemical engineering undergraduates active in AIChE's Minority Affairs Committee (MAC) community. June 15 page showed 2026 date; next cycle estimated June 15, 2027.",
+      "application_requirements": [
+        {
+          "id": "aiche-mac-application",
+          "label": "Complete the AIChE MAC scholarship application",
+          "details": "Apply through the AIChE MAC scholarship page when the cycle opens; MAC community participation expected.",
+          "required": true,
+          "source_url": "https://www.aiche.org/community/awards/minority-affairs-communitys-scholarship-awards"
+        }
+      ],
+      "verified": true,
+      "verification": {
+        "source_url": "https://www.aiche.org/community/awards/minority-affairs-communitys-scholarship-awards",
+        "last_verified_at": "2026-06-21",
+        "notes": "Official AIChE MAC page: $1,000 renewable, chemical engineering undergrad, MAC community membership, June 15 deadline (2026 on page; est 2027-06-15 next cycle)."
+      }
+    },
+    {
+      "id": "usda-1890-national-scholars-program",
+      "name": "USDA 1890 National Scholars Program",
+      "sponsor": "U.S. Department of Agriculture (USDA)",
+      "award_amount": "full tuition, fees, room, board, and internship",
+      "deadline": "VERIFY",
+      "estimated_deadline": "2027-03-08",
+      "url": "https://www.usda.gov/partnerships/1890NationalScholars",
+      "eligibility": {
+        "min_gpa": 3.0,
+        "fields_of_study": [
+          "agriculture",
+          "environmental_science",
+          "natural_sciences"
+        ],
+        "grade_levels": [
+          "high_school_senior",
+          "college_freshman"
+        ],
+        "demographics": [],
+        "states": "any",
+        "essay_required": true,
+        "citizenship_requirement": "us_citizen"
+      },
+      "description": "Full scholarship covering tuition, fees, room, board, and a USDA internship for U.S. citizens with 3.0 GPA who enroll at a participating 1890 land-grant HBCU and pursue agriculture, food, or natural resource fields.",
+      "application_requirements": [
+        {
+          "id": "usda-1890-application",
+          "label": "Complete the USDA 1890 National Scholars application",
+          "details": "Apply through the official USDA portal and enroll at a participating 1890 land-grant institution.",
+          "required": true,
+          "source_url": "https://www.usda.gov/partnerships/1890NationalScholars"
+        }
+      ],
+      "verified": true,
+      "verification": {
+        "source_url": "https://www.usda.gov/partnerships/1890NationalScholars",
+        "last_verified_at": "2026-06-21",
+        "notes": "Official USDA page: full tuition/fees/room/board + internship, U.S. citizen, 3.0 GPA, 1890 HBCU enrollment, agriculture/food/natural resources; 2026 deadline was March 8."
+      }
+    },
+    {
+      "id": "sae-international-stem-scholarships",
+      "name": "SAE International STEM Scholarships",
+      "sponsor": "SAE Foundation",
+      "award_amount": "Varies by award",
+      "deadline": "VERIFY",
+      "estimated_deadline": "2027-03-15",
+      "url": "https://www.saefoundation.org/programs/awards-scholarships/",
+      "eligibility": {
+        "min_gpa": null,
+        "fields_of_study": [
+          "engineering",
+          "technology",
+          "science"
+        ],
+        "grade_levels": [
+          "high_school_senior",
+          "college_undergraduate"
+        ],
+        "demographics": [],
+        "states": "any",
+        "essay_required": true,
+        "citizenship_requirement": "VERIFY"
+      },
+      "description": "Engineering and STEM scholarships administered through one SAE Foundation application portal. Awards support students pursuing engineering and related technical fields.",
+      "application_requirements": [
+        {
+          "id": "sae-unified-application",
+          "label": "Complete the SAE Foundation unified scholarship application",
+          "details": "One application is used for eligible SAE International STEM scholarships when the cycle opens.",
+          "required": true,
+          "source_url": "https://www.saefoundation.org/programs/awards-scholarships/"
+        }
+      ],
+      "verified": true,
+      "verification": {
+        "source_url": "https://www.saefoundation.org/programs/awards-scholarships/",
+        "last_verified_at": "2026-06-21",
+        "notes": "Official SAE Foundation page: engineering students, one unified application portal; next-cycle deadline estimated March 15, 2027."
+      }
+    },
+    {
+      "id": "northrop-grumman-hip-program",
+      "name": "Northrop Grumman HIP Scholarship Program",
+      "sponsor": "Northrop Grumman Corporation",
+      "award_amount": "Scholarship after completing 2-year HIP mentoring program",
+      "deadline": "VERIFY",
+      "url": "https://www.northropgrumman.com/corporate-responsibility/stem-education/high-school-innovation-program",
+      "eligibility": {
+        "min_gpa": 3.25,
+        "fields_of_study": [
+          "engineering",
+          "technology",
+          "science",
+          "mathematics"
+        ],
+        "grade_levels": [
+          "high_school"
+        ],
+        "demographics": [],
+        "states": "any",
+        "essay_required": false,
+        "citizenship_requirement": "VERIFY"
+      },
+      "description": "High School Innovation Program (HIP) pairs students at partnered high schools with Northrop Grumman mentors over two years; scholarship support follows successful program completion for STEM-interested students with at least 3.25 GPA.",
+      "application_requirements": [
+        {
+          "id": "hip-program-participation",
+          "label": "Participate in the HIP mentoring program at a partnered school",
+          "details": "Students enter through partnered high schools in the HIP network and complete the two-year mentoring program.",
+          "required": true,
+          "source_url": "https://www.northropgrumman.com/corporate-responsibility/stem-education/high-school-innovation-program"
+        }
+      ],
+      "verified": true,
+      "verification": {
+        "source_url": "https://www.northropgrumman.com/corporate-responsibility/stem-education/high-school-innovation-program",
+        "last_verified_at": "2026-06-21",
+        "notes": "Official Northrop Grumman HIP page: scholarship after completing 2-year mentoring program, STEM, partnered high schools, 3.25 GPA."
+      }
+    },
+    {
+      "id": "pepsico-foundation-family-scholars",
+      "name": "PepsiCo Foundation Family Scholars Program",
+      "sponsor": "PepsiCo Foundation",
+      "award_amount": "up to $5,000",
+      "deadline": "VERIFY",
+      "estimated_deadline": "2027-02-10",
+      "url": "https://www.pepsico.com/our-impact/talent-sustainability/pepsico-excel-scholarship",
+      "eligibility": {
+        "min_gpa": null,
+        "fields_of_study": [],
+        "grade_levels": [
+          "high_school_senior",
+          "college_undergraduate"
+        ],
+        "demographics": [],
+        "states": "any",
+        "essay_required": true,
+        "citizenship_requirement": "VERIFY"
+      },
+      "description": "Scholarships up to $5,000 for dependents of PepsiCo employees pursuing postsecondary education. Apply through the official ScholarsApply portal when the cycle opens.",
+      "application_requirements": [
+        {
+          "id": "scholarsapply-application",
+          "label": "Complete the ScholarsApply application",
+          "details": "Apply through the official PepsiCo Foundation scholarship portal when open.",
+          "required": true,
+          "source_url": "https://www.pepsico.com/our-impact/talent-sustainability/pepsico-excel-scholarship"
+        }
+      ],
+      "verified": true,
+      "verification": {
+        "source_url": "https://www.pepsico.com/our-impact/talent-sustainability/pepsico-excel-scholarship",
+        "last_verified_at": "2026-06-21",
+        "notes": "Official PepsiCo page and ScholarsApply portal: up to $5,000 for dependents of PepsiCo employees; next-cycle deadline estimated Feb 10, 2027."
+      }
+    },
+    {
+      "id": "ite-diversity-scholars-program",
+      "name": "ITE Diversity Scholars Program",
+      "sponsor": "Institute of Transportation Engineers (ITE)",
+      "award_amount": "up to $20,000 over 5 years",
+      "deadline": "VERIFY",
+      "url": "https://www.ite.org/about-ite/awards/diversity-scholars-program/",
+      "eligibility": {
+        "min_gpa": null,
+        "fields_of_study": [
+          "engineering"
+        ],
+        "grade_levels": [
+          "high_school_senior"
+        ],
+        "demographics": [],
+        "states": "any",
+        "essay_required": true,
+        "citizenship_requirement": "us_citizen_or_permanent_resident"
+      },
+      "description": "Up to $20,000 over five years for U.S. high school students with interest in transportation engineering who meet ITE's underrepresented-heritage eligibility criteria. Heritage eligibility is assessed separately from demographic profile tags.",
+      "application_requirements": [
+        {
+          "id": "ite-diversity-application",
+          "label": "Complete the ITE Diversity Scholars application",
+          "details": "Apply through the official ITE Diversity Scholars Program page when the cycle opens.",
+          "required": true,
+          "source_url": "https://www.ite.org/about-ite/awards/diversity-scholars-program/"
+        }
+      ],
+      "verified": true,
+      "verification": {
+        "source_url": "https://www.ite.org/about-ite/awards/diversity-scholars-program/",
+        "last_verified_at": "2026-06-21",
+        "notes": "Official ITE page: up to $20,000 over 5 years, transportation engineering interest, underrepresented heritage eligibility, U.S. high school student."
+      }
+    },
+    {
+      "id": "cargill-global-scholars-program",
+      "name": "Cargill Global Scholars Program",
+      "sponsor": "Cargill",
+      "award_amount": "Two-year leadership scholarship (amount varies by country)",
+      "deadline": "VERIFY",
+      "url": "https://www.cargill.com/about/global-scholars",
+      "eligibility": {
+        "min_gpa": null,
+        "fields_of_study": [],
+        "grade_levels": [
+          "college_undergraduate"
+        ],
+        "demographics": [],
+        "states": "any",
+        "essay_required": true,
+        "citizenship_requirement": "VERIFY"
+      },
+      "description": "Two-year leadership development scholarship for undergraduates in Brazil, China, India, Indonesia, Russia, and the United States. Selection runs through participating universities in each country.",
+      "application_requirements": [
+        {
+          "id": "university-nomination-process",
+          "label": "Apply through participating university channels",
+          "details": "Students apply or are nominated through partner universities in eligible countries per Cargill Global Scholars guidelines.",
+          "required": true,
+          "source_url": "https://www.cargill.com/about/global-scholars"
+        }
+      ],
+      "verified": true,
+      "verification": {
+        "source_url": "https://www.cargill.com/about/global-scholars",
+        "last_verified_at": "2026-06-21",
+        "notes": "Official Cargill page: 2-year leadership scholarship for undergraduates in Brazil/China/India/Indonesia/Russia/US; university channel selection."
+      }
+    },
+    {
+      "id": "ams-undergraduate-opportunity-awards",
+      "name": "AMS Undergraduate Opportunity Awards",
+      "sponsor": "American Mathematical Society (AMS)",
+      "award_amount": 3000,
+      "deadline": "VERIFY",
+      "url": "https://www.ams.org/programs/students/undergrad/emp-info",
+      "eligibility": {
+        "min_gpa": null,
+        "fields_of_study": [
+          "mathematics"
+        ],
+        "grade_levels": [
+          "college_undergraduate"
+        ],
+        "demographics": [],
+        "states": "any",
+        "essay_required": false,
+        "citizenship_requirement": "any"
+      },
+      "description": "$3,000 awards for undergraduate mathematics students selected by AMS member institutions. There is no direct student application; departments nominate or select recipients.",
+      "application_requirements": [
+        {
+          "id": "department-selection",
+          "label": "Be selected by your AMS member institution",
+          "details": "Students are nominated or selected through their college mathematics department; no standalone AMS application exists.",
+          "required": true,
+          "source_url": "https://www.ams.org/programs/students/undergrad/emp-info"
+        }
+      ],
+      "verified": true,
+      "verification": {
+        "source_url": "https://www.ams.org/programs/students/undergrad/emp-info",
+        "last_verified_at": "2026-06-21",
+        "notes": "Official AMS page: $3,000 undergraduate opportunity awards, no direct application, selected via AMS member institutions."
+      }
+    },
+    {
+      "id": "ecybermission-competition-awards",
+      "name": "eCYBERMISSION Competition Awards",
+      "sponsor": "U.S. Army (eCYBERMISSION)",
+      "award_amount": "State, regional, and national team awards (varies)",
+      "deadline": "VERIFY",
+      "url": "https://www.ecybermission.com/",
+      "eligibility": {
+        "min_gpa": null,
+        "fields_of_study": [
+          "science",
+          "engineering",
+          "technology",
+          "mathematics"
+        ],
+        "grade_levels": [
+          "middle_school",
+          "high_school_freshman"
+        ],
+        "demographics": [],
+        "states": "any",
+        "essay_required": false,
+        "citizenship_requirement": "us_citizen_or_permanent_resident"
+      },
+      "description": "Free Army-sponsored STEM team competition for grades 6–9 with state, regional, and national awards. Teams register through a team advisor at a school or eligible organization.",
+      "application_requirements": [
+        {
+          "id": "team-registration",
+          "label": "Register a team with a team advisor",
+          "details": "Teams of 2–4 students in grades 6–9 register through an adult team advisor on the eCYBERMISSION portal.",
+          "required": true,
+          "source_url": "https://www.ecybermission.com/"
+        }
+      ],
+      "verified": true,
+      "verification": {
+        "source_url": "https://www.ecybermission.com/",
+        "last_verified_at": "2026-06-21",
+        "notes": "Official eCYBERMISSION site: Army-sponsored grades 6–9 team STEM competition with state/regional/national awards; free; team advisor registration required."
+      }
+    },
+    {
+      "id": "aiche-mac-incoming-college-scholarship",
+      "name": "AIChE MAC Incoming College Students Scholarship",
+      "sponsor": "American Institute of Chemical Engineers (AIChE)",
+      "award_amount": "Varies (MAC incoming awards)",
+      "deadline": "VERIFY",
+      "estimated_deadline": "2027-06-15",
+      "url": "https://www.aiche.org/community/awards/minority-affairs-communitys-scholarship-awards-incoming-college-students",
+      "eligibility": {
+        "min_gpa": null,
+        "fields_of_study": [
+          "engineering"
+        ],
+        "grade_levels": [
+          "high_school_senior"
+        ],
+        "demographics": [],
+        "states": "any",
+        "essay_required": true,
+        "citizenship_requirement": "VERIFY"
+      },
+      "description": "AIChE Minority Affairs Committee scholarships for incoming college students planning to study chemical engineering. MAC community participation may be required.",
+      "application_requirements": [
+        {
+          "id": "aiche-mac-incoming-application",
+          "label": "Complete the AIChE MAC incoming-college application",
+          "details": "Apply through the official AIChE MAC incoming college students scholarship page.",
+          "required": true,
+          "source_url": "https://www.aiche.org/community/awards/minority-affairs-communitys-scholarship-awards-incoming-college-students"
+        }
+      ],
+      "verified": true,
+      "verification": {
+        "source_url": "https://www.aiche.org/community/awards/minority-affairs-communitys-scholarship-awards-incoming-college-students",
+        "last_verified_at": "2026-06-21",
+        "notes": "Official AIChE MAC incoming college students page; separate from continuing-student MAC awards."
+      }
+    },
+    {
+      "id": "american-physical-society-scholarships",
+      "name": "American Physical Society Undergraduate Scholarships",
+      "sponsor": "American Physical Society (APS)",
+      "award_amount": "$2,000–$5,000",
+      "deadline": "VERIFY",
+      "url": "https://www.aps.org/programs/honors/prizes/scholarships.cfm",
+      "eligibility": {
+        "min_gpa": null,
+        "fields_of_study": [
+          "natural_sciences"
+        ],
+        "grade_levels": [
+          "college_undergraduate"
+        ],
+        "demographics": [],
+        "states": "any",
+        "essay_required": true,
+        "citizenship_requirement": "VERIFY"
+      },
+      "description": "Undergraduate scholarships of $2,000–$5,000 for students pursuing physics degrees. APS student membership may be required for some awards.",
+      "application_requirements": [
+        {
+          "id": "aps-scholarship-application",
+          "label": "Complete the APS undergraduate scholarship application",
+          "details": "Apply through the official APS scholarships page when the cycle opens; confirm membership requirements for your award.",
+          "required": true,
+          "source_url": "https://www.aps.org/programs/honors/prizes/scholarships.cfm"
+        }
+      ],
+      "verified": true,
+      "verification": {
+        "source_url": "https://www.aps.org/programs/honors/prizes/scholarships.cfm",
+        "last_verified_at": "2026-06-21",
+        "notes": "Official APS undergraduate scholarship page: $2,000–$5,000 for physics undergrads; membership may be required."
+      }
+    },
+    {
+      "id": "raytheon-patriot-scholarship",
+      "name": "Raytheon Patriot Scholarship",
+      "sponsor": "RTX (Raytheon) / Student Veterans of America",
+      "award_amount": 10000,
+      "deadline": "VERIFY",
+      "url": "https://www.rtx.com/news/news-center/2024/04/08/rtn_raytheon-technologies-awards-20-000-in-scholarships-to-army-veterans",
+      "eligibility": {
+        "min_gpa": null,
+        "fields_of_study": [],
+        "grade_levels": [
+          "college_undergraduate",
+          "college_graduate"
+        ],
+        "demographics": [],
+        "states": "any",
+        "essay_required": true,
+        "citizenship_requirement": "us_citizen"
+      },
+      "description": "$10,000 scholarships (two per year) administered through Student Veterans of America for U.S. Army veterans pursuing undergraduate or graduate degrees.",
+      "application_requirements": [
+        {
+          "id": "sv-usa-application",
+          "label": "Apply through Student Veterans of America",
+          "details": "Submit the Raytheon Patriot Scholarship application via SVA when the annual cycle opens.",
+          "required": true,
+          "source_url": "https://www.rtx.com/news/news-center/2024/04/08/rtn_raytheon-technologies-awards-20-000-in-scholarships-to-army-veterans"
+        }
+      ],
+      "verified": true,
+      "verification": {
+        "source_url": "https://www.rtx.com/news/news-center/2024/04/08/rtn_raytheon-technologies-awards-20-000-in-scholarships-to-army-veterans",
+        "last_verified_at": "2026-06-21",
+        "notes": "Official RTX article: $10,000 via Student Veterans of America for Army veterans, 2 per year; next-cycle deadline not published at verification."
+      }
     }
   ]
 }

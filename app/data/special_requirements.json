@@ -602,6 +602,93 @@
         "label": "Keynote speech and video audition required",
         "details": "Selected scholar delivers the Goddard Memorial Dinner keynote; application includes a space-inspiration video and finalist speech rounds."
       }
+    ],
+    "ieee-lance-stafford-larson-student-award": [
+      {
+        "kind": "membership",
+        "label": "IEEE student membership required",
+        "details": "Applicants must be IEEE student members to enter the Lance Stafford Larson paper contest."
+      },
+      {
+        "kind": "competition_or_finalist",
+        "label": "Annual paper contest entry",
+        "details": "Award is selected from papers submitted during the October 1–31 contest window each year."
+      }
+    ],
+    "northrop-grumman-hip-program": [
+      {
+        "kind": "institution_channel",
+        "label": "Partnered high school required",
+        "details": "Students must participate through a high school in Northrop Grumman's HIP partner network."
+      }
+    ],
+    "pepsico-foundation-family-scholars": [
+      {
+        "kind": "family_or_affiliation",
+        "label": "PepsiCo employee dependent",
+        "details": "Applicants must be dependents of eligible PepsiCo employees per program rules."
+      }
+    ],
+    "aiche-donald-f-othmer-scholarship-awards": [
+      {
+        "kind": "nomination",
+        "label": "Chapter advisor nomination required",
+        "details": "Only AIChE student chapter advisors may nominate eligible chemical engineering undergraduates."
+      }
+    ],
+    "aiche-mac-minority-scholarship-awards": [
+      {
+        "kind": "membership",
+        "label": "AIChE MAC community participation",
+        "details": "Applicants are expected to participate in AIChE's Minority Affairs Committee community."
+      }
+    ],
+    "aiche-mac-incoming-college-scholarship": [
+      {
+        "kind": "membership",
+        "label": "AIChE MAC community participation if applicable",
+        "details": "Incoming college MAC scholarships may require MAC community participation per award rules."
+      }
+    ],
+    "ams-undergraduate-opportunity-awards": [
+      {
+        "kind": "no_direct_application",
+        "label": "No direct student application",
+        "details": "Recipients are selected by AMS member institutions; students cannot apply directly to AMS."
+      }
+    ],
+    "usda-1890-national-scholars-program": [
+      {
+        "kind": "institution_channel",
+        "label": "1890 land-grant HBCU enrollment required",
+        "details": "Scholars must enroll at a participating 1890 land-grant historically Black college or university."
+      }
+    ],
+    "ite-diversity-scholars-program": [
+      {
+        "kind": "family_or_affiliation",
+        "label": "Underrepresented heritage eligibility",
+        "details": "ITE assesses underrepresented heritage separately from profile demographic tags; confirm eligibility on the official application."
+      }
+    ],
+    "ecybermission-competition-awards": [
+      {
+        "kind": "competition_or_finalist",
+        "label": "Team STEM competition",
+        "details": "Awards are earned through the eCYBERMISSION team project competition at state, regional, and national levels."
+      },
+      {
+        "kind": "institution_channel",
+        "label": "Team advisor registration required",
+        "details": "Teams register through an adult team advisor at a school or eligible organization."
+      }
+    ],
+    "cargill-global-scholars-program": [
+      {
+        "kind": "institution_channel",
+        "label": "Participating university channel",
+        "details": "Selection runs through partner universities in Brazil, China, India, Indonesia, Russia, and the United States."
+      }
     ]
   }
 }
