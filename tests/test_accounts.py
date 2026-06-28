@@ -7,7 +7,7 @@ from app.auth.email import EmailDeliveryError
 from app.auth.password_reset import hash_reset_token, utcnow
 from app.auth.security import hash_password, verify_password
 from app.db.database import SessionLocal, engine
-from app.db.models import Base, PasswordResetToken
+from app.db.models import Base, PasswordResetToken, User
 from app.main import app
 
 VALID_PROFILE = {
@@ -495,6 +495,115 @@ class TestPasswordReset:
             )
             assert reset.status_code == 200
             assert other_client.get("/auth/me").status_code == 401
+
+
+class TestGoogleOAuth:
+    def _configure_google(self, monkeypatch):
+        monkeypatch.setenv("GOOGLE_CLIENT_ID", "test-client-id")
+        monkeypatch.setenv("GOOGLE_CLIENT_SECRET", "test-client-secret")
+
+    def _mock_userinfo(self, monkeypatch, userinfo):
+        async def fake_userinfo(_request):
+            return userinfo
+
+        monkeypatch.setattr("app.api.auth_routes._fetch_google_userinfo", fake_userinfo)
+
+    def test_google_callback_creates_new_verified_user(self, client, monkeypatch):
+        self._configure_google(monkeypatch)
+        self._mock_userinfo(
+            monkeypatch,
+            {
+                "email": "NewStudent@Example.com",
+                "email_verified": True,
+                "sub": "google-sub-new",
+            },
+        )
+
+        response = client.get("/auth/google/callback", follow_redirects=False)
+
+        assert response.status_code == 303
+        assert response.headers["location"] == "/"
+        me = client.get("/auth/me")
+        assert me.status_code == 200
+        assert me.json()["email"] == "newstudent@example.com"
+        assert me.json()["has_password"] is False
+        assert me.json()["google_connected"] is True
+
+        password_login = client.post(
+            "/auth/login",
+            json={"email": "newstudent@example.com", "password": "anything"},
+        )
+        assert password_login.status_code == 401
+
+        change_password = client.post(
+            "/auth/change-password",
+            json={"current_password": "anything", "new_password": "newpassword456"},
+        )
+        assert change_password.status_code == 400
+
+        with SessionLocal() as db:
+            user = db.query(User).filter(User.email == "newstudent@example.com").one()
+            assert user.google_sub == "google-sub-new"
+            assert user.password_hash is None
+
+    def test_google_callback_links_existing_verified_email(self, client, monkeypatch):
+        assert signup(client, email="student@example.com").status_code == 201
+        client.post("/auth/logout")
+        self._configure_google(monkeypatch)
+        self._mock_userinfo(
+            monkeypatch,
+            {
+                "email": "Student@Example.com",
+                "email_verified": True,
+                "sub": "google-sub-existing",
+            },
+        )
+
+        response = client.get("/auth/google/callback", follow_redirects=False)
+
+        assert response.status_code == 303
+        assert client.get("/auth/me").json()["google_connected"] is True
+        with SessionLocal() as db:
+            users = db.query(User).all()
+            assert len(users) == 1
+            assert users[0].email == "student@example.com"
+            assert users[0].google_sub == "google-sub-existing"
+            assert users[0].password_hash is not None
+
+        client.post("/auth/logout")
+        password_login = client.post(
+            "/auth/login",
+            json={"email": "student@example.com", "password": "password123"},
+        )
+        assert password_login.status_code == 200
+
+    def test_google_callback_rejects_unverified_email(self, client, monkeypatch):
+        self._configure_google(monkeypatch)
+        self._mock_userinfo(
+            monkeypatch,
+            {
+                "email": "student@example.com",
+                "email_verified": False,
+                "sub": "google-sub-unverified",
+            },
+        )
+
+        response = client.get("/auth/google/callback", follow_redirects=False)
+
+        assert response.status_code == 403
+        assert "verified" in response.json()["detail"]["error"].lower()
+        assert client.get("/auth/me").status_code == 401
+        with SessionLocal() as db:
+            assert db.query(User).count() == 0
+
+    def test_google_login_missing_config_returns_clean_error(self, client, monkeypatch):
+        monkeypatch.delenv("GOOGLE_CLIENT_ID", raising=False)
+        monkeypatch.delenv("GOOGLE_CLIENT_SECRET", raising=False)
+
+        response = client.get("/auth/google/login")
+
+        assert response.status_code == 503
+        assert "not configured" in response.text
 
 
 class TestAccountManagement:

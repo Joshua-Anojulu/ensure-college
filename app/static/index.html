@@ -21,7 +21,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/static/css/style.css?v=20260627-8">
+  <link rel="stylesheet" href="/static/css/style.css?v=20260627-9">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -63,6 +63,13 @@
       <p class="modal-intro" id="auth-modal-intro">
         Log in to save your profile and bookmark scholarships and summer programs.
       </p>
+
+      <a class="btn-google" id="google-login-link" href="/auth/google/login">
+        <span class="google-mark" aria-hidden="true">G</span>
+        Continue with Google
+      </a>
+
+      <div class="auth-divider" aria-hidden="true"><span>or</span></div>
 
       <form id="auth-form" class="auth-form" novalidate>
         <div class="field">
@@ -137,28 +144,34 @@
         <button type="button" class="modal-close" id="settings-close" aria-label="Close">&times;</button>
       </div>
 
-      <form id="change-password-form" class="auth-form" novalidate>
-        <div class="field">
-          <label for="current-password">Current password</label>
-          <input type="password" id="current-password" autocomplete="current-password" required>
-        </div>
-        <div class="field">
-          <label for="new-password">New password</label>
-          <input type="password" id="new-password" autocomplete="new-password" required>
-          <span class="field-hint">At least 8 characters.</span>
-        </div>
-        <div id="settings-error" class="form-error" role="alert" hidden></div>
-        <div id="settings-success" class="form-success" role="status" hidden></div>
-        <button type="submit" class="btn-primary" id="change-password-submit">Change password</button>
-      </form>
+      <div id="google-settings-note" class="form-success settings-note" role="status" hidden>
+        This account signs in with Google, so there is no Scholarships4U password to change here.
+      </div>
 
-      <div class="danger-zone">
-        <h3>Delete account</h3>
-        <p class="field-hint">
-          This permanently removes your account, saved profile, and tracked scholarships and summer programs, and cannot be undone.
-          Enter your current password above, then confirm.
-        </p>
-        <button type="button" class="btn-danger" id="delete-account-btn">Delete my account</button>
+      <div id="password-settings-section">
+        <form id="change-password-form" class="auth-form" novalidate>
+          <div class="field">
+            <label for="current-password">Current password</label>
+            <input type="password" id="current-password" autocomplete="current-password" required>
+          </div>
+          <div class="field">
+            <label for="new-password">New password</label>
+            <input type="password" id="new-password" autocomplete="new-password" required>
+            <span class="field-hint">At least 8 characters.</span>
+          </div>
+          <div id="settings-error" class="form-error" role="alert" hidden></div>
+          <div id="settings-success" class="form-success" role="status" hidden></div>
+          <button type="submit" class="btn-primary" id="change-password-submit">Change password</button>
+        </form>
+
+        <div class="danger-zone">
+          <h3>Delete account</h3>
+          <p class="field-hint">
+            This permanently removes your account, saved profile, and tracked scholarships and summer programs, and cannot be undone.
+            Enter your current password above, then confirm.
+          </p>
+          <button type="button" class="btn-danger" id="delete-account-btn">Delete my account</button>
+        </div>
       </div>
     </div>
   </div>
@@ -556,6 +569,6 @@
     </div>
   </div>
 
-  <script src="/static/js/app.js?v=20260627-8"></script>
+  <script src="/static/js/app.js?v=20260627-9"></script>
 </body>
 </html>

@@ -673,6 +673,8 @@ function summarizeExtraction(profile) {
 /* ---------- Account settings ---------- */
 
 const settingsModal = document.getElementById("settings-modal");
+const googleSettingsNote = document.getElementById("google-settings-note");
+const passwordSettingsSection = document.getElementById("password-settings-section");
 const SITE_CONSENT_KEY = "site_consent_v1";
 
 function wireAgeGate() {
@@ -723,8 +725,13 @@ function wireSettings() {
 function openSettingsModal() {
   hideSettingsMessages();
   document.getElementById("change-password-form").reset();
+  updateSettingsControls();
   settingsModal.hidden = false;
-  document.getElementById("current-password").focus();
+  if (currentUser?.has_password === false) {
+    document.getElementById("settings-close").focus();
+  } else {
+    document.getElementById("current-password").focus();
+  }
 }
 
 function closeSettingsModal() {
@@ -741,6 +748,16 @@ function hideSettingsMessages() {
   success.textContent = "";
 }
 
+function updateSettingsControls() {
+  const hasPassword = currentUser?.has_password !== false;
+  if (passwordSettingsSection) {
+    passwordSettingsSection.hidden = !hasPassword;
+  }
+  if (googleSettingsNote) {
+    googleSettingsNote.hidden = hasPassword;
+  }
+}
+
 function showSettingsError(message) {
   const error = document.getElementById("settings-error");
   document.getElementById("settings-success").hidden = true;
@@ -751,6 +768,10 @@ function showSettingsError(message) {
 async function handleChangePassword(event) {
   event.preventDefault();
   hideSettingsMessages();
+  if (currentUser?.has_password === false) {
+    showSettingsError("This account signs in with Google and does not have a password to change.");
+    return;
+  }
   const current = document.getElementById("current-password").value;
   const next = document.getElementById("new-password").value;
   if (!current) {
@@ -788,6 +809,10 @@ async function handleChangePassword(event) {
 
 async function handleDeleteAccount() {
   hideSettingsMessages();
+  if (currentUser?.has_password === false) {
+    showSettingsError("Google-only accounts do not have a password for this confirmation step.");
+    return;
+  }
   const password = document.getElementById("current-password").value;
   if (!password) {
     showSettingsError("Enter your current password above to confirm deletion.");

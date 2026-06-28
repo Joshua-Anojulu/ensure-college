@@ -48,6 +48,8 @@ class UserResponse(BaseModel):
     id: int
     email: str
     created_at: datetime
+    has_password: bool = True
+    google_connected: bool = False
 
 
 class ProfileResponse(BaseModel):

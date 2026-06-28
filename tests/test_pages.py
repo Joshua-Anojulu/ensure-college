@@ -77,3 +77,11 @@ class TestProductionHygiene:
         assert 'id="scholarship-search"' in response.text
         assert 'id="program-search"' in response.text
         assert 'id="catalog-search"' in response.text
+
+    def test_index_includes_google_login_link_and_updated_assets(self, client):
+        response = client.get("/")
+        assert response.status_code == 200
+        assert 'id="google-login-link"' in response.text
+        assert 'href="/auth/google/login"' in response.text
+        assert "/static/css/style.css?v=20260627-9" in response.text
+        assert "/static/js/app.js?v=20260627-9" in response.text

@@ -2,7 +2,11 @@
 
 from __future__ import annotations
 
+import os
+from collections.abc import Mapping
+
 from fastapi import APIRouter, Depends, HTTPException, Request, status
+from fastapi.responses import PlainTextResponse, RedirectResponse
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
@@ -33,6 +37,14 @@ from app.models.auth import (
 )
 from app.rate_limit import rate_limiter
 
+try:
+    from authlib.integrations.starlette_client import OAuth, OAuthError
+except ImportError:  # pragma: no cover - dependency is installed from requirements.
+    OAuth = None
+
+    class OAuthError(Exception):
+        """Fallback so missing Authlib fails cleanly instead of at import time."""
+
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 _signup_limit = rate_limiter(10, 60, "signup")
@@ -46,10 +58,142 @@ PASSWORD_RESET_ACCEPTED = {
     "ok": True,
     "message": "If an account exists for that email, a reset link will arrive shortly.",
 }
+GOOGLE_DISCOVERY_URL = "https://accounts.google.com/.well-known/openid-configuration"
+GOOGLE_SCOPE = "openid email profile"
+GOOGLE_NOT_CONFIGURED = "Google sign-in is not configured yet."
 
 
 def _normalize_email(email: str) -> str:
     return email.strip().lower()
+
+
+def google_oauth_is_configured() -> bool:
+    return bool(
+        os.getenv("GOOGLE_CLIENT_ID", "").strip()
+        and os.getenv("GOOGLE_CLIENT_SECRET", "").strip()
+        and OAuth is not None
+    )
+
+
+def _public_base_url(request: Request) -> str:
+    configured = os.getenv("PUBLIC_APP_URL", "").strip().rstrip("/")
+    return configured or str(request.base_url).rstrip("/")
+
+
+def _google_callback_url(request: Request) -> str:
+    return f"{_public_base_url(request)}/auth/google/callback"
+
+
+def _google_client():
+    if not google_oauth_is_configured():
+        return None
+
+    oauth = OAuth()
+    oauth.register(
+        name="google",
+        client_id=os.getenv("GOOGLE_CLIENT_ID", "").strip(),
+        client_secret=os.getenv("GOOGLE_CLIENT_SECRET", "").strip(),
+        server_metadata_url=GOOGLE_DISCOVERY_URL,
+        client_kwargs={"scope": GOOGLE_SCOPE},
+    )
+    return oauth.google
+
+
+async def _fetch_google_userinfo(request: Request) -> Mapping[str, object]:
+    client = _google_client()
+    if client is None:
+        raise RuntimeError(GOOGLE_NOT_CONFIGURED)
+
+    token = await client.authorize_access_token(request)
+    userinfo = token.get("userinfo")
+    if userinfo is None:
+        response = await client.get("https://openidconnect.googleapis.com/v1/userinfo", token=token)
+        userinfo = response.json()
+    return userinfo
+
+
+def _require_verified_google_identity(userinfo: Mapping[str, object]) -> tuple[str, str]:
+    email = _normalize_email(str(userinfo.get("email") or ""))
+    google_sub = str(userinfo.get("sub") or "").strip()
+    email_verified = userinfo.get("email_verified")
+    if isinstance(email_verified, str):
+        email_verified = email_verified.lower() == "true"
+
+    if not email or not google_sub:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail={"error": "Google did not return the account details needed to sign in."},
+        )
+    if email_verified is not True:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail={"error": "Google has not verified that email address."},
+        )
+    return email, google_sub
+
+
+def _find_or_create_google_user(db: Session, email: str, google_sub: str) -> User:
+    user_with_sub = db.query(User).filter(User.google_sub == google_sub).first()
+    if user_with_sub is not None and user_with_sub.email != email:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail={"error": "That Google account is already linked to another email."},
+        )
+
+    user = db.query(User).filter(User.email == email).first()
+    if user is None:
+        user = User(email=email, google_sub=google_sub, password_hash=None)
+        db.add(user)
+    elif user.google_sub and user.google_sub != google_sub:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail={"error": "That email is already linked to another Google account."},
+        )
+    else:
+        user.google_sub = google_sub
+
+    try:
+        db.commit()
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail={"error": "That Google account could not be linked. Try logging in again."},
+        ) from None
+    db.refresh(user)
+    return user
+
+
+@router.get("/google/login")
+async def google_login(request: Request):
+    client = _google_client()
+    if client is None:
+        return PlainTextResponse(GOOGLE_NOT_CONFIGURED, status_code=status.HTTP_503_SERVICE_UNAVAILABLE)
+    return await client.authorize_redirect(request, _google_callback_url(request))
+
+
+@router.get("/google/callback")
+async def google_callback(
+    request: Request,
+    db: Session = Depends(get_db),
+):
+    if not google_oauth_is_configured():
+        return PlainTextResponse(GOOGLE_NOT_CONFIGURED, status_code=status.HTTP_503_SERVICE_UNAVAILABLE)
+
+    try:
+        userinfo = await _fetch_google_userinfo(request)
+    except OAuthError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail={"error": "Google sign-in could not be completed. Try again."},
+        ) from exc
+    except RuntimeError:
+        return PlainTextResponse(GOOGLE_NOT_CONFIGURED, status_code=status.HTTP_503_SERVICE_UNAVAILABLE)
+
+    email, google_sub = _require_verified_google_identity(userinfo)
+    user = _find_or_create_google_user(db, email, google_sub)
+    set_authenticated_session(request, user)
+    return RedirectResponse("/", status_code=status.HTTP_303_SEE_OTHER)
 
 
 @router.post(
@@ -89,7 +233,7 @@ def login(request: Request, body: LoginRequest, db: Session = Depends(get_db)) -
     email = _normalize_email(body.email)
     user = db.query(User).filter(User.email == email).first()
 
-    if user is None or not verify_password(body.password, user.password_hash):
+    if user is None or not user.password_hash or not verify_password(body.password, user.password_hash):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail={"error": "Email or password is incorrect."},
@@ -117,6 +261,11 @@ def change_password(
     user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ) -> dict[str, bool]:
+    if not user.password_hash:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail={"error": "This account uses Google sign-in and does not have a password."},
+        )
     if not verify_password(body.current_password, user.password_hash):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -222,6 +371,11 @@ def delete_account(
     user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ) -> dict[str, bool]:
+    if not user.password_hash:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail={"error": "This account uses Google sign-in and does not have a password."},
+        )
     if not verify_password(body.password, user.password_hash):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
