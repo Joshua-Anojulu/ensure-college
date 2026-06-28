@@ -27,7 +27,7 @@ Scholarships4U is a **curated scholarship and summer-program planner** for U.S. 
 ## Tech stack
 
 - **Backend:** Python, FastAPI
-- **Frontend:** Vanilla HTML, CSS, and JavaScript (served by FastAPI), with a dark responsive interface and source-linked match cards
+- **Frontend:** Vanilla HTML, CSS, and JavaScript (served by FastAPI), with a responsive light/dark interface (light by default, with a dark-mode toggle that remembers your choice and respects your OS setting) and source-linked match cards
 - **Curated data:** Pydantic models, local JSON files for scholarships and elite summer programs loaded at startup
 - **Accounts and saved data:** SQLAlchemy ORM, SQLite locally and Postgres in production, bcrypt password hashing, signed session cookies
 - **Schema migrations:** Alembic, run automatically at startup and before the Render web service starts
