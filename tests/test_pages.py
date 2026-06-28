@@ -52,8 +52,8 @@ class TestProductionHygiene:
     def test_index_uses_absolute_og_image_url(self, client):
         response = client.get("/")
         assert response.status_code == 200
-        assert 'property="og:image" content="http://testserver/static/og-image-dark.svg"' in response.text
-        assert 'name="twitter:image" content="http://testserver/static/og-image-dark.svg"' in response.text
+        assert 'property="og:image" content="http://testserver/static/og-image.png"' in response.text
+        assert 'name="twitter:image" content="http://testserver/static/og-image.png"' in response.text
 
     def test_public_pages_include_production_canonical_urls(self, client):
         index = client.get("/")
@@ -83,5 +83,5 @@ class TestProductionHygiene:
         assert response.status_code == 200
         assert 'id="google-login-link"' in response.text
         assert 'href="/auth/google/login"' in response.text
-        assert "/static/css/style.css?v=20260627-9" in response.text
-        assert "/static/js/app.js?v=20260627-9" in response.text
+        assert "/static/css/style.css?v=20260628-1" in response.text
+        assert "/static/js/app.js?v=20260628-1" in response.text

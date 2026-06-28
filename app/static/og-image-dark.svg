@@ -1,27 +1,55 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-label="Scholarships4U">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-label="Scholarships4U — scholarships and summer programs, made clearer">
   <defs>
-    <radialGradient id="orbA" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(220 120) rotate(48) scale(450 290)">
-      <stop stop-color="#6bdcff" stop-opacity="0.55"/>
-      <stop offset="1" stop-color="#6bdcff" stop-opacity="0"/>
+    <linearGradient id="mk" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#818cf8"/><stop offset="1" stop-color="#4338ca"/>
+    </linearGradient>
+    <radialGradient id="gA" cx="0.15" cy="0" r="0.75">
+      <stop stop-color="#818cf8" stop-opacity="0.2"/><stop offset="1" stop-color="#818cf8" stop-opacity="0"/>
     </radialGradient>
-    <radialGradient id="orbB" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1010 470) rotate(118) scale(430 260)">
-      <stop stop-color="#f2b35c" stop-opacity="0.36"/>
-      <stop offset="1" stop-color="#f2b35c" stop-opacity="0"/>
+    <radialGradient id="gB" cx="1" cy="1" r="0.65">
+      <stop stop-color="#f5b544" stop-opacity="0.14"/><stop offset="1" stop-color="#f5b544" stop-opacity="0"/>
     </radialGradient>
-    <linearGradient id="panel" x1="80" y1="80" x2="1120" y2="550" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#1b2443"/>
-      <stop offset="0.58" stop-color="#12172a"/>
-      <stop offset="1" stop-color="#241847"/>
+    <linearGradient id="rg" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#34d399"/><stop offset="1" stop-color="#818cf8"/>
     </linearGradient>
   </defs>
-  <rect width="1200" height="630" fill="#070a16"/>
-  <rect width="1200" height="630" fill="url(#orbA)"/>
-  <rect width="1200" height="630" fill="url(#orbB)"/>
-  <rect x="80" y="80" width="1040" height="470" rx="36" fill="url(#panel)" stroke="#6bdcff" stroke-opacity="0.22"/>
-  <circle cx="196" cy="198" r="58" fill="#6bdcff" opacity="0.12"/>
-  <circle cx="1010" cy="430" r="125" fill="#8b6cff" opacity="0.16"/>
-  <path d="M930 180c70 14 122 70 136 140" fill="none" stroke="#f2b35c" stroke-width="2" opacity="0.28"/>
-  <text x="120" y="260" fill="#eef3ff" font-family="Georgia, 'Times New Roman', serif" font-size="72" font-weight="600">Scholarships4U</text>
-  <text x="120" y="340" fill="#9eeaff" font-family="Arial, Helvetica, sans-serif" font-size="40" font-weight="500">Scholarship planning, made clearer</text>
-  <text x="120" y="430" fill="#aebbe0" font-family="Arial, Helvetica, sans-serif" font-size="28">Transparent matching - Deadline tracking - Essay guidance</text>
+
+  <rect width="1200" height="630" fill="#0b0e16"/>
+  <rect x="24" y="24" width="1152" height="582" rx="28" fill="#141a27" stroke="#ffffff" stroke-opacity="0.1" stroke-width="2"/>
+  <rect x="24" y="24" width="1152" height="582" rx="28" fill="url(#gA)"/>
+  <rect x="24" y="24" width="1152" height="582" rx="28" fill="url(#gB)"/>
+
+  <g transform="translate(76,74)">
+    <rect width="60" height="60" rx="15" fill="url(#mk)"/>
+    <text x="30" y="31" text-anchor="middle" dominant-baseline="central" font-family="'Plus Jakarta Sans',system-ui,Arial,sans-serif" font-size="38" font-weight="800" fill="#0b0e16">S</text>
+    <text x="78" y="24" font-family="'Plus Jakarta Sans',system-ui,Arial,sans-serif" font-size="29" font-weight="800" fill="#e7ebf3">Scholarships4U</text>
+    <text x="79" y="49" font-family="Inter,system-ui,Arial,sans-serif" font-size="15" font-weight="700" letter-spacing="0.14em" fill="#94a1b8">SCHOLARSHIPS &#183; SUMMER PROGRAMS &#183; PLANNING</text>
+  </g>
+
+  <text transform="translate(76,244)" font-family="'Plus Jakarta Sans',system-ui,Arial,sans-serif" font-size="54" font-weight="800" letter-spacing="-0.02em" fill="#e7ebf3">
+    <tspan x="0" y="0">Scholarships &amp; summer</tspan>
+    <tspan x="0" y="68">programs, made clearer.</tspan>
+  </text>
+
+  <text transform="translate(78,408)" font-family="Inter,system-ui,Arial,sans-serif" font-size="24" font-weight="500" fill="#c4ccdc">
+    <tspan x="0" y="0">Build one profile, compare real opportunities, and turn</tspan>
+    <tspan x="0" y="34">your best matches into a clear application plan.</tspan>
+  </text>
+
+  <g transform="translate(78,506)" font-family="Inter,system-ui,Arial,sans-serif" font-size="18" font-weight="600">
+    <rect width="232" height="44" rx="22" fill="#20283f"/>
+    <text x="22" y="28" fill="#a5b4fc">Transparent fit reasons</text>
+    <rect x="248" width="212" height="44" rx="22" fill="#102a22"/>
+    <text x="270" y="28" fill="#34d399">Source-linked steps</text>
+    <rect x="476" width="200" height="44" rx="22" fill="#2c2410"/>
+    <text x="498" y="28" fill="#f5b544">Verified deadlines</text>
+  </g>
+
+  <g transform="translate(1000,292)">
+    <circle r="120" fill="#141a27" stroke="#232c41" stroke-width="2"/>
+    <circle r="94" fill="none" stroke="#232c41" stroke-width="17"/>
+    <circle r="94" fill="none" stroke="url(#rg)" stroke-width="17" stroke-linecap="round" stroke-dasharray="590" stroke-dashoffset="88" transform="rotate(-90)"/>
+    <text y="-2" text-anchor="middle" font-family="'Plus Jakarta Sans',system-ui,Arial,sans-serif" font-size="56" font-weight="800" fill="#e7ebf3">92</text>
+    <text y="34" text-anchor="middle" font-family="Inter,system-ui,Arial,sans-serif" font-size="18" font-weight="700" letter-spacing="0.12em" fill="#94a1b8">FIT</text>
+  </g>
 </svg>
