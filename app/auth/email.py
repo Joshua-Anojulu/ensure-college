@@ -123,6 +123,10 @@ def send_password_reset_email(recipient: str, token: str) -> None:
         headers={
             "Authorization": f"Bearer {api_key}",
             "Content-Type": "application/json",
+            # Resend's API is fronted by Cloudflare, which blocks the default
+            # "Python-urllib" agent with a 403 (error 1010). Send an explicit
+            # User-Agent so the request is not rejected before it reaches Resend.
+            "User-Agent": "Scholarships4U/1.0 (+https://scholarships4u.dev)",
         },
         method="POST",
     )
