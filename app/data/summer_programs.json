@@ -77,7 +77,7 @@
       "verification": {
         "source_url": "https://mites.mit.edu/discover-mites/mites-summer/",
         "last_verified_at": "2026-06-26",
-        "notes": "Official MITES Summer and MITES application pages: entirely free except transportation, residential at MIT, six weeks late June to early August, eligible to high school juniors who are U.S. citizens or permanent residents. Application checklist source confirms online application, transcript, short answers, activities, recommendations, and optional test scores. A dated upcoming-cycle deadline is not published, so deadline remains VERIFY."
+        "notes": "Official MITES Summer and MITES application pages: entirely free except transportation, residential at MIT, six weeks late June to early August, eligible to high school juniors who are U.S. citizens or permanent residents. Application checklist source confirms online application, transcript, short answers, activities, recommendations, and optional test scores. A dated upcoming-cycle deadline is not published, so the deadline field is left unknown."
       }
     },
     {
@@ -157,7 +157,7 @@
       "verification": {
         "source_url": "https://ssp.org/application/",
         "last_verified_at": "2026-06-26",
-        "notes": "Official SSP pages: five-week residential research program for current high-school juniors/rising seniors; applications define domestic and international applicants, so citizenship is open. Fees page confirms tuition-based cost with need-based aid and potential stipends. The 2026 deadlines are published but the next cycle is not, so deadline remains VERIFY."
+        "notes": "Official SSP pages: five-week residential research program for current high-school juniors/rising seniors; applications define domestic and international applicants, so citizenship is open. Fees page confirms tuition-based cost with need-based aid and potential stipends. The 2026 deadlines are published but the next cycle is not, so the deadline field is left unknown."
       }
     },
     {
@@ -229,7 +229,7 @@
       "verification": {
         "source_url": "https://promys.org/programs/promys/for-students/",
         "last_verified_at": "2026-06-26",
-        "notes": "Official PROMYS student/application pages: six-week residential mathematics program at Boston University for high-school students from the U.S. and around the world; 2026 dates/deadline, eligibility, cost, financial aid, and application components are published. Upcoming-cycle deadline remains VERIFY; 2026-02-27 is stored as the prior-cycle estimate."
+        "notes": "Official PROMYS student/application pages: six-week residential mathematics program at Boston University for high-school students from the U.S. and around the world; 2026 dates/deadline, eligibility, cost, financial aid, and application components are published. Upcoming-cycle deadline is not yet published; prior-cycle deadline was 2026-02-27."
       }
     },
     {
@@ -284,7 +284,7 @@
       "verification": {
         "source_url": "https://tellurideassociation.org/our-programs/high-school-students/",
         "last_verified_at": "2026-06-27",
-        "notes": "Official TASS page confirms free cost coverage, residential 2026 dates, sophomore/junior eligibility, U.S. and international eligibility, program areas, and the 2026 application timeline. Upcoming-cycle deadline remains VERIFY; 2025-12-03 is stored as the 2026-cycle deadline."
+        "notes": "Official TASS page confirms free cost coverage, residential 2026 dates, sophomore/junior eligibility, U.S. and international eligibility, program areas, and the 2026 application timeline. Upcoming-cycle deadline is not yet published; 2025-12-03 was the 2026-cycle deadline."
       }
     },
     {
@@ -362,7 +362,7 @@
       "verification": {
         "source_url": "https://www.depts.ttu.edu/clarkscholars/ProgramDetails.php",
         "last_verified_at": "2026-06-27",
-        "notes": "Official Texas Tech Clark pages confirm seven-week dates, twelve-student scale, eligibility, no participation fees, room/board, $750 stipend, U.S./PR citizenship, application deadline, and components. Upcoming-cycle deadline remains VERIFY; 2026-02-16 is stored as the prior-cycle estimate."
+        "notes": "Official Texas Tech Clark pages confirm seven-week dates, twelve-student scale, eligibility, no participation fees, room/board, $750 stipend, U.S./PR citizenship, application deadline, and components. Upcoming-cycle deadline is not yet published; prior-cycle deadline was 2026-02-16."
       }
     },
     {
@@ -512,7 +512,7 @@
       "verification": {
         "source_url": "https://www.stonybrook.edu/garcia/summer-program/apply.html",
         "last_verified_at": "2026-06-27",
-        "notes": "Official Garcia pages confirm 2026 dates, high-school age/GPA/course/test expectations, international conditional eligibility, application parts, transcript, recommendations, fee, in-person/commuter nature, no aid, and lab/housing costs. Deadline remains VERIFY because a specific deadline was not published on the fetched page."
+        "notes": "Official Garcia pages confirm 2026 dates, high-school age/GPA/course/test expectations, international conditional eligibility, application parts, transcript, recommendations, fee, in-person/commuter nature, no aid, and lab/housing costs. Deadline field is left unknown because a specific deadline was not published on the fetched page."
       }
     },
     {
@@ -602,7 +602,7 @@
       "verification": {
         "source_url": "https://www.stonybrook.edu/commcms/simons/applying_to/how-to-apply.php",
         "last_verified_at": "2026-06-27",
-        "notes": "Official Simons pages confirm junior-only, U.S./PR eligibility, nomination requirement, 2026 dates/deadlines, transcript, recommendations, brief questions, mentor choices, cost language, and about <5% admission. Deadline remains VERIFY for future cycle; 2026-02-05 is stored as prior-cycle estimate."
+        "notes": "Official Simons pages confirm junior-only, U.S./PR eligibility, nomination requirement, 2026 dates/deadlines, transcript, recommendations, brief questions, mentor choices, cost language, and about <5% admission. Upcoming-cycle deadline is not yet published; prior-cycle deadline was 2026-02-05."
       }
     },
     {
@@ -682,7 +682,7 @@
       "verification": {
         "source_url": "https://cosmos-ucop.ucdavis.edu/app/main/page/application-and-payment-basics",
         "last_verified_at": "2026-06-27",
-        "notes": "Official COSMOS pages confirm California-only eligibility, rising grades 9-12, residential STEM program, UC campuses, 2026 dates/cost/deadline, application materials, and financial assistance. Citizenship is not published on the reviewed pages, so it remains VERIFY."
+        "notes": "Official COSMOS pages confirm California-only eligibility, rising grades 9-12, residential STEM program, UC campuses, 2026 dates/cost/deadline, application materials, and financial assistance. Citizenship is not published on the reviewed pages, so the citizenship field is left unknown."
       }
     },
     {
@@ -850,7 +850,7 @@
       "verification": {
         "source_url": "https://www.cmu.edu/pre-college/academic-programs/sams.html",
         "last_verified_at": "2026-06-27",
-        "notes": "Official CMU SAMS page confirms fully funded cost, hybrid virtual/in-person structure, 2026 dates, resident-only in-person phase, grade/age/citizenship eligibility, financial documentation, application components, and essay prompts. Deadline remains VERIFY; 2026-02-01 is a prior-cycle estimate."
+        "notes": "Official CMU SAMS page confirms fully funded cost, hybrid virtual/in-person structure, 2026 dates, resident-only in-person phase, grade/age/citizenship eligibility, financial documentation, application components, and essay prompts. Upcoming-cycle deadline is not yet published; prior-cycle deadline was 2026-02-01."
       }
     },
     {
@@ -1012,7 +1012,7 @@
       "verification": {
         "source_url": "https://globalscholars.yale.edu/",
         "last_verified_at": "2026-06-27",
-        "notes": "Official YYGS pages confirm residential 2026 sessions, global eligibility, sophomore/junior eligibility, all-country applications and aid, tuition, application deadlines, components, essays, transcript, recommender form, and financial-aid process. Upcoming-cycle deadline remains VERIFY; 2026-01-07 is stored as prior-cycle estimate."
+        "notes": "Official YYGS pages confirm residential 2026 sessions, global eligibility, sophomore/junior eligibility, all-country applications and aid, tuition, application deadlines, components, essays, transcript, recommender form, and financial-aid process. Upcoming-cycle deadline is not yet published; prior-cycle deadline was 2026-01-07."
       }
     },
     {
@@ -2842,7 +2842,7 @@
       "verification": {
         "source_url": "https://precollege.sps.columbia.edu/programs/summer-programs",
         "last_verified_at": "2026-06-21",
-        "notes": "Official Columbia pre-college summer page: residential/commuter/online, age 15+, rolling admission — VERIFY session-specific deadlines."
+        "notes": "Official Columbia pre-college summer page: residential/commuter/online, age 15+, rolling admission; session-specific deadlines need checking."
       }
     },
     {
@@ -2885,7 +2885,7 @@
       "verification": {
         "source_url": "https://sites.lsa.umich.edu/mmss/",
         "last_verified_at": "2026-06-21",
-        "notes": "Official MMSS page: rising soph/jun/sen, 2-week residential sessions, rolling admission — VERIFY current cycle dates."
+        "notes": "Official MMSS page: rising sophomores, juniors, and seniors; two-week residential sessions; rolling admission; current cycle dates need checking."
       }
     },
     {
