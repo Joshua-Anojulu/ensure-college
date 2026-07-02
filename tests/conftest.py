@@ -18,6 +18,12 @@ os.environ.setdefault("SESSION_SECRET", "test-session-secret")
 # rate-limit test re-enables it for itself.
 os.environ["RATE_LIMIT_ENABLED"] = "false"
 
+# Tests assert the request-derived fallback base URL (http://testserver), so
+# never let an ambient PUBLIC_APP_URL (e.g. from a local .env) leak in and make
+# production-hygiene assertions depend on the developer's environment. Set it to
+# empty (not pop) so the later load_dotenv() in app.main cannot re-populate it.
+os.environ["PUBLIC_APP_URL"] = ""
+
 
 @atexit.register
 def _cleanup_test_db() -> None:

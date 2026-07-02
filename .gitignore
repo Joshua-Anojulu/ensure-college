@@ -31,3 +31,9 @@ Desktop.ini
 /_verify*.py
 /_fnsna*.py
 /_batch*.py
+
+# Local agent/session artifacts (not part of the app)
+AGENT_HANDOFF.md
+.claude/
+.codex/
+.agents/

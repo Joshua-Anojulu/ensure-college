@@ -110,6 +110,13 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
         response = await call_next(request)
         for header, value in _SECURITY_HEADERS.items():
             response.headers.setdefault(header, value)
+        # HSTS only makes sense over HTTPS. Emit it in production so browsers
+        # pin the site to HTTPS; skip it locally where the app runs over HTTP.
+        if is_production_deploy():
+            response.headers.setdefault(
+                "Strict-Transport-Security",
+                "max-age=31536000; includeSubDomains",
+            )
         return response
 
 
