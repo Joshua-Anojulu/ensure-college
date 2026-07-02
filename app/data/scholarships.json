@@ -175,7 +175,7 @@
       "name": "Dell Scholars Program",
       "sponsor": "Michael & Susan Dell Foundation",
       "award_amount": "20000 plus laptop and textbook credits",
-      "deadline": "VERIFY",
+      "deadline": "2026-02-15",
       "url": "https://www.dellscholars.org/",
       "eligibility": {
         "min_gpa": 2.4,
@@ -193,8 +193,8 @@
       "estimated_deadline": "2027-02-15",
       "verification": {
         "source_url": "https://www.dellscholars.org/students/",
-        "last_verified_at": "2026-06-24",
-        "notes": "Students page: $20,000 plus laptop and textbook credits, 2.4 GPA minimum, Pell Grant eligible senior in approved college-readiness program; prior cycle Dec 15–Feb 15 — next dates not yet published. Checklist verified 2026-06-24; next-cycle open/close dates not yet published on official site."
+        "last_verified_at": "2026-07-02",
+        "notes": "Official students page: $20,000 plus laptop and textbook credits, 2.4 GPA minimum, Pell Grant eligible senior in approved college-readiness program; 2025-26 cycle opened Dec 15 2025 and closed Feb 15 2026. Next-cycle open/close dates not yet published."
       },
       "application_requirements": [
         {
@@ -412,7 +412,7 @@
       "name": "Burger King Scholars Program",
       "sponsor": "Burger King Foundation",
       "award_amount": "1000 to 60000",
-      "deadline": "VERIFY",
+      "deadline": "2025-12-15",
       "url": "https://burgerking.scholarsapply.org/",
       "eligibility": {
         "min_gpa": 2.0,
@@ -430,8 +430,8 @@
       "estimated_deadline": "2026-12-15",
       "verification": {
         "source_url": "https://burgerking.scholarsapply.org/information.php",
-        "last_verified_at": "2026-06-21",
-        "notes": "Award guidelines: General Track $1k–$60k, 2.0 GPA minimum for seniors, U.S./PR/Guam/Canada residency; prior cycle Oct 15–Dec 15 — next dates not yet published; citizenship not stated for General Track."
+        "last_verified_at": "2026-07-02",
+        "notes": "Official Scholarship America guidelines: General Track $1k-$60k, 2.0 GPA minimum for seniors, U.S./PR/Guam/Canada residency; application was complete only if submitted electronically by Dec 15 2025 or before the 30,000-application cap. Citizenship not stated for General Track."
       }
     },
     {
@@ -924,7 +924,7 @@
       "name": "Live Mas Scholarship",
       "sponsor": "Taco Bell Foundation",
       "award_amount": "$5,000, $10,000, or $25,000",
-      "deadline": "VERIFY",
+      "deadline": "2026-01-06",
       "url": "https://www.tacobellfoundation.org/live-mas-scholarship/",
       "eligibility": {
         "min_gpa": null,
@@ -942,9 +942,9 @@
       "verified": true,
       "estimated_deadline": "2027-01-06",
       "verification": {
-        "source_url": "https://www.tacobellfoundation.org/live-mas-scholarship/",
-        "last_verified_at": "2026-06-21",
-        "notes": "Main program page: no GPA/test scores; two-minute video (not essay); passion-based; applications currently closed — next cycle deadline not published."
+        "source_url": "https://tacobellfoundation.org/live-mas-scholarship/eligibilityfaq/",
+        "last_verified_at": "2026-07-02",
+        "notes": "Official Eligibility & FAQs page: 2026 window was Oct 14 2025-Jan 6 2026 at 5:00 PM PST; no GPA, test scores, transcripts, or recommendations required; legal-resident/dependent-of-active-duty eligibility does not map cleanly to citizenship tags, so citizenship remains unconfirmed."
       }
     },
     {
@@ -2414,14 +2414,14 @@
         "demographics": [],
         "states": "any",
         "essay_required": true,
-        "citizenship_requirement": "VERIFY"
+        "citizenship_requirement": "any"
       },
       "description": "A suite of national scholarships for college students pursuing careers in radio, television, or digital journalism; recipients must be full-time sophomores, juniors, or seniors. U.S. citizenship is not required, but non-citizens must have a U.S. Taxpayer Identification Number.",
       "verified": true,
       "verification": {
         "source_url": "https://www.rtdna.org/scholarships-and-fellowships",
-        "last_verified_at": "2026-06-25",
-        "notes": "Official RTDNA page says scholarships are for full-time sophomores, juniors, or seniors in good standing pursuing radio, television, or digital journalism; apply for only one opportunity. 2026 applications open Sep 9 and are due Oct 22; no numeric GPA minimum stated."
+        "last_verified_at": "2026-07-02",
+        "notes": "Official RTDNA page says scholarships are for full-time sophomores, juniors, or seniors in good standing pursuing radio, television, or digital journalism; key eligibility is studying or working in the United States, with no citizenship restriction stated. 2026 applications open Sep 9 and are due Oct 22; no numeric GPA minimum stated."
       }
     },
     {
@@ -2503,14 +2503,14 @@
         "demographics": [],
         "states": "any",
         "essay_required": true,
-        "citizenship_requirement": "VERIFY"
+        "citizenship_requirement": "any"
       },
       "description": "Merit-based scholarships for current DECA members who intend to study marketing, finance, hospitality, management, or entrepreneurship. Requires active, dues-paying DECA membership.",
       "verified": true,
       "verification": {
         "source_url": "https://www.deca.org/scholarships",
-        "last_verified_at": "2026-06-25",
-        "notes": "Official DECA page says 2026-2027 applications are open through Jan 11, 2027; applicants upload a transcript and recommendations, must be current DECA members, and scholarships are merit-based with partner-specific criteria. No program-wide numeric GPA minimum is stated."
+        "last_verified_at": "2026-07-02",
+        "notes": "Official DECA page says 2026-2027 applications are open through Jan 11, 2027; applicants upload a transcript and recommendations, must be current DECA members, and scholarships are merit-based with partner-specific criteria. No program-wide numeric GPA minimum or citizenship restriction is stated."
       }
     },
     {
@@ -2649,15 +2649,15 @@
         "demographics": [],
         "states": "any",
         "essay_required": true,
-        "citizenship_requirement": "VERIFY"
+        "citizenship_requirement": "any"
       },
       "description": "Cash award recognizing high school students (grades 9-12) who, through volunteer work, have demonstrated leadership in advancing racial equity or understanding in their school or community. Open to all students regardless of identity; not restricted by field of study.",
       "verified": true,
       "estimated_deadline": "2027-01-15",
       "verification": {
         "source_url": "https://pprize.princeton.edu/apply",
-        "last_verified_at": "2026-06-21",
-        "notes": "$2,500; grades 9-12 in U.S.; volunteer racial-equity leadership; open regardless of identity; 2026 cycle closed Jan 15."
+        "last_verified_at": "2026-07-02",
+        "notes": "Official apply page: $2,500; currently enrolled grades 9-12 in the United States; volunteer racial-equity leadership; open regardless of identity, with no citizenship gate stated; 2026 cycle closed Jan 15."
       }
     },
     {
@@ -3615,14 +3615,14 @@
         "demographics": [],
         "states": "any",
         "essay_required": true,
-        "citizenship_requirement": "VERIFY"
+        "citizenship_requirement": "any"
       },
       "description": "Annual essay contests on Ayn Rand's novels (Anthem and The Fountainhead for grades 8-12; Atlas Shrugged for high school seniors, college, and graduate students). Open to students worldwide, with top prizes reaching $25,000.",
       "verified": true,
       "verification": {
-        "source_url": "https://www.aynrand.org/students/essay-contests",
-        "last_verified_at": "2026-06-21",
-        "notes": "Anthem/Fountainhead (grades 8-12) and Atlas Shrugged (HS/college/grad); open worldwide; top prize $25k — next deadline TBD."
+        "source_url": "https://aynrand.org/students/essay-contests",
+        "last_verified_at": "2026-07-02",
+        "notes": "Official essay-contests page: open worldwide, international students welcome; Anthem/Fountainhead serve middle/high school ages 13+, Atlas Shrugged serves high school/college/graduate students; top prize $25k; next deadline listed as TBD."
       }
     },
     {
