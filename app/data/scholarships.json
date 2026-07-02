@@ -62,7 +62,7 @@
       "name": "The Gates Scholarship",
       "sponsor": "Bill & Melinda Gates Foundation",
       "award_amount": "full cost of attendance (last-dollar scholarship)",
-      "deadline": "VERIFY",
+      "deadline": "2025-09-15",
       "url": "https://www.thegatesscholarship.org/",
       "eligibility": {
         "min_gpa": 3.3,
@@ -289,7 +289,7 @@
       "name": "Davidson Fellows Scholarship",
       "sponsor": "Davidson Institute for Talent Development",
       "award_amount": "$100000, $50000, or $25000 depending on project category",
-      "deadline": "VERIFY",
+      "deadline": "2026-02-18",
       "url": "https://www.davidsongifted.org/gifted-programs/fellows-scholarship/",
       "eligibility": {
         "min_gpa": null,
@@ -517,7 +517,7 @@
       "name": "Hispanic Scholarship Fund Scholar Program",
       "sponsor": "Hispanic Scholarship Fund",
       "award_amount": "500 to 5000 (varies by award)",
-      "deadline": "VERIFY",
+      "deadline": "2026-02-15",
       "url": "https://www.hsf.net/scholarship",
       "eligibility": {
         "min_gpa": 3.0,
@@ -647,7 +647,7 @@
         "source_url": "https://www.footlockerscholarathletes.com/",
         "last_verified_at": null,
         "provenance_recorded_at": "2026-06-21",
-        "notes": "Official sponsor URL recorded on June 21, 2026; this was not a new fact-by-fact audit."
+        "notes": "Official sponsor URL recorded on June 21, 2026. On 2026-07-02, the official URL failed DNS resolution and no current official application page was found; deadline remains VERIFY for human review."
       }
     },
     {
@@ -655,7 +655,7 @@
       "name": "Cameron Impact Scholarship",
       "sponsor": "Bryan Cameron Education Foundation",
       "award_amount": "full tuition and qualified educational expenses",
-      "deadline": "VERIFY",
+      "deadline": "2026-05-01",
       "url": "https://www.bryancameroneducationfoundation.org/faq",
       "eligibility": {
         "min_gpa": 3.7,
@@ -819,7 +819,7 @@
       "name": "GE-Reagan Foundation Scholarship Program",
       "sponsor": "Ronald Reagan Presidential Foundation & Institute",
       "award_amount": "up to $40,000 ($10,000 per year, renewable)",
-      "deadline": "VERIFY",
+      "deadline": "2026-01-05",
       "url": "https://www.reaganfoundation.org/education/ge-reagan-foundation-scholarship",
       "eligibility": {
         "min_gpa": 3.0,
@@ -978,7 +978,7 @@
       "name": "Jackie Robinson Foundation Scholarship Program",
       "sponsor": "Jackie Robinson Foundation",
       "award_amount": "up to $35,000 (over four years)",
-      "deadline": "VERIFY",
+      "deadline": "2026-01-07",
       "url": "https://jackierobinson.org/apply/",
       "eligibility": {
         "min_gpa": null,
@@ -1005,7 +1005,7 @@
       "name": "National FFA Scholarship Program",
       "sponsor": "National FFA Organization (National FFA Foundation)",
       "award_amount": "up to $10,000 (varies by scholarship)",
-      "deadline": "VERIFY",
+      "deadline": "2026-01-15",
       "url": "https://www.ffa.org/participate/grants-and-scholarships/scholarships/",
       "eligibility": {
         "min_gpa": null,
@@ -1404,7 +1404,7 @@
       "name": "Udall Undergraduate Scholarship",
       "sponsor": "Udall Foundation",
       "award_amount": "up to $7,500",
-      "deadline": "VERIFY",
+      "deadline": "2026-03-04",
       "url": "https://www.udall.gov/OurPrograms/Scholarship/Scholarship",
       "eligibility": {
         "min_gpa": null,
@@ -1492,7 +1492,7 @@
       "name": "John F. Kennedy Profile in Courage Essay Contest",
       "sponsor": "John F. Kennedy Library Foundation",
       "award_amount": "$10,000 first place; $3,000 second; $1,000 finalists",
-      "deadline": "VERIFY",
+      "deadline": "2026-01-12",
       "url": "https://www.jfklibrary.org/learn/education/profile-in-courage-essay-contest",
       "eligibility": {
         "min_gpa": null,
@@ -1552,7 +1552,7 @@
       "name": "ScholarSHPE Scholarship Program",
       "sponsor": "Society of Hispanic Professional Engineers (SHPE)",
       "award_amount": "$2,000 to $10,000 (varies by award)",
-      "deadline": "VERIFY",
+      "deadline": "2026-02-16",
       "url": "https://shpe.org/engage/programs/scholarshpe/",
       "eligibility": {
         "min_gpa": 2.5,
@@ -1651,7 +1651,7 @@
       "name": "ACM SIGHPC Computational and Data Science Fellowships",
       "sponsor": "Association for Computing Machinery (ACM SIGHPC)",
       "award_amount": "$20,000 annually (adjusted by country)",
-      "deadline": "VERIFY",
+      "deadline": "2026-05-15",
       "url": "https://www.sighpc.org/opportunities/fellowships",
       "eligibility": {
         "min_gpa": null,
@@ -1683,7 +1683,7 @@
       "name": "ACS Catalyst Scholarship",
       "sponsor": "American Chemical Society (ACS)",
       "award_amount": 10000,
-      "deadline": "VERIFY",
+      "deadline": "2026-03-01",
       "url": "https://www.acs.org/education/acs-undergraduate-scholarship.html",
       "eligibility": {
         "min_gpa": 3.0,
@@ -1715,7 +1715,7 @@
       "name": "Astronaut Scholarship",
       "sponsor": "Astronaut Scholarship Foundation",
       "award_amount": 15000,
-      "deadline": "VERIFY",
+      "deadline": "2026-03-30",
       "url": "https://www.astronautscholarship.org/programs/astronaut-scholarship/",
       "eligibility": {
         "min_gpa": null,
@@ -1749,7 +1749,7 @@
       "name": "Nurse Corps Scholarship Program",
       "sponsor": "U.S. Health Resources & Services Administration (HRSA)",
       "award_amount": "Full tuition, required fees, and a monthly stipend",
-      "deadline": "VERIFY",
+      "deadline": "2026-04-09",
       "url": "https://bhw.hrsa.gov/programs/nurse-corps/scholarship/apply",
       "eligibility": {
         "min_gpa": null,
@@ -1780,7 +1780,7 @@
       "name": "National Health Service Corps (NHSC) Scholarship Program",
       "sponsor": "U.S. Health Resources & Services Administration (HRSA)",
       "award_amount": "Full tuition, fees, and a monthly stipend",
-      "deadline": "VERIFY",
+      "deadline": "2026-04-16",
       "url": "https://nhsc.hrsa.gov/scholarships/overview",
       "eligibility": {
         "min_gpa": null,
@@ -1873,7 +1873,7 @@
       "name": "CAS Trust Scholarship",
       "sponsor": "Casualty Actuarial Society (CAS)",
       "award_amount": "$2,500 or $5,000",
-      "deadline": "VERIFY",
+      "deadline": "2026-01-31",
       "url": "https://www.casact.org/trustscholarship",
       "eligibility": {
         "min_gpa": null,
@@ -2027,7 +2027,7 @@
       "name": "GMiS STEM Scholars Program",
       "sponsor": "Great Minds in STEM (GMiS)",
       "award_amount": "$500–$5,000 (merit-based) or $500–$1,000 (donor awards)",
-      "deadline": "VERIFY",
+      "deadline": "2026-05-08",
       "url": "https://greatmindsinstem.org/gmis-scholarship-application/gmis-scholarships/gmis-scholarship-guidelines/",
       "eligibility": {
         "min_gpa": 3.0,
@@ -2159,7 +2159,7 @@
       "name": "BMI Composer Awards (formerly BMI Student Composer Awards)",
       "sponsor": "BMI Foundation",
       "award_amount": "awards totaling $20,000 annually, shared among multiple winners",
-      "deadline": "VERIFY",
+      "deadline": "2026-01-15",
       "url": "https://bmifoundation.org/by-application/bmicomposerawards",
       "eligibility": {
         "min_gpa": null,
@@ -2190,7 +2190,7 @@
       "name": "The ASCAP Foundation Morton Gould Young Composer Awards",
       "sponsor": "The ASCAP Foundation",
       "award_amount": "VERIFY",
-      "deadline": "VERIFY",
+      "deadline": "2026-02-06",
       "url": "https://www.ascapfoundation.org/programs/awards/young-composer-awards",
       "eligibility": {
         "min_gpa": null,
@@ -2221,7 +2221,7 @@
       "name": "AIGA Worldstudio D×D Scholarships",
       "sponsor": "AIGA (the professional association for design)",
       "award_amount": "up to $5,000 ($2,500–$3,000 typical)",
-      "deadline": "VERIFY",
+      "deadline": "2026-05-06",
       "url": "https://www.aiga.org/professional-development/aiga-worldstudio-dd-scholarships",
       "eligibility": {
         "min_gpa": 3.0,
@@ -2282,7 +2282,7 @@
       "name": "Princess Grace Awards",
       "sponsor": "Princess Grace Foundation-USA",
       "award_amount": "$15,000 unrestricted cash grant",
-      "deadline": "VERIFY",
+      "deadline": "2026-02-02",
       "url": "https://pgfusa.org/apply/",
       "eligibility": {
         "min_gpa": null,
@@ -2429,7 +2429,7 @@
       "name": "Quill and Scroll Foundation Student Scholarships in Journalism",
       "sponsor": "Quill and Scroll Foundation",
       "award_amount": "up to $1,500 (amounts vary; other awards typically $500)",
-      "deadline": "VERIFY",
+      "deadline": "2026-05-08",
       "url": "https://quillandscroll.org/scholarships-2/",
       "eligibility": {
         "min_gpa": null,
@@ -2638,7 +2638,7 @@
       "name": "Princeton Prize in Race Relations",
       "sponsor": "Princeton University (Princeton Prize in Race Relations)",
       "award_amount": 2500,
-      "deadline": "VERIFY",
+      "deadline": "2026-01-15",
       "url": "https://pprize.princeton.edu/",
       "eligibility": {
         "min_gpa": null,
@@ -2863,7 +2863,7 @@
       "name": "TheDream.US National Scholarship",
       "sponsor": "TheDream.US",
       "award_amount": "up to $33,000 (bachelor's; plus up to $6,000 stipend)",
-      "deadline": "VERIFY",
+      "deadline": "2026-02-28",
       "url": "https://www.thedream.us/scholarships/national-scholarship/",
       "eligibility": {
         "min_gpa": 2.5,
@@ -3002,7 +3002,7 @@
       "name": "Jesse Brown Memorial Youth Scholarship",
       "sponsor": "Disabled American Veterans (DAV)",
       "award_amount": "$2,500 to $30,000 (multiple awards)",
-      "deadline": "VERIFY",
+      "deadline": "2026-02-28",
       "url": "https://www.dav.org/get-involved/volunteer/dav-scholarships/",
       "eligibility": {
         "min_gpa": null,
@@ -3087,7 +3087,7 @@
       "name": "OCA-UPS Gold Mountain Scholarship",
       "sponsor": "OCA - Asian Pacific American Advocates",
       "award_amount": 2000,
-      "deadline": "VERIFY",
+      "deadline": "2026-03-22",
       "url": "https://www.ocanational.org/scholarships",
       "eligibility": {
         "min_gpa": null,
@@ -3172,7 +3172,7 @@
       "name": "Anne Ford Scholarship",
       "sponsor": "National Center for Learning Disabilities (NCLD)",
       "award_amount": "$10,000 ($2,500 per year over four years)",
-      "deadline": "VERIFY",
+      "deadline": "2026-05-10",
       "url": "https://ncld.org/scholarships-awards/anne-ford-scholarship/",
       "eligibility": {
         "min_gpa": null,
@@ -3283,7 +3283,7 @@
       "name": "Jack Kent Cooke Foundation Young Scholars Program",
       "sponsor": "Jack Kent Cooke Foundation",
       "award_amount": "comprehensive five-year pre-college scholarship with advising and enrichment funding",
-      "deadline": "VERIFY",
+      "deadline": "2026-04-29",
       "url": "https://www.jkcf.org/our-scholarships/young-scholars-program/",
       "eligibility": {
         "min_gpa": null,
@@ -3310,7 +3310,7 @@
       "name": "Carson Scholars Fund Scholarship",
       "sponsor": "Carson Scholars Fund",
       "award_amount": 1000,
-      "deadline": "VERIFY",
+      "deadline": "2026-01-11",
       "url": "https://carsonscholars.org/",
       "eligibility": {
         "min_gpa": 3.75,
@@ -3383,7 +3383,7 @@
       "name": "Chick-fil-A Remarkable Futures Scholarship",
       "sponsor": "Chick-fil-A, Inc.",
       "award_amount": "$1,000, $2,500, or $25,000 depending on scholarship tier",
-      "deadline": "VERIFY",
+      "deadline": "2025-10-21",
       "url": "https://www.chick-fil-a.com/remarkable-futures-scholarships",
       "eligibility": {
         "min_gpa": 2.5,
@@ -3546,7 +3546,7 @@
       "name": "DAR Scholarship Program",
       "sponsor": "National Society Daughters of the American Revolution",
       "award_amount": "VERIFY (varies by individual scholarship)",
-      "deadline": "VERIFY",
+      "deadline": "2027-01-31",
       "url": "https://www.dar.org/national-society/scholarships",
       "eligibility": {
         "min_gpa": "VERIFY",
@@ -3575,7 +3575,7 @@
       "name": "Elks National Foundation Legacy Awards",
       "sponsor": "Elks National Foundation",
       "award_amount": 4000,
-      "deadline": "VERIFY",
+      "deadline": "2026-02-02",
       "url": "https://www.elks.org/scholars/Scholarships/default.cfm",
       "eligibility": {
         "min_gpa": null,
@@ -3630,7 +3630,7 @@
       "name": "Bill of Rights Institute MyImpact Challenge",
       "sponsor": "Bill of Rights Institute",
       "award_amount": "up to $10,000 (grand prize)",
-      "deadline": "VERIFY",
+      "deadline": "2026-05-03",
       "url": "https://billofrightsinstitute.org/myimpact-challenge-student-page/",
       "eligibility": {
         "min_gpa": null,
@@ -4365,7 +4365,7 @@
       "name": "National Eagle Scout Association (NESA) Scholarships",
       "sponsor": "National Eagle Scout Association",
       "award_amount": "varies by award ($6,000–$50,000; multiple CST and national awards)",
-      "deadline": "VERIFY",
+      "deadline": "2027-01-31",
       "estimated_deadline": "2027-01-31",
       "url": "https://nesa.org/scholarships/",
       "eligibility": {
@@ -4458,7 +4458,7 @@
       "name": "Sallie Mae Bridging the Dream Scholarship for High School Seniors",
       "sponsor": "The Sallie Mae Fund (administered by Thurgood Marshall Scholarship Fund)",
       "award_amount": "up to $10,000",
-      "deadline": "VERIFY",
+      "deadline": "2026-04-24",
       "estimated_deadline": "2027-04-24",
       "url": "https://www.salliemae.com/content/dam/slm/writtencontent/Research/2026-2027_BTD_HS_Contest_Official_Rules.pdf",
       "eligibility": {
@@ -4557,7 +4557,7 @@
       "name": "Phi Kappa Phi Fellowship",
       "sponsor": "The Honor Society of Phi Kappa Phi",
       "award_amount": "up to $35,000 (52 awards; amounts vary by tier)",
-      "deadline": "VERIFY",
+      "deadline": "2026-04-15",
       "estimated_deadline": "2027-04-15",
       "url": "https://www.phikappaphi.org/grants-awards/fellowship",
       "eligibility": {
@@ -4649,7 +4649,7 @@
       "name": "American Legion Eagle Scout of the Year Scholarship",
       "sponsor": "The American Legion",
       "award_amount": 10000,
-      "deadline": "VERIFY",
+      "deadline": "2026-03-01",
       "estimated_deadline": "2027-03-01",
       "url": "https://www.legion.org/get-involved/scholarships/american-legion-eagle-scout-of-the-year-scholarship",
       "eligibility": {
@@ -4692,7 +4692,7 @@
       "name": "ALA Children of Warriors National Presidents' Scholarship",
       "sponsor": "American Legion Auxiliary",
       "award_amount": 5000,
-      "deadline": "VERIFY",
+      "deadline": "2027-03-01",
       "estimated_deadline": "2027-03-01",
       "url": "http://www.alaforveterans.org/Scholarships/FAQ",
       "eligibility": {
@@ -4735,7 +4735,7 @@
       "name": "P.E.O. STAR Scholarship",
       "sponsor": "P.E.O. Sisterhood",
       "award_amount": 2500,
-      "deadline": "VERIFY",
+      "deadline": "2026-10-15",
       "url": "https://www.peointernational.org/educational-support/star-scholarship/eligibility-and-application-process/",
       "eligibility": {
         "min_gpa": 3.0,
@@ -4777,7 +4777,7 @@
       "name": "NAACP Inspire Initiatives Scholarships",
       "sponsor": "NAACP",
       "award_amount": "varies by scholarship ($1,000–$10,000+)",
-      "deadline": "VERIFY",
+      "deadline": "2026-05-22",
       "estimated_deadline": "2027-05-22",
       "url": "https://naacp.org/find-resources/scholarships-awards-internships/scholarships",
       "eligibility": {
@@ -4822,7 +4822,7 @@
       "name": "Agnes Jones Jackson Scholarship",
       "sponsor": "NAACP",
       "award_amount": 2000,
-      "deadline": "VERIFY",
+      "deadline": "2026-05-22",
       "estimated_deadline": "2027-05-22",
       "url": "https://naacp.org/find-resources/scholarships-awards-internships/scholarships/agnes-jones-jackson-scholarship",
       "eligibility": {
@@ -4860,7 +4860,7 @@
       "name": "NIH Undergraduate Scholarship Program (UGSP)",
       "sponsor": "National Institutes of Health",
       "award_amount": "tuition and educational expenses plus paid NIH research training (see official UGSP terms)",
-      "deadline": "VERIFY",
+      "deadline": "2026-03-31",
       "estimated_deadline": "2027-03-31",
       "url": "https://www.training.nih.gov/research-training/pb/ugsp/",
       "eligibility": {
@@ -5022,7 +5022,7 @@
       "name": "ALA Non-Traditional Student Scholarship",
       "sponsor": "American Legion Auxiliary",
       "award_amount": 2000,
-      "deadline": "VERIFY",
+      "deadline": "2027-03-01",
       "estimated_deadline": "2027-03-01",
       "url": "http://www.alaforveterans.org/Scholarships/FAQ",
       "eligibility": {
@@ -5193,7 +5193,7 @@
       "name": "Mensa Foundation Scholarship",
       "sponsor": "Mensa Foundation",
       "award_amount": "over $200,000 awarded annually across multiple essay-based scholarships",
-      "deadline": "VERIFY",
+      "deadline": "2027-01-15",
       "estimated_deadline": "2027-01-15",
       "url": "https://www.mensafoundation.org/scholarships/",
       "eligibility": {
@@ -5358,7 +5358,7 @@
       "name": "Coca-Cola Leaders of Promise Scholarship",
       "sponsor": "Coca-Cola Scholars Foundation (via Phi Theta Kappa)",
       "award_amount": "up to $1,000",
-      "deadline": "VERIFY",
+      "deadline": "2027-01-31",
       "estimated_deadline": "2027-01-31",
       "url": "https://www.ptk.org/scholarships/coca-cola-leaders-of-promise-scholarship",
       "eligibility": {
@@ -5712,7 +5712,7 @@
       "name": "Doodle for Google",
       "sponsor": "Google LLC",
       "award_amount": "national winner scholarship plus finalist awards (e.g., $10,000 college scholarship per finalist)",
-      "deadline": "VERIFY",
+      "deadline": "2025-12-03",
       "estimated_deadline": "2026-12-03",
       "url": "https://doodles.google.com/d4g/",
       "eligibility": {
@@ -5853,7 +5853,7 @@
       "name": "Stephen J. Brady Stop Hunger Scholarship",
       "sponsor": "Sodexo Stop Hunger Foundation",
       "award_amount": "$10,000 scholarship plus $5,000 grant to hunger charity (national scholars)",
-      "deadline": "VERIFY",
+      "deadline": "2026-11-05",
       "estimated_deadline": "2026-11-05",
       "url": "https://www.us.stop-hunger.org/grants/youth-scholarships",
       "eligibility": {
@@ -5891,7 +5891,7 @@
       "name": "AOPA Foundation Flight Training Scholarships",
       "sponsor": "AOPA Foundation (You Can Fly)",
       "award_amount": "$250 to $14,000 (varies; high school awards up to $12,000)",
-      "deadline": "VERIFY",
+      "deadline": "2026-12-31",
       "estimated_deadline": "2026-12-31",
       "url": "https://www.aopa.org/training-and-safety/students/aopa-flight-training-scholarships",
       "eligibility": {
@@ -6152,7 +6152,7 @@
       "name": "IEEE Lance Stafford Larson Student Award",
       "sponsor": "IEEE",
       "award_amount": 500,
-      "deadline": "VERIFY",
+      "deadline": "2026-10-31",
       "url": "https://students.ieee.org/awards-scholarships/lance-stafford-larson-student-award/",
       "eligibility": {
         "min_gpa": null,
@@ -6269,7 +6269,7 @@
       "name": "Discover Scholarship Sweepstakes",
       "sponsor": "Discover Financial Services",
       "award_amount": 5000,
-      "deadline": "VERIFY",
+      "deadline": "rolling",
       "url": "https://www.discover.com/scholarships/",
       "eligibility": {
         "min_gpa": null,
@@ -6305,7 +6305,7 @@
       "name": "AMS First-Year Undergraduate Scholarship",
       "sponsor": "American Meteorological Society (AMS)",
       "award_amount": "$5,000 split over freshman and sophomore years",
-      "deadline": "VERIFY",
+      "deadline": "2026-02-06",
       "estimated_deadline": "2027-02-06",
       "url": "https://www.ametsoc.org/index.cfm/ams/in-your-community/students/ams-scholarships/ams-first-year-undergraduate-scholarship/",
       "eligibility": {
@@ -6385,7 +6385,7 @@
       "name": "AIChE John J. McKetta Undergraduate Scholarship",
       "sponsor": "American Institute of Chemical Engineers (AIChE)",
       "award_amount": 5000,
-      "deadline": "VERIFY",
+      "deadline": "2026-06-15",
       "estimated_deadline": "2027-06-15",
       "url": "https://www.aiche.org/community/awards/undergraduate-scholarship-awards/john-j-mcketta-undergraduate-scholarship",
       "eligibility": {
@@ -6424,7 +6424,7 @@
       "name": "AIChE Donald F. Othmer Scholarship Awards",
       "sponsor": "American Institute of Chemical Engineers (AIChE)",
       "award_amount": "$1,000 (15 awards)",
-      "deadline": "VERIFY",
+      "deadline": "2026-06-15",
       "estimated_deadline": "2027-06-15",
       "url": "https://www.aiche.org/community/awards/undergraduate-scholarship-awards/donald-f-othmer-scholarship-awards",
       "eligibility": {
@@ -6462,7 +6462,7 @@
       "name": "AIChE Minority Affairs Committee (MAC) Scholarship Awards",
       "sponsor": "American Institute of Chemical Engineers (AIChE)",
       "award_amount": "$1,000 (renewable)",
-      "deadline": "VERIFY",
+      "deadline": "2026-06-15",
       "estimated_deadline": "2027-06-15",
       "url": "https://www.aiche.org/community/awards/minority-affairs-communitys-scholarship-awards",
       "eligibility": {
@@ -6500,7 +6500,7 @@
       "name": "USDA 1890 National Scholars Program",
       "sponsor": "U.S. Department of Agriculture (USDA)",
       "award_amount": "full tuition, fees, room, board, and internship",
-      "deadline": "VERIFY",
+      "deadline": "2026-03-08",
       "estimated_deadline": "2027-03-08",
       "url": "https://www.usda.gov/partnerships/1890NationalScholars",
       "eligibility": {
@@ -7005,7 +7005,7 @@
       "name": "4-H Youth in Action Scholarship",
       "sponsor": "National 4-H Council",
       "award_amount": 5000,
-      "deadline": "VERIFY",
+      "deadline": "2026-04-13",
       "url": "https://4-h.org/programs/4-h-youth-in-action-program/",
       "eligibility": {
         "min_gpa": null,
@@ -7300,7 +7300,7 @@
       "name": "ACM-W Conference Scholarships",
       "sponsor": "ACM-W",
       "award_amount": "Up to $600 (student) / $1,200 (childcare)",
-      "deadline": "VERIFY",
+      "deadline": "rolling",
       "url": "https://women.acm.org/scholarships/",
       "eligibility": {
         "min_gpa": null,
@@ -7414,7 +7414,7 @@
       "name": "ASA Norman Beery Memorial Scholarship",
       "sponsor": "American Statistical Association (ASA)",
       "award_amount": 3000,
-      "deadline": "VERIFY",
+      "deadline": "2027-03-01",
       "url": "https://www.amstat.org/your-career/awards/norman-beery-memorial-scholarship",
       "eligibility": {
         "min_gpa": 3.0,
@@ -7494,7 +7494,7 @@
       "name": "NACE Foundation Scholarships",
       "sponsor": "NACE International Foundation",
       "award_amount": "Varies (multiple awards up to $10,000)",
-      "deadline": "VERIFY",
+      "deadline": "2027-01-01",
       "url": "https://nace-foundation.org/programs/students/scholarships/",
       "eligibility": {
         "min_gpa": null,
@@ -7616,7 +7616,7 @@
       "name": "MAA MathFest Student Scholars Travel Grants",
       "sponsor": "Mathematical Association of America (MAA)",
       "award_amount": "Travel, registration, lodging, and stipend",
-      "deadline": "VERIFY",
+      "deadline": "2026-05-31",
       "url": "https://maa.org/resource/maa-mathfest-student-scholars-travel-grants/",
       "eligibility": {
         "min_gpa": null,

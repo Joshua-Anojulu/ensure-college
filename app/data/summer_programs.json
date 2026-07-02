@@ -1775,7 +1775,7 @@
       "deadline": "VERIFY",
       "estimated_deadline": "2027-01-28",
       "eligibility": {
-        "min_gpa": "VERIFY",
+        "min_gpa": 3.5,
         "fields_of_study": [
           "business",
           "engineering",
@@ -2813,7 +2813,7 @@
       "program_format": "hybrid",
       "location": "New York, NY",
       "program_dates": "Multiple summer sessions",
-      "deadline": "VERIFY",
+      "deadline": "rolling",
       "eligibility": {
         "min_gpa": null,
         "fields_of_study": [],
@@ -2857,7 +2857,7 @@
       "program_format": "residential",
       "location": "Ann Arbor, MI",
       "program_dates": "Two-week sessions in July",
-      "deadline": "VERIFY",
+      "deadline": "rolling",
       "eligibility": {
         "min_gpa": null,
         "fields_of_study": [],
