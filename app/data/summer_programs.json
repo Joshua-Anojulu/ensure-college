@@ -1440,7 +1440,7 @@
       "name": "NASA SEES High School Intern Program",
       "host": "University of Texas Center for Space Research (NASA Science Activation)",
       "subject": "Earth and space science research",
-      "url": "https://www.csr.utexas.edu/sees-internship/",
+      "url": "https://csr.utexas.edu/education-outreach/high-school-internships/sees/",
       "cost": "No tuition; housing/meals provided for selected on-site interns; limited travel scholarships may be available",
       "cost_category": "free",
       "selectivity": "Nationally competitive (174 students selected for 2025 cohort per NASA Science)",
@@ -1464,7 +1464,7 @@
         "demographics": [],
         "states": "any",
         "essay_required": true,
-        "citizenship_requirement": "VERIFY"
+        "citizenship_requirement": "us_citizen"
       },
       "description": "Nationally competitive NASA-funded STEM internship where high school students analyze NASA mission data with mentors across aerospace, Earth observation, and planetary science. Hybrid format with distance-learning modules and optional residential week at UT Austin.",
       "application_requirements": [
@@ -1473,21 +1473,21 @@
           "label": "Apply at spacegrant.net/apps/sees",
           "details": "Submit application, essay questions, introduction video, and request recommendation forms by the published deadline.",
           "required": true,
-          "source_url": "https://www.csr.utexas.edu/sees-internship/"
+          "source_url": "https://csr.utexas.edu/education-outreach/high-school-internships/sees/how-to-apply/"
         },
         {
           "id": "recommendation-form",
           "label": "Ensure recommendation form is submitted",
           "details": "Recommendation forms due March 1 for the 2026 cycle (one week after application deadline).",
           "required": true,
-          "source_url": "https://www.csr.utexas.edu/sees-internship/"
+          "source_url": "https://csr.utexas.edu/education-outreach/high-school-internships/sees/how-to-apply/"
         }
       ],
       "verified": true,
       "verification": {
-        "source_url": "https://www.csr.utexas.edu/sees-internship/",
-        "last_verified_at": "2026-06-21",
-        "notes": "Official CSR SEES page: Feb 22, 2026 deadline passed; hybrid virtual/on-site; 2026 dates published; continuation contingent on funding."
+        "source_url": "https://csr.utexas.edu/education-outreach/high-school-internships/sees/eligibility/",
+        "last_verified_at": "2026-07-02",
+        "notes": "Official CSR SEES eligibility/how-to-apply pages: U.S. citizens only; current sophomores/juniors age 16 by July 5; Feb 22, 2026 deadline passed; hybrid virtual/on-site dates published."
       }
     },
     {
@@ -1658,9 +1658,9 @@
       "name": "MIT Beaver Works Summer Institute (BWSI)",
       "host": "MIT Lincoln Laboratory / MIT School of Engineering",
       "subject": "STEM (robotics, AI, cybersecurity, and more)",
-      "url": "https://bwsi.mit.edu/beaver-works-summer-institute/about/",
+      "url": "https://bwsi.mit.edu/",
       "cost": "Free online prerequisites; summer courses may require fee for families above income threshold",
-      "cost_category": "VERIFY",
+      "cost_category": "paid",
       "selectivity": "Highly competitive",
       "program_format": "hybrid",
       "location": "Cambridge, MA (in-person courses) or virtual",
@@ -1683,7 +1683,7 @@
         "demographics": [],
         "states": "any",
         "essay_required": false,
-        "citizenship_requirement": "VERIFY",
+        "citizenship_requirement": "any",
         "special_requirements": [
           {
             "kind": "institution_channel",
@@ -1699,21 +1699,21 @@
           "label": "Complete the online prerequisite course for your chosen track",
           "details": "Summer enrollment is competitive and strongly based on final online course grades.",
           "required": true,
-          "source_url": "https://bwsi.mit.edu/beaver-works-summer-institute/application-for-summer-program/faq/"
+          "source_url": "https://bwsi.mit.edu/faq/"
         },
         {
           "id": "summer-application",
           "label": "Submit the BWSI summer program application",
           "details": "Eligible students are in grade 11 or below; seniors and college students are not accepted.",
           "required": true,
-          "source_url": "https://bwsi.mit.edu/beaver-works-summer-institute/application-for-summer-program/faq/"
+          "source_url": "https://bwsi.mit.edu/apply-now/"
         }
       ],
       "verified": true,
       "verification": {
-        "source_url": "https://bwsi.mit.edu/beaver-works-summer-institute/application-for-summer-program/faq/",
-        "last_verified_at": "2026-06-21",
-        "notes": "Official BWSI FAQ: U.S. high school enrollment; grades 9-11; July 6-Aug 2 2026; in-person courses require adult housing; income-based fees possible."
+        "source_url": "https://bwsi.mit.edu/apply-now/",
+        "last_verified_at": "2026-07-02",
+        "notes": "Official BWSI application/FAQ pages: online prerequisites free; 2026 summer fee is $2,400 for families above $200,000 income/assets and free for qualifying families; students must live/attend high school in the U.S."
       }
     },
     {
@@ -2099,7 +2099,7 @@
         "demographics": [],
         "states": "any",
         "essay_required": true,
-        "citizenship_requirement": "VERIFY"
+        "citizenship_requirement": "any"
       },
       "description": "Free seven-week biomedical research program in New York City for high school juniors and seniors age 16 or older. Jan 2, 2026 deadline has passed; next cycle estimated January 2, 2027.",
       "application_requirements": [
@@ -2113,9 +2113,9 @@
       ],
       "verified": true,
       "verification": {
-        "source_url": "https://www.rockefeller.edu/outreach/ssrp/",
-        "last_verified_at": "2026-06-21",
-        "notes": "Official Rockefeller SSRP page: free 7-week NYC program, juniors/seniors 16+, Jan 2 2026 deadline passed."
+        "source_url": "https://www.rockefeller.edu/outreach/ssrp/faqs/",
+        "last_verified_at": "2026-07-02",
+        "notes": "Official SSRP page/FAQ: free 7-week NYC program, juniors/seniors 16+, no minimum GPA, students outside the U.S. may apply but RockEDU cannot assist with visas; Jan 2 2026 deadline passed."
       }
     },
     {

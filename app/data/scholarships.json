@@ -2189,7 +2189,7 @@
       "id": "ascap-morton-gould-young-composer-awards",
       "name": "The ASCAP Foundation Morton Gould Young Composer Awards",
       "sponsor": "The ASCAP Foundation",
-      "award_amount": "VERIFY",
+      "award_amount": "amount at Foundation discretion",
       "deadline": "2026-02-06",
       "url": "https://www.ascapfoundation.org/programs/awards/young-composer-awards",
       "eligibility": {
@@ -2212,7 +2212,7 @@
       "estimated_deadline": "2027-02-06",
       "verification": {
         "source_url": "https://www.ascapfoundation.org/programs/awards/young-composer-awards",
-        "last_verified_at": "2026-06-21",
+        "last_verified_at": "2026-07-02",
         "notes": "2026 cycle Jan 6–Feb 6 ET; age 13–under 30; U.S. citizen, PR, or valid U.S. student visa; single original concert work; prize amount at Foundation discretion."
       }
     },
@@ -3545,7 +3545,7 @@
       "id": "dar-scholarships",
       "name": "DAR Scholarship Program",
       "sponsor": "National Society Daughters of the American Revolution",
-      "award_amount": "VERIFY (varies by individual scholarship)",
+      "award_amount": "varies by individual scholarship",
       "deadline": "2027-01-31",
       "url": "https://www.dar.org/national-society/scholarships",
       "eligibility": {
@@ -3566,7 +3566,7 @@
       "estimated_deadline": "2027-01-31",
       "verification": {
         "source_url": "https://www.dar.org/national-society/scholarships",
-        "last_verified_at": "2026-06-21",
+        "last_verified_at": "2026-07-02",
         "notes": "Multiple merit/need awards for U.S. citizens; online portal Nov 1–Jan 31 HST annually — 2026-27 reopens Nov 1 2026."
       }
     },
@@ -4514,7 +4514,7 @@
       "id": "sallie-mae-bridging-the-dream-graduate",
       "name": "Sallie Mae Bridging the Dream Scholarship for Graduate Students",
       "sponsor": "The Sallie Mae Fund (administered by Thurgood Marshall College Fund)",
-      "award_amount": "VERIFY",
+      "award_amount": "up to $10,000",
       "deadline": "2026-07-17",
       "url": "https://www.salliemae.com/landing/bridging-the-dream-for-graduates/",
       "eligibility": {
@@ -4548,8 +4548,8 @@
       ],
       "verification": {
         "source_url": "https://www.salliemae.com/landing/bridging-the-dream-for-graduates/",
-        "last_verified_at": "2026-06-21",
-        "notes": "Official landing page: AY 2026–2027 applications open June 1 through July 17, 2026; 3.0 GPA and graduate enrollment per official rules PDF."
+        "last_verified_at": "2026-07-02",
+        "notes": "Official landing page and rules PDF: AY 2026–2027 applications open June 1 through July 17, 2026; up to 20 scholarships of up to $10,000 each; 3.0 GPA and graduate enrollment required."
       }
     },
     {
@@ -5101,7 +5101,7 @@
       "name": "AFCEA STEM Majors Scholarship",
       "sponsor": "AFCEA Educational Foundation",
       "award_amount": "$2,500 (STEM Major); up to $5,000 (Cyber Security track)",
-      "deadline": "VERIFY",
+      "deadline": "2026-05-01",
       "estimated_deadline": "2027-05-01",
       "url": "https://www.afcea.org/stem-majors-scholarships",
       "eligibility": {
@@ -5148,16 +5148,16 @@
       "verified": true,
       "verification": {
         "source_url": "https://www.afcea.org/stem-majors-scholarships",
-        "last_verified_at": "2026-06-21",
-        "notes": "Official AFCEA page: $2,500 STEM / $5,000 cyber; sophomore or junior; 3.0 GPA; U.S. citizen or PR; applications closed at verification; May 1 transcript mailing deadline shown for prior cycle."
+        "last_verified_at": "2026-07-02",
+        "notes": "Official AFCEA page: $2,500 STEM / $5,000 cyber; sophomore or junior; 3.0 GPA; U.S. citizen or PR; applications closed; application materials complete by May 1, 2026."
       }
     },
     {
       "id": "jeannette-rankin-scholar-grant",
       "name": "Jeannette Rankin Foundation Scholar Grant",
       "sponsor": "Jeannette Rankin Foundation",
-      "award_amount": "VERIFY",
-      "deadline": "VERIFY",
+      "award_amount": "up to $2,500 annually, renewable up to five years",
+      "deadline": "2026-02-13",
       "estimated_deadline": "2027-02-28",
       "url": "https://rankinfoundation.org/",
       "eligibility": {
@@ -5183,9 +5183,9 @@
       ],
       "verified": true,
       "verification": {
-        "source_url": "https://rankinfoundation.org/",
-        "last_verified_at": "2026-06-21",
-        "notes": "Official homepage: women/nonbinary age 35+; first associate or bachelor's; financial need; application opening Nov 2026."
+        "source_url": "https://rankinfoundation.org/national-scholar-grant/",
+        "last_verified_at": "2026-07-02",
+        "notes": "Official National Scholar Grant page: women/nonbinary age 35+; technical/vocational, associate's, or first bachelor's degree; financial need; up to $2,500 annually, renewable up to five years; 2025-2026 cycle closed Feb 13 2026 and next application opens Nov 2026."
       }
     },
     {
@@ -5279,7 +5279,7 @@
       "deadline": "2026-04-15",
       "url": "https://www.createrealimpact.com/",
       "eligibility": {
-        "min_gpa": "VERIFY",
+        "min_gpa": null,
         "fields_of_study": [
           "communications",
           "arts"
@@ -5290,7 +5290,7 @@
         "demographics": [],
         "states": "any",
         "essay_required": false,
-        "citizenship_requirement": "us_citizen"
+        "citizenship_requirement": "VERIFY"
       },
       "description": "Contest for students ages 14-22 to submit a video PSA or graphic design promoting positive solutions to reckless and distracted driving. High school campaign category awards grants to schools for broader awareness projects.",
       "application_requirements": [
@@ -5305,8 +5305,8 @@
       "verified": true,
       "verification": {
         "source_url": "https://www.createrealimpact.com/",
-        "last_verified_at": "2026-06-21",
-        "notes": "Official site: ages 14-22; U.S. legal residents; closes Apr 15, 2026 5 p.m. ET; video/graphic/campaign categories."
+        "last_verified_at": "2026-07-02",
+        "notes": "Official site: ages 14-22; legal residents of the 50 states/DC or DACA recipients; closes Apr 15, 2026 5 p.m. ET; no GPA cutoff found in published eligibility/FAQ."
       }
     },
     {
@@ -6014,7 +6014,7 @@
       "name": "AFCEA ROTC Scholarship",
       "sponsor": "AFCEA Educational Foundation",
       "award_amount": "$2,500 to $3,000 (varies by ROTC scholarship)",
-      "deadline": "VERIFY",
+      "deadline": "2026-05-01",
       "estimated_deadline": "2027-05-01",
       "url": "https://www.afcea.org/rotc-scholarships",
       "eligibility": {
@@ -6031,7 +6031,7 @@
         "demographics": [],
         "states": "any",
         "essay_required": false,
-        "citizenship_requirement": "us_citizen"
+        "citizenship_requirement": "us_citizen_or_permanent_resident"
       },
       "description": "Scholarship for ROTC cadets at U.S. colleges and universities majoring in STEM or related fields supporting defense and intelligence missions.",
       "application_requirements": [
@@ -6060,8 +6060,8 @@
       "verified": true,
       "verification": {
         "source_url": "https://www.afcea.org/rotc-scholarships",
-        "last_verified_at": "2026-06-21",
-        "notes": "Official AFCEA ROTC page: $2,500; ROTC enrollment; STEM majors; 3.0 GPA; U.S. citizen."
+        "last_verified_at": "2026-07-02",
+        "notes": "Official AFCEA ROTC page: $2,500-$3,000; ROTC enrollment; STEM majors; 3.0 GPA; U.S. citizen or permanent resident; application materials complete by May 1, 2026."
       }
     },
     {
@@ -7574,9 +7574,9 @@
       "id": "american-statistical-association-pride-scholarship",
       "name": "ASA Pride Scholarship",
       "sponsor": "American Statistical Association (ASA)",
-      "award_amount": "VERIFY",
-      "deadline": "VERIFY",
-      "url": "https://www.amstat.org/your-career/awards-and-scholarships",
+      "award_amount": 1000,
+      "deadline": "2027-03-01",
+      "url": "https://www.amstat.org/your-career/awards/asa-pride-scholarship",
       "eligibility": {
         "min_gpa": null,
         "fields_of_study": [
@@ -7596,9 +7596,9 @@
       "description": "ASA scholarship supporting LGBTQ+ statisticians and data scientists and allies pursuing statistics or data science education.",
       "verified": true,
       "verification": {
-        "source_url": "https://www.amstat.org/your-career/awards-and-scholarships",
-        "last_verified_at": "2026-06-21",
-        "notes": "Official ASA awards hub: Pride Scholarship for LGBTQ+ statisticians/data scientists; deadline historically March 1 — est. 2027-03-01; award amount VERIFY on application page."
+        "source_url": "https://www.amstat.org/your-career/awards/asa-pride-scholarship",
+        "last_verified_at": "2026-07-02",
+        "notes": "Official ASA Pride Scholarship page: $1,000 for LGBTQ+ statisticians and data scientists or allies; self-nominations and nominations due March 1."
       },
       "application_requirements": [
         {
@@ -7606,7 +7606,7 @@
           "label": "Complete the official online application",
           "details": "Apply through the sponsor's official page when the cycle opens.",
           "required": true,
-          "source_url": "https://www.amstat.org/your-career/awards-and-scholarships"
+          "source_url": "https://www.amstat.org/your-career/awards/asa-pride-scholarship"
         }
       ],
       "estimated_deadline": "2027-03-01"
