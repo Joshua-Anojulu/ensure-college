@@ -1506,7 +1506,7 @@
         "demographics": [],
         "states": "any",
         "essay_required": true,
-        "citizenship_requirement": "VERIFY"
+        "citizenship_requirement": "any"
       },
       "description": "Annual essay contest for U.S. high school students in grades 9-12 to describe and analyze an act of political courage by a U.S. elected official who served during or after 1917. First place receives $10,000.",
       "verified": true,
@@ -1514,7 +1514,7 @@
       "verification": {
         "source_url": "https://www.jfklibrary.org/learn/education/profile-in-courage-essay-contest",
         "last_verified_at": "2026-06-24",
-        "notes": "Main contest page: grades 9-12 U.S. high school students including GED under 20 and U.S. citizens abroad; $10k/$3k/3×$1k + 15 honorable mentions; 2026 cycle closed Jan 12 2026 — next deadline not yet published; estimated Jan 12 2027. Application checklist verified 2026-06-24 from JFK Library contest pages; next-cycle deadline not yet published."
+        "notes": "Main contest page: grades 9-12 U.S. high school students including GED under 20 and U.S. citizens abroad; no citizenship gate is stated for U.S.-based high school students. $10k/$3k/3×$1k + 15 honorable mentions; 2026 cycle closed Jan 12 2026 — next deadline not yet published; estimated Jan 12 2027. Application checklist verified 2026-06-24 from JFK Library contest pages; next-cycle deadline not yet published."
       },
       "application_requirements": [
         {
@@ -5670,7 +5670,7 @@
       "estimated_deadline": "2027-02-01",
       "url": "https://www.optimist.org/",
       "eligibility": {
-        "min_gpa": "VERIFY",
+        "min_gpa": null,
         "fields_of_study": [
           "humanities",
           "communications"
@@ -5681,7 +5681,7 @@
         "demographics": [],
         "states": "any",
         "essay_required": true,
-        "citizenship_requirement": "VERIFY"
+        "citizenship_requirement": "any"
       },
       "description": "Essay contest for students under age 19 who have not completed secondary school. Club winners advance to district scholarship competition on the annual Optimist topic.",
       "application_requirements": [
@@ -5704,7 +5704,7 @@
       "verification": {
         "source_url": "https://optimist.org/Documents/2026/programs/25-26_Essay_Application.pdf",
         "last_verified_at": "2026-06-21",
-        "notes": "Official Optimist PDF rules: under 19; local club entry required; 700-800 words; club then district levels."
+        "notes": "Official Optimist PDF rules: under 19; local club entry required; 700-800 words; club then district levels; no GPA or citizenship requirement is stated."
       }
     },
     {
@@ -5712,8 +5712,8 @@
       "name": "Doodle for Google",
       "sponsor": "Google LLC",
       "award_amount": "national winner scholarship plus finalist awards (e.g., $10,000 college scholarship per finalist)",
-      "deadline": "2025-12-03",
-      "estimated_deadline": "2026-12-03",
+      "deadline": "2025-12-17",
+      "estimated_deadline": "2026-12-17",
       "url": "https://doodles.google.com/d4g/",
       "eligibility": {
         "min_gpa": "VERIFY",
@@ -5741,7 +5741,7 @@
         {
           "id": "online-or-mail-submission",
           "label": "Submit online or by mail before the deadline",
-          "details": "2025-26 cycle entry form shows submit by December 3, 2025 8:00 PM PST; check doodles.google.com/d4g/ for next cycle dates.",
+          "details": "2025-26 cycle entry form shows submit by December 17, 2025 8:00 PM PST; check doodles.google.com/d4g/ for next cycle dates.",
           "required": true,
           "source_url": "https://doodles.google.com/d4g/"
         }
@@ -5750,7 +5750,7 @@
       "verification": {
         "source_url": "https://doodles.google.com/d4g/",
         "last_verified_at": "2026-06-21",
-        "notes": "Official Doodle for Google site and 2025-26 entry form PDF: K-12; theme My superpower is...; Dec 3 deadline on prior cycle form."
+        "notes": "Official Doodle for Google site and 2025-26 entry form PDF: K-12; theme My superpower is...; Dec 17 deadline on prior cycle form."
       }
     },
     {
@@ -5857,7 +5857,7 @@
       "estimated_deadline": "2026-11-05",
       "url": "https://www.us.stop-hunger.org/grants/youth-scholarships",
       "eligibility": {
-        "min_gpa": "VERIFY",
+        "min_gpa": null,
         "fields_of_study": [],
         "grade_levels": [
           "high_school",
@@ -5883,7 +5883,7 @@
       "verification": {
         "source_url": "https://www.us.stop-hunger.org/grants/youth-scholarships",
         "last_verified_at": "2026-06-21",
-        "notes": "Official Sodexo Stop Hunger page: ages 5-25; Sept 5-Nov 5 window; $10k scholarship + $5k charity grant for national scholars."
+        "notes": "Official Sodexo Stop Hunger page: ages 5-25; Sept 5-Nov 5 window; $10k scholarship + $5k charity grant for national scholars; no GPA requirement is stated."
       }
     },
     {
