@@ -104,6 +104,9 @@ SESSION_SECRET = _resolve_session_secret()
 SESSION_COOKIE_SECURE = os.getenv("SESSION_COOKIE_SECURE", "").lower() in {"1", "true", "yes"}
 _DOCS_ENABLED = not is_production_deploy()
 
+# Old domain hosts that should be permanently redirected to the new domain.
+_OLD_HOSTS = {"scholarships4u.dev", "www.scholarships4u.dev"}
+
 
 def _ai_features_enabled() -> bool:
     """AI-backed endpoints (essay/program advice, resume parsing) are gated off
@@ -120,6 +123,16 @@ def require_ai_features() -> None:
         )
 
 
+def _public_base_url(request: Request) -> str:
+    env = os.getenv("PUBLIC_APP_URL", "").strip().rstrip("/")
+    return env or str(request.base_url).rstrip("/")
+
+
+def _absolute_og_image_urls(html: str, base_url: str) -> str:
+    absolute = f"{base_url}{_OG_IMAGE_PATH}"
+    return html.replace(f'content="{_OG_IMAGE_PATH}"', f'content="{absolute}"')
+
+
 class SecurityHeadersMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: StarletteRequest, call_next):
         response = await call_next(request)
@@ -133,16 +146,6 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
                 "max-age=31536000; includeSubDomains",
             )
         return response
-
-
-def _public_base_url(request: Request) -> str:
-    env = os.getenv("PUBLIC_APP_URL", "").strip().rstrip("/")
-    return env or str(request.base_url).rstrip("/")
-
-
-def _absolute_og_image_urls(html: str, base_url: str) -> str:
-    absolute = f"{base_url}{_OG_IMAGE_PATH}"
-    return html.replace(f'content="{_OG_IMAGE_PATH}"', f'content="{absolute}"')
 
 
 @asynccontextmanager
@@ -161,6 +164,18 @@ app = FastAPI(
     redoc_url="/redoc" if _DOCS_ENABLED else None,
     openapi_url="/openapi.json" if _DOCS_ENABLED else None,
 )
+
+
+@app.middleware("http")
+async def _redirect_old_domain(request: StarletteRequest, call_next):
+    host = request.headers.get("host", "").split(":")[0].lower()
+    if host in _OLD_HOSTS:
+        target = f"https://ensurecollege.com{request.url.path}"
+        if request.url.query:
+            target += f"?{request.url.query}"
+        return Response(status_code=301, headers={"Location": target})
+    return await call_next(request)
+
 
 app.add_middleware(SecurityHeadersMiddleware)
 
