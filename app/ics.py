@@ -11,7 +11,7 @@ from datetime import date, datetime, timedelta, timezone
 from app.models.program import SummerProgram
 from app.models.scholarship import Scholarship
 
-_PRODID = "-//Scholarships4U//Opportunity Deadlines//EN"
+_PRODID = "-//EnsureCollege//Opportunity Deadlines//EN"
 
 
 def _parse_deadline(deadline: str) -> date | None:
@@ -55,7 +55,7 @@ def _event_lines(
     end = (parsed_deadline + timedelta(days=1)).strftime("%Y%m%d")
     return [
         "BEGIN:VEVENT",
-        f"UID:{uid}@scholarships4u",
+        f"UID:{uid}@ensurecollege",
         f"DTSTAMP:{stamp}",
         f"DTSTART;VALUE=DATE:{start}",
         f"DTEND;VALUE=DATE:{end}",
@@ -76,7 +76,7 @@ def build_calendar(
         f"PRODID:{_PRODID}",
         "CALSCALE:GREGORIAN",
         "METHOD:PUBLISH",
-        "X-WR-CALNAME:Scholarships4U verified deadlines",
+        "X-WR-CALNAME:EnsureCollege verified deadlines",
     ]
     for scholarship in scholarships:
         lines += _event_lines(

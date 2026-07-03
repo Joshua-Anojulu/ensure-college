@@ -148,7 +148,7 @@ def saved_calendar(
         content=build_calendar(scholarships, programs),
         media_type="text/calendar",
         headers={
-            "Content-Disposition": 'attachment; filename="scholarships4u-deadlines.ics"'
+            "Content-Disposition": 'attachment; filename="ensurecollege-deadlines.ics"'
         },
     )
 

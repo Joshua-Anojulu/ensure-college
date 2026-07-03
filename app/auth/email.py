@@ -27,10 +27,10 @@ _RESET_EMAIL_HTML = """\
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light">
 <meta name="supported-color-schemes" content="light">
-<title>Reset your Scholarships4U password</title>
+<title>Reset your EnsureCollege password</title>
 </head>
 <body style="margin:0; padding:0; background-color:#f5f7fb;">
-<div style="display:none; max-height:0; overflow:hidden; opacity:0;">Reset your Scholarships4U password. This link expires in one hour.</div>
+<div style="display:none; max-height:0; overflow:hidden; opacity:0;">Reset your EnsureCollege password. This link expires in one hour.</div>
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#f5f7fb;">
   <tr>
     <td align="center" style="padding:32px 16px;">
@@ -40,11 +40,11 @@ _RESET_EMAIL_HTML = """\
             <table role="presentation" cellpadding="0" cellspacing="0" border="0">
               <tr>
                 <td width="36" height="36" align="center" valign="middle" bgcolor="#4f46e5" style="width:36px; height:36px; border-radius:9px; color:#ffffff; font-family:'Segoe UI',Arial,sans-serif; font-size:20px; font-weight:bold; text-align:center; line-height:36px;">S</td>
-                <td style="padding-left:10px; font-size:17px; font-weight:bold; color:#0f172a;">Scholarships4U</td>
+                <td style="padding-left:10px; font-size:17px; font-weight:bold; color:#0f172a;">EnsureCollege</td>
               </tr>
             </table>
             <h1 style="margin:26px 0 12px 0; font-size:22px; line-height:1.3; color:#0f172a;">Reset your password</h1>
-            <p style="margin:0 0 22px 0; font-size:15px; line-height:1.6; color:#364152;">We received a request to reset the password for your Scholarships4U account. Choose a new one with the button below.</p>
+            <p style="margin:0 0 22px 0; font-size:15px; line-height:1.6; color:#364152;">We received a request to reset the password for your EnsureCollege account. Choose a new one with the button below.</p>
             <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 24px 0;">
               <tr>
                 <td align="center" bgcolor="#4f46e5" style="border-radius:10px;">
@@ -59,7 +59,7 @@ _RESET_EMAIL_HTML = """\
           </td>
         </tr>
       </table>
-      <p style="margin:18px 0 0 0; font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif; font-size:12px; color:#7a8499;">Scholarships4U &middot; scholarships4u.dev</p>
+      <p style="margin:18px 0 0 0; font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif; font-size:12px; color:#7a8499;">EnsureCollege &middot; ensurecollege.com</p>
     </td>
   </tr>
 </table>
@@ -109,9 +109,9 @@ def send_password_reset_email(recipient: str, token: str) -> None:
     payload = {
         "from": sender,
         "to": [recipient],
-        "subject": "Reset your Scholarships4U password",
+        "subject": "Reset your EnsureCollege password",
         "text": (
-            "We received a request to reset your Scholarships4U password. "
+            "We received a request to reset your EnsureCollege password. "
             f"Use this link within one hour: {reset_url}\n\n"
             "If you did not request this, you can safely ignore this email."
         ),
@@ -126,7 +126,7 @@ def send_password_reset_email(recipient: str, token: str) -> None:
             # Resend's API is fronted by Cloudflare, which blocks the default
             # "Python-urllib" agent with a 403 (error 1010). Send an explicit
             # User-Agent so the request is not rejected before it reaches Resend.
-            "User-Agent": "Scholarships4U/1.0 (+https://scholarships4u.dev)",
+            "User-Agent": "EnsureCollege/1.0 (+https://ensurecollege.com)",
         },
         method="POST",
     )

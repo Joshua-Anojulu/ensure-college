@@ -154,7 +154,7 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    title="Scholarships4U",
+    title="EnsureCollege",
     description="Match students to scholarships with transparent, explainable scoring.",
     lifespan=lifespan,
     docs_url="/docs" if _DOCS_ENABLED else None,

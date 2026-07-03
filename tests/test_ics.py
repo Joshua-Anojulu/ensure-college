@@ -13,10 +13,10 @@ def test_calendar_exports_scholarship_and_program_verified_deadlines():
     calendar = build_calendar([scholarship], [program])
 
     assert "BEGIN:VCALENDAR" in calendar
-    assert f"UID:scholarship-{scholarship.id}@scholarships4u" in calendar
-    assert f"UID:program-{program.id}@scholarships4u" in calendar
+    assert f"UID:scholarship-{scholarship.id}@ensurecollege" in calendar
+    assert f"UID:program-{program.id}@ensurecollege" in calendar
     assert f"SUMMARY:Apply: {program.name}" in calendar
-    assert "X-WR-CALNAME:Scholarships4U verified deadlines" in calendar
+    assert "X-WR-CALNAME:EnsureCollege verified deadlines" in calendar
 
 
 def test_calendar_skips_unverified_program_deadlines():
@@ -24,5 +24,5 @@ def test_calendar_skips_unverified_program_deadlines():
 
     calendar = build_calendar([], [program])
 
-    assert f"UID:program-{program.id}@scholarships4u" not in calendar
+    assert f"UID:program-{program.id}@ensurecollege" not in calendar
     assert "BEGIN:VCALENDAR" in calendar
