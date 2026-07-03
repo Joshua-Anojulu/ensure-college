@@ -145,6 +145,23 @@ uvicorn app.main:app --host 0.0.0.0 --port $PORT
 3. Add a Postgres database to the project. Railway exposes its connection string as `DATABASE_URL`.
 4. In the **Variables** tab, set `ANTHROPIC_API_KEY`, `SESSION_SECRET` (any long random string), `SESSION_COOKIE_SECURE=true`, and the same email variables described in the Render section if password reset should be enabled.
 
+## Deploy (Vercel)
+
+This repo can also run on [Vercel](https://vercel.com/) serverless infrastructure using `@vercel/python`.
+
+1. Import the repository to Vercel from GitHub.
+2. In the Vercel project settings, provision or connect:
+   - **Neon Postgres** (free tier): create a project and copy the **pooled** connection string (host contains `-pooler`).
+   - **Upstash Redis** (free tier): create a Redis database and copy the REST URL and token.
+3. Set environment variables in Vercel:
+   - `DATABASE_URL` = your Neon pooled connection string
+   - `UPSTASH_REDIS_REST_URL` = your Upstash REST URL
+   - `UPSTASH_REDIS_REST_TOKEN` = your Upstash REST token
+   - `RUN_MIGRATIONS_ON_STARTUP=false` (Alembic runs at build time instead)
+   - `PUBLIC_APP_URL`, `SESSION_SECRET`, `SESSION_COOKIE_SECURE=true`, `RESEND_API_KEY`, `EMAIL_FROM`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` (same as Render section)
+4. On first deploy, the build step runs `alembic upgrade head` to initialize the database schema. Subsequent deploys skip migrations and reuse the pooled connection, suitable for serverless invocations.
+5. Add a custom domain and configure DNS records as directed by Vercel.
+
 ## API endpoints
 
 | Method | Path | Description |
