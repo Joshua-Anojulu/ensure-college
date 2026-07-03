@@ -15,8 +15,7 @@ class TestLegalPages:
         response = client.get("/privacy")
         assert response.status_code == 200
         assert "text/html" in response.headers["content-type"]
-        # Key disclosures must be present.
-        assert "Anthropic" in response.text
+        # Age disclosure must be present.
         assert "13" in response.text
 
     def test_terms_is_served(self, client):

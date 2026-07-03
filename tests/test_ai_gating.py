@@ -47,3 +47,9 @@ def test_homepage_has_no_ai_provider_claims():
     body = client.get("/").text
     assert "Anthropic" not in body
     assert "AI features" not in body
+
+
+def test_legal_pages_have_no_ai_provider_claims():
+    for path in ("/privacy", "/terms"):
+        body = client.get(path).text
+        assert "Anthropic" not in body, path
