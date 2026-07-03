@@ -7,6 +7,12 @@ from fastapi.testclient import TestClient
 from app.main import app
 from app.models.student import StudentProfile
 
+
+@pytest.fixture(autouse=True)
+def _enable_ai_features(monkeypatch):
+    monkeypatch.setenv("AI_FEATURES_ENABLED", "true")
+
+
 VALID_STUDENT = {
     "gpa": 3.8,
     "grade_level": "high_school_senior",

@@ -21,6 +21,7 @@
   <link rel="canonical" href="https://scholarships4u.dev/">
   <link rel="icon" href="/static/favicon.svg?v=20260628-1" type="image/svg+xml">
   <meta name="theme-color" id="theme-color-meta" content="#f5f7fb">
+  <meta name="ai-features-enabled" content="__AI_FEATURES_ENABLED__">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
@@ -246,14 +247,14 @@
       </div>
     </section>
 
-    <section class="resume-import panel reveal-on-scroll" data-reveal-delay="135ms">
+    <section class="resume-import panel reveal-on-scroll" id="resume-import-section" data-reveal-delay="135ms" hidden>
       <div class="resume-intro">
         <p class="eyebrow">Optional shortcut</p>
         <h2 class="resume-import-title">Start with what you already have.</h2>
       </div>
       <p class="field-hint">
         Upload a PDF resume or paste its text, and we'll pre-fill the form below for you to review.
-        The text is sent to Anthropic's API to extract your details; nothing is submitted automatically and your file is not stored.
+        The text is processed to extract your details; nothing is submitted automatically and your file is not stored.
       </p>
       <div class="resume-import-controls">
         <input type="file" id="resume-file" accept=".pdf,.txt" aria-label="Resume file">
@@ -571,8 +572,7 @@
       <h2 id="age-gate-title">Before you start</h2>
       <p>
         Scholarships4U is a personal, educational project. The matcher uses the profile details you enter
-        (including optional demographic and financial-need information), and the optional AI features send
-        your inputs to Anthropic's API. Please review our
+        (including optional demographic and financial-need information). Please review our
         <a href="/privacy" target="_blank" rel="noopener">Privacy Policy</a> and
         <a href="/terms" target="_blank" rel="noopener">Terms</a>.
       </p>
