@@ -22,3 +22,13 @@ def test_homepage_ok_when_ai_disabled(monkeypatch):
 def test_app_serves_without_anthropic_key(monkeypatch):
     monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
     assert client.get("/health").status_code == 200
+
+
+def test_index_exposes_ai_flag_false_by_default(monkeypatch):
+    monkeypatch.delenv("AI_FEATURES_ENABLED", raising=False)
+    assert '<meta name="ai-features-enabled" content="false">' in client.get("/").text
+
+
+def test_index_exposes_ai_flag_true_when_enabled(monkeypatch):
+    monkeypatch.setenv("AI_FEATURES_ENABLED", "true")
+    assert '<meta name="ai-features-enabled" content="true">' in client.get("/").text

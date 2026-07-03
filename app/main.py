@@ -203,6 +203,9 @@ def serve_index(request: Request) -> HTMLResponse:
     # a stale cached page would keep requesting old asset versions.
     html = (STATIC_DIR / "index.html").read_text(encoding="utf-8")
     html = _absolute_og_image_urls(html, _public_base_url(request))
+    html = html.replace(
+        "__AI_FEATURES_ENABLED__", "true" if _ai_features_enabled() else "false"
+    )
     return HTMLResponse(html, headers={"Cache-Control": "no-cache"})
 
 
