@@ -1,4 +1,5 @@
 import pytest
+from fastapi import HTTPException
 from fastapi.testclient import TestClient
 
 from app.main import app
@@ -60,3 +61,46 @@ class TestRateLimitEndpoint:
             assert client.post("/auth/delete-account", json={"password": "password123"}).status_code == 429
         finally:
             _delete_limit.limiter.clear()
+
+
+def test_upstash_path_blocks_over_limit(monkeypatch):
+    import app.rate_limit as rl
+    monkeypatch.setenv("RATE_LIMIT_ENABLED", "true")
+    monkeypatch.setenv("UPSTASH_REDIS_REST_URL", "https://example.upstash.io")
+    monkeypatch.setenv("UPSTASH_REDIS_REST_TOKEN", "tok")
+    calls = {"n": 0}
+
+    def fake_incr(key, window_seconds):
+        calls["n"] += 1
+        return calls["n"]  # 1, 2, 3, ...
+
+    monkeypatch.setattr(rl, "_upstash_incr", fake_incr)
+    dep = rl.rate_limiter(2, 60, "test")
+
+    class Req:
+        class client:
+            host = "1.2.3.4"
+
+    dep(Req())  # 1 -> ok
+    dep(Req())  # 2 -> ok
+    with pytest.raises(HTTPException):
+        dep(Req())  # 3 -> blocked
+
+
+def test_upstash_fail_open(monkeypatch):
+    import app.rate_limit as rl
+    monkeypatch.setenv("RATE_LIMIT_ENABLED", "true")
+    monkeypatch.setenv("UPSTASH_REDIS_REST_URL", "https://example.upstash.io")
+    monkeypatch.setenv("UPSTASH_REDIS_REST_TOKEN", "tok")
+
+    def boom(key, window_seconds):
+        raise OSError("redis down")
+
+    monkeypatch.setattr(rl, "_upstash_incr", boom)
+    dep = rl.rate_limiter(1, 60, "test")
+
+    class Req:
+        class client:
+            host = "9.9.9.9"
+
+    dep(Req()); dep(Req())  # must NOT raise (fail open)
