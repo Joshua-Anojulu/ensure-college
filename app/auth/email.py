@@ -39,7 +39,7 @@ _RESET_EMAIL_HTML = """\
           <td style="padding:32px; font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
             <table role="presentation" cellpadding="0" cellspacing="0" border="0">
               <tr>
-                <td width="36" height="36" align="center" valign="middle" bgcolor="#4f46e5" style="width:36px; height:36px; border-radius:9px; color:#ffffff; font-family:'Segoe UI',Arial,sans-serif; font-size:20px; font-weight:bold; text-align:center; line-height:36px;">S</td>
+                <td width="36" height="36" align="center" valign="middle" bgcolor="#4f46e5" style="width:36px; height:36px; border-radius:9px; color:#ffffff; font-family:'Segoe UI',Arial,sans-serif; font-size:20px; font-weight:bold; text-align:center; line-height:36px;">E</td>
                 <td style="padding-left:10px; font-size:17px; font-weight:bold; color:#0f172a;">EnsureCollege</td>
               </tr>
             </table>

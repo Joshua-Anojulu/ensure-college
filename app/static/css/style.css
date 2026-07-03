@@ -230,7 +230,7 @@ a { color: var(--brand); }
   box-shadow: var(--shadow-sm), inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
 .brand-mark::after {
-  content: "S";
+  content: "E";
   font-family: var(--font-display);
   font-size: 1.3rem;
   font-weight: 800;
