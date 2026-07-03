@@ -1,8 +1,8 @@
-# Scholarships4U
+# EnsureCollege
 
-**Live demo:** [scholarships4u.dev](https://scholarships4u.dev/)
+**Live demo:** [ensurecollege.com](https://ensurecollege.com/)
 
-Scholarships4U is a **curated scholarship and summer-program planner** for U.S. students — a portfolio-grade web app backed by manually verified datasets of real scholarships and elite pre-college programs. Students build a profile once, see ranked matches with transparent scoring, track applications, and get practical essay guidance from a server-side LLM. Optional free accounts save the profile and bookmark scholarships between visits.
+EnsureCollege is a **curated scholarship and summer-program planner** for U.S. students — a portfolio-grade web app backed by manually verified datasets of real scholarships and elite pre-college programs. Students build a profile once, see ranked matches with transparent scoring, track applications, and get practical essay guidance from a server-side LLM. Optional free accounts save the profile and bookmark scholarships between visits.
 
 > **What this is:** a focused demo with honest data provenance, not a comprehensive scholarship search engine. Always confirm eligibility and deadlines on each sponsor's official site.
 
@@ -118,18 +118,18 @@ This repo includes a [`render.yaml`](render.yaml) for [Render](https://render.co
 3. In the Render dashboard, set these secrets under **Environment Variables**:
    - `ANTHROPIC_API_KEY` = your Anthropic API key
    - `RESEND_API_KEY` = a Resend API key for transactional email
-   - `EMAIL_FROM` = a sender address verified in Resend, such as `Scholarships4U <no-reply@mail.scholarships4u.dev>`
-   - `PUBLIC_APP_URL` = the public HTTPS URL for the app, such as `https://scholarships4u.dev`
+   - `EMAIL_FROM` = a sender address verified in Resend, such as `EnsureCollege <no-reply@mail.ensurecollege.com>`
+   - `PUBLIC_APP_URL` = the public HTTPS URL for the app, such as `https://ensurecollege.com`
 
 Do not commit API keys. Set them only in the host's environment variable UI. The app reads `DATABASE_URL` and switches from SQLite to Postgres automatically, so saved accounts persist across deploys.
 
 ### Custom domain
 
-The production deployment is intended to run at [`https://scholarships4u.dev`](https://scholarships4u.dev). Add the custom domain in Render, copy Render's DNS records into the domain registrar, and wait for Render to verify the records and issue HTTPS. After the domain resolves, set `PUBLIC_APP_URL=https://scholarships4u.dev` and redeploy so password-reset links, sitemap URLs, and social preview image URLs point at the public domain.
+The production deployment is intended to run at [`https://ensurecollege.com`](https://ensurecollege.com). Add the custom domain in Render, copy Render's DNS records into the domain registrar, and wait for Render to verify the records and issue HTTPS. After the domain resolves, set `PUBLIC_APP_URL=https://ensurecollege.com` and redeploy so password-reset links, sitemap URLs, and social preview image URLs point at the public domain.
 
 ### Password-reset email
 
-Password reset uses Resend over its HTTPS API. The app stores only a SHA-256 hash of each one-time reset token, expires tokens after one hour, uses the same response for known and unknown email addresses, and invalidates other active sessions after a successful reset. The production sender is expected to be a verified Resend domain such as `mail.scholarships4u.dev`; until `RESEND_API_KEY`, `EMAIL_FROM`, and `PUBLIC_APP_URL` are configured and redeployed, the reset form safely reports that it is temporarily unavailable instead of pretending an email was sent.
+Password reset uses Resend over its HTTPS API. The app stores only a SHA-256 hash of each one-time reset token, expires tokens after one hour, uses the same response for known and unknown email addresses, and invalidates other active sessions after a successful reset. The production sender is expected to be a verified Resend domain such as `mail.ensurecollege.com`; until `RESEND_API_KEY`, `EMAIL_FROM`, and `PUBLIC_APP_URL` are configured and redeployed, the reset form safely reports that it is temporarily unavailable instead of pretending an email was sent.
 
 The free Postgres plan and free web service are enough for a demo. On the free tier the database can expire after a period of inactivity, so treat saved data as non-critical.
 
@@ -194,7 +194,7 @@ python -m playwright install chromium
 python scripts/capture_readme_screenshots.py
 ```
 
-The screenshot script defaults to `https://scholarships4u.dev`. Set `SCHOLARSHIPS4U_URL` to target a staging or local deployment instead.
+The screenshot script defaults to `https://ensurecollege.com`. Set `SCHOLARSHIPS4U_URL` to target a staging or local deployment instead.
 
 To smoke-test the live deployment:
 
@@ -202,7 +202,7 @@ To smoke-test the live deployment:
 python scripts/smoke_test_live.py
 ```
 
-The smoke test also defaults to `https://scholarships4u.dev`; override it with `SCHOLARSHIPS4U_URL` when needed.
+The smoke test also defaults to `https://ensurecollege.com`; override it with `SCHOLARSHIPS4U_URL` when needed.
 
 ### Dataset validation
 
@@ -282,7 +282,7 @@ ScholarMatch/
 - The age and terms notice is a browser-stored acknowledgment, not age verification or parental consent. This is not a production-ready service for children under 13.
 - Sensitive endpoints (login, signup, password change, and the AI features) are rate limited per client IP. The limiter is in-memory, which suits a single-instance deploy; multi-instance hosting would need a shared store such as Redis.
 - On the free Postgres tier, saved data should be treated as non-critical because the database can expire after inactivity.
-- Scholarships4U is **not** an official scholarship search or application service — it is a student-built planner demo with curated, incrementally verified data.
+- EnsureCollege is **not** an official scholarship search or application service — it is a student-built planner demo with curated, incrementally verified data.
 
 ## License
 

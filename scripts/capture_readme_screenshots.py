@@ -1,4 +1,4 @@
-"""Capture README screenshots from a running Scholarships4U deployment.
+"""Capture README screenshots from a running EnsureCollege deployment.
 
 Usage:
     pip install playwright
@@ -17,7 +17,7 @@ from pathlib import Path
 from playwright.sync_api import sync_playwright
 
 BASE_URL = os.getenv(
-    "SCHOLARSHIPS4U_URL", "https://scholarships4u.dev"
+    "SCHOLARSHIPS4U_URL", "https://ensurecollege.com"
 ).rstrip("/")
 OUT_DIR = Path(__file__).resolve().parent.parent / "docs" / "screenshots"
 

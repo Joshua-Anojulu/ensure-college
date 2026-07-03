@@ -1,4 +1,4 @@
-"""Smoke-test the live Scholarships4U deployment."""
+"""Smoke-test the live EnsureCollege deployment."""
 
 from __future__ import annotations
 
@@ -9,7 +9,7 @@ import uuid
 
 import httpx
 
-BASE = os.getenv("SCHOLARSHIPS4U_URL", "https://scholarships4u.dev").rstrip("/")
+BASE = os.getenv("SCHOLARSHIPS4U_URL", "https://ensurecollege.com").rstrip("/")
 TIMEOUT = 120.0
 
 
