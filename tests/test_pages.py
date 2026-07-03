@@ -59,10 +59,10 @@ class TestProductionHygiene:
         privacy = client.get("/privacy")
         terms = client.get("/terms")
 
-        assert 'property="og:url" content="https://scholarships4u.dev/"' in index.text
-        assert 'rel="canonical" href="https://scholarships4u.dev/"' in index.text
-        assert 'rel="canonical" href="https://scholarships4u.dev/privacy"' in privacy.text
-        assert 'rel="canonical" href="https://scholarships4u.dev/terms"' in terms.text
+        assert 'property="og:url" content="https://ensurecollege.com/"' in index.text
+        assert 'rel="canonical" href="https://ensurecollege.com/"' in index.text
+        assert 'rel="canonical" href="https://ensurecollege.com/privacy"' in privacy.text
+        assert 'rel="canonical" href="https://ensurecollege.com/terms"' in terms.text
 
     def test_openapi_available_in_development(self, client):
         response = client.get("/openapi.json")

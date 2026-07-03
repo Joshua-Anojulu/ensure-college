@@ -1,5 +1,5 @@
 /**
- * Scholarships4U frontend.
+ * EnsureCollege frontend.
  *
  * Logged-out users get the original stateless experience. Logged-in users can
  * save their profile (it prefills on return) and bookmark scholarships/programs. Session
@@ -984,7 +984,7 @@ function openPasswordResetModal(token = null) {
   const confirming = Boolean(passwordResetToken);
   passwordResetTitle.textContent = confirming ? "Choose a new password" : "Reset your password";
   passwordResetIntro.textContent = confirming
-    ? "Choose a new password for your Scholarships4U account."
+    ? "Choose a new password for your EnsureCollege account."
     : "Enter your email and we'll send a one-time reset link.";
   passwordResetRequestForm.hidden = confirming;
   passwordResetConfirmForm.hidden = !confirming;
