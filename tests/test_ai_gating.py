@@ -1,3 +1,5 @@
+import re
+
 from fastapi.testclient import TestClient
 
 from app.main import app
@@ -32,3 +34,10 @@ def test_index_exposes_ai_flag_false_by_default(monkeypatch):
 def test_index_exposes_ai_flag_true_when_enabled(monkeypatch):
     monkeypatch.setenv("AI_FEATURES_ENABLED", "true")
     assert '<meta name="ai-features-enabled" content="true">' in client.get("/").text
+
+
+def test_resume_import_section_ships_hidden():
+    body = client.get("/").text
+    assert re.search(
+        r'<section[^>]*id="resume-import-section"[^>]*\bhidden\b', body
+    ), "resume-import section must ship hidden; JS reveals it only when AI is on"

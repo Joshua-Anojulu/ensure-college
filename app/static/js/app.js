@@ -6,6 +6,9 @@
  * state lives in an httponly cookie set by the server, not in browser storage.
  */
 
+const AI_ENABLED =
+  document.querySelector('meta[name="ai-features-enabled"]')?.content === "true";
+
 let vocabulary = null;
 let lastSubmittedProfile = null;
 let lastResults = null;
@@ -614,6 +617,9 @@ function awardSortValue(amount) {
 /* ---------- Resume auto-fill ---------- */
 
 function wireResumeImport() {
+  if (!AI_ENABLED) return; // leave the resume-import section hidden and unwired
+  const section = document.getElementById("resume-import-section");
+  if (section) section.removeAttribute("hidden");
   const importBtn = document.getElementById("resume-import-btn");
   if (importBtn) {
     importBtn.addEventListener("click", handleResumeImport);
@@ -3220,14 +3226,16 @@ function buildProgramCard(program, options = {}) {
     saveBtn.addEventListener("click", () => toggleSavedProgram(programId, saveBtn));
     actions.appendChild(saveBtn);
 
-    const adviceBtn = document.createElement("button");
-    adviceBtn.type = "button";
-    adviceBtn.className = "btn-secondary";
-    adviceBtn.textContent = "Get application advice";
-    adviceBtn.addEventListener("click", () =>
-      handleProgramAdvice(programId, adviceBtn, advicePanel, adviceLoading, adviceError)
-    );
-    actions.appendChild(adviceBtn);
+    if (AI_ENABLED) {
+      const adviceBtn = document.createElement("button");
+      adviceBtn.type = "button";
+      adviceBtn.className = "btn-secondary";
+      adviceBtn.textContent = "Get application advice";
+      adviceBtn.addEventListener("click", () =>
+        handleProgramAdvice(programId, adviceBtn, advicePanel, adviceLoading, adviceError)
+      );
+      actions.appendChild(adviceBtn);
+    }
 
     footer.appendChild(actions);
   }
@@ -3577,10 +3585,12 @@ function buildCard(card, tierClass) {
   advicePanel.className = "essay-advice-panel";
   advicePanel.hidden = true;
 
-  adviceBtn.addEventListener("click", () =>
-    handleEssayAdvice(card.scholarship_id, adviceBtn, advicePanel, adviceLoading, adviceError)
-  );
-  actions.appendChild(adviceBtn);
+  if (AI_ENABLED) {
+    adviceBtn.addEventListener("click", () =>
+      handleEssayAdvice(card.scholarship_id, adviceBtn, advicePanel, adviceLoading, adviceError)
+    );
+    actions.appendChild(adviceBtn);
+  }
 
   const reviewBtn = document.createElement("button");
   reviewBtn.type = "button";
@@ -3621,23 +3631,25 @@ function buildCard(card, tierClass) {
   reviewPanel.className = "essay-advice-panel";
   reviewPanel.hidden = true;
 
-  reviewBtn.addEventListener("click", () => {
-    reviewForm.hidden = !reviewForm.hidden;
-    if (!reviewForm.hidden) {
-      reviewInput.focus();
-    }
-  });
-  reviewSubmit.addEventListener("click", () =>
-    handleEssayReview(
-      card.scholarship_id,
-      reviewInput,
-      reviewSubmit,
-      reviewPanel,
-      reviewLoading,
-      reviewError
-    )
-  );
-  actions.appendChild(reviewBtn);
+  if (AI_ENABLED) {
+    reviewBtn.addEventListener("click", () => {
+      reviewForm.hidden = !reviewForm.hidden;
+      if (!reviewForm.hidden) {
+        reviewInput.focus();
+      }
+    });
+    reviewSubmit.addEventListener("click", () =>
+      handleEssayReview(
+        card.scholarship_id,
+        reviewInput,
+        reviewSubmit,
+        reviewPanel,
+        reviewLoading,
+        reviewError
+      )
+    );
+    actions.appendChild(reviewBtn);
+  }
 
   footer.appendChild(actions);
   body.appendChild(footer);
