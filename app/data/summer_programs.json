@@ -638,7 +638,7 @@
           "CA"
         ],
         "essay_required": true,
-        "citizenship_requirement": "VERIFY"
+        "citizenship_requirement": "any"
       },
       "description": "A four-week UC residential STEM program for California students who will be in grades 9-12 in fall 2026. Students apply to a UC campus and cluster, live on campus, and study advanced STEM topics with faculty, researchers, and scientists.",
       "application_requirements": [
@@ -681,8 +681,8 @@
       "verified": true,
       "verification": {
         "source_url": "https://cosmos-ucop.ucdavis.edu/app/main/page/application-and-payment-basics",
-        "last_verified_at": "2026-06-27",
-        "notes": "Official COSMOS pages confirm California-only eligibility, rising grades 9-12, residential STEM program, UC campuses, 2026 dates/cost/deadline, application materials, and financial assistance. Citizenship is not published on the reviewed pages, so the citizenship field is left unknown."
+        "last_verified_at": "2026-07-03",
+        "notes": "Official COSMOS application/payment page confirms California high-school eligibility, rising grades 9-12, application materials, fees, payment rules, and contact note for residency status. Citizenship is not stated as a gate, so it is marked any."
       }
     },
     {
@@ -1389,13 +1389,14 @@
       "host": "Massachusetts Institute of Technology",
       "subject": "Mechanical engineering",
       "url": "https://web.mit.edu/wtp-me/",
-      "cost": "VERIFY",
-      "cost_category": "VERIFY",
+      "cost": "Tiered by family AGI: free under $120,000; $2,000-$20,000 above; housing, food, and materials provided; additional aid possible",
+      "cost_category": "paid",
       "selectivity": "Highly competitive (20 participants selected nationally)",
       "program_format": "residential",
       "location": "Cambridge, MA",
       "program_dates": "Four weeks: June 27 – July 25, 2026",
-      "deadline": "VERIFY",
+      "deadline": "2026-12-15",
+      "estimated_deadline": "2026-12-15",
       "eligibility": {
         "min_gpa": null,
         "fields_of_study": [
@@ -1409,7 +1410,7 @@
         "demographics": [],
         "states": "any",
         "essay_required": true,
-        "citizenship_requirement": "VERIFY",
+        "citizenship_requirement": "any",
         "special_requirements": [
           {
             "kind": "family_or_affiliation",
@@ -1423,16 +1424,16 @@
         {
           "id": "online-application",
           "label": "Complete the WTP online application",
-          "details": "Apply through web.mit.edu/wtp/application.html when the cycle is open.",
+          "details": "Apply through the WTP application page; the FAQ says applications are due December 15 each year.",
           "required": true,
-          "source_url": "https://web.mit.edu/wtp/application.html"
+          "source_url": "https://wtp.mit.edu/FAQ/"
         }
       ],
       "verified": true,
       "verification": {
-        "source_url": "https://web.mit.edu/wtp-me/",
-        "last_verified_at": "2026-06-21",
-        "notes": "Official WTP-ME page: 20 students; juniors; four weeks; 2026 applications closed; program cost not confirmed on pages checked."
+        "source_url": "https://wtp.mit.edu/FAQ/",
+        "last_verified_at": "2026-07-03",
+        "notes": "Official WTP FAQ: four-week residential program for current 11th graders with permanent family home in the U.S.; no U.S. citizenship/PR gate stated. Applications due Dec 15 annually. Cost is tiered by family AGI; housing, food, materials, and loaner laptops if needed are provided."
       }
     },
     {
