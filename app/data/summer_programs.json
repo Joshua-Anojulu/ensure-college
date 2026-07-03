@@ -377,7 +377,7 @@
       "program_format": "hybrid",
       "location": "Online or Stanford, CA",
       "program_dates": "2026 online sessions: June 15 to July 3 or July 6 to July 24; residential: June 21 to July 17",
-      "deadline": "2026-02-02",
+      "deadline": "VERIFY",
       "estimated_deadline": "2026-02-02",
       "eligibility": {
         "min_gpa": null,
@@ -442,7 +442,7 @@
       "verification": {
         "source_url": "https://sumac.spcs.stanford.edu/",
         "last_verified_at": "2026-06-27",
-        "notes": "Official Stanford SUMaC pages confirm grades 10-11 eligibility, online/residential 2026 options and dates, tuition, financial aid, Feb 2 2026 application deadline, records, recommendation, exam, and optional video essay. Citizenship has no restriction stated beyond global admission language, so it is marked any."
+        "notes": "Official Stanford SUMaC pages confirm grades 10-11 eligibility, online/residential 2026 options and dates, tuition, financial aid, application deadline, records, recommendation, exam, and optional video essay. Citizenship has no restriction stated beyond global admission language, so it is marked any."
       }
     },
     {
@@ -638,7 +638,7 @@
           "CA"
         ],
         "essay_required": true,
-        "citizenship_requirement": "any"
+        "citizenship_requirement": "VERIFY"
       },
       "description": "A four-week UC residential STEM program for California students who will be in grades 9-12 in fall 2026. Students apply to a UC campus and cluster, live on campus, and study advanced STEM topics with faculty, researchers, and scientists.",
       "application_requirements": [
@@ -681,8 +681,8 @@
       "verified": true,
       "verification": {
         "source_url": "https://cosmos-ucop.ucdavis.edu/app/main/page/application-and-payment-basics",
-        "last_verified_at": "2026-07-02",
-        "notes": "Official COSMOS pages confirm California high-school-student eligibility, rising grades 9-12, residential STEM program, typical GPA 3.5+, 2026 dates/cost/deadline, application materials, and financial assistance. Citizenship is not a stated gate; students should contact COSMOS about residency status for application purposes."
+        "last_verified_at": "2026-06-27",
+        "notes": "Official COSMOS pages confirm California-only eligibility, rising grades 9-12, residential STEM program, UC campuses, 2026 dates/cost/deadline, application materials, and financial assistance. Citizenship is not published on the reviewed pages, so the citizenship field is left unknown."
       }
     },
     {
@@ -697,7 +697,7 @@
       "program_format": "hybrid",
       "location": "Boston, MA",
       "program_dates": "2026 residential dates: June 28 to August 7; commuter dates: June 29 to August 7",
-      "deadline": "2026-02-04",
+      "deadline": "VERIFY",
       "estimated_deadline": "2026-02-04",
       "eligibility": {
         "min_gpa": null,
@@ -766,7 +766,7 @@
       "verification": {
         "source_url": "https://www.bu.edu/summer/high-school-programs/rise-internship-practicum/how-to-apply/",
         "last_verified_at": "2026-06-27",
-        "notes": "Official BU RISE pages confirm junior/domestic eligibility, U.S./PR requirement, 2026 dates, residential/commuter options, tuition/fees/aid, tracks, Feb 4 2026 application deadline, transcript, essays, recommendation, optional tests, and financial-aid materials."
+        "notes": "Official BU RISE pages confirm junior/domestic eligibility, U.S./PR requirement, 2026 dates, residential/commuter options, tuition/fees/aid, tracks, application deadline, transcript, essays, recommendation, optional tests, and financial-aid materials."
       }
     },
     {
@@ -1389,14 +1389,13 @@
       "host": "Massachusetts Institute of Technology",
       "subject": "Mechanical engineering",
       "url": "https://web.mit.edu/wtp-me/",
-      "cost": "Tiered by family AGI: free under $120,000; $2,000-$20,000 above; housing, food, and materials provided; additional aid possible",
-      "cost_category": "paid",
+      "cost": "VERIFY",
+      "cost_category": "VERIFY",
       "selectivity": "Highly competitive (20 participants selected nationally)",
       "program_format": "residential",
       "location": "Cambridge, MA",
       "program_dates": "Four weeks: June 27 – July 25, 2026",
-      "deadline": "2026-12-15",
-      "estimated_deadline": "2026-12-15",
+      "deadline": "VERIFY",
       "eligibility": {
         "min_gpa": null,
         "fields_of_study": [
@@ -1410,7 +1409,7 @@
         "demographics": [],
         "states": "any",
         "essay_required": true,
-        "citizenship_requirement": "any",
+        "citizenship_requirement": "VERIFY",
         "special_requirements": [
           {
             "kind": "family_or_affiliation",
@@ -1431,9 +1430,9 @@
       ],
       "verified": true,
       "verification": {
-        "source_url": "https://wtp.mit.edu/FAQ/",
-        "last_verified_at": "2026-07-02",
-        "notes": "Official WTP application/FAQ/key-dates pages: four-week residential WTP-ME for current 11th graders with permanent family home address in the U.S.; no U.S. citizenship or permanent-resident requirement is stated. Applications are due Dec 15 each year. Cost is tiered by family AGI: free under $120k, then $2k/$4k/$8k/$20k tiers; housing, food, and materials provided, with additional aid possible."
+        "source_url": "https://web.mit.edu/wtp-me/",
+        "last_verified_at": "2026-06-21",
+        "notes": "Official WTP-ME page: 20 students; juniors; four weeks; 2026 applications closed; program cost not confirmed on pages checked."
       }
     },
     {
@@ -2769,7 +2768,7 @@
       "program_format": "hybrid",
       "location": "Providence, RI",
       "program_dates": "Multiple one- to six-week sessions in summer",
-      "deadline": "2026-05-15",
+      "deadline": "VERIFY",
       "eligibility": {
         "min_gpa": null,
         "fields_of_study": [],
@@ -2789,16 +2788,16 @@
         {
           "id": "brown-application",
           "label": "Submit the official program application",
-          "details": "Apply through the Brown Pre-College student portal; Summer 2026 applications opened January 14, 2026 and closed May 15, 2026.",
+          "details": "Apply through the host's official summer program page when the cycle opens.",
           "required": true,
-          "source_url": "https://precollege.brown.edu/apply"
+          "source_url": "https://precollege.brown.edu/programs/summerbrown"
         }
       ],
       "verified": true,
       "verification": {
-        "source_url": "https://precollege.brown.edu/apply",
-        "last_verified_at": "2026-07-02",
-        "notes": "Official Brown Pre-College apply page: Summer 2026 applications opened Jan 14, 2026 and closed May 15, 2026. Summer@Brown remains grades 9–12, ages 14–18, non-credit; est. 2027-05-15."
+        "source_url": "https://precollege.brown.edu/programs/summerbrown",
+        "last_verified_at": "2026-06-21",
+        "notes": "Official Summer at Brown page: grades 9–12, ages 14–18, non-credit; deadline May 15 2026 cited for some sessions — est. 2027-05-15."
       },
       "estimated_deadline": "2027-05-15"
     },
@@ -2951,7 +2950,7 @@
       "program_dates": "Two- to three-week residential sessions",
       "deadline": "VERIFY",
       "eligibility": {
-        "min_gpa": 3.5,
+        "min_gpa": null,
         "fields_of_study": [],
         "grade_levels": [
           "high_school_freshman",
@@ -2968,16 +2967,16 @@
         {
           "id": "penn-application",
           "label": "Submit the official program application",
-          "details": "Apply through Penn's online system; admissions are rolling until full, and the application information page lists a minimum 3.5 high-school GPA.",
+          "details": "Apply through the host's official summer program page when the cycle opens.",
           "required": true,
-          "source_url": "https://hs.sas.upenn.edu/summer-programs/application-information"
+          "source_url": "https://hs.sas.upenn.edu/summer-programs/academies"
         }
       ],
       "verified": true,
       "verification": {
-        "source_url": "https://hs.sas.upenn.edu/summer-programs/application-information",
-        "last_verified_at": "2026-07-02",
-        "notes": "Official Penn Summer Academies and application-information pages: current grades 9–11, residential 2–3 weeks, international students welcome, applications rolling until full, and minimum 3.5 high-school GPA. No dated final deadline is published."
+        "source_url": "https://hs.sas.upenn.edu/summer-programs/academies",
+        "last_verified_at": "2026-06-21",
+        "notes": "Official Penn Summer Academies page: grades 9–11, residential 2–3 weeks; deadline May 1 2026 — est. 2027-05-01."
       },
       "estimated_deadline": "2027-05-01"
     },
