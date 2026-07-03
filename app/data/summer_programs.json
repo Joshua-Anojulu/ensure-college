@@ -377,7 +377,7 @@
       "program_format": "hybrid",
       "location": "Online or Stanford, CA",
       "program_dates": "2026 online sessions: June 15 to July 3 or July 6 to July 24; residential: June 21 to July 17",
-      "deadline": "VERIFY",
+      "deadline": "2026-02-02",
       "estimated_deadline": "2026-02-02",
       "eligibility": {
         "min_gpa": null,
@@ -442,7 +442,7 @@
       "verification": {
         "source_url": "https://sumac.spcs.stanford.edu/",
         "last_verified_at": "2026-06-27",
-        "notes": "Official Stanford SUMaC pages confirm grades 10-11 eligibility, online/residential 2026 options and dates, tuition, financial aid, application deadline, records, recommendation, exam, and optional video essay. Citizenship has no restriction stated beyond global admission language, so it is marked any."
+        "notes": "Official Stanford SUMaC pages confirm grades 10-11 eligibility, online/residential 2026 options and dates, tuition, financial aid, Feb 2 2026 application deadline, records, recommendation, exam, and optional video essay. Citizenship has no restriction stated beyond global admission language, so it is marked any."
       }
     },
     {
@@ -697,7 +697,7 @@
       "program_format": "hybrid",
       "location": "Boston, MA",
       "program_dates": "2026 residential dates: June 28 to August 7; commuter dates: June 29 to August 7",
-      "deadline": "VERIFY",
+      "deadline": "2026-02-04",
       "estimated_deadline": "2026-02-04",
       "eligibility": {
         "min_gpa": null,
@@ -766,7 +766,7 @@
       "verification": {
         "source_url": "https://www.bu.edu/summer/high-school-programs/rise-internship-practicum/how-to-apply/",
         "last_verified_at": "2026-06-27",
-        "notes": "Official BU RISE pages confirm junior/domestic eligibility, U.S./PR requirement, 2026 dates, residential/commuter options, tuition/fees/aid, tracks, application deadline, transcript, essays, recommendation, optional tests, and financial-aid materials."
+        "notes": "Official BU RISE pages confirm junior/domestic eligibility, U.S./PR requirement, 2026 dates, residential/commuter options, tuition/fees/aid, tracks, Feb 4 2026 application deadline, transcript, essays, recommendation, optional tests, and financial-aid materials."
       }
     },
     {
@@ -2769,7 +2769,7 @@
       "program_format": "hybrid",
       "location": "Providence, RI",
       "program_dates": "Multiple one- to six-week sessions in summer",
-      "deadline": "VERIFY",
+      "deadline": "2026-05-15",
       "eligibility": {
         "min_gpa": null,
         "fields_of_study": [],
@@ -2789,16 +2789,16 @@
         {
           "id": "brown-application",
           "label": "Submit the official program application",
-          "details": "Apply through the host's official summer program page when the cycle opens.",
+          "details": "Apply through the Brown Pre-College student portal; Summer 2026 applications opened January 14, 2026 and closed May 15, 2026.",
           "required": true,
-          "source_url": "https://precollege.brown.edu/programs/summerbrown"
+          "source_url": "https://precollege.brown.edu/apply"
         }
       ],
       "verified": true,
       "verification": {
-        "source_url": "https://precollege.brown.edu/programs/summerbrown",
-        "last_verified_at": "2026-06-21",
-        "notes": "Official Summer at Brown page: grades 9–12, ages 14–18, non-credit; deadline May 15 2026 cited for some sessions — est. 2027-05-15."
+        "source_url": "https://precollege.brown.edu/apply",
+        "last_verified_at": "2026-07-02",
+        "notes": "Official Brown Pre-College apply page: Summer 2026 applications opened Jan 14, 2026 and closed May 15, 2026. Summer@Brown remains grades 9–12, ages 14–18, non-credit; est. 2027-05-15."
       },
       "estimated_deadline": "2027-05-15"
     },
@@ -2951,7 +2951,7 @@
       "program_dates": "Two- to three-week residential sessions",
       "deadline": "VERIFY",
       "eligibility": {
-        "min_gpa": null,
+        "min_gpa": 3.5,
         "fields_of_study": [],
         "grade_levels": [
           "high_school_freshman",
@@ -2968,16 +2968,16 @@
         {
           "id": "penn-application",
           "label": "Submit the official program application",
-          "details": "Apply through the host's official summer program page when the cycle opens.",
+          "details": "Apply through Penn's online system; admissions are rolling until full, and the application information page lists a minimum 3.5 high-school GPA.",
           "required": true,
-          "source_url": "https://hs.sas.upenn.edu/summer-programs/academies"
+          "source_url": "https://hs.sas.upenn.edu/summer-programs/application-information"
         }
       ],
       "verified": true,
       "verification": {
-        "source_url": "https://hs.sas.upenn.edu/summer-programs/academies",
-        "last_verified_at": "2026-06-21",
-        "notes": "Official Penn Summer Academies page: grades 9–11, residential 2–3 weeks; deadline May 1 2026 — est. 2027-05-01."
+        "source_url": "https://hs.sas.upenn.edu/summer-programs/application-information",
+        "last_verified_at": "2026-07-02",
+        "notes": "Official Penn Summer Academies and application-information pages: current grades 9–11, residential 2–3 weeks, international students welcome, applications rolling until full, and minimum 3.5 high-school GPA. No dated final deadline is published."
       },
       "estimated_deadline": "2027-05-01"
     },

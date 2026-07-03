@@ -27,7 +27,7 @@ Scholarships4U is a **curated scholarship and summer-program planner** for U.S. 
 ## Tech stack
 
 - **Backend:** Python, FastAPI
-- **Frontend:** Vanilla HTML, CSS, and JavaScript (served by FastAPI), with a responsive light/dark interface (light by default, with a dark-mode toggle that remembers your choice and respects your OS setting) and source-linked match cards
+- **Frontend:** Vanilla HTML, CSS, and JavaScript (served by FastAPI), with a responsive light interface and source-linked match cards
 - **Curated data:** Pydantic models, local JSON files for scholarships and elite summer programs loaded at startup
 - **Accounts and saved data:** SQLAlchemy ORM, SQLite locally and Postgres in production, bcrypt password hashing, signed session cookies
 - **Schema migrations:** Alembic, run automatically at startup and before the Render web service starts
@@ -246,7 +246,7 @@ Run the validator at any time to see how many entries are verified, which ones n
 python scripts/validate_dataset.py
 ```
 
-As of the July 2, 2026 dataset audit, the app includes **204 scholarships** and **52 elite summer programs**. Every entry has official source provenance at the record level. The raw files contain **234** remaining `VERIFY` strings in scholarships and **58** in summer programs; the validator's field-level counts are **231** scholarship placeholders (`citizenship_requirement`, `deadline`, `min_gpa`, and `states`) and **56** summer-program placeholders (`citizenship_requirement` and `deadline`). These remain where the official source does not yet publish or cleanly map the value. One scholarship, `foot-locker-scholar-athletes`, remains in the re-verification queue for human review because the official opportunity page could not be confirmed. A sidecar file, [`app/data/special_requirements.json`](app/data/special_requirements.json), records niche scholarship eligibility gates that should be surfaced as special checks rather than normal Strong matches. Summer programs can carry the same special-check metadata directly in their eligibility block. Run the validator for the current re-verification queue and placeholder counts.
+As of the July 2, 2026 dataset audit, the app includes **204 scholarships** and **52 elite summer programs**. Every entry has official source provenance at the record level. The raw files contain **230** remaining `VERIFY` strings in scholarships and **55** in summer programs; the validator's field-level counts are **227** scholarship placeholders (`citizenship_requirement`, `deadline`, `min_gpa`, and `states`) and **53** summer-program placeholders (`citizenship_requirement` and `deadline`). These remain where the official source does not yet publish or cleanly map the value. One scholarship, `foot-locker-scholar-athletes`, remains in the re-verification queue for human review because the official opportunity page could not be confirmed. A sidecar file, [`app/data/special_requirements.json`](app/data/special_requirements.json), records niche scholarship eligibility gates that should be surfaced as special checks rather than normal Strong matches. Summer programs can carry the same special-check metadata directly in their eligibility block. Run the validator for the current re-verification queue and placeholder counts.
 
 ## Project structure
 
