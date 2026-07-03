@@ -41,3 +41,9 @@ def test_resume_import_section_ships_hidden():
     assert re.search(
         r'<section[^>]*id="resume-import-section"[^>]*\bhidden\b', body
     ), "resume-import section must ship hidden; JS reveals it only when AI is on"
+
+
+def test_homepage_has_no_ai_provider_claims():
+    body = client.get("/").text
+    assert "Anthropic" not in body
+    assert "AI features" not in body
