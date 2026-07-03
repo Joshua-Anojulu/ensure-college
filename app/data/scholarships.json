@@ -4369,7 +4369,7 @@
       "estimated_deadline": "2027-01-31",
       "url": "https://nesa.org/scholarships/",
       "eligibility": {
-        "min_gpa": "VERIFY",
+        "min_gpa": null,
         "fields_of_study": [],
         "grade_levels": [
           "high_school_senior",
@@ -4378,7 +4378,7 @@
         "demographics": [],
         "states": "any",
         "essay_required": true,
-        "citizenship_requirement": "VERIFY"
+        "citizenship_requirement": "any"
       },
       "description": "Merit scholarships for Eagle Scouts who are NESA members and full-time students in degree or skilled-trade programs. Awards recognize Scouting participation, school and community service, and character; one-time awards with multiple national and council-service-territory tiers.",
       "verified": true,
@@ -4407,8 +4407,8 @@
       ],
       "verification": {
         "source_url": "https://nesa.org/scholarships/",
-        "last_verified_at": "2026-06-21",
-        "notes": "Official NESA page: NESA membership required; Eagle Scout; senior year through college junior; portal Dec 1–Jan 31 for 2025–26 cycle; next cycle opens Dec 1, 2026 per page footer."
+        "last_verified_at": "2026-07-02",
+        "notes": "Official NESA page: NESA member and Eagle Scout, eligible from high school senior year through college junior year/associate halfway point, full-time enrollment at an accredited institution or skilled trade program, not a U.S. military academy or graduate student. Portal opens Dec 1, 2026 for next cycle; no numeric GPA or citizenship restriction is stated."
       }
     },
     {
@@ -4561,7 +4561,7 @@
       "estimated_deadline": "2027-04-15",
       "url": "https://www.phikappaphi.org/grants-awards/fellowship",
       "eligibility": {
-        "min_gpa": "VERIFY",
+        "min_gpa": null,
         "fields_of_study": [],
         "grade_levels": [
           "college_undergraduate"
@@ -4597,9 +4597,9 @@
         }
       ],
       "verification": {
-        "source_url": "https://apply.phikappaphi.org/Awards/",
-        "last_verified_at": "2026-06-21",
-        "notes": "Official portal: 50×$8,500, 6×$20,000, 2×$35,000; Dec 15–Apr 15 national window for 2025–26 cycle; chapter nomination required; international students eligible."
+        "source_url": "https://www.phikappaphi.org/grants-awards/fellowship",
+        "last_verified_at": "2026-07-02",
+        "notes": "Official Phi Kappa Phi Fellowship page: active/initiated member nominated by local chapter, entering first full-time graduate/professional study, no more than 9 graduate credits by the deadline, and not a sitting society leader/employee. National 2026 deadline was Apr 15; no numeric GPA or citizenship restriction is stated."
       }
     },
     {
@@ -4653,7 +4653,7 @@
       "estimated_deadline": "2027-03-01",
       "url": "https://www.legion.org/get-involved/scholarships/american-legion-eagle-scout-of-the-year-scholarship",
       "eligibility": {
-        "min_gpa": "VERIFY",
+        "min_gpa": null,
         "fields_of_study": [],
         "grade_levels": [
           "high_school_senior"
@@ -4661,7 +4661,7 @@
         "demographics": [],
         "states": "any",
         "essay_required": true,
-        "citizenship_requirement": "VERIFY"
+        "citizenship_requirement": "any"
       },
       "description": "National scholarship for Eagle Scouts nominated through their American Legion department. One national winner receives $10,000; three runners-up receive $2,500 each. Nomination window runs November 1 through March 1 annually.",
       "verified": true,
@@ -4682,9 +4682,9 @@
         }
       ],
       "verification": {
-        "source_url": "https://www.legion.org/get-involved/scholarships/american-legion-eagle-scout-of-the-year-scholarship",
-        "last_verified_at": "2026-06-21",
-        "notes": "Official page: $10,000 winner and three $2,500 runners-up; department deadline March 1; national certification by April 1; 2026 cycle deadline was March 1, 2026."
+        "source_url": "https://www.legion.org/getmedia/e660e1bc-6726-42a9-964e-83776b727473/16ACY1021-Eagle-Scout-Nomination-Form.pdf",
+        "last_verified_at": "2026-07-02",
+        "notes": "Official American Legion nomination form: active qualifying BSA unit/member-family connection, Eagle Scout Award, religious emblem, practical citizenship, at least age 15 and enrolled in high school, state/department application, current BSA membership, transcript, activity records, recommendations, and Eagle project essay. No numeric GPA or citizenship restriction is stated; nominations are due to departments by Mar 1 annually."
       }
     },
     {
@@ -4983,7 +4983,7 @@
       "deadline": "2026-12-31",
       "url": "https://www.elks.org/scholars/scholarships/eefgrants.cfm",
       "eligibility": {
-        "min_gpa": "VERIFY",
+        "min_gpa": null,
         "fields_of_study": [],
         "grade_levels": [
           "college_undergraduate"
@@ -4991,7 +4991,7 @@
         "demographics": [],
         "states": "any",
         "essay_required": true,
-        "citizenship_requirement": "VERIFY"
+        "citizenship_requirement": "any"
       },
       "description": "Renewable one-year grants up to $5,000 for unmarried undergraduate students under 24 whose Elk parent died or is totally disabled. Demonstrated financial need required; applications available by request starting May 1.",
       "verified": true,
@@ -5013,8 +5013,8 @@
       ],
       "verification": {
         "source_url": "https://www.elks.org/scholars/scholarships/eefgrants.cfm",
-        "last_verified_at": "2026-06-21",
-        "notes": "Official ENF page: up to $5,000; child of deceased/totally disabled Elk; full-time undergrad under 24; applications available May 1; due Dec 31, 2026."
+        "last_verified_at": "2026-07-02",
+        "notes": "Official ENF Emergency Educational Grants page: child of deceased or totally disabled Elk, demonstrate financial need, full-time undergraduate at an accredited U.S. college or university, unmarried and under 24, up to four grants total; applications available May 1 and due Dec 31, 2026. No numeric GPA or citizenship restriction is stated."
       }
     },
     {
@@ -5891,8 +5891,8 @@
       "name": "AOPA Foundation Flight Training Scholarships",
       "sponsor": "AOPA Foundation (You Can Fly)",
       "award_amount": "$250 to $14,000 (varies; high school awards up to $12,000)",
-      "deadline": "2026-12-31",
-      "estimated_deadline": "2026-12-31",
+      "deadline": "2026-12-30",
+      "estimated_deadline": "2026-12-30",
       "url": "https://www.aopa.org/training-and-safety/students/aopa-flight-training-scholarships",
       "eligibility": {
         "min_gpa": "VERIFY",
@@ -5929,8 +5929,8 @@
       "verified": true,
       "verification": {
         "source_url": "https://www.aopa.org/training-and-safety/students/aopa-flight-training-scholarships",
-        "last_verified_at": "2026-06-21",
-        "notes": "Official AOPA pages and 2026 FAQ PDF: member required; windows Apr 1-Jun 30 and Oct 1-Dec 31; one application matches all eligible awards."
+        "last_verified_at": "2026-07-02",
+        "notes": "Official AOPA page: Fall 2026 application period is Oct 1-Dec 30, 2026 at 11:59 p.m. ET; Spring 2027 period is Apr 1-Jun 30, 2027. Current AOPA membership and residence in listed U.S./Canada/territory locations are required, but citizenship and GPA vary by matched scholarship, so those fields remain unknown."
       }
     },
     {
