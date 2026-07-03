@@ -105,6 +105,21 @@ SESSION_COOKIE_SECURE = os.getenv("SESSION_COOKIE_SECURE", "").lower() in {"1", 
 _DOCS_ENABLED = not is_production_deploy()
 
 
+def _ai_features_enabled() -> bool:
+    """AI-backed endpoints (essay/program advice, resume parsing) are gated off
+    by default; set AI_FEATURES_ENABLED=true to serve them."""
+    return os.getenv("AI_FEATURES_ENABLED", "").lower() in {"1", "true", "yes"}
+
+
+def require_ai_features() -> None:
+    """FastAPI dependency: hide AI routes (404) unless the feature flag is on."""
+    if not _ai_features_enabled():
+        raise HTTPException(
+            status_code=404,
+            detail={"error": "This feature is not available."},
+        )
+
+
 class SecurityHeadersMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: StarletteRequest, call_next):
         response = await call_next(request)
@@ -269,7 +284,7 @@ def match_summer_programs(request: Request, student: StudentProfile) -> list[Pro
 @app.post(
     "/essay-advice",
     response_model=EssayAdviceResponse,
-    dependencies=[Depends(_essay_limit)],
+    dependencies=[Depends(require_ai_features), Depends(_essay_limit)],
 )
 def essay_advice(request: Request, body: EssayAdviceRequest) -> EssayAdviceResponse:
     scholarships: list[Scholarship] = request.app.state.scholarships
@@ -298,7 +313,7 @@ def essay_advice(request: Request, body: EssayAdviceRequest) -> EssayAdviceRespo
 @app.post(
     "/essay-review",
     response_model=EssayReviewResponse,
-    dependencies=[Depends(_essay_limit)],
+    dependencies=[Depends(require_ai_features), Depends(_essay_limit)],
 )
 def essay_review(request: Request, body: EssayReviewRequest) -> EssayReviewResponse:
     scholarships: list[Scholarship] = request.app.state.scholarships
@@ -327,7 +342,7 @@ def essay_review(request: Request, body: EssayReviewRequest) -> EssayReviewRespo
 @app.post(
     "/program-advice",
     response_model=ProgramAdviceResponse,
-    dependencies=[Depends(_essay_limit)],
+    dependencies=[Depends(require_ai_features), Depends(_essay_limit)],
 )
 def program_advice(request: Request, body: ProgramAdviceRequest) -> ProgramAdviceResponse:
     programs: list[SummerProgram] = request.app.state.programs
@@ -375,7 +390,7 @@ async def _read_upload_capped(upload: UploadFile, max_bytes: int) -> bytes | Non
 @app.post(
     "/resume/extract",
     response_model=ResumeExtractionResponse,
-    dependencies=[Depends(_resume_limit)],
+    dependencies=[Depends(require_ai_features), Depends(_resume_limit)],
 )
 async def resume_extract(
     file: UploadFile | None = File(default=None),

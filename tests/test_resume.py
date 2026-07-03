@@ -5,6 +5,12 @@ from fastapi.testclient import TestClient
 
 from app.main import app
 
+
+@pytest.fixture(autouse=True)
+def _enable_ai_features(monkeypatch):
+    monkeypatch.setenv("AI_FEATURES_ENABLED", "true")
+
+
 FAKE_API_KEY = "sk-ant-test-key-not-real"
 
 
