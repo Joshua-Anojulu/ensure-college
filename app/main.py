@@ -150,7 +150,8 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    init_db()
+    if os.getenv("RUN_MIGRATIONS_ON_STARTUP", "true").lower() not in {"0", "false", "no"}:
+        init_db()
     app.state.scholarships = load_scholarships()
     app.state.programs = load_summer_programs()
     yield
