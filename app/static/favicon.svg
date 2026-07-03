@@ -1,13 +1,14 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Scholarships4U">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="EnsureCollege">
   <defs>
-    <linearGradient id="s4u-mark" x1="12" y1="6" x2="54" y2="58" gradientUnits="userSpaceOnUse">
+    <linearGradient id="ec-mark" x1="12" y1="6" x2="54" y2="58" gradientUnits="userSpaceOnUse">
       <stop stop-color="#6366f1"/>
       <stop offset="1" stop-color="#4338ca"/>
     </linearGradient>
   </defs>
-  <rect width="64" height="64" rx="16" fill="url(#s4u-mark)"/>
+  <rect width="64" height="64" rx="16" fill="url(#ec-mark)"/>
   <rect x="1.5" y="1.5" width="61" height="61" rx="14.5" fill="none" stroke="#ffffff" stroke-opacity="0.2"/>
-  <text x="32" y="33" text-anchor="middle" dominant-baseline="central"
-        font-family="'Plus Jakarta Sans','Segoe UI',system-ui,Arial,sans-serif"
-        font-size="42" font-weight="800" fill="#ffffff">S</text>
+  <path d="M32 14 L46 19 V33 C46 43 39.5 49 32 51.5 C24.5 49 18 43 18 33 V19 Z"
+        fill="#ffffff" fill-opacity="0.14" stroke="#ffffff" stroke-width="2.5" stroke-linejoin="round"/>
+  <path d="M25 33 l5 5 l9 -11" fill="none" stroke="#ffffff" stroke-width="3.6"
+        stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
