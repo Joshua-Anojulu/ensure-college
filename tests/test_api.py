@@ -59,7 +59,7 @@ class TestFrontend:
         response = client.get("/")
         assert response.status_code == 200
         assert "text/html" in response.headers["content-type"]
-        assert "Scholarships4U" in response.text
+        assert "EnsureCollege" in response.text
         assert "/static/js/app.js" in response.text
 
 

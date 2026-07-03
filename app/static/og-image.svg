@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-label="Scholarships4U — scholarships and summer programs, made clearer">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-label="EnsureCollege — your whole college plan, in one place">
   <defs>
     <linearGradient id="mk" x1="0" y1="0" x2="1" y2="1">
       <stop stop-color="#6366f1"/><stop offset="1" stop-color="#4338ca"/>
@@ -21,19 +21,22 @@
 
   <g transform="translate(76,74)">
     <rect width="60" height="60" rx="15" fill="url(#mk)"/>
-    <text x="30" y="31" text-anchor="middle" dominant-baseline="central" font-family="'Plus Jakarta Sans',system-ui,Arial,sans-serif" font-size="38" font-weight="800" fill="#fff">S</text>
-    <text x="78" y="24" font-family="'Plus Jakarta Sans',system-ui,Arial,sans-serif" font-size="29" font-weight="800" fill="#0e1726">Scholarships4U</text>
-    <text x="79" y="49" font-family="Inter,system-ui,Arial,sans-serif" font-size="15" font-weight="700" letter-spacing="0.14em" fill="#5a6b85">SCHOLARSHIPS &#183; SUMMER PROGRAMS &#183; PLANNING</text>
+    <path d="M30 12 L43 16.5 V30 C43 39 37 44.5 30 47 C23 44.5 17 39 17 30 V16.5 Z"
+          fill="#ffffff" fill-opacity="0.14" stroke="#ffffff" stroke-width="2.4" stroke-linejoin="round"/>
+    <path d="M23.5 30 l4.5 4.5 l8.5 -10.5" fill="none" stroke="#ffffff" stroke-width="3.4"
+          stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="78" y="24" font-family="'Plus Jakarta Sans',system-ui,Arial,sans-serif" font-size="29" font-weight="800" fill="#0e1726">EnsureCollege</text>
+    <text x="79" y="49" font-family="Inter,system-ui,Arial,sans-serif" font-size="15" font-weight="700" letter-spacing="0.12em" fill="#5a6b85">SCHOLARSHIPS &#183; PROGRAMS &#183; COMPETITIONS &#183; PLANNING</text>
   </g>
 
   <text transform="translate(76,244)" font-family="'Plus Jakarta Sans',system-ui,Arial,sans-serif" font-size="54" font-weight="800" letter-spacing="-0.02em" fill="#0e1726">
-    <tspan x="0" y="0">Scholarships &amp; summer</tspan>
-    <tspan x="0" y="68">programs, made clearer.</tspan>
+    <tspan x="0" y="0">Your whole college plan,</tspan>
+    <tspan x="0" y="68">in one place.</tspan>
   </text>
 
   <text transform="translate(78,408)" font-family="Inter,system-ui,Arial,sans-serif" font-size="24" font-weight="500" fill="#364152">
-    <tspan x="0" y="0">Build one profile, compare real opportunities, and turn</tspan>
-    <tspan x="0" y="34">your best matches into a clear application plan.</tspan>
+    <tspan x="0" y="0">Scholarships, summer programs, and competitions —</tspan>
+    <tspan x="0" y="34">matched to you, with deadlines and a clear plan.</tspan>
   </text>
 
   <g transform="translate(78,506)" font-family="Inter,system-ui,Arial,sans-serif" font-size="18" font-weight="600">

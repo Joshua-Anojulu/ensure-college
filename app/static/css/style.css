@@ -1,5 +1,5 @@
 /* =========================================================================
-   Scholarships4U — design system
+   EnsureCollege — design system
    Light "trust SaaS" theme by default; refined dark theme via [data-theme].
    All color/depth is token-driven so both themes stay in sync.
    ========================================================================= */
@@ -230,7 +230,7 @@ a { color: var(--brand); }
   box-shadow: var(--shadow-sm), inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
 .brand-mark::after {
-  content: "S";
+  content: "E";
   font-family: var(--font-display);
   font-size: 1.3rem;
   font-weight: 800;

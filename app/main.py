@@ -104,6 +104,9 @@ SESSION_SECRET = _resolve_session_secret()
 SESSION_COOKIE_SECURE = os.getenv("SESSION_COOKIE_SECURE", "").lower() in {"1", "true", "yes"}
 _DOCS_ENABLED = not is_production_deploy()
 
+# Old domain hosts that should be permanently redirected to the new domain.
+_OLD_HOSTS = {"scholarships4u.dev", "www.scholarships4u.dev"}
+
 
 def _ai_features_enabled() -> bool:
     """AI-backed endpoints (essay/program advice, resume parsing) are gated off
@@ -118,6 +121,16 @@ def require_ai_features() -> None:
             status_code=404,
             detail={"error": "This feature is not available."},
         )
+
+
+def _public_base_url(request: Request) -> str:
+    env = os.getenv("PUBLIC_APP_URL", "").strip().rstrip("/")
+    return env or str(request.base_url).rstrip("/")
+
+
+def _absolute_og_image_urls(html: str, base_url: str) -> str:
+    absolute = f"{base_url}{_OG_IMAGE_PATH}"
+    return html.replace(f'content="{_OG_IMAGE_PATH}"', f'content="{absolute}"')
 
 
 class SecurityHeadersMiddleware(BaseHTTPMiddleware):
@@ -135,32 +148,35 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
         return response
 
 
-def _public_base_url(request: Request) -> str:
-    env = os.getenv("PUBLIC_APP_URL", "").strip().rstrip("/")
-    return env or str(request.base_url).rstrip("/")
-
-
-def _absolute_og_image_urls(html: str, base_url: str) -> str:
-    absolute = f"{base_url}{_OG_IMAGE_PATH}"
-    return html.replace(f'content="{_OG_IMAGE_PATH}"', f'content="{absolute}"')
-
-
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    init_db()
+    if os.getenv("RUN_MIGRATIONS_ON_STARTUP", "true").lower() not in {"0", "false", "no"}:
+        init_db()
     app.state.scholarships = load_scholarships()
     app.state.programs = load_summer_programs()
     yield
 
 
 app = FastAPI(
-    title="Scholarships4U",
+    title="EnsureCollege",
     description="Match students to scholarships with transparent, explainable scoring.",
     lifespan=lifespan,
     docs_url="/docs" if _DOCS_ENABLED else None,
     redoc_url="/redoc" if _DOCS_ENABLED else None,
     openapi_url="/openapi.json" if _DOCS_ENABLED else None,
 )
+
+
+@app.middleware("http")
+async def _redirect_old_domain(request: StarletteRequest, call_next):
+    host = request.headers.get("host", "").split(":")[0].lower()
+    if host in _OLD_HOSTS:
+        target = f"https://ensurecollege.com{request.url.path}"
+        if request.url.query:
+            target += f"?{request.url.query}"
+        return Response(status_code=301, headers={"Location": target})
+    return await call_next(request)
+
 
 app.add_middleware(SecurityHeadersMiddleware)
 

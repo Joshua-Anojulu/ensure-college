@@ -47,6 +47,10 @@ _engine_kwargs: dict = {"pool_pre_ping": True}
 if DATABASE_URL.startswith("sqlite"):
     # SQLite needs this flag because FastAPI may use the connection across threads.
     _engine_kwargs["connect_args"] = {"check_same_thread": False}
+elif DATABASE_URL.startswith("postgresql"):
+    from sqlalchemy.pool import NullPool
+
+    _engine_kwargs["poolclass"] = NullPool
 
 engine = create_engine(DATABASE_URL, **_engine_kwargs)
 
