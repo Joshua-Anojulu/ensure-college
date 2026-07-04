@@ -79,11 +79,14 @@ class EmailDeliveryError(RuntimeError):
 
 def password_reset_email_is_configured() -> bool:
     """Return whether every setting needed to deliver reset links is present."""
-    return bool(
-        os.getenv("RESEND_API_KEY", "").strip()
-        and os.getenv("EMAIL_FROM", "").strip()
-        and os.getenv("PUBLIC_APP_URL", "").strip()
-    )
+    missing = [
+        k for k in ("RESEND_API_KEY", "EMAIL_FROM", "PUBLIC_APP_URL")
+        if not os.getenv(k, "").strip()
+    ]
+    if missing:
+        print(f"[reset-email] config check failed; missing env: {missing}", file=sys.stderr, flush=True)
+        return False
+    return True
 
 
 def password_reset_url(token: str) -> str:
