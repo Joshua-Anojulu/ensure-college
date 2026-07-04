@@ -10,6 +10,7 @@ from __future__ import annotations
 import html
 import json
 import os
+import sys
 from urllib.error import HTTPError, URLError
 from urllib.parse import quote
 from urllib.request import Request, urlopen
@@ -102,6 +103,11 @@ def send_password_reset_email(recipient: str, token: str) -> None:
     api_key = os.getenv("RESEND_API_KEY", "").strip()
     sender = os.getenv("EMAIL_FROM", "").strip()
     if not api_key or not sender or not password_reset_email_is_configured():
+        missing = [
+            k for k in ("RESEND_API_KEY", "EMAIL_FROM", "PUBLIC_APP_URL")
+            if not os.getenv(k, "").strip()
+        ]
+        print(f"[reset-email] not configured; missing env: {missing}", file=sys.stderr, flush=True)
         raise EmailDeliveryError("Password-reset email is not configured")
 
     reset_url = password_reset_url(token)
@@ -133,6 +139,22 @@ def send_password_reset_email(recipient: str, token: str) -> None:
     try:
         with urlopen(request, timeout=10) as response:
             if not 200 <= response.status < 300:
+                body = response.read(600).decode("utf-8", "ignore")
+                print(
+                    f"[reset-email] resend non-2xx {response.status} from={sender!r}: {body}",
+                    file=sys.stderr, flush=True,
+                )
                 raise EmailDeliveryError("Password-reset email could not be delivered")
-    except (HTTPError, URLError, TimeoutError, OSError) as exc:
+    except HTTPError as exc:
+        detail = exc.read().decode("utf-8", "ignore")[:600]
+        print(
+            f"[reset-email] resend HTTPError {exc.code} from={sender!r}: {detail}",
+            file=sys.stderr, flush=True,
+        )
+        raise EmailDeliveryError("Password-reset email could not be delivered") from exc
+    except (URLError, TimeoutError, OSError) as exc:
+        print(
+            f"[reset-email] resend transport error: {type(exc).__name__}: {exc}",
+            file=sys.stderr, flush=True,
+        )
         raise EmailDeliveryError("Password-reset email could not be delivered") from exc
