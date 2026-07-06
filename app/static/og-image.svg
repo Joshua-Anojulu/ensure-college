@@ -26,7 +26,7 @@
     <path d="M23.5 30 l4.5 4.5 l8.5 -10.5" fill="none" stroke="#ffffff" stroke-width="3.4"
           stroke-linecap="round" stroke-linejoin="round"/>
     <text x="78" y="24" font-family="'Plus Jakarta Sans',system-ui,Arial,sans-serif" font-size="29" font-weight="800" fill="#0e1726">EnsureCollege</text>
-    <text x="79" y="49" font-family="Inter,system-ui,Arial,sans-serif" font-size="15" font-weight="700" letter-spacing="0.12em" fill="#5a6b85">SCHOLARSHIPS &#183; PROGRAMS &#183; COMPETITIONS &#183; PLANNING</text>
+    <text x="79" y="49" font-family="'Hanken Grotesk',system-ui,Arial,sans-serif" font-size="15" font-weight="700" letter-spacing="0.12em" fill="#5a6b85">SCHOLARSHIPS &#183; PROGRAMS &#183; COMPETITIONS &#183; PLANNING</text>
   </g>
 
   <text transform="translate(76,244)" font-family="'Plus Jakarta Sans',system-ui,Arial,sans-serif" font-size="54" font-weight="800" letter-spacing="-0.02em" fill="#0e1726">
@@ -34,12 +34,12 @@
     <tspan x="0" y="68">in one place.</tspan>
   </text>
 
-  <text transform="translate(78,408)" font-family="Inter,system-ui,Arial,sans-serif" font-size="24" font-weight="500" fill="#364152">
+  <text transform="translate(78,408)" font-family="'Hanken Grotesk',system-ui,Arial,sans-serif" font-size="24" font-weight="500" fill="#364152">
     <tspan x="0" y="0">Scholarships, summer programs, and competitions —</tspan>
     <tspan x="0" y="34">matched to you, with deadlines and a clear plan.</tspan>
   </text>
 
-  <g transform="translate(78,506)" font-family="Inter,system-ui,Arial,sans-serif" font-size="18" font-weight="600">
+  <g transform="translate(78,506)" font-family="'Hanken Grotesk',system-ui,Arial,sans-serif" font-size="18" font-weight="600">
     <rect width="232" height="44" rx="22" fill="#eef0ff"/>
     <text x="22" y="28" fill="#4f46e5">Transparent fit reasons</text>
     <rect x="248" width="212" height="44" rx="22" fill="#e7f6ef"/>
@@ -53,6 +53,6 @@
     <circle r="94" fill="none" stroke="#eaf0f6" stroke-width="17"/>
     <circle r="94" fill="none" stroke="url(#rg)" stroke-width="17" stroke-linecap="round" stroke-dasharray="590" stroke-dashoffset="88" transform="rotate(-90)"/>
     <text y="-2" text-anchor="middle" font-family="'Plus Jakarta Sans',system-ui,Arial,sans-serif" font-size="56" font-weight="800" fill="#0e1726">92</text>
-    <text y="34" text-anchor="middle" font-family="Inter,system-ui,Arial,sans-serif" font-size="18" font-weight="700" letter-spacing="0.12em" fill="#5a6b85">FIT</text>
+    <text y="34" text-anchor="middle" font-family="'Hanken Grotesk',system-ui,Arial,sans-serif" font-size="18" font-weight="700" letter-spacing="0.12em" fill="#5a6b85">FIT</text>
   </g>
 </svg>

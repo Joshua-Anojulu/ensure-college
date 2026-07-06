@@ -6,8 +6,8 @@
 
 :root {
   /* ---- Theme-independent tokens ---- */
-  --font-display: "Plus Jakarta Sans", "Inter", system-ui, sans-serif;
-  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "Plus Jakarta Sans", system-ui, sans-serif;
+  --font-body: "Hanken Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
 
   --radius-xs: 8px;
   --radius-sm: 10px;
