@@ -4007,3 +4007,51 @@ async function handleProgramAdvice(programId, button, panel, loading, errorEl) {
     button.disabled = false;
   }
 }
+
+/* Theme: follows the OS preference until the user picks one via the header
+   toggle; a pre-paint inline script in <head> applies the initial value. */
+(function initThemeToggle() {
+  const root = document.documentElement;
+  const toggle = document.getElementById("theme-toggle");
+  const meta = document.getElementById("theme-color-meta");
+  const media = window.matchMedia("(prefers-color-scheme: dark)");
+
+  function readStored() {
+    try {
+      return localStorage.getItem("theme");
+    } catch (err) {
+      return null;
+    }
+  }
+
+  function apply(dark) {
+    if (dark) {
+      root.setAttribute("data-theme", "dark");
+    } else {
+      root.removeAttribute("data-theme");
+    }
+    if (meta) meta.setAttribute("content", dark ? "#16150f" : "#eae8e1");
+    if (toggle) {
+      toggle.setAttribute("aria-pressed", String(dark));
+      toggle.setAttribute("aria-label", dark ? "Switch to light theme" : "Switch to dark theme");
+    }
+  }
+
+  apply(root.getAttribute("data-theme") === "dark");
+
+  if (toggle) {
+    toggle.addEventListener("click", () => {
+      const dark = root.getAttribute("data-theme") !== "dark";
+      try {
+        localStorage.setItem("theme", dark ? "dark" : "light");
+      } catch (err) {
+        /* storage unavailable; theme still applies for this page */
+      }
+      apply(dark);
+    });
+  }
+
+  media.addEventListener("change", (event) => {
+    if (!readStored()) apply(event.matches);
+  });
+})();

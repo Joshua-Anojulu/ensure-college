@@ -1268,7 +1268,8 @@ html.motion-ready .fit-ring-value { stroke-dashoffset: var(--circ); animation: r
   background: var(--surface);
   box-shadow: var(--shadow-sm);
 }
-.loading { display: flex; align-items: center; gap: 0.75rem; color: var(--muted); }
+.loading { display: flex; flex-direction: column; gap: 0.9rem; color: var(--muted); }
+.loading-status { display: flex; align-items: center; gap: 0.75rem; }
 .loading p { margin: 0; font-size: 0.88rem; }
 .loading-spinner { width: 1.1rem; height: 1.1rem; border: 2px solid var(--surface-3); border-top-color: var(--brand); border-radius: 50%; animation: spin 700ms linear infinite; }
 @keyframes spin { to { transform: rotate(1turn); } }
@@ -1681,3 +1682,57 @@ html.motion-ready .match-card-enter { animation: card-arrive 440ms both var(--ea
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
 }
+
+/* =========================================================================
+   Platform enhancements: scroll safety, skeletons, modal motion, perf
+   ========================================================================= */
+
+/* Sticky header must not obscure scrolled-to targets (WCAG 2.4.11). */
+html { scroll-padding-top: 5.75rem; }
+
+/* Skeleton result cards while matches load (shimmer is killed by the
+   global reduced-motion rule above). */
+.skeleton-cards { display: flex; flex-direction: column; gap: 0.75rem; }
+.skeleton-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  padding: 1.15rem 1.3rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+.skeleton-line {
+  height: 0.85rem;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(90deg, var(--surface-2) 25%, var(--surface-3) 45%, var(--surface-2) 65%);
+  background-size: 220% 100%;
+  animation: skeleton-shimmer 1.3s ease-in-out infinite;
+}
+.skeleton-line.w-40 { width: 40%; }
+.skeleton-line.w-55 { width: 55%; }
+.skeleton-line.w-70 { width: 70%; }
+@keyframes skeleton-shimmer { from { background-position: 120% 0; } to { background-position: -120% 0; } }
+
+/* Modal entry: fade + rise via @starting-style discrete-display transitions.
+   Browsers without support get instant show (exit is instant everywhere
+   because [hidden] is display:none !important). */
+.modal-overlay {
+  transition: opacity var(--dur) var(--ease), display var(--dur) allow-discrete;
+}
+.modal-overlay .modal-card {
+  transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease-out);
+}
+@starting-style {
+  .modal-overlay { opacity: 0; }
+  .modal-overlay .modal-card { opacity: 0; transform: translateY(10px) scale(0.985); }
+}
+
+/* Long match lists: skip rendering offscreen cards. */
+.match-card { content-visibility: auto; contain-intrinsic-size: auto 340px; }
+
+/* Auto-growing resume textarea where supported. */
+.resume-paste textarea { field-sizing: content; min-height: 7.5rem; max-height: 60vh; }
+
+/* Native validity styling after user interaction (complements JS validation). */
+input:user-invalid, select:user-invalid, textarea:user-invalid { border-color: var(--danger); }
