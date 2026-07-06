@@ -1,7 +1,6 @@
 /* =========================================================================
    EnsureCollege — design system
-   Light "trust SaaS" theme by default; refined dark theme via [data-theme].
-   All color/depth is token-driven so both themes stay in sync.
+   Light "trust SaaS" theme. All color/depth is token-driven.
    ========================================================================= */
 
 :root {
@@ -93,74 +92,6 @@
 
   --hero-grad: linear-gradient(150deg, #fbfaf7 0%, #f3efe4 55%, #efeadd 100%);
   --hero-line: #e0dccf;
-}
-
-:root[data-theme="dark"] {
-  color-scheme: dark;
-
-  --canvas: #16150f;
-  --bg-glow-1: rgba(232, 162, 0, 0.14);
-  --bg-glow-2: rgba(255, 255, 255, 0.04);
-
-  --surface: #201e17;
-  --surface-2: #29261d;
-  --surface-3: #35311f;
-  --surface-inset: #131109;
-
-  --ink: #f3efe3;
-  --ink-soft: #d8d2c2;
-  --muted: #a49e8c;
-  --muted-2: #7c7768;
-
-  --line: rgba(255, 245, 220, 0.12);
-  --line-strong: rgba(255, 245, 220, 0.22);
-
-  /* Brand = warm paper-ink on dark (primary buttons read as light chips). */
-  --brand: #f3efe3;
-  --brand-strong: #ffffff;
-  --brand-ink: #17181c;
-  --brand-tint: rgba(243, 239, 227, 0.14);
-  --brand-tint-2: rgba(243, 239, 227, 0.22);
-
-  --accent: #f5b52a;
-  --accent-strong: #ffca4d;
-  --accent-ink: #201a08;
-  --accent-tint: rgba(245, 181, 42, 0.16);
-  --accent-line: rgba(245, 181, 42, 0.4);
-  --marker: rgba(245, 181, 42, 0.32);
-  --marker-strong: rgba(245, 181, 42, 0.5);
-
-  --gold: #f5b52a;
-  --gold-tint: rgba(245, 181, 42, 0.16);
-  --gold-line: rgba(245, 181, 42, 0.38);
-
-  --success: #4bbf8f;
-  --success-tint: rgba(75, 191, 143, 0.15);
-  --success-line: rgba(75, 191, 143, 0.34);
-
-  --amber: #f5b52a;
-  --amber-strong: #ffca4d;
-  --amber-tint: rgba(245, 181, 42, 0.14);
-  --amber-line: rgba(245, 181, 42, 0.34);
-
-  --violet: #b6a9ee;
-  --violet-tint: rgba(158, 143, 224, 0.2);
-  --violet-line: rgba(158, 143, 224, 0.38);
-
-  --danger: #ef7d6f;
-  --danger-tint: rgba(239, 125, 111, 0.15);
-  --danger-line: rgba(239, 125, 111, 0.36);
-
-  --focus: rgba(245, 181, 42, 0.5);
-
-  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.4);
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.45);
-  --shadow-md: 0 8px 22px -6px rgba(0, 0, 0, 0.55);
-  --shadow-lg: 0 20px 44px -12px rgba(0, 0, 0, 0.6);
-  --shadow-xl: 0 32px 70px -20px rgba(0, 0, 0, 0.7);
-
-  --hero-grad: linear-gradient(150deg, #24211a 0%, #1e1b14 55%, #1a180f 100%);
-  --hero-line: rgba(255, 245, 220, 0.12);
 }
 
 * { box-sizing: border-box; }
@@ -310,27 +241,6 @@ a { color: var(--brand); }
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-
-/* Theme toggle */
-.theme-toggle {
-  display: inline-grid;
-  width: 2.4rem;
-  height: 2.4rem;
-  flex: 0 0 auto;
-  place-items: center;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-sm);
-  color: var(--ink-soft);
-  background: var(--surface);
-  cursor: pointer;
-  transition: background var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
-}
-.theme-toggle:hover { border-color: var(--line-strong); background: var(--surface-2); color: var(--brand); }
-.theme-toggle svg { width: 1.15rem; height: 1.15rem; }
-.theme-toggle .theme-icon-moon { display: none; }
-.theme-toggle .theme-icon-sun { display: block; }
-:root[data-theme="dark"] .theme-toggle .theme-icon-sun { display: none; }
-:root[data-theme="dark"] .theme-toggle .theme-icon-moon { display: block; }
 
 /* =========================================================================
    Buttons
@@ -1290,7 +1200,6 @@ html.motion-ready .fit-ring-value { stroke-dashoffset: var(--circ); animation: r
   background: rgba(15, 23, 42, 0.55);
   backdrop-filter: blur(4px);
 }
-:root[data-theme="dark"] .modal-overlay { background: rgba(2, 4, 10, 0.66); }
 
 .modal-card { width: min(100%, 440px); margin: 0; padding: 1.6rem; box-shadow: var(--shadow-xl); }
 .modal-head { display: flex; margin-bottom: 0.4rem; align-items: center; justify-content: space-between; }
@@ -1548,7 +1457,6 @@ html.motion-ready .match-card-enter { animation: card-arrive 440ms both var(--ea
   mix-blend-mode: overlay;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
-:root[data-theme="dark"] .photo img { filter: grayscale(0.42) sepia(0.16) saturate(0.8) contrast(1.05) brightness(0.86); }
 .photo-caption {
   position: absolute;
   z-index: 3;
@@ -1671,7 +1579,6 @@ html.motion-ready .match-card-enter { animation: card-arrive 440ms both var(--ea
   .brand-name { font-size: 1.15rem; }
   .auth-actions { gap: 0.15rem; }
   .btn-ghost { padding: 0.52rem 0.6rem; font-size: 0.8rem; }
-  .theme-toggle { width: 2.2rem; height: 2.2rem; }
   .hero-actions { align-items: stretch; flex-direction: column; }
   .checkbox-grid { grid-template-columns: 1fr; }
   .card-header { flex-direction: column; }
