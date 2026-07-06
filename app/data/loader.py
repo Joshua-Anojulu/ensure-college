@@ -1,12 +1,14 @@
 import json
 from pathlib import Path
 
+from app.models.competition import Competition
 from app.models.program import SummerProgram
 from app.models.scholarship import Scholarship
 
 DEFAULT_DATA_PATH = Path(__file__).parent / "scholarships.json"
 DEFAULT_SPECIAL_REQUIREMENTS_PATH = Path(__file__).parent / "special_requirements.json"
 DEFAULT_PROGRAMS_PATH = Path(__file__).parent / "summer_programs.json"
+DEFAULT_COMPETITIONS_PATH = Path(__file__).parent / "competitions.json"
 
 
 def _load_special_requirements(path: Path = DEFAULT_SPECIAL_REQUIREMENTS_PATH) -> dict[str, list[dict]]:
