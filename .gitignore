@@ -37,3 +37,6 @@ AGENT_HANDOFF.md
 .claude/
 .codex/
 .agents/
+
+# graphify knowledge-graph output (local)
+graphify-out/
