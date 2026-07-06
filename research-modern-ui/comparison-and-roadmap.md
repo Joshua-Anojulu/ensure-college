@@ -13,7 +13,7 @@ Full findings: `report.md` (16 items, all fields). Site inventory: `current-site
 ## Incorporated now (commit 48879eb)
 | Change | Research item | Notes |
 |---|---|---|
-| Dark mode wired up: `theme-init.js` pre-paint bootstrap + header toggle | Dark mode & theming | Was fully styled but unreachable (no toggle/detection). External file because CSP `script-src 'self'` blocks inline scripts. Follows OS preference until user picks; persists in localStorage; syncs `theme-color` meta |
+| ~~Dark mode wired up~~ **REMOVED** (commit ba0de23) | Dark mode & theming | Built and verified, then removed: owner decided the site is light-only. Do not reintroduce. Lesson kept: CSP `script-src 'self'` blocks inline scripts, so any pre-paint bootstrap must be an external file |
 | `scroll-padding-top` on html | Navigation | WCAG 2.4.11 fix for the sticky header |
 | Skeleton loading cards in #loading | Loading & perceived performance | Shimmer killed automatically by the global reduced-motion rule |
 | Modal entry fade+rise via `@starting-style` + `allow-discrete` | Micro-interactions | Entry-only; exit stays instant because `[hidden]` is `display:none !important` |
