@@ -1507,6 +1507,125 @@ html.motion-ready .reveal-on-scroll.is-visible { opacity: 1; transform: translat
 html.motion-ready .match-card-enter { animation: card-arrive 440ms both var(--ease); animation-delay: var(--card-delay, 0ms); }
 @keyframes card-arrive { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
+/* =========================================================================
+   Photography — one editorial art-direction so real stock reads as intentional
+   (warm desaturation + a bottom ink gradient + fine grain), not glossy/AI.
+   ========================================================================= */
+.photo {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius);
+  background: var(--surface-3);
+  isolation: isolate;
+}
+.photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(0.32) sepia(0.2) saturate(0.86) contrast(1.03) brightness(1.02);
+}
+/* Warm wash + legibility gradient. */
+.photo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(175deg, rgba(232, 162, 0, 0.12) 0%, transparent 34%),
+    linear-gradient(0deg, rgba(20, 18, 12, 0.55) 0%, rgba(20, 18, 12, 0.08) 42%, transparent 66%);
+}
+/* Fine film grain so disparate photos share one texture. */
+.photo::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0.5;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+:root[data-theme="dark"] .photo img { filter: grayscale(0.42) sepia(0.16) saturate(0.8) contrast(1.05) brightness(0.86); }
+.photo-caption {
+  position: absolute;
+  z-index: 3;
+  left: 1rem;
+  bottom: 0.85rem;
+  margin: 0;
+  color: rgba(255, 250, 238, 0.92);
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/* Hero portrait photo tucked beside the stat card (Hildén-style tilt). */
+.hero-photo {
+  position: absolute;
+  z-index: 0;
+  right: 2.6rem;
+  bottom: 2rem;
+  width: clamp(150px, 15vw, 210px);
+  aspect-ratio: 3 / 4;
+  border: 5px solid var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  transform: rotate(3deg);
+}
+
+/* Proof band — a real campus scene stands in for empty claims. */
+.proof-band {
+  position: relative;
+  display: grid;
+  min-height: 300px;
+  grid-template-columns: 1.05fr 0.95fr;
+  overflow: hidden;
+  border: 1px solid var(--hero-line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+}
+.proof-photo { border-radius: 0; }
+.proof-copy {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.7rem;
+  padding: clamp(1.6rem, 3vw, 2.6rem);
+  background: var(--surface);
+}
+.proof-copy h2 {
+  max-width: 18ch;
+  margin: 0;
+  font-size: clamp(1.5rem, 2.8vw, 2.15rem);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.12;
+}
+.proof-copy p { max-width: 46ch; margin: 0; color: var(--ink-soft); font-size: 0.95rem; line-height: 1.6; }
+.proof-points { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.3rem; }
+.proof-point {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.75rem;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-pill);
+  background: var(--surface-2);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+}
+.proof-point::before { content: ""; width: 0.45rem; height: 0.45rem; border-radius: 50%; background: var(--accent); }
+
+@media (max-width: 720px) {
+  .proof-band { grid-template-columns: 1fr; }
+  .proof-photo { min-height: 200px; }
+  .hero-photo { display: none; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .hero::before, .hero-visual, .hero-status-dot, .hero-visual-meter span { animation: none !important; }
 }
