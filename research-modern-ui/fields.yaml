@@ -1,0 +1,95 @@
+# Field definitions for: Modern website UI patterns & non-AI components (EnsureCollege)
+field_categories:
+  - category: basic_info
+    fields:
+      - name: name
+        description: Name of the pattern, library, or technique
+        detail_level: brief
+        required: true
+      - name: category
+        description: "One of: design-trend, css-architecture, css-framework, theming, native-primitives, component-library, a11y-pattern, utility-library, form-ux, design-system, filtering-ux, navigation, performance, animation, progressive-enhancement, conversion"
+        detail_level: brief
+        required: true
+      - name: description
+        description: What it is and the problem it solves
+        detail_level: moderate
+        required: true
+      - name: adoption_maturity
+        description: Production adoption — who uses it, stability, community health as of 2024-2026
+        detail_level: moderate
+        required: true
+  - category: code
+    fields:
+      - name: code_sources
+        description: "Concrete code locations: GitHub repos, official docs with code, CodePen/demo URLs. Prefer copy-paste-able vanilla JS/CSS examples"
+        detail_level: detailed
+        required: true
+      - name: license
+        description: License of any library/code involved (MIT, ISC, etc.); "n/a" for pure techniques
+        detail_level: brief
+        required: true
+      - name: dependency_footprint
+        description: "What it requires: none (pure CSS/HTML), a script tag, npm/build step, framework. Flag anything incompatible with a no-build vanilla-JS site"
+        detail_level: moderate
+        required: true
+      - name: bundle_size_kb
+        description: Gzipped payload and main-thread cost; "0" for pure CSS/HTML techniques
+        detail_level: brief
+        required: false
+      - name: ssr_htmx_compat
+        description: Whether the component survives server rendering and HTMX/fetch partial swaps (web-component re-upgrade, event re-binding, Declarative Shadow DOM)
+        detail_level: moderate
+        required: false
+      - name: maintenance_health
+        description: Last release date, maintainer activity, succession status (e.g. Shoelace->Web Awesome, Duet->Cally); "n/a" for pure techniques
+        detail_level: brief
+        required: false
+      - name: integration_effort
+        description: low / medium / high effort to adopt in an existing FastAPI + vanilla-JS single-page site
+        detail_level: brief
+        required: true
+  - category: design
+    fields:
+      - name: key_techniques
+        description: The specific techniques/APIs involved (e.g. CSS properties, ARIA attributes, JS APIs) with minimal code snippets
+        detail_level: detailed
+        required: true
+      - name: visual_examples
+        description: Live sites or galleries demonstrating the pattern well
+        detail_level: moderate
+        required: false
+      - name: accessibility_notes
+        description: A11y requirements, pitfalls, and WCAG relevance
+        detail_level: moderate
+        required: true
+      - name: wcag_mapping
+        description: Which WCAG 2.2 success criteria the pattern satisfies or risks (e.g. 2.4.11 Focus Not Obscured, 3.3.7 Redundant Entry)
+        detail_level: moderate
+        required: false
+      - name: baseline_status
+        description: Web-platform Baseline tier (Widely available / Newly available / Limited) with date — the go/no-go signal for native features on a no-build site
+        detail_level: moderate
+        required: true
+      - name: progressive_enhancement_fallback
+        description: What users get when the feature/JS is unsupported (native control, plain scroll, full-page reload)
+        detail_level: moderate
+        required: true
+      - name: mobile_touch_behavior
+        description: Small-screen/touch specifics — thumb reach, virtual-keyboard interplay, sticky-header overlap (student audience is mobile-heavy)
+        detail_level: moderate
+        required: false
+  - category: applicability
+    fields:
+      - name: relevance_to_ensurecollege
+        description: "Why this matters for a college-helper site with scholarship/program/competition matchers, auth, and forms (FastAPI + vanilla JS, editorial 'Highlighter' brand, indigo palette)"
+        detail_level: detailed
+        required: true
+      - name: current_gap
+        description: What the current site lacks relative to this pattern (site has ARIA-labelled modals/tabs, token-based dark theme with manual toggle, 66KB hand-rolled CSS, 133KB vanilla JS, no skeletons, no view transitions, no prefers-color-scheme sync)
+        detail_level: moderate
+        required: true
+      - name: recommended_action
+        description: "adopt / adapt / skip — with a one-paragraph concrete implementation suggestion if adopt/adapt"
+        detail_level: detailed
+        required: true
+uncertain: []
