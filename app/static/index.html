@@ -25,7 +25,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Hanken+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/static/css/style.css?v=20260706-2">
+  <link rel="stylesheet" href="/static/css/style.css?v=20260707-2">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -566,6 +566,21 @@
         <p id="catalog-summary" class="results-summary"></p>
       </div>
 
+      <div class="catalog-kind-tabs" role="tablist" aria-label="Catalog opportunity types">
+        <button type="button" class="catalog-kind-tab is-active" data-kind="all" role="tab" aria-selected="true">
+          All <strong id="catalog-kind-count-all"></strong>
+        </button>
+        <button type="button" class="catalog-kind-tab" data-kind="scholarships" role="tab" aria-selected="false">
+          Scholarships <strong id="catalog-kind-count-scholarships"></strong>
+        </button>
+        <button type="button" class="catalog-kind-tab" data-kind="programs" role="tab" aria-selected="false">
+          Summer programs <strong id="catalog-kind-count-programs"></strong>
+        </button>
+        <button type="button" class="catalog-kind-tab" data-kind="competitions" role="tab" aria-selected="false">
+          Competitions <strong id="catalog-kind-count-competitions"></strong>
+        </button>
+      </div>
+
       <div id="catalog-search-panel" class="results-filters catalog-search">
         <div class="filter-group filter-group-search">
           <label for="catalog-search">Search all scholarships, summer programs, and competitions</label>
@@ -641,6 +656,6 @@
     </div>
   </div>
 
-  <script src="/static/js/app.js?v=20260707-1"></script>
+  <script src="/static/js/app.js?v=20260707-2"></script>
 </body>
 </html>

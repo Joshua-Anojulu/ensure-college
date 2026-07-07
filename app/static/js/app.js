@@ -25,6 +25,7 @@ let scholarshipSearchQuery = "";
 let programSearchQuery = "";
 let competitionSearchQuery = "";
 let catalogSearchQuery = "";
+let catalogKindFilter = "all";
 let searchInDescriptions = false;
 
 let currentUser = null;
@@ -180,6 +181,7 @@ async function init() {
   wireAuthControls();
   wirePasswordReset();
   wireOpportunityTabs();
+  wireCatalogKindTabs();
   wireFilterControls();
   wireSearchControls();
   wireResumeImport();
@@ -264,6 +266,21 @@ function wireOpportunityTabs() {
     activateOpportunityView("catalog", { scroll: true });
   });
   updateOpportunityTabCounts();
+}
+
+function wireCatalogKindTabs() {
+  const tabs = Array.from(document.querySelectorAll(".catalog-kind-tab"));
+  for (const tab of tabs) {
+    tab.addEventListener("click", () => {
+      catalogKindFilter = tab.dataset.kind || "all";
+      for (const other of tabs) {
+        const selected = other === tab;
+        other.classList.toggle("is-active", selected);
+        other.setAttribute("aria-selected", selected ? "true" : "false");
+      }
+      renderCatalog();
+    });
+  }
 }
 
 function updateOpportunityTabCounts() {
@@ -3193,26 +3210,65 @@ async function showCatalogView() {
   renderCatalog();
 }
 
+function updateCatalogKindCounts() {
+  const counts = {
+    scholarships: catalogScholarships ? catalogScholarships.length : null,
+    programs: catalogPrograms ? catalogPrograms.length : null,
+    competitions: catalogCompetitions ? catalogCompetitions.length : null,
+  };
+  const all =
+    counts.scholarships !== null && counts.programs !== null && counts.competitions !== null
+      ? counts.scholarships + counts.programs + counts.competitions
+      : null;
+  const set = (kind, value) => {
+    const el = document.getElementById(`catalog-kind-count-${kind}`);
+    if (el) {
+      el.textContent = value === null ? "" : String(value);
+    }
+  };
+  set("all", all);
+  set("scholarships", counts.scholarships);
+  set("programs", counts.programs);
+  set("competitions", counts.competitions);
+}
+
 function renderCatalog() {
   catalogContainer.innerHTML = "";
   if (catalogScholarships === null || catalogPrograms === null || catalogCompetitions === null) {
     return;
   }
-  const scholarships = catalogScholarships.filter((scholarship) =>
-    itemMatchesSearch(scholarshipSearchValues(scholarship), catalogSearchQuery)
-  );
-  const programs = catalogPrograms.filter((program) =>
-    itemMatchesSearch(programSearchValues(program), catalogSearchQuery)
-  );
-  const competitions = catalogCompetitions.filter((competition) =>
-    itemMatchesSearch(competitionSearchValues(competition), catalogSearchQuery)
-  );
-  const total = catalogScholarships.length + catalogPrograms.length + catalogCompetitions.length;
+  updateCatalogKindCounts();
+  const wantKind = (kind) => catalogKindFilter === "all" || catalogKindFilter === kind;
+  const scholarships = !wantKind("scholarships")
+    ? []
+    : catalogScholarships.filter((scholarship) =>
+        itemMatchesSearch(scholarshipSearchValues(scholarship), catalogSearchQuery)
+      );
+  const programs = !wantKind("programs")
+    ? []
+    : catalogPrograms.filter((program) =>
+        itemMatchesSearch(programSearchValues(program), catalogSearchQuery)
+      );
+  const competitions = !wantKind("competitions")
+    ? []
+    : catalogCompetitions.filter((competition) =>
+        itemMatchesSearch(competitionSearchValues(competition), catalogSearchQuery)
+      );
+  const kindTotal =
+    (wantKind("scholarships") ? catalogScholarships.length : 0) +
+    (wantKind("programs") ? catalogPrograms.length : 0) +
+    (wantKind("competitions") ? catalogCompetitions.length : 0);
   const shown = scholarships.length + programs.length + competitions.length;
 
+  const kindLabel = {
+    all: "catalog opportunities",
+    scholarships: "scholarships",
+    programs: "summer programs",
+    competitions: "competitions",
+  }[catalogKindFilter];
   catalogSummary.textContent = catalogSearchQuery
-    ? `Showing ${shown} of ${total} catalog opportunities.`
-    : `${total} catalog opportunities available to browse.`;
+    ? `Showing ${shown} of ${kindTotal} ${kindLabel}.`
+    : `${kindTotal} ${kindLabel} available to browse.`;
 
   if (shown === 0) {
     catalogEmpty.hidden = true;

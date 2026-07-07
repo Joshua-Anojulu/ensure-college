@@ -1643,3 +1643,39 @@ html { scroll-padding-top: 5.75rem; }
 
 /* Native validity styling after user interaction (complements JS validation). */
 input:user-invalid, select:user-invalid, textarea:user-invalid { border-color: var(--danger); }
+
+/* Catalog kind sub-tabs: pill filters for scholarships / programs / competitions. */
+.catalog-kind-tabs { display: flex; flex-wrap: wrap; gap: 0.45rem; margin: 0.9rem 0 0.2rem; }
+.catalog-kind-tab {
+  display: inline-flex;
+  min-height: 2.2rem;
+  padding: 0.42rem 0.85rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--ink-soft);
+  background: var(--surface);
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 600;
+  transition: border-color var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease);
+}
+.catalog-kind-tab:hover { border-color: var(--line-strong); }
+.catalog-kind-tab.is-active { border-color: var(--brand); color: var(--brand); background: var(--brand-tint); }
+.catalog-kind-tab strong {
+  display: inline-grid;
+  min-width: 1.4rem;
+  height: 1.4rem;
+  padding: 0 0.4rem;
+  place-content: center;
+  border-radius: var(--radius-pill);
+  background: var(--surface-2);
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.catalog-kind-tab strong:empty { display: none; }
+.catalog-kind-tab.is-active strong { background: var(--brand); color: var(--brand-ink); }
