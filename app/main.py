@@ -13,7 +13,7 @@ from starlette.requests import Request as StarletteRequest
 
 from app.api.account_routes import router as account_router
 from app.api.auth_routes import router as auth_router
-from app.data.loader import load_scholarships, load_summer_programs
+from app.data.loader import load_competitions, load_scholarships, load_summer_programs
 from app.db.database import init_db
 from app.essay.advice import (
     EssayAdviceError,
@@ -22,8 +22,10 @@ from app.essay.advice import (
     generate_program_advice,
 )
 from app.llm import AIFeatureError
+from app.matching.competition_matcher import match_competitions
 from app.matching.matcher import match_scholarships
 from app.matching.program_matcher import match_programs
+from app.models.competition import Competition, CompetitionMatchResult
 from app.models.essay import (
     EssayAdviceRequest,
     EssayAdviceResponse,
@@ -154,6 +156,7 @@ async def lifespan(app: FastAPI):
         init_db()
     app.state.scholarships = load_scholarships()
     app.state.programs = load_summer_programs()
+    app.state.competitions = load_competitions()
     yield
 
 
@@ -298,6 +301,19 @@ def get_programs(request: Request) -> list[SummerProgram]:
 def match_summer_programs(request: Request, student: StudentProfile) -> list[ProgramMatchResult]:
     programs: list[SummerProgram] = request.app.state.programs
     return match_programs(student, programs)
+
+
+@app.get("/competitions")
+def get_competitions(request: Request) -> list[Competition]:
+    return request.app.state.competitions
+
+
+@app.post("/competitions/match")
+def match_competition_list(
+    request: Request, student: StudentProfile
+) -> list[CompetitionMatchResult]:
+    competitions: list[Competition] = request.app.state.competitions
+    return match_competitions(student, competitions)
 
 
 @app.post(
