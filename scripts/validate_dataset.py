@@ -18,8 +18,9 @@ from pathlib import Path
 # Allow running as a plain script: python scripts/validate_dataset.py
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from app.data.loader import load_scholarships, load_summer_programs  # noqa: E402
+from app.data.loader import load_competitions, load_scholarships, load_summer_programs  # noqa: E402
 from app.matching.matcher import _parse_iso_deadline  # noqa: E402
+from app.models.competition import Competition  # noqa: E402
 from app.models.program import SummerProgram  # noqa: E402
 from app.models.scholarship import Scholarship  # noqa: E402
 from app.vocabulary import (  # noqa: E402
@@ -254,11 +255,107 @@ def audit_programs(programs: list[SummerProgram], today: date | None = None) -> 
     return {"errors": errors, "warnings": warnings, "stats": stats}
 
 
+def audit_competitions(competitions: list[Competition], today: date | None = None) -> dict:
+    """Return structural errors/warnings for the competitions catalog."""
+    today = today or date.today()
+    errors: list[str] = []
+    warnings: list[str] = []
+    verify_counts: Counter[str] = Counter()
+
+    ids = [c.id for c in competitions]
+    for cid, count in Counter(ids).items():
+        if count > 1:
+            errors.append(f"competition {cid}: duplicate id appears {count} times")
+
+    for competition in competitions:
+        if not _deadline_ok(competition.deadline):
+            errors.append(
+                f"competition {competition.id}: unparseable deadline {competition.deadline!r}"
+            )
+        if (
+            competition.estimated_deadline is not None
+            and _parse_iso_deadline(competition.estimated_deadline) is None
+        ):
+            errors.append(
+                f"competition {competition.id}: invalid estimated_deadline "
+                f"{competition.estimated_deadline!r} (must be an ISO date)"
+            )
+
+        elig = competition.eligibility
+        if isinstance(elig.min_gpa, (int, float)) and not 0.0 <= float(elig.min_gpa) <= 4.0:
+            errors.append(f"competition {competition.id}: min_gpa out of range ({elig.min_gpa})")
+        for field in elig.fields_of_study:
+            if field not in FIELD_OF_STUDY_VALUES:
+                warnings.append(
+                    f"competition {competition.id}: field_of_study not in vocabulary: {field!r}"
+                )
+        for tag in elig.demographics:
+            if tag not in DEMOGRAPHIC_TAG_VALUES:
+                warnings.append(
+                    f"competition {competition.id}: demographic not in vocabulary: {tag!r}"
+                )
+        for grade in elig.grade_levels:
+            if grade not in GRADE_LEVEL_VALUES:
+                warnings.append(
+                    f"competition {competition.id}: grade_level not in vocabulary: {grade!r}"
+                )
+        if isinstance(elig.states, list):
+            for state in elig.states:
+                if state.upper() not in STATE_CODE_VALUES:
+                    warnings.append(
+                        f"competition {competition.id}: state not a valid code: {state!r}"
+                    )
+
+        requirement_ids = [requirement.id for requirement in competition.application_requirements]
+        for requirement_id, count in Counter(requirement_ids).items():
+            if count > 1:
+                errors.append(
+                    f"competition {competition.id}: duplicate application requirement id "
+                    f"{requirement_id!r}"
+                )
+
+        if competition.verification is not None:
+            if (
+                competition.verification.last_verified_at is not None
+                and competition.verification.last_verified_at > today
+            ):
+                errors.append(
+                    f"competition {competition.id}: last_verified_at is in the future "
+                    f"({competition.verification.last_verified_at})"
+                )
+            if not competition.verified:
+                warnings.append(
+                    f"competition {competition.id}: has verification metadata but verified is false"
+                )
+
+        if competition.deadline.startswith("VERIFY"):
+            verify_counts["deadline"] += 1
+        if elig.citizenship_requirement == "VERIFY":
+            verify_counts["citizenship"] += 1
+        if competition.participation_format == "VERIFY":
+            verify_counts["participation_format"] += 1
+        if competition.cost_category == "VERIFY":
+            verify_counts["cost_category"] += 1
+
+    stats = {
+        "total": len(competitions),
+        "verified": sum(1 for c in competitions if c.verified),
+        "unverified": sum(1 for c in competitions if not c.verified),
+        "with_checklists": sum(1 for c in competitions if c.application_requirements),
+        "checklist_steps": sum(len(c.application_requirements) for c in competitions),
+        "estimated_deadlines": sum(1 for c in competitions if c.estimated_deadline),
+        "verify_placeholders": dict(verify_counts),
+    }
+    return {"errors": errors, "warnings": warnings, "stats": stats}
+
+
 def main() -> int:
     scholarships = load_scholarships()
     programs = load_summer_programs()
+    competitions = load_competitions()
     report = audit_dataset(scholarships)
     program_report = audit_programs(programs)
+    competition_report = audit_competitions(competitions)
     stats = report["stats"]
     program_stats = program_report["stats"]
 
@@ -290,6 +387,18 @@ def main() -> int:
     for field, count in sorted(program_stats["verify_placeholders"].items()):
         print(f"    {field:14} {count}")
 
+    competition_stats = competition_report["stats"]
+    print("\nCompetitions:")
+    print(f"  total:      {competition_stats['total']}")
+    print(f"  verified:   {competition_stats['verified']}")
+    print(f"  unverified: {competition_stats['unverified']}")
+    print(f"  with application checklists: {competition_stats['with_checklists']}")
+    print(f"  checklist steps: {competition_stats['checklist_steps']}")
+    print(f"  estimated deadlines: {competition_stats['estimated_deadlines']}")
+    print("  VERIFY placeholders:")
+    for field, count in sorted(competition_stats["verify_placeholders"].items()):
+        print(f"    {field:20} {count}")
+
     queue = report["needs_reverification_ids"]
     if queue:
         print(f"\nRe-verification queue ({len(queue)}):")
@@ -298,8 +407,12 @@ def main() -> int:
         if len(queue) > 50:
             print(f"  ... and {len(queue) - 50} more")
 
-    warnings = [*report["warnings"], *program_report["warnings"]]
-    errors = [*report["errors"], *program_report["errors"]]
+    warnings = [
+        *report["warnings"],
+        *program_report["warnings"],
+        *competition_report["warnings"],
+    ]
+    errors = [*report["errors"], *program_report["errors"], *competition_report["errors"]]
 
     if warnings:
         print(f"\nWarnings ({len(warnings)}):")

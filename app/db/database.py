@@ -17,8 +17,11 @@ from sqlalchemy import create_engine, inspect, text
 from sqlalchemy.engine import Connection, Engine
 from sqlalchemy.orm import DeclarativeBase, Session, sessionmaker
 
-DEFAULT_SQLITE_PATH = Path(__file__).resolve().parent.parent.parent / "scholarships4u.db"
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+_LEGACY_SQLITE_PATH = PROJECT_ROOT / "scholarships4u.db"
+_NEW_SQLITE_PATH = PROJECT_ROOT / "ensurecollege.db"
+# Keep an existing pre-rebrand dev database rather than silently starting empty.
+DEFAULT_SQLITE_PATH = _LEGACY_SQLITE_PATH if _LEGACY_SQLITE_PATH.exists() else _NEW_SQLITE_PATH
 
 
 def _resolve_database_url() -> str:

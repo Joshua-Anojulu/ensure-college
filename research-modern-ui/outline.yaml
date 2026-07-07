@@ -1,0 +1,54 @@
+topic: Modern website UI patterns and non-AI website components (with concrete code sources) applicable to a FastAPI + vanilla-JS college-helper site (EnsureCollege)
+items:
+  - name: 2025-2026 web design trends
+    category: design-trend
+    description: Editorial layouts, bento grids, fluid typography, oversized type, scrollytelling, type-as-interface, and the brutalist/raw-HTML counter-trend — current visual direction with code sources
+  - name: Modern CSS architecture primitives
+    category: css-architecture
+    description: Container queries, :has(), native nesting, cascade layers, subgrid — Baseline-stable primitives that determine how a no-build site implements cards, filter-chip state styling, and responsive layout
+  - name: Classless and no-build CSS frameworks
+    category: css-framework
+    description: Pico CSS, Open Props, modern-normalize — drop-in CSS foundations for no-build sites
+  - name: Dark mode and theming architecture
+    category: theming
+    description: CSS custom properties, light-dark(), prefers-color-scheme; retrofitting a themed site with an existing brand palette
+  - name: Native HTML interactive primitives
+    category: native-primitives
+    description: Popover API + invoker commands, <dialog>, exclusive accordions, customizable <select> (appearance base-select), field-sizing, accent-color — zero-JS browser-managed components (Baseline 2025) that supersede hand-rolled ARIA JS
+  - name: Vanilla-JS component libraries
+    category: component-library
+    description: Web Awesome (successor to Shoelace, shoelace-style/webawesome, public beta 2025, ~98% SSR compatible) and other native web-component libraries usable from a script tag without React or a build step
+  - name: Accessible component patterns (ARIA APG)
+    category: a11y-pattern
+    description: Tabs, dialogs, comboboxes, disclosure widgets per the W3C ARIA Authoring Practices Guide, anchored to WCAG 2.2 AA and the DOJ ADA Title II web rule; note which patterns now have native zero-JS equivalents
+  - name: Vanilla utility libraries for data-heavy pages
+    category: utility-library
+    description: Client-side fuzzy search (Fuse.js, microfuzz ~2KB), vanilla data tables (Grid.js, Tabulator, List.js), accessible date pickers (Cally ~8.5KB, Duet) — the rendering/search layer for matcher results and deadline UI
+  - name: Form UX patterns
+    category: form-ux
+    description: Multi-step forms, inline validation, smart defaults, customizable native form controls — core to the scholarship/program/competition matcher forms
+  - name: Government design systems as form-pattern code sources
+    category: design-system
+    description: GOV.UK Frontend (alphagov/govuk-frontend) and USWDS — MIT-licensed, WCAG-2.2-AA-tested production code for multi-step forms, step indicators, and validation summaries
+  - name: Faceted filtering and search-results UI
+    category: filtering-ux
+    description: Filter chips, result counts, sort controls for matcher results pages
+  - name: Navigation patterns
+    category: navigation
+    description: Sticky headers, mobile navigation without JS frameworks, breadcrumbs
+  - name: Loading and perceived-performance patterns
+    category: performance
+    description: Skeleton screens, optimistic UI, content-visibility, Speculation Rules API prerendering, and INP <=200ms / Core Web Vitals budgets for a mobile-heavy student audience
+  - name: Micro-interactions and modern CSS animation
+    category: animation
+    description: View Transitions API (same- and cross-document for MPA), scroll-driven animations, @starting-style, CSS-only carousels (::scroll-button, ::scroll-marker, scroll-state()) — motion without JS libraries
+  - name: HTMX and progressive enhancement for FastAPI
+    category: progressive-enhancement
+    description: Server-rendered interactivity and partial swaps (HTMX), plus companions/alternatives Alpine.js and Datastar — as an alternative to hand-rolled fetch code
+  - name: Landing and hero conversion patterns
+    category: conversion
+    description: Social proof bands, CTA design, trust signals for a student audience
+execution:
+  batch_size: 4
+  items_per_agent: 4
+  output_dir: ./research-modern-ui/results

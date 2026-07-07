@@ -19,13 +19,13 @@
   <meta name="twitter:title" content="EnsureCollege | Scholarships and summer programs, made clearer">
   <meta name="twitter:description" content="Build one profile to find scholarships and elite summer programs with clear matching reasons, deadline tracking, and application guidance.">
   <link rel="canonical" href="https://ensurecollege.com/">
-  <link rel="icon" href="/static/favicon.svg?v=20260628-1" type="image/svg+xml">
-  <meta name="theme-color" id="theme-color-meta" content="#f5f7fb">
+  <link rel="icon" href="/static/favicon.svg?v=20260707-1" type="image/svg+xml">
+  <meta name="theme-color" content="#eae8e1">
   <meta name="ai-features-enabled" content="__AI_FEATURES_ENABLED__">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/static/css/style.css?v=20260628-1">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Hanken+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/style.css?v=20260706-2">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -184,7 +184,7 @@
     <section class="intro hero reveal-on-scroll" data-reveal-delay="0ms">
       <div class="hero-copy">
         <p class="eyebrow">A clearer path to opportunity</p>
-        <h1>Find scholarships and elite summer programs that fit you.</h1>
+        <h1>Find scholarships and elite summer programs that <span class="mark mark-strong">fit you.</span></h1>
         <p class="intro-copy">
           Build one profile, compare real opportunities, and turn your best matches into an application plan.
         </p>
@@ -209,6 +209,26 @@
         <div class="hero-visual-row">
           <span>Next step</span>
           <strong>Checklist ready</strong>
+        </div>
+      </div>
+      <div class="hero-photo photo" aria-hidden="true">
+        <img src="/static/img/students-walking.jpg" alt="" loading="lazy" decoding="async" width="600" height="800">
+      </div>
+    </section>
+
+    <section class="proof-band reveal-on-scroll" data-reveal-delay="55ms" aria-label="How EnsureCollege works">
+      <div class="proof-photo photo">
+        <img src="/static/img/campus-quad.jpg" alt="Students walking across a college campus between classes" loading="lazy" decoding="async" width="1200" height="800">
+        <p class="photo-caption">Real opportunities, real deadlines</p>
+      </div>
+      <div class="proof-copy">
+        <p class="eyebrow">Built to be trusted</p>
+        <h2>Every match traces back to an official source.</h2>
+        <p>No guessed deadlines, no invented requirements. EnsureCollege shows you why each scholarship, program, or competition fits — and links the proof.</p>
+        <div class="proof-points">
+          <span class="proof-point">Transparent fit reasons</span>
+          <span class="proof-point">Source-linked steps</span>
+          <span class="proof-point">Deadlines you can verify</span>
         </div>
       </div>
     </section>
@@ -380,6 +400,10 @@
           <span>Summer programs</span>
           <strong id="programs-tab-count">0</strong>
         </button>
+        <button type="button" id="tab-competitions" class="opportunity-tab" data-view="competitions" role="tab" aria-selected="false" aria-controls="competitions-section">
+          <span>Competitions</span>
+          <strong id="competitions-tab-count">0</strong>
+        </button>
         <button type="button" id="tab-catalog" class="opportunity-tab" data-view="catalog" role="tab" aria-selected="false" aria-controls="catalog-section">
           <span>Browse all</span>
           <strong id="catalog-tab-count">All</strong>
@@ -464,8 +488,15 @@
       </div>
 
       <div id="loading" class="loading" hidden>
-        <div class="loading-spinner" aria-hidden="true"></div>
-        <p>Finding opportunities that fit your profile...</p>
+        <div class="loading-status">
+          <div class="loading-spinner" aria-hidden="true"></div>
+          <p>Finding opportunities that fit your profile...</p>
+        </div>
+        <div class="skeleton-cards" aria-hidden="true">
+          <article class="skeleton-card"><span class="skeleton-line w-40"></span><span class="skeleton-line w-70"></span><span class="skeleton-line w-55"></span></article>
+          <article class="skeleton-card"><span class="skeleton-line w-55"></span><span class="skeleton-line w-70"></span><span class="skeleton-line w-40"></span></article>
+          <article class="skeleton-card"><span class="skeleton-line w-40"></span><span class="skeleton-line w-55"></span><span class="skeleton-line w-70"></span></article>
+        </div>
       </div>
 
       <div id="results-empty" class="results-empty panel" hidden>
@@ -502,6 +533,32 @@
       <div id="programs-container"></div>
     </section>
 
+    <section id="competitions-section" class="results-section" hidden role="tabpanel" aria-labelledby="tab-competitions">
+      <div class="results-header">
+        <p class="eyebrow">Competition lane</p>
+        <h2>Competitions</h2>
+        <p id="competitions-summary" class="results-summary"></p>
+      </div>
+
+      <div id="competitions-search-panel" class="results-filters lane-search" hidden>
+        <div class="filter-group filter-group-search">
+          <label for="competition-search">Search matched competitions</label>
+          <input id="competition-search" type="search" placeholder="Name, host, or category..." autocomplete="off" />
+        </div>
+        <label class="filter-check">
+          <input type="checkbox" class="search-descriptions-toggle" />
+          <span>Search descriptions</span>
+        </label>
+      </div>
+
+      <div id="competitions-empty" class="results-empty panel" hidden>
+        <h3>No competitions matched this profile</h3>
+        <p>This is a small, curated set of national competitions. Adding more fields of study to your profile can surface more of them.</p>
+      </div>
+
+      <div id="competitions-container"></div>
+    </section>
+
     <section id="catalog-section" class="results-section" hidden role="tabpanel" aria-labelledby="tab-catalog">
       <div class="results-header">
         <p class="eyebrow">Full catalog</p>
@@ -511,7 +568,7 @@
 
       <div id="catalog-search-panel" class="results-filters catalog-search">
         <div class="filter-group filter-group-search">
-          <label for="catalog-search">Search all scholarships and summer programs</label>
+          <label for="catalog-search">Search all scholarships, summer programs, and competitions</label>
           <input id="catalog-search" type="search" placeholder="Name, sponsor, host, or subject..." autocomplete="off" />
         </div>
         <label class="filter-check">
@@ -535,7 +592,7 @@
     <section id="saved-section" class="results-section" hidden role="tabpanel" aria-labelledby="tab-saved">
       <div class="results-header">
         <p class="eyebrow">Your application plan</p>
-        <h2>Saved scholarships & programs</h2>
+        <h2>Saved opportunities</h2>
         <p id="saved-summary" class="results-summary"></p>
         <a id="export-ics" class="btn-ghost export-ics" href="/account/saved/calendar.ics" download>
           Export verified deadlines (.ics)
@@ -545,7 +602,7 @@
       <div id="saved-empty" class="results-empty panel" hidden>
         <h3>You have not saved anything yet</h3>
         <p>
-          Run a match, then save scholarships or programs to unlock the planning layer:
+          Run a match, then save scholarships, programs, or competitions to unlock the planning layer:
           checklist steps, strict eligibility checks, verified deadlines, and essay-reuse guidance.
         </p>
       </div>
@@ -584,6 +641,6 @@
     </div>
   </div>
 
-  <script src="/static/js/app.js?v=20260628-3"></script>
+  <script src="/static/js/app.js?v=20260707-1"></script>
 </body>
 </html>

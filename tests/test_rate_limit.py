@@ -104,3 +104,27 @@ def test_upstash_fail_open(monkeypatch):
             host = "9.9.9.9"
 
     dep(Req()); dep(Req())  # must NOT raise (fail open)
+
+
+def test_client_ip_prefers_first_forwarded_hop():
+    import app.rate_limit as rl
+
+    class Req:
+        headers = {"x-forwarded-for": "203.0.113.7, 10.0.0.1"}
+
+        class client:
+            host = "10.0.0.1"
+
+    assert rl._client_ip(Req()) == "203.0.113.7"
+
+
+def test_client_ip_falls_back_to_peer_without_header():
+    import app.rate_limit as rl
+
+    class Req:
+        headers = {}
+
+        class client:
+            host = "9.9.9.9"
+
+    assert rl._client_ip(Req()) == "9.9.9.9"

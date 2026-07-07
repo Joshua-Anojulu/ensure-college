@@ -679,3 +679,114 @@ class TestAccountManagement:
     def test_delete_account_requires_login(self, client):
         response = client.post("/auth/delete-account", json={"password": "password123"})
         assert response.status_code == 401
+
+
+class TestReviewFixes:
+    """Regression tests for the 2026-07-06 codebase-review fixes."""
+
+    def _configure_google(self, monkeypatch):
+        monkeypatch.setenv("GOOGLE_CLIENT_ID", "test-client-id")
+        monkeypatch.setenv("GOOGLE_CLIENT_SECRET", "test-client-secret")
+
+    def _mock_userinfo(self, monkeypatch, userinfo):
+        async def fake_userinfo(_request):
+            return userinfo
+
+        monkeypatch.setattr("app.api.auth_routes._fetch_google_userinfo", fake_userinfo)
+
+    def _google_login(self, client, monkeypatch, email, sub):
+        self._configure_google(monkeypatch)
+        self._mock_userinfo(
+            monkeypatch,
+            {"email": email, "email_verified": True, "sub": sub},
+        )
+        response = client.get("/auth/google/callback", follow_redirects=False)
+        assert response.status_code == 303
+
+    def test_google_only_account_can_delete_itself(self, client, monkeypatch):
+        self._google_login(client, monkeypatch, "gonly@example.com", "sub-delete-me")
+
+        deleted = client.post("/auth/delete-account", json={})
+        assert deleted.status_code == 200
+        assert client.get("/auth/me").status_code == 401
+
+    def test_password_account_still_needs_password_to_delete(self, client):
+        signup(client)
+        response = client.post("/auth/delete-account", json={})
+        assert response.status_code == 401
+        assert client.get("/auth/me").status_code == 200
+
+    def test_google_email_change_signs_in_by_sub_and_adopts_new_email(self, client, monkeypatch):
+        self._google_login(client, monkeypatch, "old-address@example.com", "sub-stable")
+        client.post("/auth/logout")
+
+        self._google_login(client, monkeypatch, "new-address@example.com", "sub-stable")
+        me = client.get("/auth/me")
+        assert me.status_code == 200
+        assert me.json()["email"] == "new-address@example.com"
+
+    def test_google_email_change_keeps_old_email_when_new_one_is_taken(self, client, monkeypatch):
+        signup(client, email="taken@example.com")
+        client.post("/auth/logout")
+
+        self._google_login(client, monkeypatch, "original@example.com", "sub-collide")
+        client.post("/auth/logout")
+
+        self._google_login(client, monkeypatch, "taken@example.com", "sub-collide")
+        me = client.get("/auth/me")
+        assert me.status_code == 200
+        assert me.json()["email"] == "original@example.com"
+
+    def test_failed_delivery_keeps_previous_reset_link_valid(self, client, monkeypatch):
+        import app.api.auth_routes as auth_routes
+
+        signup(client)
+        client.post("/auth/logout")
+        monkeypatch.setenv("RESEND_API_KEY", "k")
+        monkeypatch.setenv("EMAIL_FROM", "noreply@example.com")
+        monkeypatch.setenv("PUBLIC_APP_URL", "https://example.com")
+
+        sent_tokens = []
+        monkeypatch.setattr(
+            auth_routes, "send_password_reset_email", lambda email, token: sent_tokens.append(token)
+        )
+        first = client.post("/auth/password-reset/request", json={"email": "student@example.com"})
+        assert first.status_code == 200
+        assert len(sent_tokens) == 1
+
+        def boom(email, token):
+            raise auth_routes.EmailDeliveryError("smtp down")
+
+        monkeypatch.setattr(auth_routes, "send_password_reset_email", boom)
+        second = client.post("/auth/password-reset/request", json={"email": "student@example.com"})
+        assert second.status_code == 503
+
+        confirm = client.post(
+            "/auth/password-reset/confirm",
+            json={"token": sent_tokens[0], "new_password": "brand-new-pass1"},
+        )
+        assert confirm.status_code == 200
+
+    def test_profile_free_text_items_are_trimmed_and_capped(self, client):
+        signup(client)
+        profile = {
+            "gpa": 3.5,
+            "grade_level": "high_school_senior",
+            "intended_majors": ["science"],
+            "demographic_tags": [],
+            "state": "TX",
+            "citizenship": "us_citizen",
+            "financial_need_level": "unspecified",
+            "activities": ["  debate team  ", "x" * 500, "   "],
+            "target_schools": ["Rice University"],
+        }
+        saved = client.put("/account/profile", json=profile)
+        assert saved.status_code == 200
+        activities = saved.json()["profile"]["activities"]
+        assert activities[0] == "debate team"
+        assert len(activities[1]) == 200
+        assert len(activities) == 2  # blank entry dropped
+
+        profile["activities"] = ["club"] * 51
+        rejected = client.put("/account/profile", json=profile)
+        assert rejected.status_code == 422

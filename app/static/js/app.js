@@ -13,19 +13,24 @@ let vocabulary = null;
 let lastSubmittedProfile = null;
 let lastResults = null;
 let lastPrograms = null;
+let lastCompetitions = null;
 let catalogScholarships = null;
 let catalogPrograms = null;
+let catalogCompetitions = null;
 let catalogScholarshipsPromise = null;
 let catalogProgramsPromise = null;
+let catalogCompetitionsPromise = null;
 let activeOpportunityView = "scholarships";
 let scholarshipSearchQuery = "";
 let programSearchQuery = "";
+let competitionSearchQuery = "";
 let catalogSearchQuery = "";
 let searchInDescriptions = false;
 
 let currentUser = null;
 const savedIds = new Set();
 const savedProgramIds = new Set();
+const savedCompetitionIds = new Set();
 let authMode = "login";
 let passwordResetToken = null;
 
@@ -44,12 +49,17 @@ const programsSection = document.getElementById("programs-section");
 const programsContainer = document.getElementById("programs-container");
 const programsSummary = document.getElementById("programs-summary");
 const programsEmpty = document.getElementById("programs-empty");
+const competitionsSection = document.getElementById("competitions-section");
+const competitionsContainer = document.getElementById("competitions-container");
+const competitionsSummary = document.getElementById("competitions-summary");
+const competitionsEmpty = document.getElementById("competitions-empty");
 const submitBtn = document.getElementById("submit-btn");
 const browseCatalogBtn = document.getElementById("browse-catalog-btn");
 const opportunityTabs = document.getElementById("opportunity-tabs");
 const opportunityTabButtons = Array.from(document.querySelectorAll(".opportunity-tab"));
 const scholarshipsTabCount = document.getElementById("scholarships-tab-count");
 const programsTabCount = document.getElementById("programs-tab-count");
+const competitionsTabCount = document.getElementById("competitions-tab-count");
 const catalogTabCount = document.getElementById("catalog-tab-count");
 const savedTabCount = document.getElementById("saved-tab-count");
 
@@ -112,6 +122,8 @@ const filterClear = document.getElementById("filter-clear");
 const scholarshipSearch = document.getElementById("scholarship-search");
 const programSearch = document.getElementById("program-search");
 const programsSearchPanel = document.getElementById("programs-search-panel");
+const competitionSearch = document.getElementById("competition-search");
+const competitionsSearchPanel = document.getElementById("competitions-search-panel");
 const catalogSection = document.getElementById("catalog-section");
 const catalogSummary = document.getElementById("catalog-summary");
 const catalogSearch = document.getElementById("catalog-search");
@@ -261,15 +273,20 @@ function updateOpportunityTabCounts() {
   if (programsTabCount) {
     programsTabCount.textContent = lastPrograms ? String(lastPrograms.length) : "0";
   }
+  if (competitionsTabCount) {
+    competitionsTabCount.textContent = lastCompetitions ? String(lastCompetitions.length) : "0";
+  }
   if (catalogTabCount) {
     const loadedCount =
-      catalogScholarships && catalogPrograms
-        ? catalogScholarships.length + catalogPrograms.length
+      catalogScholarships && catalogPrograms && catalogCompetitions
+        ? catalogScholarships.length + catalogPrograms.length + catalogCompetitions.length
         : null;
     catalogTabCount.textContent = loadedCount === null ? "All" : String(loadedCount);
   }
   if (savedTabCount) {
-    savedTabCount.textContent = String(savedIds.size + savedProgramIds.size);
+    savedTabCount.textContent = String(
+      savedIds.size + savedProgramIds.size + savedCompetitionIds.size
+    );
   }
 }
 
@@ -292,12 +309,18 @@ async function activateOpportunityView(view, options = {}) {
 
   resultsSection.hidden = view !== "scholarships" || !lastResults;
   programsSection.hidden = view !== "programs" || lastPrograms === null;
+  competitionsSection.hidden = view !== "competitions" || lastCompetitions === null;
   catalogSection.hidden = view !== "catalog";
   savedSection.hidden = view !== "saved";
 
   if (view === "programs" && lastPrograms !== null) {
     renderPrograms(lastPrograms);
     programsSection.hidden = false;
+  }
+
+  if (view === "competitions" && lastCompetitions !== null) {
+    renderCompetitions(lastCompetitions);
+    competitionsSection.hidden = false;
   }
 
   if (view === "catalog") {
@@ -311,7 +334,7 @@ async function activateOpportunityView(view, options = {}) {
       savedSection.hidden = false;
       savedContainer.innerHTML = "";
       savedEmpty.hidden = false;
-      savedSummary.textContent = "Log in to save scholarships and summer programs to your application plan.";
+      savedSummary.textContent = "Log in to save scholarships, summer programs, and competitions to your application plan.";
     }
   }
 
@@ -321,6 +344,8 @@ async function activateOpportunityView(view, options = {}) {
     const target =
       view === "programs"
         ? programsSection
+        : view === "competitions"
+        ? competitionsSection
         : view === "catalog"
         ? catalogSection
         : view === "saved"
@@ -365,6 +390,18 @@ function wireSearchControls() {
       })
       .catch(console.error);
   }, 150);
+  const rerenderCompetitions = debounce(() => {
+    if (lastCompetitions) {
+      renderCompetitions(lastCompetitions);
+    }
+    ensureCatalogData(["competitions"])
+      .then(() => {
+        if (lastCompetitions) {
+          renderCompetitions(lastCompetitions);
+        }
+      })
+      .catch(console.error);
+  }, 150);
   const rerenderCatalog = debounce(() => {
     renderCatalog();
   }, 150);
@@ -376,6 +413,10 @@ function wireSearchControls() {
   programSearch?.addEventListener("input", () => {
     programSearchQuery = programSearch.value.trim();
     rerenderPrograms();
+  });
+  competitionSearch?.addEventListener("input", () => {
+    competitionSearchQuery = competitionSearch.value.trim();
+    rerenderCompetitions();
   });
   catalogSearch?.addEventListener("input", () => {
     catalogSearchQuery = catalogSearch.value.trim();
@@ -394,6 +435,9 @@ function wireSearchControls() {
       rerenderResults();
       if (lastPrograms) {
         renderPrograms(lastPrograms);
+      }
+      if (lastCompetitions) {
+        renderCompetitions(lastCompetitions);
       }
       renderCatalog();
     });
@@ -514,6 +558,37 @@ function programSearchValues(program) {
 
 function applyProgramFilters(programs) {
   return programs.filter((program) => itemMatchesSearch(programSearchValues(program), programSearchQuery));
+}
+
+function catalogCompetitionById(id) {
+  return (catalogCompetitions || []).find((competition) => competition.id === id) || null;
+}
+
+function competitionSearchValues(competition) {
+  const competitionId = competition.competition_id || competition.id;
+  const catalogItem = catalogCompetitionById(competitionId);
+  // Default scope is identity only (name + host + category).
+  const values = [
+    competition.name,
+    competition.host,
+    competition.category,
+    catalogItem?.host,
+    catalogItem?.category,
+  ];
+  if (searchInDescriptions) {
+    values.push(
+      competition.description,
+      catalogItem?.description,
+      ...(competition.match_reasons || []),
+    );
+  }
+  return values;
+}
+
+function applyCompetitionFilters(competitions) {
+  return competitions.filter((competition) =>
+    itemMatchesSearch(competitionSearchValues(competition), competitionSearchQuery)
+  );
 }
 
 // Field score of 40 means a specific field-of-study match (10 = open-to-all).
@@ -854,12 +929,11 @@ async function handleChangePassword(event) {
 
 async function handleDeleteAccount() {
   hideSettingsMessages();
-  if (currentUser?.has_password === false) {
-    showSettingsError("Google-only accounts do not have a password for this confirmation step.");
-    return;
-  }
-  const password = document.getElementById("current-password").value;
-  if (!password) {
+  // Password accounts confirm with their password; Google-only accounts have
+  // none, so their logged-in session plus the confirm dialog authorizes.
+  const hasPassword = currentUser?.has_password !== false;
+  const password = hasPassword ? document.getElementById("current-password").value : null;
+  if (hasPassword && !password) {
     showSettingsError("Enter your current password above to confirm deletion.");
     return;
   }
@@ -874,7 +948,7 @@ async function handleDeleteAccount() {
     const response = await fetch("/auth/delete-account", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ password }),
+      body: JSON.stringify(hasPassword ? { password } : {}),
     });
     const data = await response.json().catch(() => ({}));
     if (!response.ok) {
@@ -1301,11 +1375,15 @@ async function saveProfileSilently(profile) {
 function syncSavedState(data) {
   savedIds.clear();
   savedProgramIds.clear();
+  savedCompetitionIds.clear();
   for (const item of data.saved || []) {
     savedIds.add(item.scholarship_id);
   }
   for (const item of data.programs || []) {
     savedProgramIds.add(item.program_id);
+  }
+  for (const item of data.competitions || []) {
+    savedCompetitionIds.add(item.competition_id);
   }
   updateSavedCount();
 }
@@ -1322,7 +1400,7 @@ async function loadSaved() {
     const data = await response.json();
     syncSavedState(data);
     if (!savedSection.hidden) {
-      renderSaved(data.saved, data.programs || []);
+      renderSaved(data.saved, data.programs || [], data.competitions || []);
     }
   } catch (err) {
     console.error(err);
@@ -1330,7 +1408,7 @@ async function loadSaved() {
 }
 
 function updateSavedCount() {
-  const count = savedIds.size + savedProgramIds.size;
+  const count = savedIds.size + savedProgramIds.size + savedCompetitionIds.size;
   savedCountEl.textContent = String(count);
   savedCountEl.hidden = count === 0;
   updateOpportunityTabCounts();
@@ -1352,7 +1430,7 @@ async function showSavedView(options = {}) {
     }
     const data = await response.json();
     syncSavedState(data);
-    renderSaved(data.saved, data.programs || []);
+    renderSaved(data.saved, data.programs || [], data.competitions || []);
   } catch (err) {
     savedSummary.textContent = "Saved items could not be loaded.";
     console.error(err);
@@ -1387,6 +1465,7 @@ function trackerSummary(items) {
       sum +
       (item.scholarship?.application_requirements?.length ||
         item.program?.application_requirements?.length ||
+        item.competition?.application_requirements?.length ||
         0),
     0
   );
@@ -1411,8 +1490,12 @@ function refreshTrackerSummary() {
   }
 }
 
-function renderSaved(scholarshipItems, programItems = []) {
-  const items = [...(scholarshipItems || []), ...(programItems || [])];
+function renderSaved(scholarshipItems, programItems = [], competitionItems = []) {
+  const items = [
+    ...(scholarshipItems || []),
+    ...(programItems || []),
+    ...(competitionItems || []),
+  ];
   trackerItems = items;
   savedContainer.innerHTML = "";
   if (items.length === 0) {
@@ -1450,13 +1533,27 @@ function renderSaved(scholarshipItems, programItems = []) {
     (cardBody || card).appendChild(buildTrackerControls(item, card, "program"));
     savedContainer.appendChild(card);
   }
+
+  for (const item of competitionItems || []) {
+    if (!item.competition) {
+      continue;
+    }
+    const card = buildCompetitionCard(item.competition, { savedContext: true });
+    card.classList.add(`status-${item.status || "interested"}`);
+    const cardBody = card.querySelector(".card-body");
+    (cardBody || card).appendChild(buildTrackerControls(item, card, "competition"));
+    savedContainer.appendChild(card);
+  }
 }
 
 function savedOpportunity(item) {
-  return item.scholarship || item.program || null;
+  return item.scholarship || item.program || item.competition || null;
 }
 
 function savedOpportunityKind(item) {
+  if (item.competition) {
+    return "Competition";
+  }
   return item.program ? "Program" : "Scholarship";
 }
 
@@ -2108,8 +2205,18 @@ function buildTrackerControls(item, card, kind = "scholarship") {
   const wrap = document.createElement("div");
   wrap.className = "tracker-controls";
 
-  const itemId = kind === "program" ? item.program_id : item.scholarship_id;
-  const patcher = kind === "program" ? patchSavedProgram : patchSaved;
+  const itemId =
+    kind === "program"
+      ? item.program_id
+      : kind === "competition"
+      ? item.competition_id
+      : item.scholarship_id;
+  const patcher =
+    kind === "program"
+      ? patchSavedProgram
+      : kind === "competition"
+      ? patchSavedCompetition
+      : patchSaved;
 
   const checklist = buildApplicationChecklist(item, kind);
   if (checklist) {
@@ -2173,13 +2280,25 @@ function buildApplicationChecklist(item, kind = "scholarship") {
   const requirements =
     kind === "program"
       ? item.program?.application_requirements || []
+      : kind === "competition"
+      ? item.competition?.application_requirements || []
       : item.scholarship?.application_requirements || [];
   if (!requirements.length) {
     return null;
   }
 
-  const itemId = kind === "program" ? item.program_id : item.scholarship_id;
-  const patcher = kind === "program" ? patchSavedProgram : patchSaved;
+  const itemId =
+    kind === "program"
+      ? item.program_id
+      : kind === "competition"
+      ? item.competition_id
+      : item.scholarship_id;
+  const patcher =
+    kind === "program"
+      ? patchSavedProgram
+      : kind === "competition"
+      ? patchSavedCompetition
+      : patchSaved;
 
   const field = document.createElement("div");
   field.className = "tracker-field tracker-checklist";
@@ -2306,6 +2425,60 @@ async function patchSavedProgram(programId, payload) {
   }
 }
 
+async function patchSavedCompetition(competitionId, payload) {
+  try {
+    const response = await fetch(
+      `/account/saved/competitions/${encodeURIComponent(competitionId)}`,
+      {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      }
+    );
+    return response.ok;
+  } catch (err) {
+    console.error(err);
+    return false;
+  }
+}
+
+async function toggleSavedCompetition(competitionId, button) {
+  if (!currentUser) {
+    openAuthModal("login", "Log in to save competitions to your account.");
+    return;
+  }
+
+  const isSaved = savedCompetitionIds.has(competitionId);
+  button.disabled = true;
+  try {
+    const response = await fetch(
+      `/account/saved/competitions/${encodeURIComponent(competitionId)}`,
+      { method: isSaved ? "DELETE" : "POST" }
+    );
+    if (response.ok) {
+      if (isSaved) {
+        savedCompetitionIds.delete(competitionId);
+      } else {
+        savedCompetitionIds.add(competitionId);
+      }
+    }
+    applySavedButtonState(button, savedCompetitionIds.has(competitionId));
+    updateSavedCount();
+    if (!savedSection.hidden) {
+      const refreshResponse = await fetch("/account/saved");
+      if (refreshResponse.ok) {
+        const refreshed = await refreshResponse.json();
+        syncSavedState(refreshed);
+        renderSaved(refreshed.saved, refreshed.programs || [], refreshed.competitions || []);
+      }
+    }
+  } catch (err) {
+    console.error(err);
+  } finally {
+    button.disabled = false;
+  }
+}
+
 async function toggleSaved(scholarshipId, button) {
   if (!currentUser) {
     openAuthModal("login", "Log in to save scholarships to your account.");
@@ -2333,9 +2506,12 @@ async function toggleSaved(scholarshipId, button) {
     applySavedButtonState(button, savedIds.has(scholarshipId));
     updateSavedCount();
     if (!savedSection.hidden) {
-      const refreshed = await fetch("/account/saved").then((r) => r.json());
-      syncSavedState(refreshed);
-      renderSaved(refreshed.saved, refreshed.programs || []);
+      const refreshResponse = await fetch("/account/saved");
+      if (refreshResponse.ok) {
+        const refreshed = await refreshResponse.json();
+        syncSavedState(refreshed);
+        renderSaved(refreshed.saved, refreshed.programs || [], refreshed.competitions || []);
+      }
     }
   } catch (err) {
     console.error(err);
@@ -2371,9 +2547,12 @@ async function toggleSavedProgram(programId, button) {
     applySavedButtonState(button, savedProgramIds.has(programId));
     updateSavedCount();
     if (!savedSection.hidden) {
-      const refreshed = await fetch("/account/saved").then((r) => r.json());
-      syncSavedState(refreshed);
-      renderSaved(refreshed.saved, refreshed.programs || []);
+      const refreshResponse = await fetch("/account/saved");
+      if (refreshResponse.ok) {
+        const refreshed = await refreshResponse.json();
+        syncSavedState(refreshed);
+        renderSaved(refreshed.saved, refreshed.programs || [], refreshed.competitions || []);
+      }
     }
   } catch (err) {
     console.error(err);
@@ -2633,6 +2812,10 @@ function setLoading(isLoading) {
     programsEmpty.hidden = true;
     programsSearchPanel.hidden = true;
     lastPrograms = null;
+    competitionsContainer.innerHTML = "";
+    competitionsEmpty.hidden = true;
+    competitionsSearchPanel.hidden = true;
+    lastCompetitions = null;
     updateOpportunityTabCounts();
   }
 }
@@ -2649,6 +2832,7 @@ async function handleSubmit(event) {
 
   resultsSection.hidden = false;
   programsSection.hidden = true;
+  competitionsSection.hidden = true;
   savedSection.hidden = true;
   setOpportunityTabsVisible(false);
   setLoading(true);
@@ -2679,6 +2863,7 @@ async function handleSubmit(event) {
     await activateOpportunityView("scholarships");
     saveProfileSilently(built.profile);
     loadPrograms(built.profile);
+    loadCompetitions(built.profile);
   } catch (err) {
     showFormError(
       "The match request did not go through. Check your connection and try again."
@@ -2857,6 +3042,86 @@ function renderPrograms(programs) {
   }
 }
 
+async function loadCompetitions(profile) {
+  try {
+    const response = await fetch("/competitions/match", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(profile),
+    });
+    if (!response.ok) {
+      lastCompetitions = [];
+      updateOpportunityTabCounts();
+      return;
+    }
+    const competitions = await response.json();
+    lastCompetitions = competitions;
+    updateOpportunityTabCounts();
+    renderCompetitions(competitions);
+    if (activeOpportunityView === "competitions") {
+      competitionsSection.hidden = false;
+    }
+  } catch (err) {
+    lastCompetitions = [];
+    updateOpportunityTabCounts();
+    console.error(err);
+  }
+}
+
+function renderCompetitions(competitions) {
+  competitionsContainer.innerHTML = "";
+  lastCompetitions = competitions;
+  updateOpportunityTabCounts();
+
+  if (competitions.length === 0) {
+    competitionsSummary.textContent = "";
+    competitionsSearchPanel.hidden = true;
+    competitionsEmpty.hidden = false;
+    return;
+  }
+
+  competitionsSearchPanel.hidden = false;
+  competitionsEmpty.hidden = true;
+
+  const filtered = applyCompetitionFilters(competitions);
+  if (filtered.length === 0) {
+    competitionsSummary.textContent = `0 of ${competitions.length} matched competitions shown.`;
+    competitionsEmpty.hidden = true;
+    competitionsContainer.appendChild(noResultsMessage(competitionSearchQuery, "competition"));
+    return;
+  }
+
+  const regular = filtered.filter((c) => !c.requires_special_check);
+  const special = filtered.filter((c) => c.requires_special_check);
+  const strong = regular.filter((c) => c.match_tier === "strong");
+  const possible = regular.filter((c) => c.match_tier === "possible");
+  const shownAll = filtered.length === competitions.length;
+  competitionsSummary.textContent = shownAll
+    ? `${competitions.length} competition${competitions.length === 1 ? "" : "s"} matched your profile.`
+    : `Showing ${filtered.length} of ${competitions.length} matched competitions.`;
+
+  if (strong.length > 0) {
+    competitionsContainer.appendChild(
+      buildCompetitionTierSection("Strong fits", strong, "strong")
+    );
+  }
+  if (possible.length > 0) {
+    competitionsContainer.appendChild(
+      buildCompetitionTierSection("Possible fits", possible, "possible")
+    );
+  }
+  if (special.length > 0) {
+    competitionsContainer.appendChild(
+      buildCompetitionTierSection(
+        "Special competitions to check",
+        special,
+        "special",
+        "These competitions may fit, but they require a condition like school nomination, membership, or another gate this profile cannot verify yet."
+      )
+    );
+  }
+}
+
 async function fetchJson(url) {
   const response = await fetch(url);
   if (!response.ok) {
@@ -2865,7 +3130,7 @@ async function fetchJson(url) {
   return response.json();
 }
 
-async function ensureCatalogData(kinds = ["scholarships", "programs"]) {
+async function ensureCatalogData(kinds = ["scholarships", "programs", "competitions"]) {
   const requests = [];
   if (kinds.includes("scholarships") && catalogScholarships === null) {
     if (!catalogScholarshipsPromise) {
@@ -2893,12 +3158,25 @@ async function ensureCatalogData(kinds = ["scholarships", "programs"]) {
     }
     requests.push(catalogProgramsPromise);
   }
+  if (kinds.includes("competitions") && catalogCompetitions === null) {
+    if (!catalogCompetitionsPromise) {
+      catalogCompetitionsPromise = fetchJson("/competitions")
+        .then((competitions) => {
+          catalogCompetitions = competitions;
+          updateOpportunityTabCounts();
+        })
+        .finally(() => {
+          catalogCompetitionsPromise = null;
+        });
+    }
+    requests.push(catalogCompetitionsPromise);
+  }
   await Promise.all(requests);
 }
 
 async function showCatalogView() {
   catalogSection.hidden = false;
-  if (catalogScholarships === null || catalogPrograms === null) {
+  if (catalogScholarships === null || catalogPrograms === null || catalogCompetitions === null) {
     catalogSummary.textContent = "Loading the full catalog...";
     catalogEmpty.hidden = true;
     catalogContainer.innerHTML = "";
@@ -2917,7 +3195,7 @@ async function showCatalogView() {
 
 function renderCatalog() {
   catalogContainer.innerHTML = "";
-  if (catalogScholarships === null || catalogPrograms === null) {
+  if (catalogScholarships === null || catalogPrograms === null || catalogCompetitions === null) {
     return;
   }
   const scholarships = catalogScholarships.filter((scholarship) =>
@@ -2926,8 +3204,11 @@ function renderCatalog() {
   const programs = catalogPrograms.filter((program) =>
     itemMatchesSearch(programSearchValues(program), catalogSearchQuery)
   );
-  const total = catalogScholarships.length + catalogPrograms.length;
-  const shown = scholarships.length + programs.length;
+  const competitions = catalogCompetitions.filter((competition) =>
+    itemMatchesSearch(competitionSearchValues(competition), catalogSearchQuery)
+  );
+  const total = catalogScholarships.length + catalogPrograms.length + catalogCompetitions.length;
+  const shown = scholarships.length + programs.length + competitions.length;
 
   catalogSummary.textContent = catalogSearchQuery
     ? `Showing ${shown} of ${total} catalog opportunities.`
@@ -2945,6 +3226,9 @@ function renderCatalog() {
   }
   if (programs.length > 0) {
     catalogContainer.appendChild(buildCatalogProgramSection(programs));
+  }
+  if (competitions.length > 0) {
+    catalogContainer.appendChild(buildCatalogCompetitionSection(competitions));
   }
 }
 
@@ -2975,6 +3259,49 @@ function buildCatalogProgramSection(programs) {
   section.appendChild(heading);
   for (const [index, program] of programs.entries()) {
     const element = buildProgramCard(program, { catalogContext: true });
+    element.classList.add("match-card-enter");
+    element.style.setProperty("--card-delay", `${Math.min(index * 24, 180)}ms`);
+    section.appendChild(element);
+  }
+  return section;
+}
+
+function buildCatalogCompetitionSection(competitions) {
+  const section = document.createElement("div");
+  section.className = "tier-section";
+  const heading = document.createElement("h3");
+  heading.className = "tier-heading";
+  heading.innerHTML = `All competitions <span class="tier-count">${competitions.length}</span>`;
+  section.appendChild(heading);
+  for (const [index, competition] of competitions.entries()) {
+    const element = buildCompetitionCard(competition, { catalogContext: true });
+    element.classList.add("match-card-enter");
+    element.style.setProperty("--card-delay", `${Math.min(index * 24, 180)}ms`);
+    section.appendChild(element);
+  }
+  return section;
+}
+
+function buildCompetitionTierSection(title, competitions, tierClass, description = "") {
+  const section = document.createElement("div");
+  section.className = "tier-section";
+
+  const heading = document.createElement("h3");
+  heading.className = `tier-heading ${
+    tierClass === "possible" || tierClass === "special" ? tierClass : ""
+  }`;
+  heading.innerHTML = `${escapeHtml(title)} <span class="tier-count">${competitions.length}</span>`;
+  section.appendChild(heading);
+
+  if (description) {
+    const note = document.createElement("p");
+    note.className = "tier-note";
+    note.textContent = description;
+    section.appendChild(note);
+  }
+
+  for (const [index, competition] of competitions.entries()) {
+    const element = buildCompetitionCard(competition);
     element.classList.add("match-card-enter");
     element.style.setProperty("--card-delay", `${Math.min(index * 24, 180)}ms`);
     section.appendChild(element);
@@ -3055,6 +3382,173 @@ function buildProgramStatRow(program) {
   row.appendChild(apply);
 
   return row;
+}
+
+function buildCompetitionStatRow(competition) {
+  const row = document.createElement("div");
+  row.className = "card-stats";
+
+  const cost = document.createElement("div");
+  cost.className = "stat";
+  if (competition.cost_category === "free" || competition.cost_category === "stipend") {
+    cost.classList.add("stat-award");
+  }
+  cost.innerHTML =
+    '<span class="stat-label">Cost</span>' +
+    `<span class="stat-value">${escapeHtml(programStatValue(competition.cost))}</span>`;
+  row.appendChild(cost);
+
+  const recognition = document.createElement("div");
+  recognition.className = "stat";
+  recognition.innerHTML =
+    '<span class="stat-label">Recognition</span>' +
+    `<span class="stat-value">${escapeHtml(programStatValue(competition.recognition))}</span>`;
+  row.appendChild(recognition);
+
+  const dates = document.createElement("div");
+  dates.className = "stat";
+  dates.innerHTML =
+    '<span class="stat-label">Dates</span>' +
+    `<span class="stat-value">${escapeHtml(programStatValue(competition.competition_dates))}</span>`;
+  row.appendChild(dates);
+
+  const dl = deadlineParts(competition.deadline, competition.estimated_deadline);
+  const apply = document.createElement("div");
+  apply.className = "stat stat-deadline";
+  apply.innerHTML =
+    '<span class="stat-label">Register by</span>' +
+    `<span class="stat-value">${escapeHtml(dl.value)}</span>` +
+    (dl.note ? `<span class="stat-note">${escapeHtml(dl.note)}</span>` : "");
+  row.appendChild(apply);
+
+  return row;
+}
+
+function buildCompetitionCard(competition, options = {}) {
+  const competitionId = competition.competition_id || competition.id;
+  const specialRequirements =
+    competition.special_requirements || competition.eligibility?.special_requirements || [];
+  const requiresSpecialCheck =
+    Boolean(competition.requires_special_check) || specialRequirements.length > 0;
+  const tierClass = options.catalogContext
+    ? "catalog"
+    : options.savedContext
+    ? "saved"
+    : requiresSpecialCheck
+    ? "special"
+    : competition.match_tier === "possible"
+    ? "possible"
+    : "strong";
+  const article = document.createElement("article");
+  article.className = `match-card ${tierClass}`;
+
+  const pathBar = document.createElement("div");
+  pathBar.className = "path-bar";
+  pathBar.setAttribute("aria-hidden", "true");
+
+  const body = document.createElement("div");
+  body.className = "card-body";
+
+  const header = document.createElement("div");
+  header.className = "card-header";
+  const headline = document.createElement("div");
+  headline.className = "card-headline";
+
+  const title = document.createElement("h4");
+  title.className = "card-title";
+  title.textContent = competition.name;
+  headline.appendChild(title);
+
+  if (competition.host) {
+    const host = document.createElement("p");
+    host.className = "card-sponsor";
+    host.textContent = competition.host;
+    headline.appendChild(host);
+  }
+
+  const formatLabel =
+    competition.participation_format &&
+    !String(competition.participation_format).startsWith("VERIFY")
+      ? competition.participation_format.charAt(0).toUpperCase() +
+        competition.participation_format.slice(1)
+      : null;
+  const metaParts = [competition.category, formatLabel, competition.location].filter(
+    (part) => part && part !== "VERIFY" && !String(part).startsWith("VERIFY")
+  );
+  if (metaParts.length > 0) {
+    const meta = document.createElement("p");
+    meta.className = "card-program-meta";
+    meta.textContent = metaParts.join(" · ");
+    headline.appendChild(meta);
+  }
+  header.appendChild(headline);
+
+  if (typeof competition.score === "number") {
+    header.appendChild(buildFitRing(competition.score, tierClass));
+  }
+
+  body.appendChild(header);
+  body.appendChild(buildCompetitionStatRow(competition));
+
+  const provenance = buildVerificationSource(competition);
+  if (provenance) {
+    body.appendChild(provenance);
+  }
+
+  if (competition.match_reasons && competition.match_reasons.length > 0) {
+    body.appendChild(buildReasons(competition.match_reasons));
+  }
+
+  if (requiresSpecialCheck) {
+    const badges = document.createElement("div");
+    badges.className = "badge-row";
+    if (options.catalogContext) {
+      badges.appendChild(makeBadge("Full catalog — not personalized", "badge-catalog"));
+    }
+    badges.appendChild(makeBadge("Special eligibility", "badge-special"));
+    body.appendChild(badges);
+  } else if (options.catalogContext) {
+    const badges = document.createElement("div");
+    badges.className = "badge-row";
+    badges.appendChild(makeBadge("Full catalog — not personalized", "badge-catalog"));
+    body.appendChild(badges);
+  }
+
+  if (specialRequirements.length > 0) {
+    body.appendChild(buildSpecialRequirements(specialRequirements));
+  }
+
+  const steps = competition.application_requirements || [];
+  if (steps.length > 0) {
+    body.appendChild(buildProgramSteps(steps));
+  }
+
+  const footer = document.createElement("div");
+  footer.className = "card-footer";
+  const link = document.createElement("a");
+  link.className = "card-link";
+  link.href = competition.url;
+  link.target = "_blank";
+  link.rel = "noopener noreferrer";
+  link.textContent = requiresSpecialCheck ? "Check competition page" : "View competition";
+  footer.appendChild(link);
+
+  if (competitionId) {
+    const actions = document.createElement("div");
+    actions.className = "card-actions";
+    const saveBtn = document.createElement("button");
+    saveBtn.type = "button";
+    saveBtn.className = "btn-save";
+    applySavedButtonState(saveBtn, savedCompetitionIds.has(competitionId));
+    saveBtn.addEventListener("click", () => toggleSavedCompetition(competitionId, saveBtn));
+    actions.appendChild(saveBtn);
+    footer.appendChild(actions);
+  }
+  body.appendChild(footer);
+
+  article.appendChild(pathBar);
+  article.appendChild(body);
+  return article;
 }
 
 function buildProgramSteps(steps) {

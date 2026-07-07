@@ -24,6 +24,7 @@ class StudentProfile(BaseModel):
     )
     target_schools: Optional[list[str]] = Field(
         default=None,
+        max_length=30,
         description="Optional list of colleges the student is considering.",
     )
     demographic_tags: list[str] = Field(default_factory=list)
@@ -32,8 +33,18 @@ class StudentProfile(BaseModel):
     financial_need_level: Literal["low", "medium", "high", "unspecified"] = "unspecified"
     activities: list[str] = Field(
         default_factory=list,
+        max_length=50,
         description="Extracurriculars, leadership roles, athletics, etc.",
     )
+
+    @field_validator("target_schools", "activities")
+    @classmethod
+    def cap_free_text_items(cls, values: list[str] | None) -> list[str] | None:
+        """Free-text entries are stored per account and scanned by the matcher,
+        so each one is trimmed to a sane length instead of rejecting the form."""
+        if values is None:
+            return None
+        return [value.strip()[:200] for value in values if value.strip()]
 
     @field_validator("grade_level")
     @classmethod

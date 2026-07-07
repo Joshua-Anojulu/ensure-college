@@ -8,15 +8,17 @@ from sqlalchemy.orm import Session
 
 from app.auth.dependencies import get_current_user
 from app.db.database import get_db
-from app.db.models import SavedProgram, SavedScholarship, User, UserProfile
+from app.db.models import SavedCompetition, SavedProgram, SavedScholarship, User, UserProfile
 from app.ics import build_calendar
 from app.models.auth import (
     ProfileResponse,
+    SavedCompetitionItem,
     SavedListResponse,
     SavedProgramItem,
     SavedScholarshipItem,
     SavedUpdateRequest,
 )
+from app.models.competition import Competition
 from app.models.program import SummerProgram
 from app.models.scholarship import Scholarship
 from app.models.student import StudentProfile
@@ -32,6 +34,11 @@ def _scholarship_index(request: Request) -> dict[str, Scholarship]:
 def _program_index(request: Request) -> dict[str, SummerProgram]:
     programs: list[SummerProgram] = request.app.state.programs
     return {p.id: p for p in programs}
+
+
+def _competition_index(request: Request) -> dict[str, Competition]:
+    competitions: list[Competition] = request.app.state.competitions
+    return {c.id: c for c in competitions}
 
 
 @router.get("/profile", response_model=ProfileResponse)
@@ -77,6 +84,7 @@ def list_saved(
 ) -> SavedListResponse:
     index = _scholarship_index(request)
     program_index = _program_index(request)
+    competition_index = _competition_index(request)
     scholarship_rows = (
         db.query(SavedScholarship)
         .filter(SavedScholarship.user_id == user.id)
@@ -87,6 +95,12 @@ def list_saved(
         db.query(SavedProgram)
         .filter(SavedProgram.user_id == user.id)
         .order_by(SavedProgram.created_at.desc())
+        .all()
+    )
+    competition_rows = (
+        db.query(SavedCompetition)
+        .filter(SavedCompetition.user_id == user.id)
+        .order_by(SavedCompetition.created_at.desc())
         .all()
     )
     items = [
@@ -111,7 +125,18 @@ def list_saved(
         )
         for row in program_rows
     ]
-    return SavedListResponse(saved=items, programs=program_items)
+    competition_items = [
+        SavedCompetitionItem(
+            competition_id=row.competition_id,
+            saved_at=row.created_at,
+            status=row.status,
+            notes=row.notes,
+            completed_requirement_ids=row.completed_requirement_ids,
+            competition=competition_index.get(row.competition_id),
+        )
+        for row in competition_rows
+    ]
+    return SavedListResponse(saved=items, programs=program_items, competitions=competition_items)
 
 
 @router.get("/saved/calendar.ics")
@@ -122,6 +147,7 @@ def saved_calendar(
 ) -> Response:
     index = _scholarship_index(request)
     program_index = _program_index(request)
+    competition_index = _competition_index(request)
     scholarship_rows = (
         db.query(SavedScholarship)
         .filter(SavedScholarship.user_id == user.id)
@@ -134,6 +160,12 @@ def saved_calendar(
         .order_by(SavedProgram.created_at.desc())
         .all()
     )
+    competition_rows = (
+        db.query(SavedCompetition)
+        .filter(SavedCompetition.user_id == user.id)
+        .order_by(SavedCompetition.created_at.desc())
+        .all()
+    )
     scholarships = [
         index[row.scholarship_id]
         for row in scholarship_rows
@@ -144,8 +176,13 @@ def saved_calendar(
         for row in program_rows
         if row.program_id in program_index
     ]
+    competitions = [
+        competition_index[row.competition_id]
+        for row in competition_rows
+        if row.competition_id in competition_index
+    ]
     return Response(
-        content=build_calendar(scholarships, programs),
+        content=build_calendar(scholarships, programs, competitions),
         media_type="text/calendar",
         headers={
             "Content-Disposition": 'attachment; filename="ensurecollege-deadlines.ics"'
@@ -253,6 +290,131 @@ def save_program(
         completed_requirement_ids=row.completed_requirement_ids,
         program=program,
     )
+
+
+@router.post(
+    "/saved/competitions/{competition_id}",
+    response_model=SavedCompetitionItem,
+    status_code=status.HTTP_201_CREATED,
+)
+def save_competition(
+    competition_id: str,
+    request: Request,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+) -> SavedCompetitionItem:
+    index = _competition_index(request)
+    competition = index.get(competition_id)
+    if competition is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail={"error": "That competition was not found in the current dataset."},
+        )
+
+    existing = (
+        db.query(SavedCompetition)
+        .filter(
+            SavedCompetition.user_id == user.id,
+            SavedCompetition.competition_id == competition_id,
+        )
+        .first()
+    )
+    if existing is not None:
+        return SavedCompetitionItem(
+            competition_id=existing.competition_id,
+            saved_at=existing.created_at,
+            status=existing.status,
+            notes=existing.notes,
+            completed_requirement_ids=existing.completed_requirement_ids,
+            competition=competition,
+        )
+
+    row = SavedCompetition(user_id=user.id, competition_id=competition_id)
+    db.add(row)
+    db.commit()
+    db.refresh(row)
+    return SavedCompetitionItem(
+        competition_id=row.competition_id,
+        saved_at=row.created_at,
+        status=row.status,
+        notes=row.notes,
+        completed_requirement_ids=row.completed_requirement_ids,
+        competition=competition,
+    )
+
+
+@router.patch("/saved/competitions/{competition_id}", response_model=SavedCompetitionItem)
+def update_saved_competition(
+    competition_id: str,
+    body: SavedUpdateRequest,
+    request: Request,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+) -> SavedCompetitionItem:
+    row = (
+        db.query(SavedCompetition)
+        .filter(
+            SavedCompetition.user_id == user.id,
+            SavedCompetition.competition_id == competition_id,
+        )
+        .first()
+    )
+    if row is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail={"error": "That competition is not in your saved list."},
+        )
+
+    if body.status is not None:
+        row.status = body.status
+    if body.notes is not None:
+        row.notes = body.notes
+
+    index = _competition_index(request)
+    if body.completed_requirement_ids is not None:
+        competition = index.get(row.competition_id)
+        requirement_ids = {
+            requirement.id
+            for requirement in (competition.application_requirements if competition else [])
+        }
+        invalid_ids = set(body.completed_requirement_ids) - requirement_ids
+        if invalid_ids:
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail={"error": "Checklist steps must belong to this competition."},
+            )
+        row.completed_requirement_ids = body.completed_requirement_ids
+    db.commit()
+    db.refresh(row)
+
+    return SavedCompetitionItem(
+        competition_id=row.competition_id,
+        saved_at=row.created_at,
+        status=row.status,
+        notes=row.notes,
+        completed_requirement_ids=row.completed_requirement_ids,
+        competition=index.get(row.competition_id),
+    )
+
+
+@router.delete("/saved/competitions/{competition_id}", status_code=status.HTTP_200_OK)
+def unsave_competition(
+    competition_id: str,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+) -> dict[str, bool]:
+    row = (
+        db.query(SavedCompetition)
+        .filter(
+            SavedCompetition.user_id == user.id,
+            SavedCompetition.competition_id == competition_id,
+        )
+        .first()
+    )
+    if row is not None:
+        db.delete(row)
+        db.commit()
+    return {"ok": True}
 
 
 @router.patch("/saved/{scholarship_id}", response_model=SavedScholarshipItem)

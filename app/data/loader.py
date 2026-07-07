@@ -1,12 +1,14 @@
 import json
 from pathlib import Path
 
+from app.models.competition import Competition
 from app.models.program import SummerProgram
 from app.models.scholarship import Scholarship
 
 DEFAULT_DATA_PATH = Path(__file__).parent / "scholarships.json"
 DEFAULT_SPECIAL_REQUIREMENTS_PATH = Path(__file__).parent / "special_requirements.json"
 DEFAULT_PROGRAMS_PATH = Path(__file__).parent / "summer_programs.json"
+DEFAULT_COMPETITIONS_PATH = Path(__file__).parent / "competitions.json"
 
 
 def _load_special_requirements(path: Path = DEFAULT_SPECIAL_REQUIREMENTS_PATH) -> dict[str, list[dict]]:
@@ -42,3 +44,13 @@ def load_summer_programs(path: Path | None = None) -> list[SummerProgram]:
     data_path = path or DEFAULT_PROGRAMS_PATH
     raw = json.loads(data_path.read_text(encoding="utf-8"))
     return [SummerProgram.model_validate(entry) for entry in raw["programs"]]
+
+
+def load_competitions(path: Path | None = None) -> list[Competition]:
+    """Load curated competitions from the seed JSON file.
+
+    The file is a top-level object with a ``competitions`` array, not a bare list.
+    """
+    data_path = path or DEFAULT_COMPETITIONS_PATH
+    raw = json.loads(data_path.read_text(encoding="utf-8"))
+    return [Competition.model_validate(entry) for entry in raw["competitions"]]

@@ -72,6 +72,23 @@ class RateLimiter:
         self._hits.clear()
 
 
+def _client_ip(request: Request) -> str:
+    """Best-effort client IP for rate-limit keying.
+
+    Behind Vercel/Render the socket peer is the proxy, so every user would share
+    one bucket. Those platforms set X-Forwarded-For themselves (client-supplied
+    values are overwritten at the edge), so its first hop is trustworthy there.
+    Locally there is no proxy and the header is absent, falling back to the peer.
+    """
+    headers = getattr(request, "headers", None)
+    forwarded = headers.get("x-forwarded-for", "") if headers is not None else ""
+    if forwarded:
+        first_hop = forwarded.split(",")[0].strip()
+        if first_hop:
+            return first_hop
+    return request.client.host if request.client else "unknown"
+
+
 def rate_limiter(max_requests: int, window_seconds: float, scope: str):
     """Build a dependency that enforces a per-client-IP limit for one scope."""
 
@@ -80,8 +97,7 @@ def rate_limiter(max_requests: int, window_seconds: float, scope: str):
     def dependency(request: Request) -> None:
         if not _enabled():
             return
-        client = request.client.host if request.client else "unknown"
-        key = f"{scope}:{client}"
+        key = f"{scope}:{_client_ip(request)}"
         if _upstash_configured():
             try:
                 allowed = _upstash_incr(key, window_seconds) <= max_requests
