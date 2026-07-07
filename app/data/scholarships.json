@@ -1571,7 +1571,7 @@
         "demographics": [],
         "states": "any",
         "essay_required": false,
-        "citizenship_requirement": "VERIFY"
+        "citizenship_requirement": "any"
       },
       "description": "Renewable scholarships for active SHPE members pursuing STEM degrees. Requires SHPE membership and a minimum 2.5 GPA; citizenship is not required for SHPE-funded awards but some sponsor-funded awards do require it.",
       "verified": true,
@@ -1984,7 +1984,7 @@
         "demographics": [],
         "states": "any",
         "essay_required": false,
-        "citizenship_requirement": "VERIFY"
+        "citizenship_requirement": "any"
       },
       "description": "Scholarships for ANS student members pursuing nuclear science, nuclear engineering, or a nuclear-related field at accredited U.S. institutions, plus an incoming-freshman award for graduating high school seniors.",
       "verified": true,
@@ -2708,7 +2708,7 @@
         ],
         "states": "any",
         "essay_required": true,
-        "citizenship_requirement": "VERIFY"
+        "citizenship_requirement": "us_citizen_or_permanent_resident"
       },
       "description": "Awards for graduating high school seniors of Hispanic heritage (including ancestry from Latin America, Spain, Brazil, or the Philippines) who excel in the classroom and community across categories such as engineering, technology, and community service.",
       "verified": true,
@@ -2952,7 +2952,7 @@
       "deadline": "VERIFY",
       "url": "https://www.fisherhouse.org/programs/scholarship-programs/scholarships-for-military-children/",
       "eligibility": {
-        "min_gpa": "VERIFY",
+        "min_gpa": 3.0,
         "fields_of_study": [],
         "grade_levels": [
           "high_school_senior",
@@ -3844,7 +3844,7 @@
         "demographics": [],
         "states": "any",
         "essay_required": true,
-        "citizenship_requirement": "VERIFY"
+        "citizenship_requirement": "any"
       },
       "description": "Fully funded one-year Master's in Global Affairs at Tsinghua University in Beijing, open to applicants of all majors from any country (about 45% of scholars are from the U.S.). Applicants must be 18-28 with a completed undergraduate degree and strong English proficiency.",
       "verified": true,
@@ -3904,7 +3904,7 @@
         "demographics": [],
         "states": "any",
         "essay_required": true,
-        "citizenship_requirement": "VERIFY"
+        "citizenship_requirement": "any"
       },
       "description": "Fully funded scholarship supporting any full-time Stanford graduate degree (e.g., MA, MS, MBA, JD, MD, PhD); open to applicants of all fields from any country. Requires a bachelor's degree earned in 2020 or later and separate admission to a Stanford graduate program.",
       "verified": true,
@@ -4202,7 +4202,7 @@
         "demographics": [],
         "states": "any",
         "essay_required": false,
-        "citizenship_requirement": "VERIFY",
+        "citizenship_requirement": "us_citizen_or_permanent_resident",
         "eligible_schools": [
           {
             "name": "Carnegie Mellon University",
@@ -4529,7 +4529,7 @@
         "demographics": [],
         "states": "any",
         "essay_required": false,
-        "citizenship_requirement": "VERIFY"
+        "citizenship_requirement": "us_citizen_or_permanent_resident"
       },
       "description": "Graduate-student scholarship contest administered with Thurgood Marshall College Fund for legal residents enrolled in accredited U.S. graduate programs. Official landing page publishes the active application window for the current award year.",
       "verified": true,
@@ -5172,7 +5172,7 @@
         "demographics": [],
         "states": "any",
         "essay_required": true,
-        "citizenship_requirement": "VERIFY"
+        "citizenship_requirement": "us_citizen_or_permanent_resident"
       },
       "description": "Need-based grants for women and nonbinary applicants age 35 and older working toward a first associate's or bachelor's degree. The Foundation supports students from all states and backgrounds who demonstrate financial need.",
       "application_requirements": [
@@ -5323,7 +5323,7 @@
       "estimated_deadline": "2027-02-28",
       "url": "https://opportunity.collegeboard.org/",
       "eligibility": {
-        "min_gpa": "VERIFY",
+        "min_gpa": null,
         "fields_of_study": [],
         "grade_levels": [
           "high_school_sophomore",
@@ -5332,7 +5332,7 @@
         "demographics": [],
         "states": "any",
         "essay_required": false,
-        "citizenship_requirement": "VERIFY"
+        "citizenship_requirement": "any"
       },
       "description": "No-essay scholarship drawings for high school sophomores and juniors who complete BigFuture planning steps on their dashboard by class-year deadlines. Steps can qualify students for $500 and $40,000 awards.",
       "application_requirements": [
@@ -5732,7 +5732,7 @@
         "demographics": [],
         "states": "any",
         "essay_required": true,
-        "citizenship_requirement": "VERIFY"
+        "citizenship_requirement": "us_citizen_or_permanent_resident"
       },
       "description": "Annual K-12 art contest where students create a Google Doodle on the published theme. National finalists receive scholarships and homepage recognition.",
       "application_requirements": [
@@ -5983,7 +5983,7 @@
       "estimated_deadline": "2027-02-28",
       "url": "https://developer.apple.com/swift-student-challenge/",
       "eligibility": {
-        "min_gpa": "VERIFY",
+        "min_gpa": null,
         "fields_of_study": [
           "computer_science",
           "technology"
@@ -5995,7 +5995,7 @@
         "demographics": [],
         "states": "any",
         "essay_required": false,
-        "citizenship_requirement": "VERIFY"
+        "citizenship_requirement": "any"
       },
       "description": "Apple's annual coding challenge for student developers to submit an app playground demonstrating creativity, innovation, or social impact. Winners may be invited to Apple in Cupertino as Distinguished Winners.",
       "application_requirements": [
@@ -6078,7 +6078,7 @@
       "estimated_deadline": "2027-01-31",
       "url": "https://www.ptk.org/scholarships/competitive-scholarships",
       "eligibility": {
-        "min_gpa": "VERIFY",
+        "min_gpa": 3.5,
         "fields_of_study": [],
         "grade_levels": [
           "college_undergraduate"
@@ -6603,7 +6603,7 @@
         "demographics": [],
         "states": "any",
         "essay_required": false,
-        "citizenship_requirement": "VERIFY"
+        "citizenship_requirement": "us_citizen"
       },
       "description": "High School Innovation Program (HIP) pairs students at partnered high schools with Northrop Grumman mentors over two years; scholarship support follows successful program completion for STEM-interested students with at least 3.25 GPA.",
       "application_requirements": [
@@ -7067,7 +7067,7 @@
         "demographics": [],
         "states": "any",
         "essay_required": true,
-        "citizenship_requirement": "VERIFY"
+        "citizenship_requirement": "any"
       },
       "description": "SPIE scholarships for full-time students in optics, photonics, imaging, or optoelectronics programs. SPIE student membership is required; awards range from $3,000 to $11,000 depending on the fund.",
       "verified": true,

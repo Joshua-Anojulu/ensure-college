@@ -7,8 +7,8 @@
       "host": "Society for Science",
       "category": "STEM research",
       "url": "https://www.societyforscience.org/isef/",
-      "cost": "VERIFY",
-      "cost_category": "VERIFY",
+      "cost": "Individual students do not pay to attend; their affiliated fair pays Society for Science affiliation fees ($825-$5,000 based on project allocation) plus per-attendee registration fees ($400-$425 per finalist/observer before April 30, 2026; $425-$450 after).",
+      "cost_category": "paid",
       "recognition": "More than $7 million in awards, prizes and scholarships across 22 scientific categories.",
       "participation_format": "either",
       "location": "ISEF 2027 finals in Los Angeles, CA (location rotates annually)",
@@ -44,7 +44,44 @@
         "source_url": "https://www.societyforscience.org/isef/international-rules/rules-for-all-projects/",
         "last_verified_at": "2026-07-06"
       },
-      "verified": true
+      "verified": true,
+      "application_requirements": [
+        {
+          "id": "find-affiliated-fair",
+          "label": "Find and register at a Society-affiliated regional/state/local science fair",
+          "details": "ISEF cannot be entered directly; use the Affiliated Fair Network to find the fair serving your area.",
+          "required": true,
+          "source_url": "https://www.societyforscience.org/isef/affiliated-fair-network/"
+        },
+        {
+          "id": "compete-at-affiliated-fair",
+          "label": "Compete at your affiliated fair following its local rules and deadlines",
+          "details": null,
+          "required": true,
+          "source_url": "https://www.societyforscience.org/isef/affiliated-fair-network/"
+        },
+        {
+          "id": "qualify-as-finalist",
+          "label": "Be selected as a finalist by your affiliated fair",
+          "details": "Only finalists selected by an affiliated fair advance to ISEF; each fair sets its own project and paperwork deadlines.",
+          "required": true,
+          "source_url": "https://www.societyforscience.org/isef/affiliated-fair-network/"
+        },
+        {
+          "id": "submit-finalist-materials",
+          "label": "Submit ISEF finalist paperwork via the Fair Dashboard within 12 calendar days of your fair",
+          "details": null,
+          "required": true,
+          "source_url": "https://www.societyforscience.org/isef/affiliated-fair-network/"
+        },
+        {
+          "id": "attend-isef",
+          "label": "Attend and present at Regeneron ISEF",
+          "details": "ISEF 2027 will be held May 8-14, 2027 in Los Angeles, CA; the affiliated fair pays the finalist's registration fee.",
+          "required": true,
+          "source_url": "https://www.societyforscience.org/isef/fees/"
+        }
+      ]
     },
     {
       "id": "regeneron-science-talent-search",
@@ -52,8 +89,8 @@
       "host": "Society for Science",
       "category": "STEM research",
       "url": "https://www.societyforscience.org/regeneron-sts/",
-      "cost": "VERIFY",
-      "cost_category": "VERIFY",
+      "cost": "Free to enter; no application fee (confirmed by the absence of any fee across the official application-requirements, FAQ, and official-rules pages).",
+      "cost_category": "free",
       "recognition": "$3.1 million in awards distributed annually, including a $250,000 first-place prize; 2026 finalists received more than $1.8 million.",
       "participation_format": "individual",
       "location": "Application-based; Finals Week held in Washington, D.C.",
@@ -80,7 +117,51 @@
         "source_url": "https://www.societyforscience.org/regeneron-sts/frequently-asked-questions/",
         "last_verified_at": "2026-07-06"
       },
-      "verified": true
+      "verified": true,
+      "application_requirements": [
+        {
+          "id": "confirm-eligibility",
+          "label": "Confirm you are a graduating high school senior meeting STS eligibility",
+          "details": null,
+          "required": true,
+          "source_url": "https://www.societyforscience.org/regeneron-sts/frequently-asked-questions/"
+        },
+        {
+          "id": "complete-research",
+          "label": "Complete an original, independent research project",
+          "details": "Research can be done at school, a research institution, in the field, or at home; often spans a year or more.",
+          "required": true,
+          "source_url": "https://www.societyforscience.org/regeneron-sts/application-requirements/"
+        },
+        {
+          "id": "write-research-report-and-essays",
+          "label": "Prepare a research report (max 20 pages) plus required short essays and application sections",
+          "details": "Sections include about you, your project, prior research projects, and your activities.",
+          "required": true,
+          "source_url": "https://www.societyforscience.org/regeneron-sts/application-requirements/"
+        },
+        {
+          "id": "obtain-recommendations",
+          "label": "Obtain educator, project, and high school (transcript) recommendations",
+          "details": null,
+          "required": true,
+          "source_url": "https://www.societyforscience.org/regeneron-sts/application-requirements/"
+        },
+        {
+          "id": "submit-disclosures",
+          "label": "Disclose all support received for the research project and application",
+          "details": null,
+          "required": true,
+          "source_url": "https://www.societyforscience.org/regeneron-sts/application-requirements/"
+        },
+        {
+          "id": "submit-application",
+          "label": "Submit the complete application online by the deadline",
+          "details": "Application and all recommendations due November 5, 8PM ET, no exceptions. Test scores are optional.",
+          "required": true,
+          "source_url": "https://www.societyforscience.org/regeneron-sts/official-rules/"
+        }
+      ]
     },
     {
       "id": "amc-10-12",
@@ -101,7 +182,7 @@
           "middle_school",
           "high_school"
         ],
-        "citizenship_requirement": "VERIFY",
+        "citizenship_requirement": "any",
         "fields_of_study": [
           "mathematics"
         ],
@@ -113,7 +194,37 @@
         "last_verified_at": "2026-07-06",
         "notes": "2026-10-28 is the late deadline for returning competition managers; the regular deadline is 2026-10-15 (final for new competition managers)."
       },
-      "verified": true
+      "verified": true,
+      "application_requirements": [
+        {
+          "id": "school-registers-as-competition-manager",
+          "label": "School designates a Competition Manager who registers the school by the deadline",
+          "details": "Regular registration deadline Oct 15, 2026 ($75 fee); late deadline Oct 28, 2026 ($115).",
+          "required": true,
+          "source_url": "https://maa.org/amcreg/"
+        },
+        {
+          "id": "purchase-student-licenses",
+          "label": "Competition Manager purchases student license bundles",
+          "details": "$30 per bundle of 10 student licenses.",
+          "required": true,
+          "source_url": "https://maa.org/amcreg/"
+        },
+        {
+          "id": "enroll-students",
+          "label": "Competition Manager enrolls individual students on the registration platform",
+          "details": null,
+          "required": true,
+          "source_url": "https://maa.org/amcreg/"
+        },
+        {
+          "id": "take-exam",
+          "label": "Student takes the 25-question, 75-minute exam on the scheduled competition date",
+          "details": "AMC 10/12 A: Nov 5, 2026; AMC 10/12 B: Nov 13, 2026.",
+          "required": true,
+          "source_url": "https://maa.org/student-programs/amc/"
+        }
+      ]
     },
     {
       "id": "congressional-app-challenge",
@@ -121,8 +232,8 @@
       "host": "U.S. House of Representatives (coordinated by the Internet Education Foundation)",
       "category": "Computer science",
       "url": "https://www.congressionalappchallenge.us/",
-      "cost": "VERIFY",
-      "cost_category": "VERIFY",
+      "cost": "Free to enter; no registration or entry fee for students (confirmed by absence of any fee across the official rules, FAQ, and registration pages).",
+      "cost_category": "free",
       "recognition": "District winners' apps are eligible to be featured in the U.S. Capitol Building and on House.gov; winners are invited to the #HouseOfCode celebration and receive waived copyright registration application fees through the ARTS Act.",
       "participation_format": "either",
       "location": "Online (judged district-by-district by Members of Congress)",
@@ -146,7 +257,51 @@
         "source_url": "https://www.congressionalappchallenge.us/students/rules/",
         "last_verified_at": "2026-07-06"
       },
-      "verified": true
+      "verified": true,
+      "application_requirements": [
+        {
+          "id": "create-applicant-profile",
+          "label": "Create a student applicant profile in the registration portal",
+          "details": null,
+          "required": true,
+          "source_url": "https://www.congressionalappchallenge.us/students/student-registration/"
+        },
+        {
+          "id": "identify-representative",
+          "label": "Identify and confirm your U.S. Representative's participation in the Challenge",
+          "details": null,
+          "required": true,
+          "source_url": "https://www.congressionalappchallenge.us/students/student-registration/"
+        },
+        {
+          "id": "register-team-or-individual",
+          "label": "Register as an individual or as a team of up to four students",
+          "details": "All competing students must be U.S. residents at time of submission and enrolled in middle/high school.",
+          "required": true,
+          "source_url": "https://www.congressionalappchallenge.us/students/rules/"
+        },
+        {
+          "id": "build-app",
+          "label": "Build an original app in any programming language, for any platform",
+          "details": null,
+          "required": true,
+          "source_url": "https://www.congressionalappchallenge.us/students/rules/"
+        },
+        {
+          "id": "submit-app-and-video",
+          "label": "Submit the app plus a 1-3 minute demonstration video, disclosing any AI tool use",
+          "details": null,
+          "required": true,
+          "source_url": "https://www.congressionalappchallenge.us/students/rules/"
+        },
+        {
+          "id": "submit-by-deadline",
+          "label": "Submit the completed entry online by the deadline",
+          "details": "2026 deadline: October 26, 2026 at 12:00 PM ET.",
+          "required": true,
+          "source_url": "https://www.congressionalappchallenge.us/students/student-registration/"
+        }
+      ]
     },
     {
       "id": "congressional-art-competition",
@@ -154,8 +309,8 @@
       "host": "U.S. House of Representatives / Congressional Institute",
       "category": "Visual arts",
       "url": "https://www.house.gov/educators-and-students/congressional-art-competition",
-      "cost": "VERIFY",
-      "cost_category": "VERIFY",
+      "cost": "No entry fee is stated; submission is through your U.S. Representative's office at no charge (confirmed on the official House.gov competition page).",
+      "cost_category": "free",
       "recognition": "Winning artwork from each district is displayed for one year at the U.S. Capitol; winners are recognized in their district and at an annual awards ceremony in Washington, DC.",
       "participation_format": "individual",
       "location": "District-based entry via each representative's office; winning works displayed in Washington, DC",
@@ -184,7 +339,37 @@
         "source_url": "https://www.house.gov/educators-and-students/congressional-art-competition",
         "last_verified_at": "2026-07-06"
       },
-      "verified": true
+      "verified": true,
+      "application_requirements": [
+        {
+          "id": "contact-representative",
+          "label": "Contact your U.S. Representative's office to confirm district participation and rules",
+          "details": null,
+          "required": true,
+          "source_url": "https://www.house.gov/educators-and-students/congressional-art-competition"
+        },
+        {
+          "id": "review-rules",
+          "label": "Review the current year's Rules for Students and Teachers",
+          "details": null,
+          "required": true,
+          "source_url": "https://www.house.gov/educators-and-students/congressional-art-competition"
+        },
+        {
+          "id": "complete-release-form",
+          "label": "Complete the Student Release Form",
+          "details": null,
+          "required": true,
+          "source_url": "https://www.house.gov/educators-and-students/congressional-art-competition"
+        },
+        {
+          "id": "submit-to-office",
+          "label": "Submit the artwork and release form to your representative's office by their district's deadline",
+          "details": null,
+          "required": true,
+          "source_url": "https://www.house.gov/educators-and-students/congressional-art-competition"
+        }
+      ]
     },
     {
       "id": "deca-icdc",
@@ -192,8 +377,8 @@
       "host": "DECA Inc.",
       "category": "Business & marketing",
       "url": "https://www.deca.org/icdc",
-      "cost": "VERIFY",
-      "cost_category": "VERIFY",
+      "cost": "DECA does not publish one fixed national per-student ICDC fee; registration is submitted and paid by the chartered association advisor, and attendees must book the official conference hotel for a minimum of four nights. Exact fees are set annually by each chartered association.",
+      "cost_category": "paid",
       "recognition": "Competitive-event finalists from DECA's chartered associations compete to be named international champions.",
       "participation_format": "either",
       "location": "Anaheim, CA (Anaheim Convention Center)",
@@ -204,7 +389,7 @@
         "grade_levels": [
           "high_school"
         ],
-        "citizenship_requirement": "VERIFY",
+        "citizenship_requirement": "any",
         "fields_of_study": [
           "business",
           "communications"
@@ -223,7 +408,44 @@
         "source_url": "https://www.deca.org/icdc",
         "last_verified_at": "2026-07-06"
       },
-      "verified": true
+      "verified": true,
+      "application_requirements": [
+        {
+          "id": "join-chapter",
+          "label": "Become a DECA member through a chartered local chapter",
+          "details": null,
+          "required": true,
+          "source_url": "https://www.deca.org/icdc"
+        },
+        {
+          "id": "qualify-through-association",
+          "label": "Qualify for ICDC through your chartered association's competitive events/conference",
+          "details": null,
+          "required": true,
+          "source_url": "https://www.deca.org/icdc"
+        },
+        {
+          "id": "advisor-submits-registration",
+          "label": "Chapter advisor submits ICDC registration through the chartered association to DECA Inc.",
+          "details": null,
+          "required": true,
+          "source_url": "https://www.deca.org/icdc"
+        },
+        {
+          "id": "book-official-hotel",
+          "label": "Book the official DECA-assigned hotel property for a minimum of four nights",
+          "details": null,
+          "required": true,
+          "source_url": "https://www.deca.org/icdc"
+        },
+        {
+          "id": "attend-and-compete",
+          "label": "Attend ICDC and compete in your qualified event(s)",
+          "details": null,
+          "required": true,
+          "source_url": "https://www.deca.org/icdc"
+        }
+      ]
     },
     {
       "id": "fbla-nlc",
@@ -231,10 +453,10 @@
       "host": "Future Business Leaders of America (FBLA)",
       "category": "Business & leadership",
       "url": "https://www.fbla.org/fbla-national-leadership-conference/",
-      "cost": "VERIFY",
-      "cost_category": "VERIFY",
-      "recognition": "VERIFY",
-      "participation_format": "VERIFY",
+      "cost": "Registration and housing instructions vary by state; each chartered/state association distributes its own NLC Registration Guide and sets its own conference fees. Optional on-site certification exams at NLC cost $15-$55 per exam (2026 NLC).",
+      "cost_category": "paid",
+      "recognition": "Top-placing competitors in each competitive event are named to FBLA's National Top Ten List, recognized at NLC and shared via a national press release template.",
+      "participation_format": "either",
       "location": "Columbus, Ohio (2027 NLC)",
       "competition_dates": "June 23-26, 2027",
       "deadline": "VERIFY",
@@ -244,7 +466,7 @@
           "middle_school",
           "high_school"
         ],
-        "citizenship_requirement": "VERIFY",
+        "citizenship_requirement": "any",
         "fields_of_study": [
           "business"
         ],
@@ -262,7 +484,37 @@
         "source_url": "https://www.fbla.org/fbla-national-leadership-conference/",
         "last_verified_at": "2026-07-06"
       },
-      "verified": true
+      "verified": true,
+      "application_requirements": [
+        {
+          "id": "join-fbla-chapter",
+          "label": "Join FBLA through a local chartered chapter",
+          "details": null,
+          "required": true,
+          "source_url": "https://www.fbla.org/high-school/membership/"
+        },
+        {
+          "id": "qualify-at-state-conference",
+          "label": "Qualify for NLC through your state's competitive events/state leadership conference",
+          "details": null,
+          "required": true,
+          "source_url": "https://www.fbla.org/nlc-ms-hs/"
+        },
+        {
+          "id": "register-via-state-guide",
+          "label": "Register for NLC through your state association's NLC Registration Guide",
+          "details": "Registration and housing instructions vary by state; guides are distributed each spring.",
+          "required": true,
+          "source_url": "https://www.fbla.org/nlc-ms-hs/"
+        },
+        {
+          "id": "attend-and-compete",
+          "label": "Attend NLC and compete in your qualified individual, team, or either-format event",
+          "details": null,
+          "required": true,
+          "source_url": "https://www.fbla.org/high-school/competitive-events/"
+        }
+      ]
     },
     {
       "id": "nsda-nationals",
@@ -277,7 +529,7 @@
       "location": "Phoenix, AZ (2027 tournament)",
       "competition_dates": "June 13-18, 2027",
       "deadline": "VERIFY",
-      "estimated_deadline": "2026-05-15",
+      "estimated_deadline": "2027-05-15",
       "eligibility": {
         "grade_levels": [
           "high_school"
@@ -300,7 +552,44 @@
         "source_url": "https://www.speechanddebate.org/national-tournament-2026-registration/",
         "last_verified_at": "2026-07-06"
       },
-      "verified": true
+      "verified": true,
+      "application_requirements": [
+        {
+          "id": "earn-nsda-membership-and-merit",
+          "label": "Earn NSDA membership with at least the Merit degree to be district-eligible",
+          "details": null,
+          "required": true,
+          "source_url": "https://www.speechanddebate.org/ufaq/what-are-the-eligibility-requirements-for-entering-the-nsda-district-tournament/"
+        },
+        {
+          "id": "compete-at-district-tournament",
+          "label": "Compete in and earn qualifying points at your NSDA district tournament",
+          "details": null,
+          "required": true,
+          "source_url": "https://www.speechanddebate.org/district-tournaments/"
+        },
+        {
+          "id": "file-seli",
+          "label": "File a Single Entry Letter of Intent (SELI) declaring your qualifying event",
+          "details": "No student may double-enter at the National Tournament.",
+          "required": true,
+          "source_url": "https://www.speechanddebate.org/district-tournaments/"
+        },
+        {
+          "id": "school-completes-registration",
+          "label": "School/coach completes National Tournament registration, payment, and judge obligations by the deadline",
+          "details": null,
+          "required": true,
+          "source_url": "https://www.speechanddebate.org/national-tournament-2026-registration/"
+        },
+        {
+          "id": "attend-and-compete",
+          "label": "Attend and compete at the National Tournament",
+          "details": "2027 tournament: June 13-18, 2027, Phoenix, AZ.",
+          "required": true,
+          "source_url": "https://www.speechanddebate.org/nationals/"
+        }
+      ]
     },
     {
       "id": "scholastic-art-writing-awards",
@@ -311,7 +600,7 @@
       "cost": "$10 per individual entry, $30 per portfolio; fee waivers available via the online entry portal",
       "cost_category": "paid",
       "recognition": "Regional and national recognition via ceremonies, exhibitions, and publications; National Medalists (celebrated each June) are eligible for scholarships of up to $12,500.",
-      "participation_format": "VERIFY",
+      "participation_format": "either",
       "location": "Entered online and judged through regional affiliate programs; national medals awarded each June",
       "competition_dates": "Opens for entries in the fall; National Medalists recognized in June",
       "deadline": "VERIFY",
@@ -333,7 +622,44 @@
         "source_url": "https://www.artandwriting.org/awards/how-to-enter/",
         "last_verified_at": "2026-07-06"
       },
-      "verified": true
+      "verified": true,
+      "application_requirements": [
+        {
+          "id": "create-account",
+          "label": "Create a student (or educator) account in the Scholastic Awards online portal",
+          "details": null,
+          "required": true,
+          "source_url": "https://www.artandwriting.org/awards/how-to-enter/"
+        },
+        {
+          "id": "choose-category",
+          "label": "Choose the category that best represents your work",
+          "details": null,
+          "required": true,
+          "source_url": "https://www.artandwriting.org/awards/how-to-enter/"
+        },
+        {
+          "id": "upload-work",
+          "label": "Upload digital images/files of your work",
+          "details": "Collaborative entries are not allowed in any category except Film & Animation, which permits up to 5 acknowledged collaborators.",
+          "required": true,
+          "source_url": "https://www.artandwriting.org/awards/how-to-enter/categories/"
+        },
+        {
+          "id": "pay-entry-fee-or-waiver",
+          "label": "Pay the entry fee or request a fee waiver",
+          "details": "$10 per individual entry, $30 per portfolio; fee waivers available in the portal.",
+          "required": true,
+          "source_url": "https://www.artandwriting.org/awards/how-to-enter/"
+        },
+        {
+          "id": "regional-then-national-judging",
+          "label": "Work is judged through a regional affiliate program, then top entries advance to national judging",
+          "details": "National Medalists are announced each June.",
+          "required": true,
+          "source_url": "https://www.artandwriting.org/awards/"
+        }
+      ]
     },
     {
       "id": "national-history-day",
@@ -341,8 +667,8 @@
       "host": "National History Day (NHD)",
       "category": "History research",
       "url": "https://nhd.org/en/contest/",
-      "cost": "VERIFY",
-      "cost_category": "VERIFY",
+      "cost": "NHD's National Contest itself does not charge individual students a fee (only a $65 adviser/teacher registration fee at Nationals); school, regional, and affiliate-level contests set and collect their own per-student fees, which vary by affiliate (official affiliate sites show roughly $15-$60 per student).",
+      "cost_category": "paid",
       "recognition": "At the National Contest, the top three entries in each contest category receive awards, plus special prizes.",
       "participation_format": "either",
       "location": "National Contest at the University of Maryland, College Park (after school, regional, and affiliate rounds)",
@@ -374,7 +700,37 @@
         "source_url": "https://nhd.org/en/contest/national-contest/",
         "last_verified_at": "2026-07-06"
       },
-      "verified": true
+      "verified": true,
+      "application_requirements": [
+        {
+          "id": "choose-topic-and-category",
+          "label": "Choose a project category (documentary, exhibit, paper, performance, or website) and a topic tied to the annual theme",
+          "details": null,
+          "required": true,
+          "source_url": "https://nhd.org/en/contest/national-contest/"
+        },
+        {
+          "id": "compete-at-school-contest",
+          "label": "Compete at your school-level contest",
+          "details": null,
+          "required": true,
+          "source_url": "https://nhd.org/en/contest/national-contest/"
+        },
+        {
+          "id": "advance-to-affiliate-contest",
+          "label": "Advance to your regional/affiliate contest",
+          "details": "Registration fees for these local rounds are set by each affiliate.",
+          "required": true,
+          "source_url": "https://nhd.org/en/contest/national-contest/"
+        },
+        {
+          "id": "advance-to-national-contest",
+          "label": "Top affiliate entries are invited to the National Contest",
+          "details": "2027 National Contest: June 13-17, 2027, University of Maryland, College Park.",
+          "required": true,
+          "source_url": "https://nhd.org/en/contest/national-contest/"
+        }
+      ]
     },
     {
       "id": "conrad-challenge",
@@ -382,27 +738,74 @@
       "host": "The Conrad Foundation",
       "category": "Entrepreneurship & innovation",
       "url": "https://www.conradchallenge.org/",
-      "cost": "VERIFY",
-      "cost_category": "VERIFY",
-      "recognition": "VERIFY",
-      "participation_format": "VERIFY",
-      "location": "VERIFY",
-      "competition_dates": "VERIFY",
+      "cost": "Activation and Innovation Stage submission is free; teams that advance pay a $499 Innovation Stage team registration fee, and Summit attendees pay $499/guest (financial aid available for both).",
+      "cost_category": "paid",
+      "recognition": "Winning teams receive academic scholarships, an all-expenses-paid trip (presented by Equinor with United Airlines), free patent support from IP lawyers, and honors including Pete Conrad Scholar, Power Pitch Award, Citizenship Award, and Excellence in Education Award; exact scholarship dollar amounts are not published.",
+      "participation_format": "team",
+      "location": "Houston, TX — Innovation Summit held on-site at Space Center Houston; the program is administered by the Conrad Foundation in partnership with Space Center Houston.",
+      "competition_dates": "2025-26 cycle (most recently confirmed): Activation Stage Aug 28-Oct 30, 2025; Innovation Stage Oct 31, 2025-Jan 8, 2026; Innovation Summit Apr 22-25, 2026. The 2026-27 cycle's dates are not yet announced.",
       "deadline": "VERIFY",
-      "estimated_deadline": null,
+      "estimated_deadline": "2026-01-08",
       "eligibility": {
-        "grade_levels": [],
-        "citizenship_requirement": "VERIFY",
-        "fields_of_study": [],
+        "grade_levels": [
+          "middle_school",
+          "high_school"
+        ],
+        "citizenship_requirement": "any",
+        "fields_of_study": [
+          "science",
+          "engineering",
+          "technology",
+          "environmental_science",
+          "health_medicine",
+          "computer_science"
+        ],
         "essay_required": false
       },
       "description": "The Conrad (Spirit of Innovation) Challenge, run by the Conrad Foundation (est. 2008 in honor of astronaut Pete Conrad), brings together a community of student innovators and entrepreneurs to develop viable solutions to global challenges.",
       "verification": {
-        "source_url": "https://www.conradfoundation.org/",
-        "notes": "Official site was unreachable during the 2026-07-06 audit (TLS failures + error page); description sourced from conradfoundation.org. Re-verify all fields when the site is back.",
-        "provenance_recorded_at": "2026-07-06"
+        "source_url": "https://conrad.spacecenter.org/the-challenge/rules-and-regulations/",
+        "notes": "Primary domain conradchallenge.org unreachable on 2026-07-06 and 2026-07-07; facts sourced from the official operator conrad.spacecenter.org (Space Center Houston). grade_levels/fields_of_study mapped from stated ages/categories. Re-check primary domain when restored.",
+        "provenance_recorded_at": "2026-07-07"
       },
-      "verified": false
+      "verified": false,
+      "application_requirements": [
+        {
+          "id": "register-team",
+          "label": "Register a team of 2-5 students (ages 13-18) with an adult team coach (18+) via the Award Force portal",
+          "details": null,
+          "required": true,
+          "source_url": "https://conrad.spacecenter.org/the-challenge/rules-and-regulations/"
+        },
+        {
+          "id": "activation-stage",
+          "label": "Complete the Activation Stage: form your team and define your innovation concept",
+          "details": null,
+          "required": true,
+          "source_url": "https://conrad.spacecenter.org/the-challenge/"
+        },
+        {
+          "id": "innovation-stage-submission",
+          "label": "Complete the Innovation Stage: develop and submit your solution materials, paying the $499 team registration fee",
+          "details": null,
+          "required": true,
+          "source_url": "https://conrad.spacecenter.org/the-challenge/rules-and-regulations/"
+        },
+        {
+          "id": "advance-as-finalist",
+          "label": "Advance as a finalist based on Innovation Stage judging",
+          "details": null,
+          "required": true,
+          "source_url": "https://conrad.spacecenter.org/the-challenge/"
+        },
+        {
+          "id": "attend-innovation-summit",
+          "label": "Attend the Innovation Summit in Houston, TX to pitch and compete for prizes",
+          "details": "Summit registration is $499/guest; financial aid available.",
+          "required": true,
+          "source_url": "https://conrad.spacecenter.org/the-challenge/rules-and-regulations/"
+        }
+      ]
     },
     {
       "id": "diamond-challenge",
@@ -410,14 +813,14 @@
       "host": "Horn Entrepreneurship, University of Delaware",
       "category": "Entrepreneurship",
       "url": "https://diamondchallenge.org/competition/",
-      "cost": "VERIFY",
-      "cost_category": "VERIFY",
+      "cost": "Free to enter; Diamond Challenge provides free resources with no participation fee (confirmed on the official competition page).",
+      "cost_category": "free",
       "recognition": "More than $100,000 in awards; grand prizes in each track (Business Innovation and Social Innovation): $12,000 first, $8,000 second, $4,500 third, plus additional topical prizes.",
       "participation_format": "team",
-      "location": "VERIFY",
+      "location": "Chase Center on the Riverfront, Wilmington, DE (Limitless World Summit); the program is run by Horn Entrepreneurship, University of Delaware, Newark, DE.",
       "competition_dates": "Submissions open September 16; submission deadline January 14 (5PM EST); finalists announced March 9; final summit April 29-30",
-      "deadline": "VERIFY",
-      "estimated_deadline": "2027-01-14",
+      "deadline": "2027-01-14",
+      "estimated_deadline": null,
       "eligibility": {
         "grade_levels": [
           "high_school"
@@ -434,7 +837,44 @@
         "last_verified_at": "2026-07-06",
         "notes": "Official timeline shows a January 14 deadline without a year; presumed 2027-01-14 for the 2026-27 cycle and recorded as an estimate only."
       },
-      "verified": true
+      "verified": true,
+      "application_requirements": [
+        {
+          "id": "develop-concept",
+          "label": "Form a team (2-4 students, ages 14-18) with an adult advisor (21+) and develop a business or social innovation concept",
+          "details": null,
+          "required": true,
+          "source_url": "https://diamondchallenge.org/competition/"
+        },
+        {
+          "id": "submit-narrative-and-video",
+          "label": "Submit a written concept narrative (3-5 pages) and a 60-second introductory video by the submission deadline",
+          "details": "2027 deadline: January 14, 5PM EST.",
+          "required": true,
+          "source_url": "https://diamondchallenge.org/competition/"
+        },
+        {
+          "id": "advance-to-pitch-round",
+          "label": "Meet the minimum judging score to advance to the pitching round",
+          "details": null,
+          "required": true,
+          "source_url": "https://diamondchallenge.org/competition/"
+        },
+        {
+          "id": "submit-pitch",
+          "label": "Deliver a live 5-minute pitch (3-minute Q&A) or submit a pre-recorded 5-minute pitch video with a pitch deck",
+          "details": null,
+          "required": true,
+          "source_url": "https://diamondchallenge.org/competition/"
+        },
+        {
+          "id": "attend-summit",
+          "label": "Finalists attend the Limitless World Summit in person to deliver final pitches and compete for prizes",
+          "details": "Held April 29-30 at the Chase Center on the Riverfront, Wilmington, DE.",
+          "required": true,
+          "source_url": "https://limitlessworldsummit.org/"
+        }
+      ]
     },
     {
       "id": "profile-in-courage-essay-contest",
@@ -442,8 +882,8 @@
       "host": "John F. Kennedy Library Foundation",
       "category": "Essay writing / civics",
       "url": "https://www.jfklibrary.org/learn/education/profile-in-courage-essay-contest",
-      "cost": "VERIFY",
-      "cost_category": "VERIFY",
+      "cost": "Free to enter; no fee is mentioned on the official contest pages or the smapply submission portal.",
+      "cost_category": "free",
       "recognition": "First place: $10,000 cash award plus an invitation (with paid travel) to the Profile in Courage Award ceremony in Boston; second place: $3,000; three finalists: $1,000 each; fifteen honorable mentions; all participants receive a Certificate of Participation.",
       "participation_format": "individual",
       "location": "Online submission; winner honored at the JFK Presidential Library in Boston, MA",
@@ -454,7 +894,7 @@
         "grade_levels": [
           "high_school"
         ],
-        "citizenship_requirement": "any",
+        "citizenship_requirement": "VERIFY",
         "fields_of_study": [
           "humanities",
           "social_sciences"
@@ -467,7 +907,37 @@
         "last_verified_at": "2026-07-06",
         "notes": "Official site still shows the past 2026-01-12 deadline; the next cycle's date is not yet posted."
       },
-      "verified": true
+      "verified": true,
+      "application_requirements": [
+        {
+          "id": "review-contest-topic",
+          "label": "Review the contest topic and choose an eligible elected U.S. official (served during/after 1917, not JFK, not a president)",
+          "details": null,
+          "required": true,
+          "source_url": "https://www.jfklibrary.org/learn/education/profile-in-courage-essay-contest/getting-started"
+        },
+        {
+          "id": "research-and-write-essay",
+          "label": "Research and write a 700-1,000 word essay analyzing a single act of political courage",
+          "details": "Must cite at least 5 sources with a full bibliography; citations/bibliography don't count toward the word limit.",
+          "required": true,
+          "source_url": "https://www.jfklibrary.org/learn/education/profile-in-courage-essay-contest/getting-started"
+        },
+        {
+          "id": "get-nominating-teacher-review",
+          "label": "Have a nominating teacher (or, for homeschoolers, a parent/guardian) read the essay before submission",
+          "details": null,
+          "required": true,
+          "source_url": "https://www.jfklibrary.org/learn/education/profile-in-courage-essay-contest/faq"
+        },
+        {
+          "id": "submit-via-portal",
+          "label": "Submit the essay through the official online contest portal by the deadline",
+          "details": "2026 deadline was January 12, 2026 (11:59 PM ET); the next cycle's date is not yet posted.",
+          "required": true,
+          "source_url": "https://jfkessaycontest.smapply.io/prog/john_f_kennedy_profile_in_courage_essay_contest/"
+        }
+      ]
     }
   ]
 }
