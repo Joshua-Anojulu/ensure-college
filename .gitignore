@@ -40,3 +40,6 @@ AGENT_HANDOFF.md
 
 # graphify knowledge-graph output (local)
 graphify-out/
+
+# In-progress session handoffs (never commit)
+.handoff/

@@ -1095,7 +1095,7 @@
       "location": "Eligible U.S. program markets (local nonprofit placement)",
       "program_dates": "Six weeks mid-June through July 2026, including mandatory 3-day Leadership Summit (June 16–18, 2026)",
       "deadline": "VERIFY",
-      "estimated_deadline": "2027-03-16",
+      "estimated_deadline": "2026-03-16",
       "eligibility": {
         "min_gpa": null,
         "fields_of_study": [],
@@ -1342,7 +1342,7 @@
       "location": "Bar Harbor, ME and Farmington, CT",
       "program_dates": "10 weeks: May 30 – August 7, 2026 (Bar Harbor) or May 30 – August 10, 2026 (Farmington)",
       "deadline": "VERIFY",
-      "estimated_deadline": "2027-01-26",
+      "estimated_deadline": "2026-01-26",
       "eligibility": {
         "min_gpa": null,
         "fields_of_study": [
@@ -1449,7 +1449,7 @@
       "location": "Virtual plus optional on-site at UT Austin, TX",
       "program_dates": "June–July 2026: virtual work June–July 3; on-site July 5–18, 2026; symposium July 20–21, 2026",
       "deadline": "VERIFY",
-      "estimated_deadline": "2027-02-22",
+      "estimated_deadline": "2026-02-22",
       "eligibility": {
         "min_gpa": null,
         "fields_of_study": [
@@ -1504,7 +1504,7 @@
       "location": "Stanford, CA",
       "program_dates": "Eight weeks: June 8 – July 30, 2026",
       "deadline": "VERIFY",
-      "estimated_deadline": "2027-02-21",
+      "estimated_deadline": "2026-02-21",
       "eligibility": {
         "min_gpa": null,
         "fields_of_study": [
@@ -1612,7 +1612,7 @@
       "location": "Upton, NY",
       "program_dates": "Six weeks, Monday-Friday 8:30 a.m.-5:00 p.m.",
       "deadline": "VERIFY",
-      "estimated_deadline": "2027-03-01",
+      "estimated_deadline": "2026-03-20",
       "eligibility": {
         "min_gpa": null,
         "fields_of_study": [
@@ -1730,7 +1730,7 @@
       "location": "Philadelphia, PA",
       "program_dates": "Three weeks; multiple sessions June-August 2026",
       "deadline": "VERIFY",
-      "estimated_deadline": "2027-01-28",
+      "estimated_deadline": "2026-03-18",
       "eligibility": {
         "min_gpa": 3.5,
         "fields_of_study": [
@@ -1774,7 +1774,7 @@
       "location": "Philadelphia, PA",
       "program_dates": "July 5-25, 2026",
       "deadline": "VERIFY",
-      "estimated_deadline": "2027-01-28",
+      "estimated_deadline": "2026-03-25",
       "eligibility": {
         "min_gpa": 3.5,
         "fields_of_study": [
@@ -1871,7 +1871,7 @@
       "location": "Iowa City, IA",
       "program_dates": "Session 1: June 14-27, 2026; Session 2: July 12-25, 2026",
       "deadline": "VERIFY",
-      "estimated_deadline": "2027-02-01",
+      "estimated_deadline": "2026-02-01",
       "eligibility": {
         "min_gpa": null,
         "fields_of_study": [
@@ -2039,7 +2039,7 @@
       "location": "Philadelphia, PA",
       "program_dates": "Three weeks in summer (dates vary by year)",
       "deadline": "VERIFY",
-      "estimated_deadline": "2027-01-28",
+      "estimated_deadline": "2026-03-18",
       "eligibility": {
         "min_gpa": "VERIFY",
         "fields_of_study": [
@@ -2086,7 +2086,7 @@
       "location": "New York, NY",
       "program_dates": "Seven weeks in summer",
       "deadline": "VERIFY",
-      "estimated_deadline": "2027-01-02",
+      "estimated_deadline": "2026-01-02",
       "eligibility": {
         "min_gpa": null,
         "fields_of_study": [
@@ -2448,7 +2448,7 @@
       "location": "Philadelphia, PA",
       "program_dates": "Three weeks in summer",
       "deadline": "VERIFY",
-      "estimated_deadline": "2027-01-28",
+      "estimated_deadline": "2026-03-18",
       "eligibility": {
         "min_gpa": null,
         "fields_of_study": [
@@ -2495,7 +2495,7 @@
       "location": "Philadelphia, PA",
       "program_dates": "Two weeks in summer",
       "deadline": "VERIFY",
-      "estimated_deadline": "2027-01-28",
+      "estimated_deadline": "2026-03-18",
       "eligibility": {
         "min_gpa": null,
         "fields_of_study": [
@@ -2612,7 +2612,7 @@
         "last_verified_at": "2026-06-21",
         "notes": "Official Harvard Pre-College page: 2 weeks, $6,100, rising juniors/seniors; early deadline Jan 7 / regular Feb 11 2026 — est. 2027-01-07 next early deadline."
       },
-      "estimated_deadline": "2027-01-07"
+      "estimated_deadline": "2026-04-01"
     },
     {
       "id": "stanford-summer-session-high-school",
@@ -2702,7 +2702,7 @@
         "last_verified_at": "2026-06-21",
         "notes": "Official MDIBL Biomedical Bootcamp 2026 page: 1 week commuter, grades 11–12, $1,000, deadline June 5 2026 — est. 2027-06-05."
       },
-      "estimated_deadline": "2027-06-05"
+      "estimated_deadline": "2026-06-05"
     },
     {
       "id": "uchicago-research-in-biological-sciences",
@@ -2801,7 +2801,7 @@
         "last_verified_at": "2026-07-03",
         "notes": "Official Brown Pre-College apply page: Summer 2026 applications opened Jan 14, 2026 and closed May 15, 2026. Summer@Brown remains grades 9–12, ages 14–18, non-credit; est. 2027-05-15."
       },
-      "estimated_deadline": "2027-05-15"
+      "estimated_deadline": "2026-05-15"
     },
     {
       "id": "columbia-pre-college-summer",
@@ -2980,7 +2980,7 @@
         "last_verified_at": "2026-07-03",
         "notes": "Official Penn Summer Academies and application-information pages: current grades 9–11, residential 2–3 weeks, international students welcome, applications rolling until full, and minimum 3.5 high-school GPA. No dated final deadline is published."
       },
-      "estimated_deadline": "2027-05-01"
+      "estimated_deadline": "2026-05-01"
     },
     {
       "id": "georgetown-university-summer-hoya",
