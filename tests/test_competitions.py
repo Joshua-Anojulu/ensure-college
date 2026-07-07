@@ -95,3 +95,63 @@ def test_open_category_competition_appears_as_possible():
     assert result.score_breakdown.category > 0  # open-to-all credit
     assert result.match_tier == "possible"
     assert any("Open to all" in reason for reason in result.match_reasons)
+
+
+def test_competitions_dataset_loads_and_has_provenance():
+    from app.data.loader import load_competitions
+
+    competitions = load_competitions()
+    assert len(competitions) >= 10
+    for competition in competitions:
+        assert competition.verification is not None
+        assert str(competition.verification.source_url).startswith("http")
+        requirement_ids = [r.id for r in competition.application_requirements]
+        assert len(requirement_ids) == len(set(requirement_ids))
+
+
+def test_competitions_dataset_has_no_structural_errors():
+    from app.data.loader import load_competitions
+    from scripts.validate_dataset import audit_competitions
+
+    report = audit_competitions(load_competitions())
+    assert report["errors"] == []
+
+
+def test_competitions_dataset_has_no_vocabulary_warnings():
+    from app.data.loader import load_competitions
+    from scripts.validate_dataset import audit_competitions
+
+    report = audit_competitions(load_competitions())
+    vocab_warnings = [w for w in report["warnings"] if "not in vocabulary" in w]
+    assert vocab_warnings == []
+
+
+def test_api_competitions_endpoints():
+    from fastapi.testclient import TestClient
+
+    from app.main import app
+
+    # Context manager triggers the lifespan so app.state.competitions is loaded.
+    with TestClient(app) as client:
+        listing = client.get("/competitions")
+        assert listing.status_code == 200
+        assert len(listing.json()) >= 10
+
+        matched = client.post(
+            "/competitions/match",
+            json={
+                "gpa": 3.8,
+                "grade_level": "high_school_junior",
+                "citizenship": "us_citizen",
+                "state": "CA",
+                "intended_majors": ["science", "mathematics"],
+                "financial_need_level": "medium",
+            },
+        )
+        assert matched.status_code == 200
+        body = matched.json()
+        assert isinstance(body, list) and len(body) >= 1
+        first = body[0]
+        assert {"competition_id", "score", "match_tier", "match_reasons"} <= first.keys()
+        scores = [r["score"] for r in body]
+        assert scores == sorted(scores, reverse=True)

@@ -1,0 +1,473 @@
+{
+  "_dataset_notice": "Curated seed of national competitions. Every field was either confirmed against the competition's OFFICIAL website on the verification date or left as the literal 'VERIFY'. Never fill a VERIFY value from memory; cite an official source and update verification when confirming.",
+  "competitions": [
+    {
+      "id": "regeneron-isef",
+      "name": "Regeneron International Science and Engineering Fair (ISEF)",
+      "host": "Society for Science",
+      "category": "STEM research",
+      "url": "https://www.societyforscience.org/isef/",
+      "cost": "VERIFY",
+      "cost_category": "VERIFY",
+      "recognition": "More than $7 million in awards, prizes and scholarships across 22 scientific categories.",
+      "participation_format": "either",
+      "location": "ISEF 2027 finals in Los Angeles, CA (location rotates annually)",
+      "competition_dates": "May 8-14, 2027",
+      "deadline": "VERIFY",
+      "estimated_deadline": null,
+      "eligibility": {
+        "grade_levels": [
+          "high_school"
+        ],
+        "citizenship_requirement": "any",
+        "fields_of_study": [
+          "science",
+          "engineering",
+          "technology",
+          "mathematics",
+          "computer_science",
+          "environmental_science",
+          "health_medicine",
+          "research"
+        ],
+        "essay_required": false,
+        "special_requirements": [
+          {
+            "kind": "competition_or_finalist",
+            "label": "Qualify via an ISEF-affiliated fair",
+            "details": "Finalists are selected by ISEF-affiliated regional, state, or national fairs; you cannot apply to ISEF directly."
+          }
+        ]
+      },
+      "description": "Global final for the world's largest pre-college STEM research competition: roughly 1,700 finalists who qualify through ISEF-affiliated fairs in more than 60 countries present original research projects in 22 categories.",
+      "verification": {
+        "source_url": "https://www.societyforscience.org/isef/international-rules/rules-for-all-projects/",
+        "last_verified_at": "2026-07-06"
+      },
+      "verified": true
+    },
+    {
+      "id": "regeneron-science-talent-search",
+      "name": "Regeneron Science Talent Search",
+      "host": "Society for Science",
+      "category": "STEM research",
+      "url": "https://www.societyforscience.org/regeneron-sts/",
+      "cost": "VERIFY",
+      "cost_category": "VERIFY",
+      "recognition": "$3.1 million in awards distributed annually, including a $250,000 first-place prize; 2026 finalists received more than $1.8 million.",
+      "participation_format": "individual",
+      "location": "Application-based; Finals Week held in Washington, D.C.",
+      "competition_dates": "Finals Week: March 11-17, 2027",
+      "deadline": "2026-11-05",
+      "estimated_deadline": null,
+      "eligibility": {
+        "grade_levels": [
+          "high_school_senior"
+        ],
+        "citizenship_requirement": "any",
+        "fields_of_study": [
+          "science",
+          "engineering",
+          "technology",
+          "mathematics",
+          "computer_science",
+          "research"
+        ],
+        "essay_required": true
+      },
+      "description": "The nation's oldest and most prestigious science research competition for high school seniors, who submit original independent research plus a full application (essays, a max 20-page paper, recommendations, transcripts) for holistic review.",
+      "verification": {
+        "source_url": "https://www.societyforscience.org/regeneron-sts/frequently-asked-questions/",
+        "last_verified_at": "2026-07-06"
+      },
+      "verified": true
+    },
+    {
+      "id": "amc-10-12",
+      "name": "AMC 10/12 (American Mathematics Competitions)",
+      "host": "Mathematical Association of America",
+      "category": "Mathematics",
+      "url": "https://maa.org/student-programs/amc/",
+      "cost": "School/venue pays registration per competition ($55 early bird by Sept 30, $75 regular by Oct 15, $115 late by Oct 28, 2026) plus $30 per 10-student license bundle; cost to individual students is set by their school",
+      "cost_category": "paid",
+      "recognition": "Top scorers are invited to the AIME (at least top 2.5% of AMC 10 scorers, top 5% of AMC 12 scorers), the pathway to USAJMO/USAMO qualification.",
+      "participation_format": "individual",
+      "location": "Administered in person at accredited schools, universities, math circles, and learning centers",
+      "competition_dates": "AMC 10 A / AMC 12 A: November 5, 2026; AMC 10 B / AMC 12 B: November 13, 2026",
+      "deadline": "2026-10-28",
+      "estimated_deadline": null,
+      "eligibility": {
+        "grade_levels": [
+          "middle_school",
+          "high_school"
+        ],
+        "citizenship_requirement": "VERIFY",
+        "fields_of_study": [
+          "mathematics"
+        ],
+        "essay_required": false
+      },
+      "description": "25-question, 75-minute multiple-choice mathematics competitions: the AMC 10 for students in grades 10 and below (under age 17.5), the AMC 12 for grades 12 and below (under 19.5), taken at registered schools and venues.",
+      "verification": {
+        "source_url": "https://maa.org/amcreg/",
+        "last_verified_at": "2026-07-06",
+        "notes": "2026-10-28 is the late deadline for returning competition managers; the regular deadline is 2026-10-15 (final for new competition managers)."
+      },
+      "verified": true
+    },
+    {
+      "id": "congressional-app-challenge",
+      "name": "Congressional App Challenge",
+      "host": "U.S. House of Representatives (coordinated by the Internet Education Foundation)",
+      "category": "Computer science",
+      "url": "https://www.congressionalappchallenge.us/",
+      "cost": "VERIFY",
+      "cost_category": "VERIFY",
+      "recognition": "District winners' apps are eligible to be featured in the U.S. Capitol Building and on House.gov; winners are invited to the #HouseOfCode celebration and receive waived copyright registration application fees through the ARTS Act.",
+      "participation_format": "either",
+      "location": "Online (judged district-by-district by Members of Congress)",
+      "competition_dates": "Challenge launches in May; submissions close October 26, 2026; judging in November; winners announced in December",
+      "deadline": "2026-10-26",
+      "estimated_deadline": null,
+      "eligibility": {
+        "grade_levels": [
+          "middle_school",
+          "high_school"
+        ],
+        "citizenship_requirement": "any",
+        "fields_of_study": [
+          "computer_science",
+          "technology"
+        ],
+        "essay_required": false
+      },
+      "description": "A district-by-district coding competition for U.S. middle and high school students, who create and submit an original app (any language, any platform) to their Member of Congress.",
+      "verification": {
+        "source_url": "https://www.congressionalappchallenge.us/students/rules/",
+        "last_verified_at": "2026-07-06"
+      },
+      "verified": true
+    },
+    {
+      "id": "congressional-art-competition",
+      "name": "Congressional Art Competition (An Artistic Discovery)",
+      "host": "U.S. House of Representatives / Congressional Institute",
+      "category": "Visual arts",
+      "url": "https://www.house.gov/educators-and-students/congressional-art-competition",
+      "cost": "VERIFY",
+      "cost_category": "VERIFY",
+      "recognition": "Winning artwork from each district is displayed for one year at the U.S. Capitol; winners are recognized in their district and at an annual awards ceremony in Washington, DC.",
+      "participation_format": "individual",
+      "location": "District-based entry via each representative's office; winning works displayed in Washington, DC",
+      "competition_dates": "Held each spring",
+      "deadline": "VERIFY",
+      "estimated_deadline": null,
+      "eligibility": {
+        "grade_levels": [
+          "high_school"
+        ],
+        "citizenship_requirement": "VERIFY",
+        "fields_of_study": [
+          "arts"
+        ],
+        "essay_required": false,
+        "special_requirements": [
+          {
+            "kind": "institution_channel",
+            "label": "Enter via your U.S. representative's office",
+            "details": "Artwork is submitted to your district's Member of Congress by the deadline that office sets; there is no national registration."
+          }
+        ]
+      },
+      "description": "A nationwide high school visual art competition, sponsored each spring by the Congressional Institute, in which students submit artwork to their U.S. representative's office and district panels select winners; over 650,000 students have participated since 1982.",
+      "verification": {
+        "source_url": "https://www.house.gov/educators-and-students/congressional-art-competition",
+        "last_verified_at": "2026-07-06"
+      },
+      "verified": true
+    },
+    {
+      "id": "deca-icdc",
+      "name": "DECA International Career Development Conference (ICDC)",
+      "host": "DECA Inc.",
+      "category": "Business & marketing",
+      "url": "https://www.deca.org/icdc",
+      "cost": "VERIFY",
+      "cost_category": "VERIFY",
+      "recognition": "Competitive-event finalists from DECA's chartered associations compete to be named international champions.",
+      "participation_format": "either",
+      "location": "Anaheim, CA (Anaheim Convention Center)",
+      "competition_dates": "April 17-20, 2027",
+      "deadline": "2027-03-15",
+      "estimated_deadline": null,
+      "eligibility": {
+        "grade_levels": [
+          "high_school"
+        ],
+        "citizenship_requirement": "VERIFY",
+        "fields_of_study": [
+          "business",
+          "communications"
+        ],
+        "essay_required": false,
+        "special_requirements": [
+          {
+            "kind": "membership",
+            "label": "DECA membership and association qualification",
+            "details": "Open to DECA members who qualify through their chartered association's competitive events; registration is submitted by associations, not individuals."
+          }
+        ]
+      },
+      "description": "The culmination of the DECA year, where more than 25,000 high school DECA members, advisors, and professionals gather and over 10,000 members who qualified through their chartered associations compete in business, marketing, finance, and hospitality events.",
+      "verification": {
+        "source_url": "https://www.deca.org/icdc",
+        "last_verified_at": "2026-07-06"
+      },
+      "verified": true
+    },
+    {
+      "id": "fbla-nlc",
+      "name": "FBLA National Leadership Conference",
+      "host": "Future Business Leaders of America (FBLA)",
+      "category": "Business & leadership",
+      "url": "https://www.fbla.org/fbla-national-leadership-conference/",
+      "cost": "VERIFY",
+      "cost_category": "VERIFY",
+      "recognition": "VERIFY",
+      "participation_format": "VERIFY",
+      "location": "Columbus, Ohio (2027 NLC)",
+      "competition_dates": "June 23-26, 2027",
+      "deadline": "VERIFY",
+      "estimated_deadline": null,
+      "eligibility": {
+        "grade_levels": [
+          "middle_school",
+          "high_school"
+        ],
+        "citizenship_requirement": "VERIFY",
+        "fields_of_study": [
+          "business"
+        ],
+        "essay_required": false,
+        "special_requirements": [
+          {
+            "kind": "membership",
+            "label": "FBLA membership and qualification",
+            "details": "Attendees compete after advancing through FBLA's qualifying process (typically state conferences)."
+          }
+        ]
+      },
+      "description": "FBLA's annual national conference where the organization's top members convene to compete in leadership events, share successes, and attend workshops and exhibits; the 2026 Middle School & High School NLC was held in San Antonio, TX (June 29-July 2, 2026).",
+      "verification": {
+        "source_url": "https://www.fbla.org/fbla-national-leadership-conference/",
+        "last_verified_at": "2026-07-06"
+      },
+      "verified": true
+    },
+    {
+      "id": "nsda-nationals",
+      "name": "NSDA National Speech & Debate Tournament",
+      "host": "National Speech & Debate Association",
+      "category": "Speech & debate",
+      "url": "https://www.speechanddebate.org/nationals/",
+      "cost": "$140 per student main-event entry; $280 for partner events; $30 per supplemental event; schools also post a $200 judge bond (2026 tournament rates; 15% discount when staying in the NSDA hotel block)",
+      "cost_category": "paid",
+      "recognition": "Competitors who advance through the week-long championship are named National Tournament Champions in their events.",
+      "participation_format": "either",
+      "location": "Phoenix, AZ (2027 tournament)",
+      "competition_dates": "June 13-18, 2027",
+      "deadline": "VERIFY",
+      "estimated_deadline": "2026-05-15",
+      "eligibility": {
+        "grade_levels": [
+          "high_school"
+        ],
+        "citizenship_requirement": "VERIFY",
+        "fields_of_study": [
+          "communications"
+        ],
+        "essay_required": false,
+        "special_requirements": [
+          {
+            "kind": "competition_or_finalist",
+            "label": "Qualify via an NSDA district tournament",
+            "details": "Entry to Nationals is earned through NSDA district tournament qualification, not open registration."
+          }
+        ]
+      },
+      "description": "The premier national championship of the National Speech & Debate Association, where high school students who qualify through NSDA district tournaments compete in speech and debate events; a separate Middle School Nationals is also held.",
+      "verification": {
+        "source_url": "https://www.speechanddebate.org/national-tournament-2026-registration/",
+        "last_verified_at": "2026-07-06"
+      },
+      "verified": true
+    },
+    {
+      "id": "scholastic-art-writing-awards",
+      "name": "Scholastic Art & Writing Awards",
+      "host": "Alliance for Young Artists & Writers",
+      "category": "Arts & writing",
+      "url": "https://www.artandwriting.org/awards/",
+      "cost": "$10 per individual entry, $30 per portfolio; fee waivers available via the online entry portal",
+      "cost_category": "paid",
+      "recognition": "Regional and national recognition via ceremonies, exhibitions, and publications; National Medalists (celebrated each June) are eligible for scholarships of up to $12,500.",
+      "participation_format": "VERIFY",
+      "location": "Entered online and judged through regional affiliate programs; national medals awarded each June",
+      "competition_dates": "Opens for entries in the fall; National Medalists recognized in June",
+      "deadline": "VERIFY",
+      "estimated_deadline": null,
+      "eligibility": {
+        "grade_levels": [
+          "middle_school",
+          "high_school"
+        ],
+        "citizenship_requirement": "VERIFY",
+        "fields_of_study": [
+          "arts",
+          "literature"
+        ],
+        "essay_required": false
+      },
+      "description": "Running since 1923, the Scholastic Awards recognize creative teens in grades 7-12 (ages 13 and up) across 29 categories of art and writing, with work submitted digitally and judged regionally then nationally.",
+      "verification": {
+        "source_url": "https://www.artandwriting.org/awards/how-to-enter/",
+        "last_verified_at": "2026-07-06"
+      },
+      "verified": true
+    },
+    {
+      "id": "national-history-day",
+      "name": "National History Day Contest",
+      "host": "National History Day (NHD)",
+      "category": "History research",
+      "url": "https://nhd.org/en/contest/",
+      "cost": "VERIFY",
+      "cost_category": "VERIFY",
+      "recognition": "At the National Contest, the top three entries in each contest category receive awards, plus special prizes.",
+      "participation_format": "either",
+      "location": "National Contest at the University of Maryland, College Park (after school, regional, and affiliate rounds)",
+      "competition_dates": "National Contest: June 13-17, 2027; school/regional/affiliate contests earlier in the school year",
+      "deadline": "VERIFY",
+      "estimated_deadline": null,
+      "eligibility": {
+        "grade_levels": [
+          "middle_school",
+          "high_school"
+        ],
+        "citizenship_requirement": "any",
+        "fields_of_study": [
+          "humanities",
+          "social_sciences",
+          "research"
+        ],
+        "essay_required": false,
+        "special_requirements": [
+          {
+            "kind": "competition_or_finalist",
+            "label": "Advance from school and affiliate contests",
+            "details": "National Contest invitations go to top entries from school, regional, and affiliate rounds held earlier in the year."
+          }
+        ]
+      },
+      "description": "A year-long historical research competition in which students in the Junior (grades 6-8) and Senior (grades 9-12) divisions create theme-based projects — documentary, exhibit, paper, performance, or website — and advance from school to regional/affiliate contests, with top entries invited to the National Contest.",
+      "verification": {
+        "source_url": "https://nhd.org/en/contest/national-contest/",
+        "last_verified_at": "2026-07-06"
+      },
+      "verified": true
+    },
+    {
+      "id": "conrad-challenge",
+      "name": "Conrad Challenge",
+      "host": "The Conrad Foundation",
+      "category": "Entrepreneurship & innovation",
+      "url": "https://www.conradchallenge.org/",
+      "cost": "VERIFY",
+      "cost_category": "VERIFY",
+      "recognition": "VERIFY",
+      "participation_format": "VERIFY",
+      "location": "VERIFY",
+      "competition_dates": "VERIFY",
+      "deadline": "VERIFY",
+      "estimated_deadline": null,
+      "eligibility": {
+        "grade_levels": [],
+        "citizenship_requirement": "VERIFY",
+        "fields_of_study": [],
+        "essay_required": false
+      },
+      "description": "The Conrad (Spirit of Innovation) Challenge, run by the Conrad Foundation (est. 2008 in honor of astronaut Pete Conrad), brings together a community of student innovators and entrepreneurs to develop viable solutions to global challenges.",
+      "verification": {
+        "source_url": "https://www.conradfoundation.org/",
+        "notes": "Official site was unreachable during the 2026-07-06 audit (TLS failures + error page); description sourced from conradfoundation.org. Re-verify all fields when the site is back.",
+        "provenance_recorded_at": "2026-07-06"
+      },
+      "verified": false
+    },
+    {
+      "id": "diamond-challenge",
+      "name": "Diamond Challenge",
+      "host": "Horn Entrepreneurship, University of Delaware",
+      "category": "Entrepreneurship",
+      "url": "https://diamondchallenge.org/competition/",
+      "cost": "VERIFY",
+      "cost_category": "VERIFY",
+      "recognition": "More than $100,000 in awards; grand prizes in each track (Business Innovation and Social Innovation): $12,000 first, $8,000 second, $4,500 third, plus additional topical prizes.",
+      "participation_format": "team",
+      "location": "VERIFY",
+      "competition_dates": "Submissions open September 16; submission deadline January 14 (5PM EST); finalists announced March 9; final summit April 29-30",
+      "deadline": "VERIFY",
+      "estimated_deadline": "2027-01-14",
+      "eligibility": {
+        "grade_levels": [
+          "high_school"
+        ],
+        "citizenship_requirement": "any",
+        "fields_of_study": [
+          "business"
+        ],
+        "essay_required": false
+      },
+      "description": "A global entrepreneurship competition from the University of Delaware's Horn Entrepreneurship in which teams of 2-4 high school students (ages 14-18, with an adult advisor 21+) develop and pitch a business or social innovation concept for a share of over $100,000 in awards.",
+      "verification": {
+        "source_url": "https://diamondchallenge.org/competition/",
+        "last_verified_at": "2026-07-06",
+        "notes": "Official timeline shows a January 14 deadline without a year; presumed 2027-01-14 for the 2026-27 cycle and recorded as an estimate only."
+      },
+      "verified": true
+    },
+    {
+      "id": "profile-in-courage-essay-contest",
+      "name": "Profile in Courage Essay Contest",
+      "host": "John F. Kennedy Library Foundation",
+      "category": "Essay writing / civics",
+      "url": "https://www.jfklibrary.org/learn/education/profile-in-courage-essay-contest",
+      "cost": "VERIFY",
+      "cost_category": "VERIFY",
+      "recognition": "First place: $10,000 cash award plus an invitation (with paid travel) to the Profile in Courage Award ceremony in Boston; second place: $3,000; three finalists: $1,000 each; fifteen honorable mentions; all participants receive a Certificate of Participation.",
+      "participation_format": "individual",
+      "location": "Online submission; winner honored at the JFK Presidential Library in Boston, MA",
+      "competition_dates": "Annual; most recent deadline January 12, 2026; winners notified by April 30, ceremony in May",
+      "deadline": "VERIFY",
+      "estimated_deadline": "2026-01-12",
+      "eligibility": {
+        "grade_levels": [
+          "high_school"
+        ],
+        "citizenship_requirement": "any",
+        "fields_of_study": [
+          "humanities",
+          "social_sciences"
+        ],
+        "essay_required": true
+      },
+      "description": "An annual contest in which US high school students write an original 700-1,000 word essay (with at least five cited sources) describing and analyzing an act of political courage by a US elected official who served during or after 1917.",
+      "verification": {
+        "source_url": "https://www.jfklibrary.org/learn/education/profile-in-courage-essay-contest/recognition-and-awards",
+        "last_verified_at": "2026-07-06",
+        "notes": "Official site still shows the past 2026-01-12 deadline; the next cycle's date is not yet posted."
+      },
+      "verified": true
+    }
+  ]
+}
