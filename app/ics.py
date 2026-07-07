@@ -39,6 +39,23 @@ def _escape(text: str) -> str:
     )
 
 
+def _fold(line: str) -> str:
+    """Fold a content line at 75 octets per RFC 5545 (continuations start with a space)."""
+    encoded = line.encode("utf-8")
+    if len(encoded) <= 75:
+        return line
+    parts: list[str] = []
+    while encoded:
+        limit = 75 if not parts else 74  # continuation lines lose one octet to the leading space
+        cut = min(limit, len(encoded))
+        # Do not split inside a multi-byte UTF-8 sequence (continuation bytes are 0b10xxxxxx).
+        while cut < len(encoded) and (encoded[cut] & 0xC0) == 0x80:
+            cut -= 1
+        parts.append(encoded[:cut].decode("utf-8"))
+        encoded = encoded[cut:]
+    return "\r\n ".join(parts)
+
+
 def _event_lines(
     *,
     uid: str,
@@ -103,4 +120,4 @@ def build_calendar(
             stamp=stamp,
         )
     lines.append("END:VCALENDAR")
-    return "\r\n".join(lines) + "\r\n"
+    return "\r\n".join(_fold(line) for line in lines) + "\r\n"

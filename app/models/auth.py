@@ -41,7 +41,10 @@ class PasswordResetConfirmRequest(BaseModel):
 
 
 class DeleteAccountRequest(BaseModel):
-    password: str = Field(min_length=1, max_length=PASSWORD_MAX_LENGTH)
+    """Password confirms deletion for password accounts; Google-only accounts
+    have no password, so it is optional and their session alone authorizes."""
+
+    password: Optional[str] = Field(default=None, min_length=1, max_length=PASSWORD_MAX_LENGTH)
 
 
 class UserResponse(BaseModel):

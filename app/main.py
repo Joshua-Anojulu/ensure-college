@@ -265,9 +265,9 @@ def serve_terms() -> FileResponse:
 @app.get("/health")
 def health() -> dict[str, str]:
     info = {"status": "ok"}
-    commit = os.getenv("RENDER_GIT_COMMIT")
+    commit = os.getenv("VERCEL_GIT_COMMIT_SHA") or os.getenv("RENDER_GIT_COMMIT")
     if commit:
-        # Render injects the deployed commit SHA; exposing it confirms which
+        # The host injects the deployed commit SHA; exposing it confirms which
         # build is live (handy for verifying a redeploy actually rolled out).
         info["commit"] = commit[:7]
     return info

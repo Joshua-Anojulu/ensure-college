@@ -133,12 +133,19 @@ def _require_verified_google_identity(userinfo: Mapping[str, object]) -> tuple[s
 
 
 def _find_or_create_google_user(db: Session, email: str, google_sub: str) -> User:
+    # The Google `sub` is the stable identifier; the email on a Google account
+    # can change. An already-linked user signs in by sub regardless, and we
+    # adopt their new address when no other account holds it (never lock them
+    # out over an email change on Google's side).
     user_with_sub = db.query(User).filter(User.google_sub == google_sub).first()
-    if user_with_sub is not None and user_with_sub.email != email:
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail={"error": "That Google account is already linked to another email."},
-        )
+    if user_with_sub is not None:
+        if user_with_sub.email != email:
+            email_taken = db.query(User).filter(User.email == email).first() is not None
+            if not email_taken:
+                user_with_sub.email = email
+                db.commit()
+                db.refresh(user_with_sub)
+        return user_with_sub
 
     user = db.query(User).filter(User.email == email).first()
     if user is None:
@@ -303,24 +310,29 @@ def request_password_reset(
         token_hash=hash_reset_token(raw_token),
         expires_at=reset_token_expires_at(),
     )
-    # A newly requested link invalidates all older, unused links for this user.
-    db.query(PasswordResetToken).filter(
-        PasswordResetToken.user_id == user.id,
-        PasswordResetToken.used_at.is_(None),
-    ).delete(synchronize_session=False)
     db.add(reset_token)
     db.commit()
 
     try:
         send_password_reset_email(user.email, raw_token)
     except EmailDeliveryError:
-        # Do not leave a usable token behind when we know the mail handoff failed.
+        # Do not leave a usable token behind when we know the mail handoff
+        # failed. Older links are still intact at this point, so a transient
+        # mail outage never strands the user with zero working links.
         db.delete(reset_token)
         db.commit()
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
             detail={"error": "Password reset is temporarily unavailable. Please try again later."},
         ) from None
+
+    # The delivered link supersedes all older, unused links for this user.
+    db.query(PasswordResetToken).filter(
+        PasswordResetToken.user_id == user.id,
+        PasswordResetToken.used_at.is_(None),
+        PasswordResetToken.id != reset_token.id,
+    ).delete(synchronize_session=False)
+    db.commit()
 
     return PASSWORD_RESET_ACCEPTED
 
@@ -371,16 +383,15 @@ def delete_account(
     user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ) -> dict[str, bool]:
-    if not user.password_hash:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail={"error": "This account uses Google sign-in and does not have a password."},
-        )
-    if not verify_password(body.password, user.password_hash):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail={"error": "Password is incorrect."},
-        )
+    if user.password_hash:
+        if not body.password or not verify_password(body.password, user.password_hash):
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail={"error": "Password is incorrect."},
+            )
+    # Google-only accounts have no password to confirm with; the authenticated
+    # session is the authorization. Without this branch they could never delete
+    # their account or its data.
     db.delete(user)
     db.commit()
     request.session.clear()

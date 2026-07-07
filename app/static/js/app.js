@@ -854,12 +854,11 @@ async function handleChangePassword(event) {
 
 async function handleDeleteAccount() {
   hideSettingsMessages();
-  if (currentUser?.has_password === false) {
-    showSettingsError("Google-only accounts do not have a password for this confirmation step.");
-    return;
-  }
-  const password = document.getElementById("current-password").value;
-  if (!password) {
+  // Password accounts confirm with their password; Google-only accounts have
+  // none, so their logged-in session plus the confirm dialog authorizes.
+  const hasPassword = currentUser?.has_password !== false;
+  const password = hasPassword ? document.getElementById("current-password").value : null;
+  if (hasPassword && !password) {
     showSettingsError("Enter your current password above to confirm deletion.");
     return;
   }
@@ -874,7 +873,7 @@ async function handleDeleteAccount() {
     const response = await fetch("/auth/delete-account", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ password }),
+      body: JSON.stringify(hasPassword ? { password } : {}),
     });
     const data = await response.json().catch(() => ({}));
     if (!response.ok) {
@@ -2333,9 +2332,12 @@ async function toggleSaved(scholarshipId, button) {
     applySavedButtonState(button, savedIds.has(scholarshipId));
     updateSavedCount();
     if (!savedSection.hidden) {
-      const refreshed = await fetch("/account/saved").then((r) => r.json());
-      syncSavedState(refreshed);
-      renderSaved(refreshed.saved, refreshed.programs || []);
+      const refreshResponse = await fetch("/account/saved");
+      if (refreshResponse.ok) {
+        const refreshed = await refreshResponse.json();
+        syncSavedState(refreshed);
+        renderSaved(refreshed.saved, refreshed.programs || []);
+      }
     }
   } catch (err) {
     console.error(err);
@@ -2371,9 +2373,12 @@ async function toggleSavedProgram(programId, button) {
     applySavedButtonState(button, savedProgramIds.has(programId));
     updateSavedCount();
     if (!savedSection.hidden) {
-      const refreshed = await fetch("/account/saved").then((r) => r.json());
-      syncSavedState(refreshed);
-      renderSaved(refreshed.saved, refreshed.programs || []);
+      const refreshResponse = await fetch("/account/saved");
+      if (refreshResponse.ok) {
+        const refreshed = await refreshResponse.json();
+        syncSavedState(refreshed);
+        renderSaved(refreshed.saved, refreshed.programs || []);
+      }
     }
   } catch (err) {
     console.error(err);
