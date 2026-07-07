@@ -1,4 +1,4 @@
-﻿import pytest
+import pytest
 from fastapi.testclient import TestClient
 
 from app.main import app
@@ -83,4 +83,4 @@ class TestProductionHygiene:
         assert 'id="google-login-link"' in response.text
         assert 'href="/auth/google/login"' in response.text
         assert "/static/css/style.css?v=20260706-2" in response.text
-        assert "/static/js/app.js?v=20260706-4" in response.text
+        assert "/static/js/app.js?v=20260707-1" in response.text

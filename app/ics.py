@@ -8,6 +8,7 @@ from __future__ import annotations
 
 from datetime import date, datetime, timedelta, timezone
 
+from app.models.competition import Competition
 from app.models.program import SummerProgram
 from app.models.scholarship import Scholarship
 
@@ -85,6 +86,7 @@ def _event_lines(
 def build_calendar(
     scholarships: list[Scholarship],
     programs: list[SummerProgram] | None = None,
+    competitions: list[Competition] | None = None,
 ) -> str:
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     lines = [
@@ -116,6 +118,18 @@ def build_calendar(
                 f"Summer program. Host: {program.host}. "
                 f"Cost: {program.cost}. Location: {program.location}. "
                 f"{program.url}"
+            ),
+            stamp=stamp,
+        )
+    for competition in competitions or []:
+        lines += _event_lines(
+            uid=f"competition-{competition.id}",
+            name=competition.name,
+            deadline=competition.deadline,
+            description=(
+                f"Competition. Host: {competition.host}. "
+                f"Recognition: {competition.recognition}. "
+                f"{competition.url}"
             ),
             stamp=stamp,
         )

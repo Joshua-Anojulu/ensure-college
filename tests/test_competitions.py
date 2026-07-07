@@ -155,3 +155,70 @@ def test_api_competitions_endpoints():
         assert {"competition_id", "score", "match_tier", "match_reasons"} <= first.keys()
         scores = [r["score"] for r in body]
         assert scores == sorted(scores, reverse=True)
+
+
+def test_save_list_update_and_remove_competition():
+    from fastapi.testclient import TestClient
+
+    from app.main import app
+
+    with TestClient(app) as client:
+        signup = client.post(
+            "/auth/signup",
+            json={"email": "comp-saver@example.com", "password": "password123"},
+        )
+        assert signup.status_code == 201
+
+        competition_id = client.get("/competitions").json()[0]["id"]
+
+        saved = client.post(f"/account/saved/competitions/{competition_id}")
+        assert saved.status_code == 201
+        assert saved.json()["competition_id"] == competition_id
+        assert saved.json()["competition"]["id"] == competition_id
+
+        # Idempotent double-save.
+        again = client.post(f"/account/saved/competitions/{competition_id}")
+        assert again.status_code == 201
+
+        listing = client.get("/account/saved").json()
+        assert [c["competition_id"] for c in listing["competitions"]] == [competition_id]
+
+        updated = client.patch(
+            f"/account/saved/competitions/{competition_id}",
+            json={"status": "drafting", "notes": "register early"},
+        )
+        assert updated.status_code == 200
+        assert updated.json()["status"] == "drafting"
+        assert updated.json()["notes"] == "register early"
+
+        unknown = client.post("/account/saved/competitions/not-a-real-competition")
+        assert unknown.status_code == 404
+
+        removed = client.delete(f"/account/saved/competitions/{competition_id}")
+        assert removed.status_code == 200
+        assert client.get("/account/saved").json()["competitions"] == []
+
+
+def test_saved_competition_deadline_appears_in_calendar_export():
+    from fastapi.testclient import TestClient
+
+    from app.main import app
+
+    with TestClient(app) as client:
+        signup = client.post(
+            "/auth/signup",
+            json={"email": "comp-calendar@example.com", "password": "password123"},
+        )
+        assert signup.status_code == 201
+
+        competitions = client.get("/competitions").json()
+        dated = next(
+            c for c in competitions
+            if c["deadline"] not in ("rolling",) and not c["deadline"].startswith("VERIFY")
+        )
+        client.post(f"/account/saved/competitions/{dated['id']}")
+
+        calendar = client.get("/account/saved/calendar.ics")
+        assert calendar.status_code == 200
+        unfolded = calendar.text.replace("\r\n ", "")
+        assert f"UID:competition-{dated['id']}@ensurecollege" in unfolded

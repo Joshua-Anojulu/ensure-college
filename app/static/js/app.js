@@ -30,6 +30,7 @@ let searchInDescriptions = false;
 let currentUser = null;
 const savedIds = new Set();
 const savedProgramIds = new Set();
+const savedCompetitionIds = new Set();
 let authMode = "login";
 let passwordResetToken = null;
 
@@ -283,7 +284,9 @@ function updateOpportunityTabCounts() {
     catalogTabCount.textContent = loadedCount === null ? "All" : String(loadedCount);
   }
   if (savedTabCount) {
-    savedTabCount.textContent = String(savedIds.size + savedProgramIds.size);
+    savedTabCount.textContent = String(
+      savedIds.size + savedProgramIds.size + savedCompetitionIds.size
+    );
   }
 }
 
@@ -331,7 +334,7 @@ async function activateOpportunityView(view, options = {}) {
       savedSection.hidden = false;
       savedContainer.innerHTML = "";
       savedEmpty.hidden = false;
-      savedSummary.textContent = "Log in to save scholarships and summer programs to your application plan.";
+      savedSummary.textContent = "Log in to save scholarships, summer programs, and competitions to your application plan.";
     }
   }
 
@@ -1372,11 +1375,15 @@ async function saveProfileSilently(profile) {
 function syncSavedState(data) {
   savedIds.clear();
   savedProgramIds.clear();
+  savedCompetitionIds.clear();
   for (const item of data.saved || []) {
     savedIds.add(item.scholarship_id);
   }
   for (const item of data.programs || []) {
     savedProgramIds.add(item.program_id);
+  }
+  for (const item of data.competitions || []) {
+    savedCompetitionIds.add(item.competition_id);
   }
   updateSavedCount();
 }
@@ -1393,7 +1400,7 @@ async function loadSaved() {
     const data = await response.json();
     syncSavedState(data);
     if (!savedSection.hidden) {
-      renderSaved(data.saved, data.programs || []);
+      renderSaved(data.saved, data.programs || [], data.competitions || []);
     }
   } catch (err) {
     console.error(err);
@@ -1401,7 +1408,7 @@ async function loadSaved() {
 }
 
 function updateSavedCount() {
-  const count = savedIds.size + savedProgramIds.size;
+  const count = savedIds.size + savedProgramIds.size + savedCompetitionIds.size;
   savedCountEl.textContent = String(count);
   savedCountEl.hidden = count === 0;
   updateOpportunityTabCounts();
@@ -1423,7 +1430,7 @@ async function showSavedView(options = {}) {
     }
     const data = await response.json();
     syncSavedState(data);
-    renderSaved(data.saved, data.programs || []);
+    renderSaved(data.saved, data.programs || [], data.competitions || []);
   } catch (err) {
     savedSummary.textContent = "Saved items could not be loaded.";
     console.error(err);
@@ -1458,6 +1465,7 @@ function trackerSummary(items) {
       sum +
       (item.scholarship?.application_requirements?.length ||
         item.program?.application_requirements?.length ||
+        item.competition?.application_requirements?.length ||
         0),
     0
   );
@@ -1482,8 +1490,12 @@ function refreshTrackerSummary() {
   }
 }
 
-function renderSaved(scholarshipItems, programItems = []) {
-  const items = [...(scholarshipItems || []), ...(programItems || [])];
+function renderSaved(scholarshipItems, programItems = [], competitionItems = []) {
+  const items = [
+    ...(scholarshipItems || []),
+    ...(programItems || []),
+    ...(competitionItems || []),
+  ];
   trackerItems = items;
   savedContainer.innerHTML = "";
   if (items.length === 0) {
@@ -1521,13 +1533,27 @@ function renderSaved(scholarshipItems, programItems = []) {
     (cardBody || card).appendChild(buildTrackerControls(item, card, "program"));
     savedContainer.appendChild(card);
   }
+
+  for (const item of competitionItems || []) {
+    if (!item.competition) {
+      continue;
+    }
+    const card = buildCompetitionCard(item.competition, { savedContext: true });
+    card.classList.add(`status-${item.status || "interested"}`);
+    const cardBody = card.querySelector(".card-body");
+    (cardBody || card).appendChild(buildTrackerControls(item, card, "competition"));
+    savedContainer.appendChild(card);
+  }
 }
 
 function savedOpportunity(item) {
-  return item.scholarship || item.program || null;
+  return item.scholarship || item.program || item.competition || null;
 }
 
 function savedOpportunityKind(item) {
+  if (item.competition) {
+    return "Competition";
+  }
   return item.program ? "Program" : "Scholarship";
 }
 
@@ -2179,8 +2205,18 @@ function buildTrackerControls(item, card, kind = "scholarship") {
   const wrap = document.createElement("div");
   wrap.className = "tracker-controls";
 
-  const itemId = kind === "program" ? item.program_id : item.scholarship_id;
-  const patcher = kind === "program" ? patchSavedProgram : patchSaved;
+  const itemId =
+    kind === "program"
+      ? item.program_id
+      : kind === "competition"
+      ? item.competition_id
+      : item.scholarship_id;
+  const patcher =
+    kind === "program"
+      ? patchSavedProgram
+      : kind === "competition"
+      ? patchSavedCompetition
+      : patchSaved;
 
   const checklist = buildApplicationChecklist(item, kind);
   if (checklist) {
@@ -2244,13 +2280,25 @@ function buildApplicationChecklist(item, kind = "scholarship") {
   const requirements =
     kind === "program"
       ? item.program?.application_requirements || []
+      : kind === "competition"
+      ? item.competition?.application_requirements || []
       : item.scholarship?.application_requirements || [];
   if (!requirements.length) {
     return null;
   }
 
-  const itemId = kind === "program" ? item.program_id : item.scholarship_id;
-  const patcher = kind === "program" ? patchSavedProgram : patchSaved;
+  const itemId =
+    kind === "program"
+      ? item.program_id
+      : kind === "competition"
+      ? item.competition_id
+      : item.scholarship_id;
+  const patcher =
+    kind === "program"
+      ? patchSavedProgram
+      : kind === "competition"
+      ? patchSavedCompetition
+      : patchSaved;
 
   const field = document.createElement("div");
   field.className = "tracker-field tracker-checklist";
@@ -2377,6 +2425,60 @@ async function patchSavedProgram(programId, payload) {
   }
 }
 
+async function patchSavedCompetition(competitionId, payload) {
+  try {
+    const response = await fetch(
+      `/account/saved/competitions/${encodeURIComponent(competitionId)}`,
+      {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      }
+    );
+    return response.ok;
+  } catch (err) {
+    console.error(err);
+    return false;
+  }
+}
+
+async function toggleSavedCompetition(competitionId, button) {
+  if (!currentUser) {
+    openAuthModal("login", "Log in to save competitions to your account.");
+    return;
+  }
+
+  const isSaved = savedCompetitionIds.has(competitionId);
+  button.disabled = true;
+  try {
+    const response = await fetch(
+      `/account/saved/competitions/${encodeURIComponent(competitionId)}`,
+      { method: isSaved ? "DELETE" : "POST" }
+    );
+    if (response.ok) {
+      if (isSaved) {
+        savedCompetitionIds.delete(competitionId);
+      } else {
+        savedCompetitionIds.add(competitionId);
+      }
+    }
+    applySavedButtonState(button, savedCompetitionIds.has(competitionId));
+    updateSavedCount();
+    if (!savedSection.hidden) {
+      const refreshResponse = await fetch("/account/saved");
+      if (refreshResponse.ok) {
+        const refreshed = await refreshResponse.json();
+        syncSavedState(refreshed);
+        renderSaved(refreshed.saved, refreshed.programs || [], refreshed.competitions || []);
+      }
+    }
+  } catch (err) {
+    console.error(err);
+  } finally {
+    button.disabled = false;
+  }
+}
+
 async function toggleSaved(scholarshipId, button) {
   if (!currentUser) {
     openAuthModal("login", "Log in to save scholarships to your account.");
@@ -2408,7 +2510,7 @@ async function toggleSaved(scholarshipId, button) {
       if (refreshResponse.ok) {
         const refreshed = await refreshResponse.json();
         syncSavedState(refreshed);
-        renderSaved(refreshed.saved, refreshed.programs || []);
+        renderSaved(refreshed.saved, refreshed.programs || [], refreshed.competitions || []);
       }
     }
   } catch (err) {
@@ -2449,7 +2551,7 @@ async function toggleSavedProgram(programId, button) {
       if (refreshResponse.ok) {
         const refreshed = await refreshResponse.json();
         syncSavedState(refreshed);
-        renderSaved(refreshed.saved, refreshed.programs || []);
+        renderSaved(refreshed.saved, refreshed.programs || [], refreshed.competitions || []);
       }
     }
   } catch (err) {
@@ -3323,12 +3425,15 @@ function buildCompetitionStatRow(competition) {
 }
 
 function buildCompetitionCard(competition, options = {}) {
+  const competitionId = competition.competition_id || competition.id;
   const specialRequirements =
     competition.special_requirements || competition.eligibility?.special_requirements || [];
   const requiresSpecialCheck =
     Boolean(competition.requires_special_check) || specialRequirements.length > 0;
   const tierClass = options.catalogContext
     ? "catalog"
+    : options.savedContext
+    ? "saved"
     : requiresSpecialCheck
     ? "special"
     : competition.match_tier === "possible"
@@ -3427,6 +3532,18 @@ function buildCompetitionCard(competition, options = {}) {
   link.rel = "noopener noreferrer";
   link.textContent = requiresSpecialCheck ? "Check competition page" : "View competition";
   footer.appendChild(link);
+
+  if (competitionId) {
+    const actions = document.createElement("div");
+    actions.className = "card-actions";
+    const saveBtn = document.createElement("button");
+    saveBtn.type = "button";
+    saveBtn.className = "btn-save";
+    applySavedButtonState(saveBtn, savedCompetitionIds.has(competitionId));
+    saveBtn.addEventListener("click", () => toggleSavedCompetition(competitionId, saveBtn));
+    actions.appendChild(saveBtn);
+    footer.appendChild(actions);
+  }
   body.appendChild(footer);
 
   article.appendChild(pathBar);

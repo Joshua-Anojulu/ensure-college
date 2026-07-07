@@ -7,6 +7,7 @@ from typing import Literal, Optional
 
 from pydantic import BaseModel, EmailStr, Field, field_validator
 
+from app.models.competition import Competition
 from app.models.program import SummerProgram
 from app.models.scholarship import Scholarship
 from app.models.student import StudentProfile
@@ -89,6 +90,18 @@ class SavedProgramItem(BaseModel):
     )
 
 
+class SavedCompetitionItem(BaseModel):
+    competition_id: str
+    saved_at: datetime
+    status: SavedStatus = "interested"
+    notes: str = ""
+    completed_requirement_ids: list[str] = Field(default_factory=list)
+    competition: Competition | None = Field(
+        default=None,
+        description="Full competition record, or null if it left the dataset.",
+    )
+
+
 class SavedUpdateRequest(BaseModel):
     """Patch the tracker fields on a saved scholarship. Omitted fields are unchanged."""
 
@@ -118,3 +131,4 @@ class SavedUpdateRequest(BaseModel):
 class SavedListResponse(BaseModel):
     saved: list[SavedScholarshipItem]
     programs: list[SavedProgramItem] = Field(default_factory=list)
+    competitions: list[SavedCompetitionItem] = Field(default_factory=list)
