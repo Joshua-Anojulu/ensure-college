@@ -400,6 +400,10 @@
           <span>Summer programs</span>
           <strong id="programs-tab-count">0</strong>
         </button>
+        <button type="button" id="tab-competitions" class="opportunity-tab" data-view="competitions" role="tab" aria-selected="false" aria-controls="competitions-section">
+          <span>Competitions</span>
+          <strong id="competitions-tab-count">0</strong>
+        </button>
         <button type="button" id="tab-catalog" class="opportunity-tab" data-view="catalog" role="tab" aria-selected="false" aria-controls="catalog-section">
           <span>Browse all</span>
           <strong id="catalog-tab-count">All</strong>
@@ -529,6 +533,32 @@
       <div id="programs-container"></div>
     </section>
 
+    <section id="competitions-section" class="results-section" hidden role="tabpanel" aria-labelledby="tab-competitions">
+      <div class="results-header">
+        <p class="eyebrow">Competition lane</p>
+        <h2>Competitions</h2>
+        <p id="competitions-summary" class="results-summary"></p>
+      </div>
+
+      <div id="competitions-search-panel" class="results-filters lane-search" hidden>
+        <div class="filter-group filter-group-search">
+          <label for="competition-search">Search matched competitions</label>
+          <input id="competition-search" type="search" placeholder="Name, host, or category..." autocomplete="off" />
+        </div>
+        <label class="filter-check">
+          <input type="checkbox" class="search-descriptions-toggle" />
+          <span>Search descriptions</span>
+        </label>
+      </div>
+
+      <div id="competitions-empty" class="results-empty panel" hidden>
+        <h3>No competitions matched this profile</h3>
+        <p>This is a small, curated set of national competitions. Adding more fields of study to your profile can surface more of them.</p>
+      </div>
+
+      <div id="competitions-container"></div>
+    </section>
+
     <section id="catalog-section" class="results-section" hidden role="tabpanel" aria-labelledby="tab-catalog">
       <div class="results-header">
         <p class="eyebrow">Full catalog</p>
@@ -538,7 +568,7 @@
 
       <div id="catalog-search-panel" class="results-filters catalog-search">
         <div class="filter-group filter-group-search">
-          <label for="catalog-search">Search all scholarships and summer programs</label>
+          <label for="catalog-search">Search all scholarships, summer programs, and competitions</label>
           <input id="catalog-search" type="search" placeholder="Name, sponsor, host, or subject..." autocomplete="off" />
         </div>
         <label class="filter-check">
@@ -611,6 +641,6 @@
     </div>
   </div>
 
-  <script src="/static/js/app.js?v=20260706-3"></script>
+  <script src="/static/js/app.js?v=20260706-4"></script>
 </body>
 </html>
