@@ -660,3 +660,73 @@ class TestDataLoader:
         scholarships = load_scholarships()
         assert len(scholarships) >= 15
         assert all(scholarship.id for scholarship in scholarships)
+
+
+class TestPreviewMatching:
+    """The three-question preview: residency gates flagged, never applied."""
+
+    def _preview_payload(self, **overrides):
+        payload = {
+            "gpa": 3.7,
+            "grade_level": "high_school_junior",
+            "intended_majors": ["science"],
+        }
+        payload.update(overrides)
+        return payload
+
+    def test_preview_endpoint_returns_top_three_and_total(self):
+        from fastapi.testclient import TestClient
+
+        from app.main import app
+
+        with TestClient(app) as client:
+            response = client.post("/match/preview", json=self._preview_payload())
+            assert response.status_code == 200
+            body = response.json()
+            assert body["total_matches"] >= len(body["results"])
+            assert 1 <= len(body["results"]) <= 3
+            scores = [r["score"] for r in body["results"]]
+            assert scores == sorted(scores, reverse=True)
+
+    def test_preview_does_not_gate_on_citizenship_or_state(self):
+        from fastapi.testclient import TestClient
+
+        from app.main import app
+
+        with TestClient(app) as client:
+            preview = client.post("/match/preview", json=self._preview_payload()).json()
+            # An international student in a random state sees fewer or equal
+            # full matches; preview must be the superset (no residency gates).
+            full = client.post(
+                "/match",
+                json={
+                    **self._preview_payload(),
+                    "citizenship": "international",
+                    "state": "WY",
+                },
+            ).json()
+            assert preview["total_matches"] >= len(full)
+
+    def test_preview_flags_residency_requirements_in_reasons(self):
+        from fastapi.testclient import TestClient
+
+        from app.main import app
+
+        with TestClient(app) as client:
+            body = client.post("/match/preview", json=self._preview_payload()).json()
+            all_reasons = [r for item in body["results"] for r in item["match_reasons"]]
+            # No preview result may claim a met citizenship/state requirement.
+            assert not any(reason.startswith("Meets citizenship") for reason in all_reasons)
+            assert not any(reason.startswith("State matches") for reason in all_reasons)
+
+    def test_preview_validates_vocabulary(self):
+        from fastapi.testclient import TestClient
+
+        from app.main import app
+
+        with TestClient(app) as client:
+            bad = client.post(
+                "/match/preview",
+                json=self._preview_payload(grade_level="third_grade"),
+            )
+            assert bad.status_code == 422

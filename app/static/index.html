@@ -25,7 +25,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Hanken+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/static/css/style.css?v=20260707-2">
+  <link rel="stylesheet" href="/static/css/style.css?v=20260707-3">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -213,6 +213,42 @@
       </div>
       <div class="hero-photo photo" aria-hidden="true">
         <img src="/static/img/students-walking.jpg" alt="" loading="lazy" decoding="async" width="600" height="800">
+      </div>
+    </section>
+
+    <section class="preview-panel panel reveal-on-scroll" data-reveal-delay="45ms" aria-labelledby="preview-title">
+      <div class="preview-intro">
+        <p class="eyebrow">60-second preview</p>
+        <h2 id="preview-title">See three real matches first.</h2>
+        <p>Three questions, no account. Your full profile then applies citizenship and state checks and unlocks every match.</p>
+      </div>
+      <form id="preview-form" class="preview-form" novalidate>
+        <div class="field">
+          <label for="preview-gpa">GPA</label>
+          <input type="number" id="preview-gpa" min="0" max="4" step="0.1" inputmode="decimal" placeholder="e.g. 3.8" required>
+        </div>
+        <div class="field">
+          <label for="preview-grade">Grade level</label>
+          <select id="preview-grade" required>
+            <option value="">Select grade level</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="preview-field">Main academic interest</label>
+          <select id="preview-field" required>
+            <option value="">Select a field</option>
+          </select>
+        </div>
+        <button type="submit" class="btn-primary" id="preview-submit">Show my 3 matches</button>
+      </form>
+      <div id="preview-error" class="form-error" role="alert" hidden></div>
+      <div id="preview-results" hidden>
+        <div id="preview-cards" class="preview-cards"></div>
+        <div class="preview-cta">
+          <p id="preview-total" class="preview-total"></p>
+          <button type="button" class="btn-primary" id="preview-complete-btn">Finish my full profile <span aria-hidden="true">↓</span></button>
+          <p class="preview-note">The full profile applies citizenship and state checks and adds summer programs and competitions.</p>
+        </div>
       </div>
     </section>
 
@@ -656,6 +692,6 @@
     </div>
   </div>
 
-  <script src="/static/js/app.js?v=20260707-2"></script>
+  <script src="/static/js/app.js?v=20260707-3"></script>
 </body>
 </html>

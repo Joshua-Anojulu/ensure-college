@@ -34,11 +34,11 @@ from app.models.essay import (
     ProgramAdviceRequest,
     ProgramAdviceResponse,
 )
-from app.models.match import MatchResult
+from app.models.match import MatchResult, PreviewMatchResponse
 from app.models.program import ProgramMatchResult, SummerProgram
 from app.models.resume import ResumeExtractionResponse
 from app.models.scholarship import Scholarship
-from app.models.student import StudentProfile
+from app.models.student import PreviewMatchRequest, StudentProfile
 from app.rate_limit import rate_limiter
 from app.resume.extractor import extract_profile_from_resume
 from app.vocabulary import VocabularyOption, get_vocabulary
@@ -290,6 +290,26 @@ def get_scholarships(request: Request) -> list[Scholarship]:
 def match_student(request: Request, student: StudentProfile) -> list[MatchResult]:
     scholarships: list[Scholarship] = request.app.state.scholarships
     return match_scholarships(student, scholarships)
+
+
+@app.post("/match/preview")
+def match_preview(request: Request, body: PreviewMatchRequest) -> PreviewMatchResponse:
+    """Three-question teaser: real matcher, residency gates flagged instead of applied.
+
+    The placeholder citizenship/state below are never consulted — the matcher
+    skips those gates in preview mode — they only satisfy StudentProfile's
+    required-field validation.
+    """
+    student = StudentProfile(
+        gpa=body.gpa,
+        grade_level=body.grade_level,
+        intended_majors=body.intended_majors,
+        citizenship="us_citizen",
+        state="TX",
+    )
+    scholarships: list[Scholarship] = request.app.state.scholarships
+    results = match_scholarships(student, scholarships, skip_residency_gates=True)
+    return PreviewMatchResponse(total_matches=len(results), results=results[:3])
 
 
 @app.get("/programs")

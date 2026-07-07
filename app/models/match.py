@@ -56,3 +56,12 @@ class MatchResult(BaseModel):
         description="True when niche eligibility requirements need manual confirmation.",
     )
     special_requirements: list[SpecialRequirement] = Field(default_factory=list)
+
+
+class PreviewMatchResponse(BaseModel):
+    """Teaser for the three-question preview: top matches plus the full count."""
+
+    total_matches: int
+    results: list[MatchResult] = Field(
+        description="Top-scored matches (at most 3), with residency gates flagged, not applied.",
+    )

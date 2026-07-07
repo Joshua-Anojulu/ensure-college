@@ -130,6 +130,8 @@ def _evaluate_scholarship(
     student: StudentProfile,
     scholarship: Scholarship,
     today: date,
+    *,
+    skip_residency_gates: bool = False,
 ) -> MatchResult | None:
     reasons: list[str] = []
     breakdown = ScoreBreakdown()
@@ -167,29 +169,37 @@ def _evaluate_scholarship(
     else:
         reasons.append("Deadline not yet verified")
 
-    citizenship_result = _citizenship_satisfies(
-        student.citizenship,
-        scholarship.eligibility.citizenship_requirement,
-    )
-    if citizenship_result is False:
-        return None
-    if citizenship_result is True:
-        if scholarship.eligibility.citizenship_requirement == "any":
-            reasons.append("No citizenship restriction verified")
+    if skip_residency_gates:
+        # Preview mode: the student hasn't been asked citizenship or state yet,
+        # so those gates cannot be applied honestly. Flag them instead.
+        if scholarship.eligibility.citizenship_requirement not in ("any", "VERIFY"):
+            reasons.append("Citizenship requirement to confirm with your full profile")
+        if isinstance(scholarship.eligibility.states, list):
+            reasons.append("State eligibility to confirm with your full profile")
+    else:
+        citizenship_result = _citizenship_satisfies(
+            student.citizenship,
+            scholarship.eligibility.citizenship_requirement,
+        )
+        if citizenship_result is False:
+            return None
+        if citizenship_result is True:
+            if scholarship.eligibility.citizenship_requirement == "any":
+                reasons.append("No citizenship restriction verified")
+            else:
+                reasons.append("Meets citizenship requirement")
         else:
-            reasons.append("Meets citizenship requirement")
-    else:
-        reasons.append("Citizenship requirement not yet verified")
+            reasons.append("Citizenship requirement not yet verified")
 
-    states = scholarship.eligibility.states
-    if not _state_matches(student.state, states):
-        return None
-    if states == "any":
-        reasons.append("Eligible in all states")
-    elif states == "VERIFY":
-        reasons.append("State eligibility not yet verified (treated as all states)")
-    else:
-        reasons.append(f"State matches ({student.state})")
+        states = scholarship.eligibility.states
+        if not _state_matches(student.state, states):
+            return None
+        if states == "any":
+            reasons.append("Eligible in all states")
+        elif states == "VERIFY":
+            reasons.append("State eligibility not yet verified (treated as all states)")
+        else:
+            reasons.append(f"State matches ({student.state})")
 
     required_fields = scholarship.eligibility.fields_of_study
     matched_fields = _matching_fields(student.intended_majors, required_fields)
@@ -310,12 +320,15 @@ def match_scholarships(
     scholarships: list[Scholarship],
     *,
     today: date | None = None,
+    skip_residency_gates: bool = False,
 ) -> list[MatchResult]:
     """Return scholarships ranked by transparent additive score (highest first)."""
     reference_date = today or date.today()
     results: list[MatchResult] = []
     for scholarship in scholarships:
-        match = _evaluate_scholarship(student, scholarship, reference_date)
+        match = _evaluate_scholarship(
+            student, scholarship, reference_date, skip_residency_gates=skip_residency_gates
+        )
         if match is not None:
             results.append(match)
     results.sort(key=lambda result: _sort_key(result, reference_date))

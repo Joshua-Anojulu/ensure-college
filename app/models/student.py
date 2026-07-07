@@ -11,6 +11,24 @@ from app.vocabulary import (
 )
 
 
+def _check_grade_level(value: str) -> str:
+    if value not in GRADE_LEVEL_VALUES:
+        raise ValueError(
+            f"Unknown grade_level '{value}'. Allowed values: {sorted(GRADE_LEVEL_VALUES)}"
+        )
+    return value
+
+
+def _check_intended_majors(values: list[str]) -> list[str]:
+    unknown = [field for field in values if field not in FIELD_OF_STUDY_VALUES]
+    if unknown:
+        raise ValueError(
+            f"Unknown intended_majors: {unknown}. "
+            f"Allowed values: {sorted(FIELD_OF_STUDY_VALUES)}"
+        )
+    return values
+
+
 class StudentProfile(BaseModel):
     """Student input collected from the profile form."""
 
@@ -37,23 +55,10 @@ class StudentProfile(BaseModel):
         description="Extracurriculars, leadership roles, athletics, etc.",
     )
 
-    @field_validator("target_schools", "activities")
-    @classmethod
-    def cap_free_text_items(cls, values: list[str] | None) -> list[str] | None:
-        """Free-text entries are stored per account and scanned by the matcher,
-        so each one is trimmed to a sane length instead of rejecting the form."""
-        if values is None:
-            return None
-        return [value.strip()[:200] for value in values if value.strip()]
-
     @field_validator("grade_level")
     @classmethod
     def validate_grade_level(cls, value: str) -> str:
-        if value not in GRADE_LEVEL_VALUES:
-            raise ValueError(
-                f"Unknown grade_level '{value}'. Allowed values: {sorted(GRADE_LEVEL_VALUES)}"
-            )
-        return value
+        return _check_grade_level(value)
 
     @field_validator("citizenship")
     @classmethod
@@ -88,10 +93,35 @@ class StudentProfile(BaseModel):
     @field_validator("intended_majors")
     @classmethod
     def validate_intended_majors(cls, values: list[str]) -> list[str]:
-        unknown = [field for field in values if field not in FIELD_OF_STUDY_VALUES]
-        if unknown:
-            raise ValueError(
-                f"Unknown intended_majors: {unknown}. "
-                f"Allowed values: {sorted(FIELD_OF_STUDY_VALUES)}"
-            )
-        return values
+        return _check_intended_majors(values)
+
+    @field_validator("target_schools", "activities")
+    @classmethod
+    def cap_free_text_items(cls, values: list[str] | None) -> list[str] | None:
+        """Free-text entries are stored per account and scanned by the matcher,
+        so each one is trimmed to a sane length instead of rejecting the form."""
+        if values is None:
+            return None
+        return [value.strip()[:200] for value in values if value.strip()]
+
+
+class PreviewMatchRequest(BaseModel):
+    """The three-question quick preview: enough for an honest teaser match.
+
+    Citizenship and state are deliberately absent — the preview matcher skips
+    those gates and flags them as to-confirm instead of assuming values.
+    """
+
+    gpa: float = Field(ge=0.0, le=4.0)
+    grade_level: str
+    intended_majors: list[str] = Field(min_length=1, max_length=5)
+
+    @field_validator("grade_level")
+    @classmethod
+    def validate_grade_level(cls, value: str) -> str:
+        return _check_grade_level(value)
+
+    @field_validator("intended_majors")
+    @classmethod
+    def validate_intended_majors(cls, values: list[str]) -> list[str]:
+        return _check_intended_majors(values)

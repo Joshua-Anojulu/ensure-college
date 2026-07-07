@@ -182,6 +182,7 @@ async function init() {
   wirePasswordReset();
   wireOpportunityTabs();
   wireCatalogKindTabs();
+  wirePreviewForm();
   wireFilterControls();
   wireSearchControls();
   wireResumeImport();
@@ -2583,6 +2584,141 @@ function applySavedButtonState(button, isSaved) {
   button.textContent = isSaved ? "Saved" : "Save";
 }
 
+/* ---------- Preview funnel (3 questions -> 3 teaser matches) ---------- */
+
+function wirePreviewForm() {
+  const form = document.getElementById("preview-form");
+  if (!form) {
+    return;
+  }
+  form.addEventListener("submit", handlePreviewSubmit);
+  document.getElementById("preview-complete-btn")?.addEventListener("click", prefillFromPreview);
+}
+
+function showPreviewError(message) {
+  const el = document.getElementById("preview-error");
+  el.textContent = message;
+  el.hidden = false;
+}
+
+async function handlePreviewSubmit(event) {
+  event.preventDefault();
+  const errorEl = document.getElementById("preview-error");
+  errorEl.hidden = true;
+
+  const gpa = parseFloat(document.getElementById("preview-gpa").value);
+  const gradeLevel = document.getElementById("preview-grade").value;
+  const field = document.getElementById("preview-field").value;
+  if (Number.isNaN(gpa) || gpa < 0 || gpa > 4) {
+    showPreviewError("Enter your GPA on a 4.0 scale.");
+    return;
+  }
+  if (!gradeLevel || !field) {
+    showPreviewError("Pick your grade level and main academic interest.");
+    return;
+  }
+
+  const submit = document.getElementById("preview-submit");
+  submit.disabled = true;
+  try {
+    const response = await fetch("/match/preview", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ gpa, grade_level: gradeLevel, intended_majors: [field] }),
+    });
+    if (!response.ok) {
+      showPreviewError("The preview did not go through. Check your entries and try again.");
+      return;
+    }
+    renderPreviewResults(await response.json());
+  } catch (err) {
+    showPreviewError("The preview did not go through. Check your connection and try again.");
+    console.error(err);
+  } finally {
+    submit.disabled = false;
+  }
+}
+
+function renderPreviewResults(data) {
+  const wrap = document.getElementById("preview-results");
+  const cards = document.getElementById("preview-cards");
+  const total = document.getElementById("preview-total");
+  cards.innerHTML = "";
+
+  if (!data.results.length) {
+    showPreviewError(
+      "No preview matches for those three answers — try another interest, or build the full profile for the complete search."
+    );
+    wrap.hidden = true;
+    return;
+  }
+
+  for (const result of data.results) {
+    cards.appendChild(buildPreviewCard(result));
+  }
+  const remaining = data.total_matches - data.results.length;
+  total.textContent =
+    remaining > 0
+      ? `${data.total_matches} scholarships match those three answers. Finish your profile to see the other ${remaining} with citizenship and state checks applied.`
+      : "Finish your profile to confirm eligibility and add summer programs and competitions.";
+  wrap.hidden = false;
+  wrap.scrollIntoView({ behavior: "smooth", block: "nearest" });
+}
+
+function buildPreviewCard(result) {
+  const card = document.createElement("article");
+  card.className = "preview-card";
+
+  const title = document.createElement("h3");
+  title.textContent = result.scholarship_name;
+  card.appendChild(title);
+
+  const sponsor = document.createElement("p");
+  sponsor.className = "preview-card-sponsor";
+  sponsor.textContent = result.sponsor;
+  card.appendChild(sponsor);
+
+  const award = document.createElement("p");
+  award.className = "preview-card-award";
+  award.textContent = formatAward(result.award_amount);
+  card.appendChild(award);
+
+  const reason = (result.match_reasons || []).find(
+    (r) => r.startsWith("Field of study overlap") || r.startsWith("Open to all fields")
+  );
+  if (reason) {
+    const why = document.createElement("p");
+    why.className = "preview-card-reason";
+    why.textContent = reason;
+    card.appendChild(why);
+  }
+  return card;
+}
+
+function prefillFromPreview() {
+  const gpa = document.getElementById("preview-gpa").value;
+  const gradeLevel = document.getElementById("preview-grade").value;
+  const field = document.getElementById("preview-field").value;
+
+  if (gpa) {
+    document.getElementById("gpa").value = gpa;
+  }
+  if (gradeLevel) {
+    const gradeSelect = document.getElementById("grade-level");
+    gradeSelect.value = gradeLevel;
+    gradeSelect.dispatchEvent(new Event("change", { bubbles: true }));
+  }
+  if (field) {
+    for (const box of document.querySelectorAll('#fields-of-study input[type="checkbox"]')) {
+      if (box.value === field && !box.checked) {
+        box.checked = true;
+        box.dispatchEvent(new Event("change", { bubbles: true }));
+      }
+    }
+  }
+  document.getElementById("profile-form").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
 /* ---------- Form population (existing) ---------- */
 
 function populateForm(vocab) {
@@ -2592,6 +2728,8 @@ function populateForm(vocab) {
   fillSelect("financial-need", vocab.financial_need_level);
   fillCheckboxes("fields-of-study", vocab.fields_of_study, "fields");
   fillCheckboxes("demographic-tags", vocab.demographic_tags, "demographics");
+  fillSelect("preview-grade", vocab.grade_level);
+  fillSelect("preview-field", vocab.fields_of_study);
   applyProfileHelp();
 }
 
