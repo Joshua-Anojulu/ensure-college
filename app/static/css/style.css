@@ -1189,7 +1189,31 @@ html.motion-ready .fit-ring-value { stroke-dashoffset: var(--circ); animation: r
 /* =========================================================================
    Modals + auth
    ========================================================================= */
+/* Native <dialog>: the browser handles the top layer, focus trap, and Escape.
+   The dialog box is stretched to fill the viewport as a flex centering shell so
+   a click outside the card (target === the dialog) still closes it; the dim is
+   painted on ::backdrop. */
 .modal-overlay {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 1.25rem;
+  border: 0;
+  background: transparent;
+  align-items: center;
+  justify-content: center;
+}
+.modal-overlay[open] { display: flex; }
+.modal-overlay::backdrop {
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(4px);
+}
+
+/* Age/consent gate: a blocking overlay (not a dismissible dialog), so it keeps
+   the classic fixed-overlay styling and is never a native <dialog>. */
+.age-gate {
   position: fixed;
   z-index: 200;
   inset: 0;
@@ -1622,17 +1646,21 @@ html { scroll-padding-top: 5.75rem; }
 @keyframes skeleton-shimmer { from { background-position: 120% 0; } to { background-position: -120% 0; } }
 
 /* Modal entry: fade + rise via @starting-style discrete-display transitions.
-   Browsers without support get instant show (exit is instant everywhere
-   because [hidden] is display:none !important). */
-.modal-overlay {
-  transition: opacity var(--dur) var(--ease), display var(--dur) allow-discrete;
+   The open dialog and its ::backdrop both animate in; browsers without support
+   get an instant show. */
+.modal-overlay[open] {
+  transition: opacity var(--dur) var(--ease), display var(--dur) allow-discrete, overlay var(--dur) allow-discrete;
 }
-.modal-overlay .modal-card {
+.modal-overlay[open] .modal-card {
   transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease-out);
 }
+.modal-overlay[open]::backdrop {
+  transition: opacity var(--dur) var(--ease), display var(--dur) allow-discrete, overlay var(--dur) allow-discrete;
+}
 @starting-style {
-  .modal-overlay { opacity: 0; }
-  .modal-overlay .modal-card { opacity: 0; transform: translateY(10px) scale(0.985); }
+  .modal-overlay[open] { opacity: 0; }
+  .modal-overlay[open] .modal-card { opacity: 0; transform: translateY(10px) scale(0.985); }
+  .modal-overlay[open]::backdrop { opacity: 0; }
 }
 
 /* Long match lists: skip rendering offscreen cards. */

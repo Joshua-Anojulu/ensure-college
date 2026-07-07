@@ -848,11 +848,8 @@ function wireSettings() {
       closeSettingsModal();
     }
   });
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && !settingsModal.hidden) {
-      closeSettingsModal();
-    }
-  });
+  // Native <dialog> handles Escape and the top layer; run cleanup on any close.
+  settingsModal.addEventListener("close", hideSettingsMessages);
   document
     .getElementById("change-password-form")
     .addEventListener("submit", handleChangePassword);
@@ -865,7 +862,9 @@ function openSettingsModal() {
   hideSettingsMessages();
   document.getElementById("change-password-form").reset();
   updateSettingsControls();
-  settingsModal.hidden = false;
+  if (!settingsModal.open) {
+    settingsModal.showModal();
+  }
   if (currentUser?.has_password === false) {
     document.getElementById("settings-close").focus();
   } else {
@@ -874,8 +873,9 @@ function openSettingsModal() {
 }
 
 function closeSettingsModal() {
-  settingsModal.hidden = true;
-  hideSettingsMessages();
+  if (settingsModal.open) {
+    settingsModal.close();
+  }
 }
 
 function hideSettingsMessages() {
@@ -1004,10 +1004,10 @@ function wireAuthControls() {
       closeAuthModal();
     }
   });
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && !authModal.hidden) {
-      closeAuthModal();
-    }
+  // Native <dialog> handles Escape and the top layer; run cleanup on any close.
+  authModal.addEventListener("close", () => {
+    authForm.reset();
+    hideAuthError();
   });
   authSwitchBtn.addEventListener("click", () => {
     openAuthModal(authMode === "login" ? "signup" : "login");
@@ -1027,11 +1027,8 @@ function wirePasswordReset() {
       closePasswordResetModal();
     }
   });
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && !passwordResetModal.hidden) {
-      closePasswordResetModal();
-    }
-  });
+  // Native <dialog> handles Escape and the top layer; run cleanup on any close.
+  passwordResetModal.addEventListener("close", onPasswordResetClosed);
   passwordResetRequestForm.addEventListener("submit", handlePasswordResetRequest);
   passwordResetConfirmForm.addEventListener("submit", handlePasswordResetConfirm);
 
@@ -1061,14 +1058,16 @@ function openAuthModal(mode, message) {
   );
 
   hideAuthError();
-  authModal.hidden = false;
+  if (!authModal.open) {
+    authModal.showModal();
+  }
   authEmail.focus();
 }
 
 function closeAuthModal() {
-  authModal.hidden = true;
-  authForm.reset();
-  hideAuthError();
+  if (authModal.open) {
+    authModal.close();
+  }
 }
 
 function openPasswordResetModal(token = null) {
@@ -1082,12 +1081,19 @@ function openPasswordResetModal(token = null) {
   passwordResetRequestForm.hidden = confirming;
   passwordResetConfirmForm.hidden = !confirming;
   hidePasswordResetMessages();
-  passwordResetModal.hidden = false;
+  if (!passwordResetModal.open) {
+    passwordResetModal.showModal();
+  }
   (confirming ? passwordResetNewPassword : passwordResetEmail).focus();
 }
 
 function closePasswordResetModal() {
-  passwordResetModal.hidden = true;
+  if (passwordResetModal.open) {
+    passwordResetModal.close();
+  }
+}
+
+function onPasswordResetClosed() {
   passwordResetRequestForm.reset();
   passwordResetConfirmForm.reset();
   passwordResetToken = null;

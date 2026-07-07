@@ -25,7 +25,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Hanken+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/static/css/style.css?v=20260707-4">
+  <link rel="stylesheet" href="/static/css/style.css?v=20260707-5">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -57,8 +57,8 @@
     </div>
   </header>
 
-  <div id="auth-modal" class="modal-overlay" hidden>
-    <div class="modal-card panel" role="dialog" aria-modal="true" aria-labelledby="auth-modal-title">
+  <dialog id="auth-modal" class="modal-overlay" aria-labelledby="auth-modal-title">
+    <div class="modal-card panel">
       <div class="modal-head">
         <h2 id="auth-modal-title">Log in</h2>
         <button type="button" class="modal-close" id="auth-modal-close" aria-label="Close">&times;</button>
@@ -99,10 +99,10 @@
         <button type="button" class="link-button" id="open-password-reset">Forgot your password?</button>
       </p>
     </div>
-  </div>
+  </dialog>
 
-  <div id="password-reset-modal" class="modal-overlay" hidden>
-    <div class="modal-card panel" role="dialog" aria-modal="true" aria-labelledby="password-reset-title">
+  <dialog id="password-reset-modal" class="modal-overlay" aria-labelledby="password-reset-title">
+    <div class="modal-card panel">
       <div class="modal-head">
         <h2 id="password-reset-title">Reset your password</h2>
         <button type="button" class="modal-close" id="password-reset-close" aria-label="Close">&times;</button>
@@ -139,10 +139,10 @@
         <button type="button" class="link-button" id="password-reset-back">Back to log in</button>
       </p>
     </div>
-  </div>
+  </dialog>
 
-  <div id="settings-modal" class="modal-overlay" hidden>
-    <div class="modal-card panel" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+  <dialog id="settings-modal" class="modal-overlay" aria-labelledby="settings-title">
+    <div class="modal-card panel">
       <div class="modal-head">
         <h2 id="settings-title">Account settings</h2>
         <button type="button" class="modal-close" id="settings-close" aria-label="Close">&times;</button>
@@ -178,7 +178,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </dialog>
 
   <main id="main" class="main">
     <section class="intro hero reveal-on-scroll" data-reveal-delay="0ms">
@@ -689,7 +689,7 @@
     </p>
   </footer>
 
-  <div id="age-gate" class="modal-overlay age-gate" hidden>
+  <div id="age-gate" class="age-gate" hidden>
     <div class="modal-card panel" role="dialog" aria-modal="true" aria-labelledby="age-gate-title">
       <h2 id="age-gate-title">Before you start</h2>
       <p>
@@ -706,6 +706,6 @@
     </div>
   </div>
 
-  <script src="/static/js/app.js?v=20260707-4"></script>
+  <script src="/static/js/app.js?v=20260707-5"></script>
 </body>
 </html>
