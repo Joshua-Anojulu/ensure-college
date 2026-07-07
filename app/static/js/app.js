@@ -183,6 +183,7 @@ async function init() {
   wireOpportunityTabs();
   wireCatalogKindTabs();
   wirePreviewForm();
+  wireFormSteps();
   wireFilterControls();
   wireSearchControls();
   wireResumeImport();
@@ -2716,7 +2717,109 @@ function prefillFromPreview() {
       }
     }
   }
+  // The preview already answered step 1, so land the student on eligibility.
+  goToFormStep(2);
   document.getElementById("profile-form").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+/* ---------- Multi-step profile form ---------- */
+
+let currentFormStep = 1;
+const FORM_STEP_COUNT = 3;
+
+function wireFormSteps() {
+  const next = document.getElementById("step-next-btn");
+  const back = document.getElementById("step-back-btn");
+  if (!next || !back) {
+    return;
+  }
+  next.addEventListener("click", () => {
+    const problems = validateFormStep(currentFormStep);
+    if (problems.length > 0) {
+      showFormStepError(problems);
+      return;
+    }
+    goToFormStep(currentFormStep + 1);
+  });
+  back.addEventListener("click", () => goToFormStep(currentFormStep - 1));
+  for (const tab of document.querySelectorAll(".form-step-tab")) {
+    tab.addEventListener("click", () => {
+      const target = Number(tab.dataset.step);
+      // Moving forward still validates each intermediate step.
+      while (currentFormStep < target) {
+        const problems = validateFormStep(currentFormStep);
+        if (problems.length > 0) {
+          showFormStepError(problems);
+          return;
+        }
+        goToFormStep(currentFormStep + 1);
+      }
+      if (target < currentFormStep) {
+        goToFormStep(target);
+      }
+    });
+  }
+}
+
+function validateFormStep(step) {
+  const problems = [];
+  if (step === 1) {
+    const gpa = parseFloat(document.getElementById("gpa").value);
+    if (Number.isNaN(gpa) || gpa < 0 || gpa > 4) {
+      problems.push("Enter your GPA on a 4.0 scale.");
+    }
+    if (!document.getElementById("grade-level").value) {
+      problems.push("Select your grade level.");
+    }
+  } else if (step === 2) {
+    if (!document.getElementById("citizenship").value) {
+      problems.push("Select your citizenship status.");
+    }
+    if (!document.getElementById("state").value) {
+      problems.push("Select your state.");
+    }
+    if (!document.getElementById("financial-need").value) {
+      problems.push("Select your financial need level.");
+    }
+  }
+  return problems;
+}
+
+function showFormStepError(problems) {
+  const el = document.getElementById("form-step-error");
+  el.replaceChildren();
+  const intro = document.createElement("strong");
+  intro.textContent = "Before continuing:";
+  el.appendChild(intro);
+  const list = document.createElement("ul");
+  for (const problem of problems) {
+    const li = document.createElement("li");
+    li.textContent = problem;
+    list.appendChild(li);
+  }
+  el.appendChild(list);
+  el.hidden = false;
+}
+
+function goToFormStep(step) {
+  currentFormStep = Math.min(Math.max(step, 1), FORM_STEP_COUNT);
+  document.getElementById("form-step-error").hidden = true;
+  for (const panel of document.querySelectorAll(".form-step")) {
+    panel.hidden = Number(panel.dataset.step) !== currentFormStep;
+  }
+  for (const tab of document.querySelectorAll(".form-step-tab")) {
+    const tabStep = Number(tab.dataset.step);
+    tab.classList.toggle("is-current", tabStep === currentFormStep);
+    tab.classList.toggle("is-done", tabStep < currentFormStep);
+    if (tabStep === currentFormStep) {
+      tab.setAttribute("aria-current", "step");
+    } else {
+      tab.removeAttribute("aria-current");
+    }
+  }
+  document.getElementById("step-back-btn").hidden = currentFormStep === 1;
+  document.getElementById("step-next-btn").hidden = currentFormStep === FORM_STEP_COUNT;
+  document.getElementById("submit-btn").hidden = currentFormStep !== FORM_STEP_COUNT;
 }
 
 /* ---------- Form population (existing) ---------- */

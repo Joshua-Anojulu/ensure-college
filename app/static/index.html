@@ -25,7 +25,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Hanken+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/static/css/style.css?v=20260707-3">
+  <link rel="stylesheet" href="/static/css/style.css?v=20260707-4">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -348,7 +348,15 @@
           </div>
         </div>
       </div>
-      <div class="form-grid">
+      <ol class="form-step-indicator" aria-label="Profile steps">
+        <li class="form-step-tab is-current" data-step="1" aria-current="step"><span>1</span> The basics</li>
+        <li class="form-step-tab" data-step="2"><span>2</span> Eligibility</li>
+        <li class="form-step-tab" data-step="3"><span>3</span> Interests</li>
+      </ol>
+
+      <div id="form-step-error" class="form-error" role="alert" hidden></div>
+
+      <div class="form-grid form-step" data-step="1">
         <div class="field">
           <label for="gpa">GPA</label>
           <input type="number" id="gpa" name="gpa" min="0" max="4" step="0.1" required
@@ -362,7 +370,9 @@
             <option value="">Select grade level</option>
           </select>
         </div>
+      </div>
 
+      <div class="form-grid form-step" data-step="2" hidden>
         <div class="field">
           <label for="citizenship">Citizenship</label>
           <select id="citizenship" name="citizenship" required>
@@ -383,7 +393,9 @@
             <option value="">Select level</option>
           </select>
         </div>
+      </div>
 
+      <div class="form-grid form-step" data-step="3" hidden>
         <div class="field field-full">
           <fieldset id="fields-of-study-group">
             <legend>Fields of study</legend>
@@ -414,7 +426,9 @@
       </div>
 
       <div class="form-actions">
-        <button type="submit" class="btn-primary" id="submit-btn">Find my opportunities <span aria-hidden="true">→</span></button>
+        <button type="button" class="btn-ghost" id="step-back-btn" hidden>&larr; Back</button>
+        <button type="button" class="btn-primary" id="step-next-btn">Next <span aria-hidden="true">→</span></button>
+        <button type="submit" class="btn-primary" id="submit-btn" hidden>Find my opportunities <span aria-hidden="true">→</span></button>
         <span class="form-action-note">We’ll explain every match.</span>
       </div>
 
@@ -692,6 +706,6 @@
     </div>
   </div>
 
-  <script src="/static/js/app.js?v=20260707-3"></script>
+  <script src="/static/js/app.js?v=20260707-4"></script>
 </body>
 </html>

@@ -1723,3 +1723,43 @@ input:user-invalid, select:user-invalid, textarea:user-invalid { border-color: v
   .preview-form .field:first-child { grid-column: auto; }
   .preview-form .btn-primary { grid-column: 1 / -1; }
 }
+
+/* Multi-step profile form: numbered step tabs + one visible step at a time. */
+.form-step-indicator {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1.1rem 0 1rem;
+  padding: 0;
+  list-style: none;
+}
+.form-step-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.9rem 0.45rem 0.5rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  color: var(--muted);
+  background: var(--surface);
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 600;
+  transition: border-color var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+}
+.form-step-tab span {
+  display: inline-grid;
+  width: 1.5rem;
+  height: 1.5rem;
+  place-content: center;
+  border-radius: var(--radius-pill);
+  background: var(--surface-2);
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+.form-step-tab.is-current { border-color: var(--brand); color: var(--brand); background: var(--brand-tint); }
+.form-step-tab.is-current span { background: var(--brand); color: var(--brand-ink); }
+.form-step-tab.is-done { color: var(--ink-soft); }
+.form-step-tab.is-done span { background: var(--accent-tint); color: var(--accent-strong); }
+.form-error ul { margin: 0.35rem 0 0; padding-left: 1.2rem; }
