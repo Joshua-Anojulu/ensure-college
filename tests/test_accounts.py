@@ -918,7 +918,9 @@ class TestReminders:
         assert client.get("/reminders/run", headers={"Authorization": "Bearer wrong"}).status_code == 404
         ok = client.get("/reminders/run", headers={"Authorization": "Bearer topsecret"})
         assert ok.status_code == 200
-        assert set(ok.json()) >= {"considered", "sent", "skipped_empty"}
+        body = ok.json()
+        assert set(body) >= {"deadline_reminders", "new_match_alerts"}
+        assert set(body["deadline_reminders"]) >= {"considered", "sent", "skipped_empty"}
 
     def test_run_endpoint_disabled_without_secret(self, client, monkeypatch):
         monkeypatch.delenv("CRON_SECRET", raising=False)

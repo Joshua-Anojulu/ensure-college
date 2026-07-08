@@ -41,6 +41,7 @@ from app.models.program import ProgramMatchResult, SummerProgram
 from app.models.resume import ResumeExtractionResponse
 from app.models.scholarship import Scholarship
 from app.models.student import PreviewMatchRequest, StudentProfile
+from app.alerts import send_new_match_alerts
 from app.rate_limit import rate_limiter
 from app.reminders import send_reminder_digests
 from app.resume.extractor import extract_profile_from_resume
@@ -529,10 +530,18 @@ def reminders_run(
     presented = (authorization or "").removeprefix("Bearer ").strip()
     if not secret or presented != secret:
         raise HTTPException(status_code=404, detail={"error": "Not found."})
-    scholarship_index = {s.id: s for s in request.app.state.scholarships}
-    program_index = {p.id: p for p in request.app.state.programs}
-    competition_index = {c.id: c for c in request.app.state.competitions}
-    return send_reminder_digests(db, scholarship_index, program_index, competition_index)
+    scholarships = request.app.state.scholarships
+    programs = request.app.state.programs
+    competitions = request.app.state.competitions
+    scholarship_index = {s.id: s for s in scholarships}
+    program_index = {p.id: p for p in programs}
+    competition_index = {c.id: c for c in competitions}
+    return {
+        "deadline_reminders": send_reminder_digests(
+            db, scholarship_index, program_index, competition_index
+        ),
+        "new_match_alerts": send_new_match_alerts(db, scholarships, programs, competitions),
+    }
 
 
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")

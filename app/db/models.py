@@ -51,6 +51,9 @@ class User(Base):
         String(64), unique=True, index=True, nullable=True, default=_reminder_token
     )
     reminder_last_sent_on: Mapped[date | None] = mapped_column(Date, nullable=True)
+    # NULL until the first alert run baselines it; then a list of "kind:id" strings
+    # the user has already been alerted about, so only new matches trigger emails.
+    alerted_opportunity_ids: Mapped[list[str] | None] = mapped_column(JSON, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_utcnow)
 
     profile: Mapped["UserProfile | None"] = relationship(
