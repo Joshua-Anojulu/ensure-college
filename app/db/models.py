@@ -2,11 +2,9 @@
 
 from __future__ import annotations
 
-import secrets
 from datetime import date, datetime, timezone
 
 from sqlalchemy import (
-    Boolean,
     Date,
     DateTime,
     ForeignKey,
@@ -14,7 +12,6 @@ from sqlalchemy import (
     String,
     Text,
     UniqueConstraint,
-    true as sa_true,
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.types import JSON
@@ -24,10 +21,6 @@ from app.db.database import Base
 
 def _utcnow() -> datetime:
     return datetime.now(timezone.utc)
-
-
-def _reminder_token() -> str:
-    return secrets.token_urlsafe(32)
 
 
 class User(Base):
@@ -44,13 +37,6 @@ class User(Base):
     auth_version: Mapped[int] = mapped_column(
         Integer, nullable=False, default=0, server_default="0"
     )
-    reminders_enabled: Mapped[bool] = mapped_column(
-        Boolean, nullable=False, default=True, server_default=sa_true()
-    )
-    reminder_unsubscribe_token: Mapped[str | None] = mapped_column(
-        String(64), unique=True, index=True, nullable=True, default=_reminder_token
-    )
-    reminder_last_sent_on: Mapped[date | None] = mapped_column(Date, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_utcnow)
 
     profile: Mapped["UserProfile | None"] = relationship(

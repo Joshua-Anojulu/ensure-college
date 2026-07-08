@@ -3,11 +3,10 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 
 from dotenv import load_dotenv
-from fastapi import Depends, FastAPI, File, Form, Header, HTTPException, Request, UploadFile
+from fastapi import Depends, FastAPI, File, Form, HTTPException, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, HTMLResponse, PlainTextResponse, Response
 from fastapi.staticfiles import StaticFiles
-from sqlalchemy.orm import Session
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.middleware.sessions import SessionMiddleware
 from starlette.requests import Request as StarletteRequest
@@ -15,8 +14,7 @@ from starlette.requests import Request as StarletteRequest
 from app.api.account_routes import router as account_router
 from app.api.auth_routes import router as auth_router
 from app.data.loader import load_competitions, load_scholarships, load_summer_programs
-from app.db.database import get_db, init_db
-from app.db.models import User
+from app.db.database import init_db
 from app.essay.advice import (
     EssayAdviceError,
     generate_essay_advice,
@@ -42,7 +40,6 @@ from app.models.resume import ResumeExtractionResponse
 from app.models.scholarship import Scholarship
 from app.models.student import PreviewMatchRequest, StudentProfile
 from app.rate_limit import rate_limiter
-from app.reminders import send_reminder_digests
 from app.resume.extractor import extract_profile_from_resume
 from app.vocabulary import VocabularyOption, get_vocabulary
 
@@ -487,52 +484,6 @@ async def resume_extract(
             status_code=exc.status_code,
             detail={"error": exc.user_message},
         ) from None
-
-
-@app.get("/reminders/unsubscribe", response_class=HTMLResponse)
-def reminders_unsubscribe(token: str, db: Session = Depends(get_db)) -> HTMLResponse:
-    """One-click unsubscribe from deadline reminder emails (no login needed)."""
-    user = None
-    if token:
-        user = db.query(User).filter(User.reminder_unsubscribe_token == token).first()
-    if user is not None and user.reminders_enabled:
-        user.reminders_enabled = False
-        db.commit()
-    # Always show the same confirmation, so the token is not a membership oracle.
-    page = (
-        "<!DOCTYPE html><html lang='en'><head><meta charset='utf-8'>"
-        "<meta name='viewport' content='width=device-width, initial-scale=1'>"
-        "<title>Reminders off</title>"
-        "<style>body{font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:#eae8e1;"
-        "color:#17181c;display:grid;place-items:center;min-height:100vh;margin:0}"
-        ".c{max-width:30rem;padding:2rem;background:#fbfaf7;border:1px solid #ddd9cd;border-radius:14px;text-align:center}"
-        "a{color:#1b2430}</style></head><body><div class='c'>"
-        "<h1>Reminders turned off</h1>"
-        "<p>You won't get deadline reminder emails anymore. You can turn them back on "
-        "anytime under Account settings.</p>"
-        "<p><a href='/'>Back to EnsureCollege</a></p></div></body></html>"
-    )
-    return HTMLResponse(page)
-
-
-@app.get("/reminders/run")
-def reminders_run(
-    request: Request,
-    authorization: str | None = Header(default=None),
-    db: Session = Depends(get_db),
-) -> dict:
-    """Send due deadline digests. Guarded by CRON_SECRET (Vercel cron sends it as
-    an Authorization: Bearer header). Disabled if CRON_SECRET is unset. GET
-    because Vercel Cron issues GET requests; the per-user re-send guard makes
-    repeated invocations safe."""
-    secret = os.getenv("CRON_SECRET", "").strip()
-    presented = (authorization or "").removeprefix("Bearer ").strip()
-    if not secret or presented != secret:
-        raise HTTPException(status_code=404, detail={"error": "Not found."})
-    scholarship_index = {s.id: s for s in request.app.state.scholarships}
-    program_index = {p.id: p for p in request.app.state.programs}
-    competition_index = {c.id: c for c in request.app.state.competitions}
-    return send_reminder_digests(db, scholarship_index, program_index, competition_index)
 
 
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")

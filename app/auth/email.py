@@ -97,25 +97,34 @@ def password_reset_url(token: str) -> str:
     return f"{app_url}/?reset_token={quote(token, safe='')}"
 
 
-def send_email(recipient: str, subject: str, text_body: str, html_body: str, *, log_tag: str) -> None:
-    """Send one transactional email through Resend. Raises EmailDeliveryError.
+def send_password_reset_email(recipient: str, token: str) -> None:
+    """Ask Resend to send a password-reset link to ``recipient``.
 
-    The provider response is intentionally not surfaced to callers; only a
-    server-side diagnostic is logged.
+    The API response is intentionally not surfaced to callers: account-recovery
+    endpoints must not reveal provider internals or whether an address exists.
     """
     api_key = os.getenv("RESEND_API_KEY", "").strip()
     sender = os.getenv("EMAIL_FROM", "").strip()
-    if not api_key or not sender:
-        missing = [k for k in ("RESEND_API_KEY", "EMAIL_FROM") if not os.getenv(k, "").strip()]
-        print(f"[{log_tag}] not configured; missing env: {missing}", file=sys.stderr, flush=True)
-        raise EmailDeliveryError("Email delivery is not configured")
+    if not api_key or not sender or not password_reset_email_is_configured():
+        missing = [
+            k for k in ("RESEND_API_KEY", "EMAIL_FROM", "PUBLIC_APP_URL")
+            if not os.getenv(k, "").strip()
+        ]
+        print(f"[reset-email] not configured; missing env: {missing}", file=sys.stderr, flush=True)
+        raise EmailDeliveryError("Password-reset email is not configured")
 
+    reset_url = password_reset_url(token)
+    escaped_url = html.escape(reset_url, quote=True)
     payload = {
         "from": sender,
         "to": [recipient],
-        "subject": subject,
-        "text": text_body,
-        "html": html_body,
+        "subject": "Reset your EnsureCollege password",
+        "text": (
+            "We received a request to reset your EnsureCollege password. "
+            f"Use this link within one hour: {reset_url}\n\n"
+            "If you did not request this, you can safely ignore this email."
+        ),
+        "html": _reset_email_html(escaped_url),
     }
     request = Request(
         RESEND_EMAILS_URL,
@@ -135,44 +144,20 @@ def send_email(recipient: str, subject: str, text_body: str, html_body: str, *, 
             if not 200 <= response.status < 300:
                 body = response.read(600).decode("utf-8", "ignore")
                 print(
-                    f"[{log_tag}] resend non-2xx {response.status} from={sender!r}: {body}",
+                    f"[reset-email] resend non-2xx {response.status} from={sender!r}: {body}",
                     file=sys.stderr, flush=True,
                 )
-                raise EmailDeliveryError("Email could not be delivered")
+                raise EmailDeliveryError("Password-reset email could not be delivered")
     except HTTPError as exc:
         detail = exc.read().decode("utf-8", "ignore")[:600]
         print(
-            f"[{log_tag}] resend HTTPError {exc.code} from={sender!r}: {detail}",
+            f"[reset-email] resend HTTPError {exc.code} from={sender!r}: {detail}",
             file=sys.stderr, flush=True,
         )
-        raise EmailDeliveryError("Email could not be delivered") from exc
+        raise EmailDeliveryError("Password-reset email could not be delivered") from exc
     except (URLError, TimeoutError, OSError) as exc:
         print(
-            f"[{log_tag}] resend transport error: {type(exc).__name__}: {exc}",
+            f"[reset-email] resend transport error: {type(exc).__name__}: {exc}",
             file=sys.stderr, flush=True,
         )
-        raise EmailDeliveryError("Email could not be delivered") from exc
-
-
-def send_password_reset_email(recipient: str, token: str) -> None:
-    """Ask Resend to send a password-reset link to ``recipient``.
-
-    The API response is intentionally not surfaced to callers: account-recovery
-    endpoints must not reveal provider internals or whether an address exists.
-    """
-    if not password_reset_email_is_configured():
-        raise EmailDeliveryError("Password-reset email is not configured")
-
-    reset_url = password_reset_url(token)
-    escaped_url = html.escape(reset_url, quote=True)
-    send_email(
-        recipient,
-        subject="Reset your EnsureCollege password",
-        text_body=(
-            "We received a request to reset your EnsureCollege password. "
-            f"Use this link within one hour: {reset_url}\n\n"
-            "If you did not request this, you can safely ignore this email."
-        ),
-        html_body=_reset_email_html(escaped_url),
-        log_tag="reset-email",
-    )
+        raise EmailDeliveryError("Password-reset email could not be delivered") from exc
