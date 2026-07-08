@@ -2196,6 +2196,629 @@
         "last_verified_at": "2026-07-08"
       },
       "verified": true
+    },
+    {
+      "id": "ecybermission",
+      "name": "eCYBERMISSION",
+      "host": "U.S. Army Educational Outreach Program (AEOP) / National Science Teaching Association (NSTA)",
+      "category": "STEM Competition (Science & Engineering)",
+      "url": "https://www.ecybermission.com/",
+      "cost": "Free to enter",
+      "cost_category": "free",
+      "recognition": "State First-Place Winners receive a U.S. Series EE Savings Bond ($500 purchase value / $1,000 at maturity) per student; Regional Finalists and Regional Winners receive additional bond value; National Winners receive a cumulative bond plus $3,000 (purchase value, $6,000 at maturity) per student.",
+      "participation_format": "team",
+      "location": "Virtual/online (U.S.); students investigate a problem in their own community",
+      "competition_dates": "2026-2027 cycle: registration opens August 12, 2026; Mission Folder submission due March 3, 2027; virtual judging March 10-24, 2027",
+      "deadline": "2027-02-24",
+      "estimated_deadline": null,
+      "eligibility": {
+        "grade_levels": [
+          "middle_school",
+          "high_school_freshman"
+        ],
+        "citizenship_requirement": "VERIFY",
+        "fields_of_study": [
+          "science",
+          "engineering",
+          "technology",
+          "research"
+        ],
+        "essay_required": false,
+        "special_requirements": [
+          {
+            "kind": "institution_channel",
+            "label": "Must register as a team of 2-4 students led by an adult Team Advisor",
+            "details": "Students cannot register individually; an adult Team Advisor (teacher, parent, or mentor) must register and lead the team through ecybermission.com. Mixed-grade teams compete at the level of the highest grade represented."
+          }
+        ]
+      },
+      "description": "eCYBERMISSION is a free, virtual STEM competition run by the U.S. Army (AEOP) and NSTA in which teams of students in grades 6-9 identify a problem in their community and investigate it with science or solve it with engineering, submitting their work as a 'Mission Folder' for judging.",
+      "application_requirements": [
+        {
+          "id": "register-team",
+          "label": "Register team of 2-4 students (grades 6-9) plus an adult Team Advisor on ecybermission.com",
+          "details": "Registration for the 2026-2027 cycle opens August 12, 2026 and closes February 24, 2027.",
+          "required": true,
+          "source_url": "https://usaeop.com/program/ecybermission/"
+        },
+        {
+          "id": "select-problem",
+          "label": "Identify a real problem in the team's community to investigate via science or solve via engineering",
+          "details": null,
+          "required": true,
+          "source_url": "https://usaeop.com/program/ecybermission/"
+        },
+        {
+          "id": "submit-mission-folder",
+          "label": "Submit a completed Mission Folder documenting the project by the deadline",
+          "details": "2026-2027 cycle Mission Folder deadline is March 3, 2027.",
+          "required": true,
+          "source_url": "https://usaeop.com/program/ecybermission/"
+        },
+        {
+          "id": "virtual-judging",
+          "label": "Participate in virtual judging/interview period",
+          "details": "2026-2027 virtual judging period is March 10-24, 2027.",
+          "required": true,
+          "source_url": "https://usaeop.com/program/ecybermission/"
+        }
+      ],
+      "verification": {
+        "source_url": "https://usaeop.com/program/ecybermission/",
+        "last_verified_at": "2026-07-08"
+      },
+      "verified": true
+    },
+    {
+      "id": "zero-robotics",
+      "name": "Zero Robotics",
+      "host": "MIT (Space Systems Laboratory / Media Lab), in partnership with NASA and the ISS National Laboratory",
+      "category": "Robotics & Computer Science Competition",
+      "url": "https://zerorobotics.mit.edu/",
+      "cost": "Free",
+      "cost_category": "free",
+      "recognition": "Finalist teams' code is uploaded and run by astronauts aboard the International Space Station (High School Championship); specific prize items/scholarships VERIFY.",
+      "participation_format": "team",
+      "location": "Virtual/online; High School Tournament open to teams from the U.S. and ESA (European Space Agency) member states; Middle School Summer Program held at selected U.S. locations",
+      "competition_dates": "VERIFY (most recent confirmed cycle: 2026 Middle School Program registration extended to May 22, 2026; 2026 High School Championship held February 21, 2026 -- both already past)",
+      "deadline": "VERIFY",
+      "estimated_deadline": "2026-05-22",
+      "eligibility": {
+        "grade_levels": [
+          "middle_school",
+          "high_school"
+        ],
+        "citizenship_requirement": "US_or_ESA_member_state",
+        "fields_of_study": [
+          "computer_science",
+          "engineering",
+          "technology",
+          "science"
+        ],
+        "essay_required": false,
+        "special_requirements": [
+          {
+            "kind": "institution_channel",
+            "label": "Must form a team of 5-20 students with an adult mentor and register through zerorobotics.mit.edu",
+            "details": "Teams program satellites (SPHERES/Astrobee) to solve an annual challenge; top teams advance to a live final where code may be run aboard the ISS."
+          }
+        ]
+      },
+      "description": "Zero Robotics is a free MIT-run programming and robotics competition in which student teams write code to control satellites aboard the International Space Station, competing through online qualifying rounds toward a live championship.",
+      "application_requirements": [
+        {
+          "id": "form-team",
+          "label": "Gather a team of 5-20 students and a mentor",
+          "details": null,
+          "required": true,
+          "source_url": "https://zerorobotics.mit.edu/what-is-zr/"
+        },
+        {
+          "id": "register-team",
+          "label": "Register the team on zerorobotics.mit.edu before the registration deadline",
+          "details": "Most recently confirmed deadline (2026 Middle School Program) was extended to May 22, 2026; next-cycle dates not yet posted as of this check.",
+          "required": true,
+          "source_url": "https://zerorobotics.mit.edu/"
+        },
+        {
+          "id": "complete-tutorials",
+          "label": "Complete online coding tutorials and qualifying competition rounds",
+          "details": null,
+          "required": true,
+          "source_url": "https://zerorobotics.mit.edu/what-is-zr/"
+        },
+        {
+          "id": "advance-to-finals",
+          "label": "Advance through virtual rounds to the live final competition",
+          "details": "Top teams' code may be executed aboard the ISS during the championship event.",
+          "required": false,
+          "source_url": "https://zerorobotics.mit.edu/what-is-zr/"
+        }
+      ],
+      "verification": {
+        "source_url": "https://zerorobotics.mit.edu/what-is-zr/",
+        "last_verified_at": "2026-07-08"
+      },
+      "verified": true
+    },
+    {
+      "id": "physicsbowl",
+      "name": "PhysicsBowl",
+      "host": "American Association of Physics Teachers (AAPT)",
+      "category": "Physics Competition",
+      "url": "https://www.aapt.org/programs/physicsbowl/",
+      "cost": "$10 per student",
+      "cost_category": "paid",
+      "recognition": "National and international recognition for top-scoring individual students and school teams (school team score = sum of top 5 students' scores); specific award list/prizes VERIFY.",
+      "participation_format": "either",
+      "location": "Students take the exam at their own school (or an alternate proctored site); open to schools internationally, with separate regions/divisions noted for Asia and the Middle East",
+      "competition_dates": "2026 exam window: any one day between March 18 and April 3, 2026 (already past)",
+      "deadline": "VERIFY",
+      "estimated_deadline": "2026-02-25",
+      "eligibility": {
+        "grade_levels": [
+          "high_school"
+        ],
+        "citizenship_requirement": "any",
+        "fields_of_study": [
+          "science",
+          "natural_sciences"
+        ],
+        "essay_required": false,
+        "special_requirements": [
+          {
+            "kind": "institution_channel",
+            "label": "Must be registered by a school through a teacher/proctor; individual students cannot self-register",
+            "details": "Registration requires an official school email address for the proctor (personal emails not accepted). The exam must be proctored by a qualified individual who is not a parent or relative of a participant."
+          }
+        ]
+      },
+      "description": "PhysicsBowl is AAPT's annual multiple-choice physics exam (40 questions, 45 minutes) for high school students, offered in two divisions for first- and second-year physics students, administered by schools nationally and internationally.",
+      "application_requirements": [
+        {
+          "id": "teacher-registers-school",
+          "label": "A teacher/school registers online (credit card) or by mailing a printable form with check/purchase order",
+          "details": "Form can also be emailed to programs@aapt.org.",
+          "required": true,
+          "source_url": "https://aapt.org/Programs/PhysicsBowl/howto.cfm"
+        },
+        {
+          "id": "pay-fee",
+          "label": "Pay $10 per registered student",
+          "details": null,
+          "required": true,
+          "source_url": "https://aapt.org/Programs/PhysicsBowl/howto.cfm"
+        },
+        {
+          "id": "arrange-proctor",
+          "label": "Arrange a qualified proctor (not a parent/relative) with a verifiable official school email",
+          "details": null,
+          "required": true,
+          "source_url": "https://aapt.org/Programs/PhysicsBowl/howto.cfm"
+        },
+        {
+          "id": "administer-exam",
+          "label": "Administer the 40-question, 45-minute exam on one day within the official testing window",
+          "details": "2026 window was March 18 - April 3, 2026.",
+          "required": true,
+          "source_url": "https://www.aapt.org/programs/physicsbowl/"
+        }
+      ],
+      "verification": {
+        "source_url": "https://www.aapt.org/programs/physicsbowl/",
+        "last_verified_at": "2026-07-08"
+      },
+      "verified": true
+    },
+    {
+      "id": "ncf-envirothon",
+      "name": "NCF-Envirothon",
+      "host": "National Conservation Foundation (NCF)",
+      "category": "Environmental Science Competition",
+      "url": "https://envirothon.org/",
+      "cost": "VERIFY",
+      "cost_category": "VERIFY",
+      "recognition": "VERIFY (published National Conservation Foundation reporting on recent past competitions describes scholarships/prizes for top-placing teams, e.g. a reported $50,000 total in scholarships/prizes for winning teams in 2024/2025 sponsored partly by Smithfield Foods, but no confirmed official figure for the 2026 competition was found this session)",
+      "participation_format": "team",
+      "location": "2026 NCF-Envirothon international final: Mississippi State University, Starkville, MS, USA",
+      "competition_dates": "2026-07-19 to 2026-07-25",
+      "deadline": "VERIFY",
+      "estimated_deadline": "2026-06-05",
+      "eligibility": {
+        "grade_levels": [
+          "high_school"
+        ],
+        "citizenship_requirement": "VERIFY",
+        "fields_of_study": [
+          "environmental_science",
+          "agriculture",
+          "natural_sciences",
+          "science"
+        ],
+        "essay_required": false,
+        "special_requirements": [
+          {
+            "kind": "competition_or_finalist",
+            "label": "Must win state/provincial/partner-nation Envirothon competition to qualify for NCF-Envirothon nationals",
+            "details": "Per official rules: 'The first placed team from each state, provincial and partner nation Envirothon competition is eligible to attend the NCF-Envirothon annual international competition.' There is no direct-application path to nationals; teams qualify only by winning their state/provincial/partner-nation program."
+          }
+        ]
+      },
+      "description": "NCF-Envirothon is described as North America's largest high school environmental education competition; state, provincial, and partner-nation champion teams advance to an annual international final featuring five environmental knowledge stations (aquatic ecology, forestry, soils and land use, wildlife, and a current environmental issue) plus an oral presentation.",
+      "application_requirements": [
+        {
+          "id": "win-state-competition",
+          "label": "Qualify by placing first in a state, provincial, or partner-nation Envirothon competition",
+          "details": "Direct entry to the NCF-Envirothon national/international final is not available; teams must first win their own state/provincial/partner-nation program.",
+          "required": true,
+          "source_url": "https://envirothon.org/the-competition/"
+        },
+        {
+          "id": "submit-team-registration-fee",
+          "label": "Submit the qualifying team's national registration and pay the team registration fee",
+          "details": "2026 team registration fee deadline is June 1, 2026; late registrations after this date incur a $150 USD late fee.",
+          "required": true,
+          "source_url": "https://envirothon.org/2026-mississippi/registration/"
+        },
+        {
+          "id": "submit-advisor-forms",
+          "label": "Team Advisor(s)/Chaperone(s) submit Advisor/Chaperone Information and Adult Medical/Insurance forms",
+          "details": null,
+          "required": true,
+          "source_url": "https://envirothon.org/2026-mississippi/registration/"
+        },
+        {
+          "id": "submit-student-forms",
+          "label": "Each student submits Team Member Registration and Medical/Insurance Information forms (with parental/guardian consent if under 18)",
+          "details": "Deadline for all other registration forms is June 5, 2026 (Maine, Ohio, and Maryland teams have extended state-specific deadlines).",
+          "required": true,
+          "source_url": "https://envirothon.org/2026-mississippi/registration/"
+        },
+        {
+          "id": "attend-competition",
+          "label": "Attend and compete in the five knowledge stations and oral presentation at the national/international final",
+          "details": null,
+          "required": true,
+          "source_url": "https://envirothon.org/the-competition/"
+        }
+      ],
+      "verification": {
+        "source_url": "https://envirothon.org/2026-mississippi/registration/",
+        "last_verified_at": "2026-07-08"
+      },
+      "verified": true
+    },
+    {
+      "id": "national-ocean-sciences-bowl",
+      "name": "National Ocean Sciences Bowl (NOSB)",
+      "host": "Center for Ocean Leadership, a University Corporation for Atmospheric Research (UCAR) Community Program",
+      "category": "Ocean & Environmental Science Academic Competition",
+      "url": "https://nosb.org/",
+      "cost": "VERIFY",
+      "cost_category": "VERIFY",
+      "recognition": "Top eight Finals teams receive prizes ranging from textbooks to gift certificates; first- and second-place teams receive experiential summer award trips for hands-on marine science field/lab work (past trips included Hawaii, California, Florida, Costa Rica, Panama, and Monaco).",
+      "participation_format": "team",
+      "location": "Regional bowls held at roughly 25 university/research host sites nationwide; national Finals location rotates annually and was not yet announced for the 2027 cycle as of this session",
+      "competition_dates": "Regional bowls typically held February-March; national Finals held in May. Specific 2027 dates were not yet published on nosb.org as of this session.",
+      "deadline": "VERIFY",
+      "estimated_deadline": null,
+      "eligibility": {
+        "grade_levels": [
+          "high_school_freshman",
+          "high_school_sophomore",
+          "high_school_junior",
+          "high_school_senior"
+        ],
+        "citizenship_requirement": "VERIFY",
+        "fields_of_study": [
+          "environmental_science",
+          "natural_sciences",
+          "science"
+        ],
+        "essay_required": false,
+        "special_requirements": [
+          {
+            "kind": "institution_channel",
+            "label": "Compete via a school-based team through a regional bowl",
+            "details": "Students must form a school-affiliated team (4-5 students plus a coach) and register through their nearest regional bowl coordinator; NOSB has no direct individual-application pathway."
+          },
+          {
+            "kind": "competition_or_finalist",
+            "label": "Win regional bowl to advance to national Finals",
+            "details": "Only the top team from each of NOSB's roughly 25 regional bowls qualifies to compete at the national Finals competition; regional bowls are held February-March, with Finals in May."
+          }
+        ]
+      },
+      "description": "The National Ocean Sciences Bowl is a team-based academic competition, run by the Center for Ocean Leadership (a UCAR community program), that tests U.S. high school students' knowledge of ocean sciences through regional bowls that feed into a national Finals event.",
+      "application_requirements": [
+        {
+          "id": "form-school-team",
+          "label": "Assemble a school-affiliated team of 4-5 currently enrolled high school students (grades 9-12) plus one coach",
+          "details": "Per official rules, teams need a minimum of four student members and one coach (five recommended, including an alternate); rosters must remain static once competition begins.",
+          "required": true,
+          "source_url": "https://nosb.org/rules/"
+        },
+        {
+          "id": "contact-regional-coordinator",
+          "label": "Contact your nearest regional bowl coordinator to register your team",
+          "details": "Prospective teams check NOSB's regional competition map to find and contact the coordinator for their region, who confirms openings and local details.",
+          "required": true,
+          "source_url": "https://nosb.org/team-information/"
+        },
+        {
+          "id": "compete-regional-bowl",
+          "label": "Compete in your regional bowl (typically held February-March)",
+          "details": null,
+          "required": true,
+          "source_url": "https://nosb.org/team-information/"
+        },
+        {
+          "id": "advance-to-finals",
+          "label": "Top team from each regional bowl advances to the national Finals competition in May",
+          "details": "The national Finals is a three-day event held annually at a rotating university/research host location.",
+          "required": false,
+          "source_url": "https://nosb.org/finals-competition/"
+        }
+      ],
+      "verification": {
+        "source_url": "https://nosb.org/rules/",
+        "last_verified_at": "2026-07-08"
+      },
+      "verified": true
+    },
+    {
+      "id": "tsa-national-conference",
+      "name": "TSA National Conference Competitions",
+      "host": "Technology Student Association (TSA)",
+      "category": "STEM Career & Technical Student Organization (CTSO) Competitions",
+      "url": "https://tsaweb.org/conferences/nationaltsaconference",
+      "cost": "VERIFY",
+      "cost_category": "paid",
+      "recognition": "VERIFY",
+      "participation_format": "either",
+      "location": "VERIFY",
+      "competition_dates": "VERIFY",
+      "deadline": "VERIFY",
+      "estimated_deadline": "2026-05-06",
+      "eligibility": {
+        "grade_levels": [
+          "middle_school",
+          "high_school"
+        ],
+        "citizenship_requirement": "VERIFY",
+        "fields_of_study": [
+          "technology",
+          "engineering",
+          "computer_science",
+          "science",
+          "mathematics"
+        ],
+        "essay_required": false,
+        "special_requirements": [
+          {
+            "kind": "membership",
+            "label": "Must be a dues-paying TSA member through a chartered school chapter",
+            "details": "TSA competitions (37 middle school and 40 high school events) are open to student members of chartered TSA chapters; the association serves both middle and high school divisions."
+          },
+          {
+            "kind": "institution_channel",
+            "label": "Qualify through your state TSA conference",
+            "details": "State advisors register/slot competitors who qualify at their state TSA conference to compete at the National Conference; students do not self-register for national competitive events."
+          }
+        ]
+      },
+      "description": "The Technology Student Association's National Conference is the annual culminating event of this national CTSO, where middle and high school members who qualify through their state TSA conference compete in dozens of STEM-focused competitive events.",
+      "application_requirements": [
+        {
+          "id": "join-tsa-chapter",
+          "label": "Join TSA through a chartered school chapter as a dues-paying student member",
+          "details": null,
+          "required": true,
+          "source_url": "https://tsaweb.org/about"
+        },
+        {
+          "id": "compete-state-conference",
+          "label": "Compete at and qualify through your state TSA conference",
+          "details": null,
+          "required": true,
+          "source_url": "https://tsaweb.org/conferences/2026-national-tsa-conference/general-information/dates-and-deadlines"
+        },
+        {
+          "id": "state-advisor-registration",
+          "label": "Have your state advisor register you for national competitive events by the state deadline",
+          "details": "In the 2026 cycle, state advisors slotted registered competitors by May 7-8.",
+          "required": true,
+          "source_url": "https://tsaweb.org/conferences/2026-national-tsa-conference/general-information/dates-and-deadlines"
+        },
+        {
+          "id": "complete-national-registration",
+          "label": "Complete national conference registration and pay conference fees by the payment deadline",
+          "details": "In the 2026 cycle: competitive event participant deadline May 6, payment deadline June 12 (credit card or check); onsite registration was available afterward at higher, card-only rates.",
+          "required": true,
+          "source_url": "https://tsaweb.org/conferences/2026-national-tsa-conference/general-information/dates-and-deadlines"
+        },
+        {
+          "id": "submit-competition-materials",
+          "label": "Submit any required competition materials/uploads ahead of the conference",
+          "details": "In the 2026 cycle, competition uploads were due May 11-13.",
+          "required": false,
+          "source_url": "https://tsaweb.org/conferences/2026-national-tsa-conference/general-information/dates-and-deadlines"
+        }
+      ],
+      "verification": {
+        "source_url": "https://tsaweb.org/conferences/2026-national-tsa-conference/general-information/dates-and-deadlines",
+        "last_verified_at": "2026-07-08"
+      },
+      "verified": true
+    },
+    {
+      "id": "odyssey-of-the-mind-world-finals",
+      "name": "Odyssey of the Mind World Finals",
+      "host": "Creative Competitions, Inc. (Odyssey of the Mind Association / OdysseyHQ)",
+      "category": "Creative Problem-Solving Team Competition",
+      "url": "https://odysseyofthemind.com/world-finals-2/",
+      "cost": "VERIFY",
+      "cost_category": "paid",
+      "recognition": "VERIFY",
+      "participation_format": "team",
+      "location": "2026 World Finals were held at Iowa State University, Ames, IA; 2027 World Finals location not yet announced as of this session",
+      "competition_dates": "VERIFY",
+      "deadline": "VERIFY",
+      "estimated_deadline": "2026-04-01",
+      "eligibility": {
+        "grade_levels": [
+          "middle_school",
+          "high_school"
+        ],
+        "citizenship_requirement": "VERIFY",
+        "fields_of_study": [
+          "engineering",
+          "arts",
+          "technology",
+          "research"
+        ],
+        "essay_required": false,
+        "special_requirements": [
+          {
+            "kind": "institution_channel",
+            "label": "Register a team through a paid membership (school, community group, or homeschool)",
+            "details": "School memberships may enter one team per problem per division; community groups and homeschooled teams may enter up to five teams. All memberships must be paid in full to compete."
+          },
+          {
+            "kind": "competition_or_finalist",
+            "label": "Advance through regional and Association tournaments to qualify for World Finals",
+            "details": "Teams generally progress through a regional tournament, then Association (state/provincial/country) Finals, before earning a berth at World Finals; teams without a local pre-World Finals tournament may apply directly to World Finals by April 1, first-come first-served."
+          }
+        ]
+      },
+      "description": "Odyssey of the Mind is an international creative problem-solving team competition in which school, homeschool, and community-group teams solve a long-term and a spontaneous problem, advancing from regional and Association (state/country) tournaments to the annual World Finals.",
+      "application_requirements": [
+        {
+          "id": "purchase-membership",
+          "label": "Purchase a school, community-group, or homeschool membership from Creative Competitions, Inc.",
+          "details": null,
+          "required": true,
+          "source_url": "https://odysseyofthemind.com/program-guide/"
+        },
+        {
+          "id": "form-team",
+          "label": "Form a team of up to 7 students (5-6 recommended) in the appropriate grade division",
+          "details": "Division II covers grades 6-8 (middle school) and Division III covers grades 9-12 (high school); the oldest team member's grade sets the division and teams must compete in the lowest division for which they qualify.",
+          "required": true,
+          "source_url": "https://odysseyofthemind.com/program-guide/"
+        },
+        {
+          "id": "compete-regional",
+          "label": "Compete at a regional tournament",
+          "details": null,
+          "required": true,
+          "source_url": "https://odysseyofthemind.com/program-guide/"
+        },
+        {
+          "id": "advance-association-finals",
+          "label": "Place well enough to advance to Association (state/provincial/country) Finals",
+          "details": null,
+          "required": true,
+          "source_url": "https://odysseyofthemind.com/program-guide/"
+        },
+        {
+          "id": "qualify-world-finals",
+          "label": "Qualify for World Finals via Association Finals, or apply directly by April 1 if no local tournament exists",
+          "details": "Direct World Finals applications for areas without a pre-World Finals tournament are accepted on a first-come, first-served basis by April 1.",
+          "required": false,
+          "source_url": "https://odysseyofthemind.com/program-guide/"
+        }
+      ],
+      "verification": {
+        "source_url": "https://odysseyofthemind.com/program-guide/",
+        "last_verified_at": "2026-07-08"
+      },
+      "verified": true
+    },
+    {
+      "id": "future-problem-solving-international-conference",
+      "name": "Future Problem Solving International Conference (Global Issues Problem Solving)",
+      "host": "Future Problem Solving Program International (FPSPI)",
+      "category": "Futures Problem-Solving Academic Competition",
+      "url": "https://fpspi.org/international-conference/",
+      "cost": "VERIFY",
+      "cost_category": "paid",
+      "recognition": "VERIFY",
+      "participation_format": "either",
+      "location": "2026 International Conference was held at Indiana University Bloomington; 2027 host campus to be announced in July 2026 and was not yet posted as of this session",
+      "competition_dates": "2027 International Conference: June 9-13, 2027 (2026 cycle, June 10-14, 2026, has already concluded relative to today's date)",
+      "deadline": "VERIFY",
+      "estimated_deadline": "2026-05-01",
+      "eligibility": {
+        "grade_levels": [
+          "middle_school",
+          "high_school"
+        ],
+        "citizenship_requirement": "VERIFY",
+        "fields_of_study": [
+          "social_sciences",
+          "science",
+          "technology",
+          "business",
+          "research"
+        ],
+        "essay_required": false,
+        "special_requirements": [
+          {
+            "kind": "institution_channel",
+            "label": "Participate as part of a registered team or individually under an adult coach",
+            "details": "Students register under an adult coach (parent, teacher, or mentor) who serves as the point of contact; Global Issues Problem Solving allows teams of up to four students or individual participation."
+          },
+          {
+            "kind": "competition_or_finalist",
+            "label": "Only regional/state affiliate champions qualify for the International Conference",
+            "details": "FPSPI states participation at the International Conference is limited to regional affiliate champions; the organization cites roughly 7% of participating students qualifying to compete at the IC in a given year."
+          }
+        ]
+      },
+      "description": "Future Problem Solving Program International (FPSPI) runs Global Issues, Community Projects, Creative Writing, and Storytelling competitions for students in Junior (grades 4-6), Middle (grades 7-9), and Senior (grades 10-12) divisions, culminating in an annual International Conference open only to regional affiliate champions.",
+      "application_requirements": [
+        {
+          "id": "register-under-coach",
+          "label": "Register as part of a team (up to 4 students) or individually under an adult coach",
+          "details": null,
+          "required": true,
+          "source_url": "https://fpspi.org/programs/global-issues-problem-solving/"
+        },
+        {
+          "id": "complete-qualifying-problems",
+          "label": "Complete practice and qualifying problem(s) during the competition season",
+          "details": "Two practice problems and one qualifying problem are offered annually before regional/affiliate competition.",
+          "required": true,
+          "source_url": "https://fpspi.org/programs/global-issues-problem-solving/"
+        },
+        {
+          "id": "compete-regional-affiliate",
+          "label": "Compete in your state/regional affiliate bowl",
+          "details": null,
+          "required": true,
+          "source_url": "https://fpspi.org/programs/global-issues-problem-solving/"
+        },
+        {
+          "id": "win-affiliate-championship",
+          "label": "Place as an affiliate champion to earn an invitation to the International Conference",
+          "details": null,
+          "required": true,
+          "source_url": "https://fpspi.org/international-conference/"
+        },
+        {
+          "id": "register-for-ic",
+          "label": "Register for the International Conference and pay applicable fees by the published deadline",
+          "details": "In the 2026 cycle, registration opened February 1 and was due by May 1, 2026; a $100 late fee applied to registrations/payments after that date.",
+          "required": true,
+          "source_url": "https://resources.futureproblemsolving.org/article/how-register-international-conference/"
+        }
+      ],
+      "verification": {
+        "source_url": "https://fpspi.org/international-conference/",
+        "last_verified_at": "2026-07-08"
+      },
+      "verified": true
     }
   ]
 }
