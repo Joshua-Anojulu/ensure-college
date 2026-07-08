@@ -1,0 +1,90 @@
+{
+  "category_name": "Imagery and illustration tells",
+  "definition": "This category covers image-level signals that make a website's visual content read as AI-generated or AI-adjacent: photoreal hero art with a Midjourney/DALL-E look, Corporate-Memphis-style flat vector illustrations, faceless 3D humanoid renders, fake device mockups showing implausible product screens, uncanny stock-like people, and abstract gradient blobs/mesh backgrounds. It is distinct from copy or layout tells because it is about the pixels themselves, not the words or page skeleton.",
+  "why_flagged_as_ai": "Three separate root causes get bundled under one 'looks AI' label. (1) Actual generative image tools (Midjourney, DALL-E, Stable Diffusion, Adobe Firefly) produce a recognizable house style: overly smooth/plastic skin and surfaces, dreamlike studio lighting, near-symmetrical composition, and small anatomical/text artifacts (garbled hands, teeth, warped background signage) that trained observers now pattern-match on sight. (2) AI website builders (v0, Lovable, Bolt, Framer AI, Google Stitch) default to the same small set of cheap, license-free illustration assets and blur-heavy CSS decoration (gradient blobs, glassmorphism cards, glow borders) because those are the statistically 'safest' choices in their training data and templates, so thousands of unrelated sites end up visually identical. (3) A pre-AI illustration trend, Corporate Memphis/Alegria (flat, tiny-headed, gangly-limbed vector people originated by the agency Buck for Facebook in 2017), already had a 'soulless big-tech' connotation; because it shares the same smooth, textureless, conflict-free visual grammar as generative-AI output, observers now lump it into the same 'AI slop' bucket even on sites that predate modern generative AI.",
+  "features": [
+    {
+      "feature": "Abstract gradient blobs / mesh-gradient backgrounds",
+      "description": "Large, softly blurred, organic-shaped color fields (often purple-to-blue or cyan-on-dark) floating behind hero and section content, typically built with absolutely-positioned divs and heavy CSS blur or SVG mesh gradients.",
+      "ai_association_strength": "strong",
+      "first_or_notable_mention": "925studios.co 'AI Slop Web Design' guide (2026); impeccable.style/slop"
+    },
+    {
+      "feature": "Corporate Memphis / Alegria flat illustrations",
+      "description": "Flat, outline-free vector people with tiny heads, gangly bending limbs, pastel or unnaturally colored skin, knee-less poses, and beady/zen expressions, used for hero art and feature sections.",
+      "ai_association_strength": "moderate",
+      "first_or_notable_mention": "Buck agency 'Alegria' style for Facebook, 2017; Eye on Design 'What the Think Pieces About Corporate Memphis Tell Us' (AIGA); Wikipedia 'Corporate Memphis'"
+    },
+    {
+      "feature": "Faceless 3D humanoid renders / abstract 3D people",
+      "description": "Smooth, monochrome or pastel 3D character models with no facial features, often posed in impossible semi-circles holding glowing orbs or interacting with floating UI panels, used to illustrate 'teamwork' or 'connectivity' concepts.",
+      "ai_association_strength": "moderate",
+      "first_or_notable_mention": "925studios.co AI Slop guide; stock catalogs (Dreamstime 'faceless 3D', Meshy 'faceless' tag) documenting the trope's spread"
+    },
+    {
+      "feature": "Photoreal AI-generated hero art (Midjourney/DALL-E look)",
+      "description": "Hero backgrounds or feature imagery that are obviously text-to-image generated: overly smooth/pearlescent surfaces, near-perfect symmetry, dreamlike studio lighting, and occasional small artifacts (garbled hands/teeth, warped background text or objects).",
+      "ai_association_strength": "strong",
+      "first_or_notable_mention": "Webwave 'Midjourney web design' guide; Diggit Magazine 'Generative AI and the uncanny valley'"
+    },
+    {
+      "feature": "Uncanny stock-like people / AI-generated 'diverse team' photos",
+      "description": "Impossibly perfect, evenly lit office scenes with a diverse group looking at a laptop; faces sourced from AI face generators (e.g., Icons8 'Generated Photos') that read as slightly too symmetrical or emotionally flat, sometimes with subtle artifacts like mismatched earrings or odd hair-skin blending.",
+      "ai_association_strength": "moderate",
+      "first_or_notable_mention": "prototypr.io 'AI Stock Images: The Uncanny Valley from ShutterStock to StockAI'"
+    },
+    {
+      "feature": "Fake device mockups with implausible product screens",
+      "description": "Floating iPhone/MacBook/browser-chrome mockups in a hero section showing a UI screenshot that is generic, doesn't match the actual product, or is a stock template screen rather than a real capture, often set against a flat gradient backdrop.",
+      "ai_association_strength": "moderate",
+      "first_or_notable_mention": "PixelPanda / Screenhance / Mockey.ai mockup-generator marketing copy describing this exact 'contextual style' use case for SaaS landing heroes"
+    },
+    {
+      "feature": "Amateurish hand-coded SVG doodles / mascots",
+      "description": "Crude, simplistic hand-drawn-style SVG illustrations or mascots used as filler decoration where the crudeness reads as an unfinished AI-scaffolded placeholder rather than an intentional illustrative style.",
+      "ai_association_strength": "weak",
+      "first_or_notable_mention": "impeccable.style/slop ('Hand-coded SVG illustrations of scenes or mascots read as amateur doodles, not whimsy')"
+    },
+    {
+      "feature": "Glassmorphism / glow-bordered image cards layered over imagery",
+      "description": "Blurred glass-panel cards, glow borders, and colored box-shadows used purely as decoration around or over hero imagery, amplifying the generic-gradient look rather than adding information.",
+      "ai_association_strength": "weak",
+      "first_or_notable_mention": "impeccable.style/slop"
+    },
+    {
+      "feature": "Broken, empty, or literally-placeholder imagery",
+      "description": "Empty src attributes, missing alt text, or unedited stock/placeholder filenames and URLs (e.g., unremoved Unsplash/Lorem Picsum links, undraw_*.svg, pexels-*.jpg) left in shipped production markup.",
+      "ai_association_strength": "weak",
+      "first_or_notable_mention": "impeccable.style/slop; renameit.io website image-audit tooling"
+    }
+  ],
+  "tools_that_produce_it": "v0 (Vercel), Lovable, Bolt, Google Stitch, and Framer AI default to license-free illustration libraries (unDraw, Blush, Storyset) and CSS-only gradient/blob decoration when no imagery is supplied; ChatGPT/DALL-E, Midjourney, Adobe Firefly, and Stable Diffusion are the source of the photoreal 'AI art' hero-image look; Icons8 'Generated Photos' and similar face-generation tools produce the uncanny stock-person photos; Canva Magic Design and mockup generators (PixelPanda, Mockey.ai, Screenhance) produce the fake-device-mockup look. [uncertain: exact default asset libraries per specific AI builder were not independently confirmed per-tool]",
+  "canonical_examples": "Corporate Memphis is most associated with Facebook/Meta, Slack, Mailchimp, and Dropbox illustration campaigns from 2017-2020 (style originated by agency Buck under the internal name 'Alegria'). SlopDetector.org and the Wikipedia 'AI slop' article maintain running galleries of AI-generated visual examples cited in general 'AI slop' discourse, though these skew toward social-media content rather than SaaS website imagery specifically. [uncertain: no single named website is widely and repeatedly cited as the canonical 'AI slop imagery' landing page in the sources found; examples in circulation tend to be generic composites in blog guides rather than named companies]",
+  "sources": [
+    "https://eyeondesign.aiga.org/what-the-think-pieces-about-corporate-memphis-tell-us-about-the-state-of-illustration/",
+    "https://en.wikipedia.org/wiki/Corporate_Memphis",
+    "https://webflow.com/blog/after-corporate-memphis",
+    "https://aiprognosticator.substack.com/p/whats-worse-than-ai-art-corporate-memphis",
+    "https://www.925studios.co/blog/ai-slop-web-design-guide",
+    "https://impeccable.style/slop/",
+    "https://prototypr.io/post/ai-stock-image-marketplaces",
+    "https://www.diggitmagazine.com/blog/generative-ai-and-uncanny-valley-and-call-action",
+    "https://dev.to/alanwest/why-every-ai-built-website-looks-the-same-blame-tailwinds-indigo-500-3h2p",
+    "https://dev.to/_46ea277e677b888e0cd13/why-every-ai-generated-landing-page-looks-the-same-and-how-to-fix-it-1kmo",
+    "https://axe-web.com/insights/ai-website-design-sameness/",
+    "https://shuffle.dev/blog/2026/01/why-do-most-ai-generated-websites-look-the-same/",
+    "https://pixelpanda.ai/free-tools/website-mockup-generator",
+    "https://renameit.io/blog/can-chatgpt-see-your-images",
+    "https://en.wikipedia.org/wiki/AI_slop",
+    "https://slopdetector.org/ai-slop-examples"
+  ],
+  "community_sentiment": "Mixed mockery and fatigue. Corporate Memphis draws polarized reactions among illustrators themselves (some call it 'lazy' and 'soulless', others defend its art-historical legitimacy), but the broader public/design commentary now treats it as an early symptom of the same homogenization AI produces. The newer 'AI slop' framing (Wikipedia has a dedicated article; SlopDetector.org catalogs examples) is largely dismissive/mocking — commentary consistently uses words like 'generic,' 'plastic,' 'uncanny,' and 'sea of sameness.' A widely-cited example of designer fatigue: Tailwind CSS creator Adam Wathan publicly semi-apologized in August 2025 for defaulting Tailwind UI buttons to indigo-500, blamed by commentators for the ubiquitous purple-gradient AI look. [uncertain: exact reach/virality figures for the Wathan tweet could not be independently verified beyond the secondary source reporting it]",
+  "detection_signals": "CSS/markup: large absolutely-positioned <div> elements with heavy `filter: blur(60px+)` or `backdrop-filter: blur(...)` combined with radial/conic gradients, used purely as decoration (class names like `.blob`, `.gradient-orb`, `.mesh-gradient`, `.glow`, `.hero-illustration`, `.floating-shape`); glassmorphism card classes (`.glass`, `.frosted`, `backdrop-blur`) wrapping image content. Asset/filename patterns: unedited stock or generator filenames left in the DOM or asset folder — `undraw_*.svg`, `storyset_*.svg`, `pexels-*.jpg`, `unsplash-*.jpg`, generic exported names like `image_1.png`, `generated-image-*.png`, or Midjourney-style suffixes (`_u1`, `_v6`); literal hot-linked `images.unsplash.com` or `picsum.photos` URLs in production. Alt text/accessibility: empty `alt=\"\"` or generic alt text (`\"hero image\"`, `\"team photo\"`, `\"illustration\"`) on meaningful content images. Device-mockup structure: wrapper elements like `.device-frame`, `.mockup-phone`, `.browser-chrome` containing a screenshot that shows generic dashboard content unrelated to the actual product's real UI (checkable by comparing the mockup screen against the live app). Visual/perceptual: identical Corporate-Memphis figure proportions (tiny head, no visible joints, flat color fill, no outline stroke) recurring across unrelated brands; 3D renders with uniform soft three-point studio lighting and no cast shadow onto a real environment; photographic images that reverse-image-search to multiple unrelated company sites (indicating unmodified stock, not necessarily AI, but often co-occurring with AI-slop layouts).",
+  "human_design_contrast": "Human-directed sites tend to commission real photography of the actual team, office, product, or customers (with visible environmental context, imperfect lighting, genuine expressions) rather than generic stock or AI renders; when illustration is used, it typically carries a distinct, consistent brand 'hand' — a custom character design, unique and constrained color palette, and often visible linework or texture rather than smooth gradient fills; product imagery is usually a real, current screenshot rather than a mockup with placeholder screen content; and many intentionally-designed sites skip decorative illustration entirely in favor of typography-led or data/screenshot-led visual hierarchy.",
+  "false_positive_notes": "Corporate Memphis/Alegria illustration predates modern generative AI by several years (2017 Facebook rebrand) and is often licensed from legitimate illustration libraries (unDraw, Blush, Storyset) purely for budget reasons — its presence indicates a common cheap-illustration choice or a dated brand refresh, not proof an AI tool built the site. Small teams and bootstrapped startups frequently use real Unsplash/Pexels stock photography simply because they cannot afford custom photoshoots; stock photography alone is not evidence of AI generation. Device mockups (floating phone/laptop screenshots) are a decades-old, near-universal marketing convention used in official Apple App Store marketing and countless pre-AI SaaS sites, so a mockup alone is not diagnostic — the tell is a mockup showing a screen that doesn't match the real product, combined with other AI-slop signals like gradient blobs and Corporate-Memphis figures. Gradient/blob backgrounds are also a legitimate, pre-AI design trend (popular since ~2019 in 'organic shapes' web design), so the strength of the tell should scale with how many co-occurring signals (imagery + copy + layout + component patterns) are present rather than any single element in isolation.",
+  "uncertain": [
+    "tools_that_produce_it",
+    "canonical_examples",
+    "community_sentiment"
+  ]
+}

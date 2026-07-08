@@ -1,0 +1,102 @@
+{
+  "category_name": "Copywriting and microcopy tells",
+  "definition": "This category covers word-, phrase-, and sentence-level patterns in website copy (headlines, hero sections, feature blurbs, CTAs, footers, error/empty states) that readers have learned to associate with LLM-generated or LLM-assisted text. It spans lexical tells (a small cluster of overused verbs and nouns), punctuation tells (em-dash density), and structural/rhetorical tells (parallel triads, false-contrast constructions, vapid framing openers, and vague unquantified value claims). The common thread is that these patterns are statistically the 'safest' or most probable outputs of instruction-tuned chat models, so they surface repeatedly across unrelated products regardless of what the product actually does.",
+  "why_flagged_as_ai": "Three overlapping root causes are cited across the sources gathered. (1) Training-data bias: RLHF-tuned chat models are trained heavily on marketing copy, LinkedIn posts, corporate blogs, and SEO content, so words like 'elevate,' 'unlock,' 'seamless,' 'empower,' and 'supercharge' were already high-frequency in that corpus and the model reproduces them as the statistically likeliest continuation regardless of context. (2) Optimization for 'safe/polished/inoffensive' outputs: RLHF reward models tend to favor confident, upbeat, hedge-free promotional language, which pushes generations toward puffery ('game-changing,' 'revolutionize') and away from plain, specific claims. (3) Tool-default and template reuse: AI website/landing-page builders (v0, Lovable, Bolt, Durable, Framer AI, Dorik) and copy generators (Jasper, Copy.ai, ChatGPT-drafted briefs) ship or generate boilerplate hero/feature copy from a small set of templates, so the same verb choices and sentence shapes (rule-of-three, 'not just X, it's Y') propagate across thousands of unrelated sites built with the same tools. A documented feedback loop compounds this: because 'delve,' 'robust,' and 'pivotal' usage measurably spiked in published human writing after ChatGPT's release, some of what looks like 'AI tells' is now humans unconsciously imitating AI-polished style, which further normalizes the pattern in web copy.",
+  "features": [
+    {
+      "feature": "Power-verb cluster (Elevate / Unlock / Seamless / Empower / Supercharge / Transform / Revolutionize / Streamline / Leverage / Optimize)",
+      "description": "A small, recurring set of grandiose or corporate verbs and adjectives used as headline and CTA language regardless of the product category, e.g. 'Elevate your workflow,' 'Unlock your potential,' 'Seamlessly integrate,' 'Supercharge your team.' These words are high-probability tokens in LLM output because they are common in the marketing/business-blog training data chat models were tuned on.",
+      "ai_association_strength": "strong",
+      "first_or_notable_mention": "Widely catalogued from 2023-2025 in 'AI words to avoid' listicles (Walter Writes AI, GPTZero, useaiwriter.com) and in the 'delve' meme cycle that began circulating on Twitter/X and Reddit in 2023 after users noticed spikes in scientific and marketing writing."
+    },
+    {
+      "feature": "Em-dash-heavy sentences",
+      "description": "Frequent use of the em dash (—) to join clauses, create dramatic pauses, or substitute for commas/colons/periods, at a rate well above typical human web copy (cited threshold: roughly 3+ per 1,000 words as a detector-flagged rate). Often appears as 'X — not Y — is what matters' or 'It's fast — really fast.'",
+      "ai_association_strength": "strong",
+      "first_or_notable_mention": "Became a mainstream meme in mid-2025 news coverage ('em dash as AI tell') per marketreportanalytics.com and Plagiarism Today (June 2025); The Ringer ran a piece in August 2025 pushing back on the association."
+    },
+    {
+      "feature": "Rule-of-three / snappy triad phrasing",
+      "description": "Compressing a value proposition into three parallel words or short phrases, e.g. 'Fast, efficient, reliable' or 'Think bigger. Act bolder. Move faster.' Also appears as adjective triads in feature blurbs. The device is rhetorically old (classical rule of three) but AI models reach for it reflexively and over-apply it even where two items or a single strong claim would read better.",
+      "ai_association_strength": "moderate",
+      "first_or_notable_mention": "Discussed as an AI tell in GPTZero's 'How to Break Free from GPT's Rule of Three' and in Wikipedia's 'Signs of AI writing' guidance page."
+    },
+    {
+      "feature": "\"It's not just X, it's Y\" / false-contrast construction",
+      "description": "A negative-parallelism framing that sets up a strawman ('X') only to pivot to the real claim ('Y'), e.g. 'It's not just a scheduling tool, it's peace of mind.' Related forms: 'not only... but also,' 'X rather than Y.' Flagged as overused because it asks the reader to visualize the thing being negated before landing on the actual point, which dilutes impact when used repeatedly.",
+      "ai_association_strength": "strong",
+      "first_or_notable_mention": "Called out explicitly on Wikipedia's 'Signs of AI writing' page and in Medium/GPTZero pieces on 'the rule of three' as one of the most recognizable AI copy tics."
+    },
+    {
+      "feature": "Vague, unquantified value propositions",
+      "description": "Feature and benefit statements that assert impact without any concrete number, mechanism, or proof point, e.g. 'Boost your productivity' or 'Drive real results' with no specifics on how much, how, or for whom. Reflects LLMs' tendency toward generically confident claims rather than specific, falsifiable ones (a byproduct of not having real product data to draw on).",
+      "ai_association_strength": "moderate",
+      "first_or_notable_mention": "Described as 'puffery' in the AI-writing-detection literature (Wikipedia Signs of AI writing; the arXiv 'Last Fingerprint' paper on markdown/LLM prose training artifacts)."
+    },
+    {
+      "feature": "\"In today's fast-paced world/digital landscape\" style vapid openers",
+      "description": "Generic scene-setting sentences used as an opening line or section intro that add no product-specific information, e.g. 'In today's fast-paced world, businesses need...' or 'As technology continues to evolve...' Functions as filler while the model 'buys time' before committing to a specific claim.",
+      "ai_association_strength": "strong",
+      "first_or_notable_mention": "Repeatedly named as the single most-mocked AI opening line across 2024-2026 listicles (Hunting the Muse, Stackedo, hyacinth.ai, oliviacal.com); a widely-shared LinkedIn post by Srini Gosangi literally combined this opener with the 'not just X, it's Y' construction in one sentence, cited as an unintentionally self-parodic example."
+    },
+    {
+      "feature": "Gerund-phrase hollow commentary tacked onto claims",
+      "description": "Sentences padded with '-ing' clauses that restate significance without adding content, e.g. '...ensuring a seamless experience, empowering teams, and driving engagement.' Common in feature-list microcopy under each icon on a bento-grid features section.",
+      "ai_association_strength": "moderate",
+      "first_or_notable_mention": "Documented in Wikipedia's Signs of AI writing under 'superficial analysis' / 'undue emphasis on significance.'"
+    },
+    {
+      "feature": "Rhetorical-question subheads and CTAs (\"Ready to transform your business?\")",
+      "description": "Using a question as a section subhead or pre-CTA line, often paired with a power verb from the same cluster, e.g. 'Ready to elevate your workflow?' before a sign-up button. Functions as a low-effort, template-friendly transition that AI copy defaults to between sections.",
+      "ai_association_strength": "weak",
+      "first_or_notable_mention": "Called out as a 'vapid transition' pattern in the 'Field Guide to AI Slop' (ignorance.ai, Charlie Guo) alongside other transition clichés like 'Something shifted' and 'But here's the thing.'"
+    },
+    {
+      "feature": "Weasel-worded credibility claims",
+      "description": "Unattributed authority language in testimonials/trust sections or about pages, e.g. 'Trusted by industry leaders,' 'Recognized by experts,' without naming who, without a source, or with placeholder logos. Mirrors the 'industry reports/observers have cited' vague-attribution pattern documented in AI-writing detection.",
+      "ai_association_strength": "weak",
+      "first_or_notable_mention": "Documented as 'vague attributions/weasel wording' in Wikipedia's Signs of AI writing page, originally written for AI-generated encyclopedia articles but ported by commentators to marketing-copy critique."
+    }
+  ],
+  "tools_that_produce_it": "ChatGPT (drafting hero copy, feature blurbs, About pages) and other general chat models (Gemini, Claude, especially earlier/less-instructed versions) are the primary source when copy is drafted directly. AI website/app builders that auto-generate placeholder or final marketing copy alongside UI (v0, Lovable, Bolt.new, Durable, 10Web AI, Framer AI, Dorik AI) reproduce the same verb clusters and sentence shapes because their copy-generation step is itself an LLM call over similar prompts/training data; several vendor comparison write-ups note Lovable in particular emphasizes generating 'marketing copy that fits the design vibe' as a selling point, which is exactly the mechanism that propagates the pattern. Dedicated AI copywriting tools (Jasper, Copy.ai, Writesonic) show the same tells since they are built on the same base models and marketing-heavy fine-tuning data.",
+  "canonical_examples": "[uncertain] Public discussion of this tell set is overwhelmingly about generic patterns (blog intros, LinkedIn posts, listicle examples) rather than named production marketing sites — commentators are generally reluctant to call out specific companies by name. One concretely citable instance is a real LinkedIn post by Srini Gosangi ('In today's fast-paced world, AI isn't just a tool; it's a catalyst for...') that stacks two of the flagged tells in a single sentence and was shared as an example of the style. No further named/screenshotted marketing websites were found in this pass of research; treat 'canonical examples' for this category as thin until a dedicated before/after screenshot roundup is located.",
+  "sources": [
+    "https://www.blakestockton.com/red-flag-words/",
+    "https://www.useaiwriter.com/articles/ai-words-to-avoid-2026",
+    "https://walterwrites.ai/most-common-chatgpt-words-to-avoid/",
+    "https://ruben.substack.com/p/delve",
+    "https://embryo.com/blog/list-words-ai-overuses/",
+    "https://aiphrasefinder.com/common-ai-words/",
+    "https://meresophistry.substack.com/p/id-like-to-delve-into-how-ai-is-fostering",
+    "https://huntingthemuse.net/library/how-to-tell-if-writing-is-ai",
+    "https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing",
+    "https://www.onlinewritingclub.com/p/18-signs-you-used-ai-to-write-that",
+    "https://en.wikipedia.org/wiki/Rule_of_three_(writing)",
+    "https://gptzero.me/news/the-rule-of-three/",
+    "https://www.oliviacal.com/post/ai-writing-tells",
+    "https://medium.com/practice-in-public/the-rule-of-three-a-sign-of-good-writing-or-a-sign-of-ai-d430435c51d6",
+    "https://www.marketreportanalytics.com/news/article/19199",
+    "https://www.plagiarismtoday.com/2025/06/26/em-dashes-hyphens-and-spotting-ai-writing/",
+    "https://proofreaderpro.ai/blog/remove-em-dashes-from-academic-writing",
+    "https://gptscrambler.com/en/blog/how-to-deal-with-em-dashes-in-ai-overuse",
+    "https://genztranslator.substack.com/p/ai-em-dash-chatgpt-writing",
+    "https://www.theringer.com/2025/08/20/pop-culture/em-dash-use-ai-artificial-intelligence-chatgpt-google-gemini",
+    "https://arxiv.org/pdf/2603.27006",
+    "https://www.seangoedecke.com/em-dashes/",
+    "https://www.ignorance.ai/p/the-field-guide-to-ai-slop",
+    "https://stackedo.com/ai-writing-cliches-to-avoid/",
+    "https://hyacinth.ai/spot-ai-written-content-phrases/",
+    "https://gptzero.me/news/most-common-ai-vocabulary/",
+    "https://justdone.com/blog/ai/common-ai-words",
+    "https://www.blakestockton.com/red-flag-phrases/",
+    "https://link.springer.com/article/10.1007/s00146-025-02729-5",
+    "https://www.linkedin.com/posts/srinigosangi_in-todays-fast-paced-world-ai-isnt-just-activity-7276725669110149121-ufit"
+  ],
+  "community_sentiment": "Overwhelmingly mockery and fatigue. Writers, designers, and readers treat this vocabulary cluster ('delve,' 'elevate,' 'unlock,' em dashes, 'not just X, it's Y') as an in-joke/meme at this point — the 'delve' phenomenon in particular spawned its own explainer posts and Twitter/X ridicule from 2023 onward. There is a documented self-censorship feedback loop: human writers report deliberately avoiding em dashes, rule-of-three, and power verbs they'd otherwise use naturally, purely to avoid being mistaken for AI output, which several commentators (Ringer, Sean Goedecke) argue is an overcorrection punishing legitimate human stylistic choices. Sentiment is more measured among linguists/detection researchers, who caution that any single tell is weak evidence and that clustering/frequency matters far more than presence of one phrase.",
+  "detection_signals": "Grep-able phrase list for hero/feature/CTA copy: 'elevate your', 'unlock your', 'seamless(ly)', 'empower(ing)', 'supercharge', 'revolutioniz(e/ing)', 'game-changing', 'transform your', 'streamline your', 'leverage', 'in today's fast-paced', 'in today's digital landscape', 'as technology continues to evolve', 'it's not just', 'not only...but also', 'ready to transform', 'take your ... to the next level', 'whether you're a ... or a'. Punctuation signal: em-dash count per 1,000 words of body/marketing copy (a rate at or above roughly 3 per 1,000 words, or any use of em dash inside headline/subhead microcopy, is a flaggable outlier for most commercial web copy which typically uses periods/commas). Structural signal: three-item parallel lists in headlines or feature captions (comma- or period-separated triads of adjectives/short verb phrases), especially when the three items are near-synonyms rather than distinct claims. Also scan for repeated '-ing' clause stacking at the end of sentences (three or more gerund phrases chained with commas) and unattributed credibility phrases ('trusted by leaders', 'recognized experts') with no named source nearby in the DOM.",
+  "human_design_contrast": "Copy written or edited by humans for a specific product tends to name concrete nouns, numbers, and mechanisms instead of power verbs — 'Cuts deploy time from 40 minutes to 90 seconds' rather than 'Supercharge your deployments.' Professional copywriters and brand style guides (e.g., Mailchimp's, Stripe's) explicitly favor plain verbs, contractions, and varied sentence length/rhythm over uniform templated cadence, and intentionally avoid formulaic contrast constructions unless used sparingly for genuine rhetorical effect. Human-edited sites also tend to show idiosyncratic voice (in-house jokes, specific customer quotes with names/titles, and honest limitations) rather than uniformly upbeat, hedge-free claims across every section.",
+  "false_positive_notes": "None of these devices are AI-exclusive, and single-instance flagging produces false positives. Em dashes are a legitimate, decades-old feature of edited English prose (favored by many professional editors and publications like The New Yorker); a copywriter or editor with a strong personal style may simply use them heavily. The rule of three and 'not X, but Y' antithesis are classical rhetorical devices (Cicero, MLK's 'I Have a Dream,' pre-AI advertising slogans like 'Not just a lipstick, it's an attitude') long predating LLMs, so their presence alone is weak evidence. Aspirational verbs like 'empower' and 'unlock' have been staples of tech and lifestyle brand voice (Apple, Nike, Peloton) since well before generative AI existed. Reliable detection requires looking at clustering (multiple tells co-occurring), frequency relative to established human baselines, and absence of product-specific detail — not any single word or device in isolation. Sites written by non-native English speakers, by junior marketers following an internal template, or by any writer who has simply absorbed the now-widespread 'LLM-polish' style (the documented post-2022 spike in human use of 'delve'/'robust'/'pivotal') can trigger these signals without any AI tool involvement.",
+  "uncertain": [
+    "canonical_examples"
+  ]
+}

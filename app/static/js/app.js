@@ -21,6 +21,7 @@ let catalogScholarshipsPromise = null;
 let catalogProgramsPromise = null;
 let catalogCompetitionsPromise = null;
 let activeOpportunityView = "scholarships";
+let activeViewTransition = null;
 let scholarshipSearchQuery = "";
 let programSearchQuery = "";
 let competitionSearchQuery = "";
@@ -251,25 +252,9 @@ function wirePageMotion() {
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
     return;
   }
-  const targets = document.querySelectorAll(".reveal-on-scroll");
-  if (!("IntersectionObserver" in window) || targets.length === 0) {
-    return;
-  }
+  // Gates the few state-tied animations (hero marker draw, new-result arrival,
+  // fit-ring draw). Sections themselves render instantly with no reveal.
   document.documentElement.classList.add("motion-ready");
-  const observer = new IntersectionObserver(
-    (entries, currentObserver) => {
-      for (const entry of entries) {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("is-visible");
-          currentObserver.unobserve(entry.target);
-        }
-      }
-    },
-    { threshold: 0.12 }
-  );
-  for (const target of targets) {
-    observer.observe(target);
-  }
 }
 
 function wireOpportunityTabs() {
@@ -341,11 +326,31 @@ async function activateOpportunityView(view, options = {}) {
     button.setAttribute("aria-selected", selected ? "true" : "false");
   }
 
-  resultsSection.hidden = view !== "scholarships" || !lastResults;
-  programsSection.hidden = view !== "programs" || lastPrograms === null;
-  competitionsSection.hidden = view !== "competitions" || lastCompetitions === null;
-  catalogSection.hidden = view !== "catalog";
-  savedSection.hidden = view !== "saved";
+  const applyViewVisibility = () => {
+    resultsSection.hidden = view !== "scholarships" || !lastResults;
+    programsSection.hidden = view !== "programs" || lastPrograms === null;
+    competitionsSection.hidden = view !== "competitions" || lastCompetitions === null;
+    catalogSection.hidden = view !== "catalog";
+    savedSection.hidden = view !== "saved";
+  };
+  // Lane switches crossfade via the View Transitions API where supported.
+  // Only one transition at a time: starting another aborts the first with an
+  // unhandled InvalidStateError, so rapid updates fall back to instant.
+  if (
+    document.startViewTransition &&
+    document.documentElement.classList.contains("motion-ready") &&
+    !document.hidden &&
+    !activeViewTransition
+  ) {
+    activeViewTransition = document.startViewTransition(applyViewVisibility);
+    const clearTransition = () => {
+      activeViewTransition = null;
+    };
+    activeViewTransition.finished.then(clearTransition, clearTransition);
+    activeViewTransition.ready.catch(() => {});
+  } else {
+    applyViewVisibility();
+  }
 
   if (view === "programs" && lastPrograms !== null) {
     renderPrograms(lastPrograms);
@@ -1539,8 +1544,14 @@ async function loadSaved() {
 
 function updateSavedCount() {
   const count = savedIds.size + savedProgramIds.size + savedCompetitionIds.size;
+  const changed = savedCountEl.textContent !== String(count);
   savedCountEl.textContent = String(count);
   savedCountEl.hidden = count === 0;
+  if (changed && count > 0) {
+    savedCountEl.classList.remove("count-pop");
+    void savedCountEl.offsetWidth;
+    savedCountEl.classList.add("count-pop");
+  }
   updateOpportunityTabCounts();
 }
 
@@ -1604,10 +1615,10 @@ function trackerSummary(items) {
     0
   );
   if (totalSteps) {
-    const statusSummary = parts.length ? `${head} — ${parts.join(", ")}.` : `${head}.`;
+    const statusSummary = parts.length ? `${head}: ${parts.join(", ")}.` : `${head}.`;
     return `${statusSummary} ${completedSteps}/${totalSteps} application steps complete.`;
   }
-  return parts.length ? `${head} — ${parts.join(", ")}.` : `${head}.`;
+  return parts.length ? `${head}: ${parts.join(", ")}.` : `${head}.`;
 }
 
 function refreshTrackerSummary() {
@@ -2323,7 +2334,7 @@ function specialRequirementText(requirement) {
     return requirement;
   }
   const label = requirement?.label || "Extra eligibility check";
-  return requirement?.details ? `${label} — ${requirement.details}` : label;
+  return requirement?.details ? `${label}: ${requirement.details}` : label;
 }
 
 function deadlineUrgencyText(item) {
@@ -2920,7 +2931,7 @@ function renderPreviewResults(data) {
 
   if (!data.results.length) {
     showPreviewError(
-      "No preview matches for those three answers — try another interest, or build the full profile for the complete search."
+      "No preview matches for those three answers. Try another interest, or build the full profile for the complete search."
     );
     wrap.hidden = true;
     return;
@@ -4162,14 +4173,14 @@ function buildCompetitionCard(competition, options = {}) {
     const badges = document.createElement("div");
     badges.className = "badge-row";
     if (options.catalogContext) {
-      badges.appendChild(makeBadge("Full catalog — not personalized", "badge-catalog"));
+      badges.appendChild(makeBadge("Full catalog · not personalized", "badge-catalog"));
     }
     badges.appendChild(makeBadge("Special eligibility", "badge-special"));
     body.appendChild(badges);
   } else if (options.catalogContext) {
     const badges = document.createElement("div");
     badges.className = "badge-row";
-    badges.appendChild(makeBadge("Full catalog — not personalized", "badge-catalog"));
+    badges.appendChild(makeBadge("Full catalog · not personalized", "badge-catalog"));
     body.appendChild(badges);
   }
 
@@ -4324,14 +4335,14 @@ function buildProgramCard(program, options = {}) {
     const badges = document.createElement("div");
     badges.className = "badge-row";
     if (options.catalogContext) {
-      badges.appendChild(makeBadge("Full catalog — not personalized", "badge-catalog"));
+      badges.appendChild(makeBadge("Full catalog · not personalized", "badge-catalog"));
     }
     badges.appendChild(makeBadge("Special eligibility", "badge-special"));
     body.appendChild(badges);
   } else if (options.catalogContext) {
     const badges = document.createElement("div");
     badges.className = "badge-row";
-    badges.appendChild(makeBadge("Full catalog — not personalized", "badge-catalog"));
+    badges.appendChild(makeBadge("Full catalog · not personalized", "badge-catalog"));
     body.appendChild(badges);
   }
 
@@ -4479,7 +4490,7 @@ function deadlineParts(deadline, estimated) {
           note: `Last cycle closed ${formatMonthYear(estimated)} \u2014 check sponsor site`,
         };
       }
-      return { value: formatVerifiedDate(estimated), note: "Estimated \u2014 confirm on sponsor site" };
+      return { value: formatVerifiedDate(estimated), note: "Estimated; confirm on sponsor site" };
     }
     return { value: "Not listed", note: "Confirm on sponsor site" };
   }
@@ -4636,7 +4647,7 @@ function buildSpecialRequirements(requirements) {
     label.textContent = requirement.label || "Extra eligibility check";
     li.appendChild(label);
     if (requirement.details) {
-      li.appendChild(document.createTextNode(` — ${requirement.details}`));
+      li.appendChild(document.createTextNode(`: ${requirement.details}`));
     }
     list.appendChild(li);
   }
@@ -4684,7 +4695,7 @@ function buildCard(card, tierClass) {
   const badges = document.createElement("div");
   badges.className = "badge-row";
   if (card.catalog_context) {
-    badges.appendChild(makeBadge("Full catalog — not personalized", "badge-catalog"));
+    badges.appendChild(makeBadge("Full catalog · not personalized", "badge-catalog"));
   }
   if (card.closing_soon) {
     badges.appendChild(makeBadge("Closing soon", "badge-closing"));
@@ -4698,7 +4709,7 @@ function buildCard(card, tierClass) {
   if (card.eligible_schools && card.eligible_schools.length > 0) {
     const targetMatched = card.score_breakdown && card.score_breakdown.target_school > 0;
     if (targetMatched) {
-      badges.appendChild(makeBadge("★ At your target school", "badge-school-match"));
+      badges.appendChild(makeBadge("At your target school", "badge-school-match"));
     } else {
       badges.appendChild(
         makeBadge("Only at " + schoolBadgeLabel(card.eligible_schools), "badge-school")
@@ -4971,7 +4982,7 @@ function formatDeadline(deadline, estimated) {
   }
   if (!deadline || deadline === "VERIFY" || String(deadline).startsWith("VERIFY")) {
     return estimated
-      ? `~${estimated} (estimated — confirm official date)`
+      ? `~${estimated} (estimated; confirm official date)`
       : "Confirm on sponsor site";
   }
   return deadline;

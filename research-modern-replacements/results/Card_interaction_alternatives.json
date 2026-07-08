@@ -1,0 +1,90 @@
+{
+  "pattern_area": "Card interaction alternatives (hover/focus/press treatments for cards and list rows)",
+  "current_flagged_state": "The EnsureCollege site applies one uniform hover treatment to every card on the page: translateY(-3px) plus a growing box-shadow. Because the exact same lift+shadow-grow combo is the default 'make it feel interactive' output of most AI page generators and component libraries, it reads as templated rather than designed - it doesn't distinguish clickable cards from static ones, doesn't vary by content type (stat card vs. article card vs. list row), and provides no meaningful signal beyond 'something is under the cursor.'",
+  "goal": "Replace the uniform lift with interaction treatments that (a) are chosen per card type rather than applied blanket-wide, (b) read as intentional product/editorial design rather than generated boilerplate, (c) work for keyboard/touch users and not just mouse hover, and (d) match a professional, dashboard-leaning product feel - which for EnsureCollege likely means restrained state changes (or none) on data-dense cards, with slightly more expressive treatment reserved for genuinely editorial/marketing cards.",
+  "options": [
+    {
+      "option": "Border/ink color shift (no lift, no shadow growth)",
+      "description": "On hover/focus the card's border color deepens or shifts to the accent/ink color (and optionally text darkens slightly). Border width and box-shadow stay constant so the card's footprint never moves; only color changes.",
+      "why_it_reads_human": "This is the treatment real product design systems converge on: a hybrid of a light border plus a subtle resting shadow, where hover only recolors the border rather than growing the shadow, keeping the layout stable and the motion invisible - the opposite of a 'look, it moved' animation.",
+      "adoption_examples": "Common pattern across SaaS design systems (Stripe-, Linear-, Notion-style card treatments) that pair a 1px light border with a small resting shadow and change only border color on hover [uncertain - based on aggregated design-system commentary, not a direct first-party screenshot audit]",
+      "effort": "low"
+    },
+    {
+      "option": "Background tint fill",
+      "description": "Card or row background shifts from the base paper color to a very light tint (2-6% of the accent hue, or a warmer/cooler neutral) on hover/focus, with no shadow or transform change at all.",
+      "why_it_reads_human": "Background tint is the standard 'this row/card is interactive' signal in dense data UIs and enterprise tables, because it reads as a state change in the surface rather than a physical animation - it doesn't imply the object is a floating tile that lifts off the page.",
+      "adoption_examples": "Enterprise data table and dashboard patterns broadly recommend a subtle background shift on the hovered row to confirm which row an action will hit, kept understated to avoid visual clutter",
+      "effort": "low"
+    },
+    {
+      "option": "Underline or arrow reveal (editorial link-style)",
+      "description": "For cards whose primary role is 'read more'/navigation (article cards, resource cards), the title or a trailing arrow glyph animates in on hover - an underline draws in via clip-path/background-size, or a small arrow slides into view next to the title. The card container itself stays static.",
+      "why_it_reads_human": "This borrows from editorial hyperlink conventions (magazine/newspaper sites), where the reveal is tied to the specific clickable text/affordance rather than decorating the whole card shell - it signals 'this specific thing is a link' rather than 'this whole box is generically interactive.'",
+      "adoption_examples": "National Geographic-style underline-grows-from-bottom link treatment; Pitchfork-style underline/color fade on article links [uncertain - characterizations from secondary write-ups, not a direct current-site audit]",
+      "effort": "medium"
+    },
+    {
+      "option": "Inset press / active-state feedback (no hover motion, only on click/tap)",
+      "description": "Cards have no hover animation at all, but on :active (mouse-down or touch) briefly apply an inset shadow and/or 1px translateY to simulate a physical press, reverting instantly on release.",
+      "why_it_reads_human": "Press feedback answers 'did my click register' rather than 'is this hoverable,' which is the actual product-feel question on a dashboard - tactile confirmation on interaction, not ambient animation while merely passing over content.",
+      "adoption_examples": "Common in native-feeling web app buttons/rows: inset box-shadow plus 1-2px downward translate on :active, reverted on release",
+      "effort": "low"
+    },
+    {
+      "option": "No hover effect at all",
+      "description": "Cards/rows in dense, data-oriented sections (e.g., stat tiles, saved-item lists, results tables) get zero visual change on hover. Interactivity is signaled only by cursor:pointer and a clear focus-visible ring for keyboard users; clicking works but nothing decorates the pointer pass-over.",
+      "why_it_reads_human": "This is the modern answer for dashboard/data-dense UI: UX pattern analyses of enterprise dashboards and tables explicitly flag hover-only decoration as anti-pattern noise in dense grids, recommending that dense data surfaces rely on layout, typography, and focus states rather than decorative hover motion.",
+      "adoption_examples": "Enterprise dashboard and data-table pattern libraries (per Pencil & Paper's UX pattern analyses of dashboards and enterprise data tables) recommend minimal-to-no hover decoration on dense rows, reserving emphasis for focus and selection states",
+      "effort": "low"
+    },
+    {
+      "option": "Cursor-only signal",
+      "description": "The only differentiation between clickable and non-clickable cards is the CSS cursor property (pointer vs. default/not-allowed) - no color, background, shadow, or transform change on hover.",
+      "why_it_reads_human": "Extremely restrained and 'quiet' - appropriate when a grid mixes clickable and inert cards (e.g., stat tiles that aren't links next to resource cards that are) and you want the cursor itself to do the disambiguation work rather than animating everything.",
+      "adoption_examples": "General best practice for disambiguating interactive vs. static tiles in dashboards; not tied to one flagship product, functions as a baseline layered under any of the above options",
+      "effort": "low"
+    },
+    {
+      "option": "Shadow-only refinement (constant border, shadow deepens slightly)",
+      "description": "A middle-ground option: border and layout stay fixed, only the resting shadow's blur/opacity increases slightly (e.g., from 0 2px 8px rgba(0,0,0,.08) to 0 4px 16px rgba(0,0,0,.12)) with no translateY at all.",
+      "why_it_reads_human": "Retains a hint of depth feedback (softer than the current lift+grow combo) while removing the actual movement, which is the more identifiable 'AI tell' component of the current pattern - shadow-only changes read as a refinement rather than a generated micro-animation.",
+      "adoption_examples": "Widely used hybrid card pattern (light border + resting shadow, shadow deepens on hover, border and radius held constant) across modern SaaS design systems [uncertain - synthesized from aggregated design-system commentary]",
+      "effort": "low"
+    },
+    {
+      "option": "Corner/accent mark reveal",
+      "description": "A small arrow, chevron, or plus-icon glyph fades or slides in at a fixed corner of the card on hover/focus, while the rest of the card (border, shadow, position) stays static.",
+      "why_it_reads_human": "Concentrates the 'this is clickable' signal into one small, deliberate element instead of animating the entire card shell, which reads as an intentional affordance choice rather than a blanket interactivity effect applied to every element on the page.",
+      "adoption_examples": "Common in documentation/resource-card patterns (e.g., Stripe docs-style 'read more' cards with a trailing arrow) [uncertain - characterization from secondary sources, not directly verified against current live markup]",
+      "effort": "medium"
+    }
+  ],
+  "recommended": "Use a tiered, per-card-type approach rather than one blanket effect - this itself is the fix, since uniformity was the tell. (1) For genuinely clickable list/resource/article cards: border/ink color shift (border deepens toward the marigold-tinted ink) + a very light background tint, with no shadow growth and no transform - stable footprint, color-only signal, on both :hover and :focus-visible so keyboard users get the identical treatment (WCAG-recommended hover/focus parity). Optionally add a small trailing arrow reveal next to the card title specifically (not the whole card) for cards whose sole purpose is navigation, since that ties the motion to the actual affordance. (2) For stat tiles, dashboard summary cards, and any dense data rows/tables: no hover effect at all beyond cursor:pointer where clickable, or genuinely none where inert - matching the 'professional dashboard' owner preference and the current UX-research consensus that decorative hover states are noise in data-dense surfaces. (3) For all interactive cards everywhere, replace any lift on click with a brief inset-shadow/1px press state on :active only, giving tactile click confirmation without a hover animation. This combination reads current because it varies by content type (a tell in itself is uniformity), removes the compositor-friendly-but-cliche translateY lift, and keeps every state change readable in the paper/ink/marigold palette without adding new colors.",
+  "sources": [
+    "https://www.pencilandpaper.io/articles/ux-pattern-analysis-enterprise-data-tables",
+    "https://www.pencilandpaper.io/articles/ux-pattern-analysis-data-dashboards",
+    "https://design-system.service.gov.uk/get-started/focus-states/",
+    "https://designsystem.digital.gov/components/button/",
+    "https://designsystem.digital.gov/utilities/outline/",
+    "https://design-patterns.service.justice.gov.uk/components/card/",
+    "https://www.wcag.com/authors/1-4-13-content-on-hover-or-focus/",
+    "https://www.w3.org/WAI/WCAG21/Techniques/css/C39",
+    "https://www.smashingmagazine.com/2021/10/respecting-users-motion-preferences/",
+    "https://css-tricks.com/almanac/rules/m/media/prefers-reduced-motion/",
+    "https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/prefers-reduced-motion",
+    "https://css-tricks.com/styling-links-with-real-underlines/",
+    "https://mn.gov/mnit/media/blog/?id=38-680276",
+    "https://blog.logrocket.com/box-shadow-css/",
+    "https://www.nikolailehbr.ink/blog/realistic-button-design-css/",
+    "https://www.subframe.com/tips/css-card-hover-effect-examples"
+  ],
+  "trend_context": "Through 2025-2026, professional SaaS/dashboard design is moving away from generic 'hover lift + shadow grow' toward restrained, layout-stable state changes - color/border shifts and background tints that don't move the element - because the lift-and-grow combo is now recognizable as a default AI/template output rather than a deliberate choice [uncertain - trend characterization synthesized from multiple secondary sources rather than a single authoritative trend report]. In parallel, enterprise dashboard/data-table UX research (Pencil & Paper's 2025-2026 pattern analyses) is increasingly explicit that dense, data-oriented surfaces should minimize or eliminate decorative hover states entirely, reserving visual emphasis for selection, focus, and actual state (sorted, filtered, error) rather than ambient mouse-over decoration. Editorial/content sites are trending toward affordance-specific micro-interactions (underline draws, arrow slides tied to a specific link or title) instead of whole-card animation. Government and accessibility-first design systems (GOV.UK, USWDS, UK Parliament, MOJ) reinforce this by treating focus-visible as the non-negotiable baseline and hover as an optional enhancement that must mirror focus, which pushes professional products toward hover treatments that are simple enough to replicate exactly on focus.",
+  "vanilla_css_notes": "All of the recommended options are achievable in pure CSS with zero JavaScript, which is ideal given the CSP script-src 'self' constraint (no inline scripts) - hover/focus/active state changes don't need JS at all. Concrete approach: (1) Define hover/focus states with a shared selector so they never drift: `.card:hover, .card:focus-visible { border-color: var(--ink-accent); background-color: var(--paper-tint); }` - keep `transition: border-color 150ms ease, background-color 150ms ease;` and explicitly do NOT transition `transform` or `box-shadow` size for the lift-free options. (2) For :active press feedback: `.card:active { box-shadow: inset 0 1px 3px rgba(0,0,0,.12); transform: translateY(1px); transition: transform 60ms ease, box-shadow 60ms ease; }` - this is a short, click-only transition, not a hover animation, so it doesn't recreate the flagged tell. (3) For the corner-arrow or underline reveal on card titles: scope the transition to the small glyph/pseudo-element only, e.g. `.card__arrow { opacity: 0; transform: translateX(-4px); transition: opacity 150ms ease, transform 150ms ease; } .card:hover .card__arrow, .card:focus-visible .card__arrow { opacity: 1; transform: translateX(0); }` - underline reveal can use `background-image: linear-gradient(...); background-size: 0% 1px; background-repeat: no-repeat; transition: background-size 200ms ease;` flipped to 100% on hover/focus, which avoids layout-affecting properties. (4) For 'no hover' dense cards, simply omit any :hover rule and rely on `cursor: pointer` plus a `:focus-visible` outline - fewer rules, not more. (5) Since no JS is needed for any of this, the CSP constraint is a non-issue here; if a future need arises for JS-driven interaction (e.g., ripple effects), it must live in an external static .js file referenced via <script src>, never inline or in an onclick attribute.",
+  "accessibility_notes": "Hover and focus-visible states should be visually identical or near-identical per accessibility best practice, so keyboard users get the same signal mouse users do - implement both in the same selector rule rather than styling them separately. Never rely on color change alone to signal interactivity (WCAG 1.4.1 use of color): pair the border/background color shift with at least one non-color cue (the arrow/underline reveal, or simply the pre-existing cursor and semantic markup) for users with color vision deficiency. Any border/tint color change should maintain at least 3:1 contrast against the adjacent background for non-text UI components (WCAG 1.4.11). Wrap all transitions in `@media (prefers-reduced-motion: reduce) { .card, .card__arrow { transition: none; } }` so users who've opted out get instant state changes rather than none at all - the state must still be visible, just without animation (per WCAG 2.3.3 / C39 guidance, motion-triggered-by-interaction should be reducible, and the fallback should still communicate state). Ensure hover-only affordances have a non-hover equivalent: since hover doesn't exist on touch, cards must remain fully operable via tap with visible :active feedback, and links/arrows revealed 'on hover' must not be the only way to discover that a card is clickable (title text itself should look and read as a link/heading, e.g. via existing underline or semantic <a> wrapping).",
+  "pitfalls": "The uniform-effect problem can resurface in a new form: applying the same border-color-shift-plus-tint to every single card on the site (stat tiles, article cards, nav cards, form cards alike) just swaps one uniform tell for another. Vary by content type and reserve richer treatments (underline/arrow reveal) for genuinely link-like cards only. An animated arrow or underline reveal becomes its own cliche if used on every card indiscriminately - restrict it to the 1-2 card types where it's the actual affordance (e.g., 'read the full profile'), not decorative flourish. Custom/animated cursors (cursor trails, cursor-morphing-into-icons) are a real 2025-2026 trend but belong to creative-agency/portfolio sites - applying one to a professional/dashboard-leaning product would read as more 'AI generated web trend chasing,' not less; avoid entirely for this site. Overusing inset/pressed-button skeuomorphism across many elements can drift into a neumorphism aesthetic, which is its own dated/AI-adjacent tell if applied broadly rather than to true click feedback. Finally, removing all hover effects site-wide without a clear focus/cursor replacement risks the opposite failure - cards that look interactive (rounded corners, elevated resting shadow) but give zero feedback of any kind, which reads as broken rather than restrained; the 'no hover' option only works when cursor and focus-visible are still doing clear, deliberate signaling work.",
+  "uncertain": [
+    "options",
+    "trend_context"
+  ]
+}

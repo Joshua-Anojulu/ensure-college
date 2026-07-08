@@ -1,0 +1,75 @@
+{
+  "category_name": "Typography tells",
+  "definition": "This category covers typeface and text-styling choices that observers use to flag a website or app as AI-generated: near-universal reliance on Inter or an indistinguishable geometric sans as the sole typeface, oversized hero headlines set with unusually tight letter-tracking, decorative gradient-filled headline text, repeated font-pairing combos across otherwise unrelated products, and untouched default type scales inherited from shadcn/ui and Tailwind CSS starter configurations. Together these signal that no deliberate typographic system was designed for the product.",
+  "why_flagged_as_ai": "AI code- and design-generation models (Claude, ChatGPT, v0, Lovable, Bolt, Cursor, etc.) are trained on huge corpora of scraped web/Tailwind/shadcn code from roughly 2019-2024, in which Inter and a small handful of Google Fonts (Geist, Space Grotesk, Instrument Serif) are wildly overrepresented as the 'default' or example typeface. When a prompt does not specify a typeface, the model regresses to this statistical mode rather than making a brand-driven choice. Compounding this, shadcn/ui ships 'Inter Variable, sans-serif' as its literal default CSS variable, and most AI builder tools (v0, Lovable, Bolt, Replit) are built directly on the shadcn+Tailwind stack, so an un-customized scaffold reproduces the same font stack, the same default Tailwind type scale (text-xs...text-9xl), and the same utility-class idioms (tracking-tight, bg-clip-text) across completely unrelated products. Because the same statistical average is reproduced whenever a builder is used 'out of the box,' the tells read less as a stylistic movement and more as a fingerprint of unedited, unconstrained generation.",
+  "features": [
+    {
+      "feature": "Inter (or an indistinguishable geometric sans) as the sole/default typeface",
+      "description": "Nearly every unconstrained AI-generated interface uses Inter, described by critics as 'the Helvetica of the LLM era.' It is the literal default font-family in shadcn/ui's CSS variables and thus in v0, Lovable, Bolt, and similar AI builders. Because it dominates the scraped training corpus, models reach for it whenever no brand direction is given.",
+      "ai_association_strength": "strong",
+      "first_or_notable_mention": "925studios.co 'AI Slop Fonts and Gradients' blog post and the Developers Digest '16 patterns' post (2026) are the most-cited write-ups; the underlying shadcn/ui default ('Inter Variable, sans-serif') predates the framing but is the mechanical cause. [uncertain]"
+    },
+    {
+      "feature": "Huge, tightly-tracked hero headlines",
+      "description": "Oversized display headlines (Tailwind's text-6xl/7xl/8xl+) combined with negative letter-spacing (tracking-tight/tracking-tighter) is the default AI 'big text, subtext, button' hero formula. Full-sentence headlines rendered at display size, rather than short punchy phrases sized appropriately, is called out as a specific misuse.",
+      "ai_association_strength": "strong",
+      "first_or_notable_mention": "Developers Digest '16 Patterns That Out Your App as Vibe-Coded' (2026); AI Agent Skills 'Why Every AI-Generated Website Looks the Same' blog (2026) describes the same 'big text, subtext, button' formula. [uncertain]"
+    },
+    {
+      "feature": "Gradient headline / gradient text",
+      "description": "Text painted with a CSS gradient via background-clip: text (Tailwind's text-transparent bg-clip-text bg-gradient-to-r utilities), typically purple-to-blue ('VibeCode Purple'), used decoratively on hero headlines and stat/metric numbers rather than for functional emphasis.",
+      "ai_association_strength": "strong",
+      "first_or_notable_mention": "Widely referenced across 925studios, Developers Digest, prg.sh 'Why Your AI Keeps Building the Same Purple Gradient Website', and thecrit.co in 2025-2026 write-ups. [uncertain]"
+    },
+    {
+      "feature": "Repeated cross-site font-pairing combos (Inter + Space Grotesk / Instrument Serif / Geist)",
+      "description": "A small rotating set of Google Fonts pairings recurs across unrelated AI-generated products: Inter as body/UI font paired with Space Grotesk or Geist for headings, or an Instrument Serif italic word used as a single accent inside an otherwise sans-serif headline. Because the same few pairings appear everywhere, sites that never coordinated with each other end up visually identical.",
+      "ai_association_strength": "moderate",
+      "first_or_notable_mention": "Developers Digest blog names this 'Repeated Font Combinations' and 'Serif Italic Accents' as two of its 16 patterns (2026); impeccable.style/slop/ documents the same italic-serif-as-hero-accent pattern. [uncertain]"
+    },
+    {
+      "feature": "Default/untouched shadcn-Tailwind type scale with flat hierarchy",
+      "description": "Sites ship with Tailwind's stock text-xs through text-9xl scale never customized to the brand, and adjacent steps in the hierarchy (e.g., body vs. subhead) are too close in size to read as distinct levels. Recommended minimum ratio between steps (~1.25x) is routinely ignored, and body text sometimes dips below the 14-16px legibility floor.",
+      "ai_association_strength": "moderate",
+      "first_or_notable_mention": "Developers Digest blog post explicitly calls out 'Flat Type Hierarchy' and 'Tiny Body Text' as distinct patterns (2026). [uncertain]"
+    },
+    {
+      "feature": "Small uppercase tracked 'eyebrow' label directly above the hero headline",
+      "description": "A tiny, letter-spaced, uppercase span (often in a muted or brand color) placed immediately above the oversized hero headline — a boilerplate compositional tic that appears regardless of product category.",
+      "ai_association_strength": "moderate",
+      "first_or_notable_mention": "Developers Digest '16 Patterns' post names this the 'Hero Eyebrow Label' default AI SaaS hero pattern (2026). [uncertain]"
+    }
+  ],
+  "tools_that_produce_it": "v0, Lovable, Bolt, and Replit are built on and default to the React + Tailwind + shadcn/ui stack, whose CSS variable literally sets --font-sans to 'Inter Variable, sans-serif' unless overridden; unconstrained prompting to ChatGPT/Claude/Cursor for 'a landing page' reproduces the same defaults because the underlying LLMs regress to the statistical mode of their Tailwind/shadcn-heavy training data. Framer AI and Webflow AI's generative layout tools are anecdotally described as prone to similar generic-font defaults, but this was not independently confirmed in sourced articles. [uncertain]",
+  "canonical_examples": "No single widely-agreed-upon named example site (e.g., a specific startup landing page) recurs consistently across the sourced articles; critics instead point to a generalized 'median AI SaaS landing page' archetype (925studios calls it 'the median aesthetic') and to gallery/critique pages such as impeccable.style/slop/ that collect anonymized or composite screenshots rather than naming specific companies. Treat this field as largely unconfirmed by named examples. [uncertain]",
+  "sources": [
+    "https://www.925studios.co/blog/ai-slop-design-tells",
+    "https://www.925studios.co/blog/ai-slop-web-design-guide",
+    "https://www.developersdigest.tech/blog/ai-design-slop-and-how-to-spot-it",
+    "https://impeccable.style/slop/",
+    "https://prg.sh/ramblings/Why-Your-AI-Keeps-Building-the-Same-Purple-Gradient-Website",
+    "https://dev.to/alanwest/why-every-ai-built-website-looks-the-same-blame-tailwinds-indigo-500-3h2p",
+    "https://www.aiagentskills.ai/blog/ai-websites-all-look-the-same",
+    "https://medium.com/@khushboo.nijhawan/your-website-looks-like-everyone-elses-here-s-why-578ec4e88957",
+    "https://medium.com/@chiragthummar16/your-ai-built-websites-look-identical-to-everyone-elses-these-10-skills-fix-that-046ddf58e4d5",
+    "https://www.thefountaininstitute.com/blog/signs-vibe-coded-ui",
+    "https://www.sinton.agency/blog/how-to-spot-a-vibe-coded-website",
+    "https://thecrit.co/resources/vibe-coding-design-guide",
+    "https://andrew.ooo/posts/taste-skill-anti-slop-ai-frontend-review/",
+    "https://ui.shadcn.com/docs/components/radix/typography"
+  ],
+  "community_sentiment": "Predominantly mockery and fatigue. The phenomenon has acquired shorthand names ('AI slop,' 'the Purple Problem,' 'VibeCode Purple,' 'vibe-coded') used pejoratively across dev blogs and social media. Tailwind CSS creator Adam Wathan's August 2025 tweet 'apologizing' for making every Tailwind UI button bg-indigo-500 went viral (over a million views) and is repeatedly cited as the moment the community collectively named the pattern. Commentary frequently frames Inter specifically as tragic-ironic: a genuinely excellent, legitimately popular typeface that 'became the default and exactly why it now reads as generic' — sympathy for the font itself, contempt for its unconsidered reuse. Overall tone: recognition-based ridicule ('you can spot it instantly') paired with practical how-to-avoid-it advice rather than outright anger.",
+  "detection_signals": "Font stack: font-family / @font-face / <link> references limited to 'Inter', 'Inter Tight', 'Geist', 'Space Grotesk', or 'Instrument Serif' pulled from Google Fonts/Fontsource with zero custom or licensed typefaces; CSS variable literally set to 'Inter Variable, sans-serif' (the shadcn/ui default, often left unedited in globals.css or tailwind.config). Only one font family used across headings, body, buttons, and labels (no distinct display face). Tailwind utility classes: tracking-tight or tracking-tighter applied to text-5xl/6xl/7xl/8xl/9xl headings; text-transparent bg-clip-text bg-gradient-to-r/br combined with from-*/to-* color stops on <h1>/<span> for gradient headline text; font-black or font-extrabold on hero copy. Type scale: unmodified Tailwind default scale (text-xs through text-9xl) with no custom clamp()-based fluid typography and adjacent steps closer than ~1.25x apart. Structural pattern: small uppercase <span> or <p> with tracking-wide/tracking-widest sitting directly above an <h1>; a single word wrapped in an italic serif <em>/<span> inside an otherwise sans-serif headline. Body text set below 14px. Copy pairing with generic headline phrasing ('Build faster. Ship smarter.') alongside the above visual patterns strengthens the signal.",
+  "human_design_contrast": "Intentionally designed products treat typography as a brand asset: they license or commission distinctive faces (e.g., Söhne, GT Sectra, Tiempos, Untitled Sans, PP Nouvelle Montreal, Reckless) rather than using whatever a starter template ships with, and build custom fluid type scales (often with clamp()) tuned to the product's content rather than accepting Tailwind's stock steps. Named examples repeatedly cited as doing this well include Linear, Stripe, and Duolingo, whose type choices are recognizable across their own surfaces specifically because they were chosen once and reused deliberately, not regenerated per page. Gradient text, when present at all, tends to be a rare, deliberate accent rather than the default hero treatment, and tight tracking is applied as an optical correction at specific sizes rather than uniformly to every large heading.",
+  "false_positive_notes": "Inter is a legitimately excellent, highly legible variable font that many human-designed products (dashboards, internal tools, some major SaaS sites) choose deliberately for accessibility and international-language support — its presence alone is not proof of AI origin, especially outside marketing/hero contexts. Tight letter-tracking on large display type is a standard, pre-AI typographic optical correction used by professional type designers, not an AI invention. Gradient text as a decorative technique predates AI code generation (it was a recognizable ~2015-era web trend and remains common in human-made fintech/consumer marketing pages). Using the shadcn/ui + Tailwind stack is also simply a popular, fast, well-documented choice among human developers who value velocity over bespoke design, independent of AI tooling. Because each individual signal has legitimate non-AI explanations, reviewers should require a cluster of co-occurring tells (e.g., unedited Inter + gradient hero headline + tracking-tight + icon-card grid + indigo/purple palette) before concluding AI origin from typography alone, rather than flagging on any single feature.",
+  "uncertain": [
+    "features[0].first_or_notable_mention",
+    "features[1].first_or_notable_mention",
+    "features[2].first_or_notable_mention",
+    "features[3].first_or_notable_mention",
+    "features[4].first_or_notable_mention",
+    "features[5].first_or_notable_mention",
+    "tools_that_produce_it",
+    "canonical_examples"
+  ]
+}

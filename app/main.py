@@ -229,6 +229,10 @@ def serve_index(request: Request) -> HTMLResponse:
     html = html.replace(
         "__AI_FEATURES_ENABLED__", "true" if _ai_features_enabled() else "false"
     )
+    # Hero stats state the live catalog size so the copy never drifts from the data.
+    html = html.replace("__COUNT_SCHOLARSHIPS__", str(len(request.app.state.scholarships)))
+    html = html.replace("__COUNT_PROGRAMS__", str(len(request.app.state.programs)))
+    html = html.replace("__COUNT_COMPETITIONS__", str(len(request.app.state.competitions)))
     return HTMLResponse(html, headers={"Cache-Control": "no-cache"})
 
 

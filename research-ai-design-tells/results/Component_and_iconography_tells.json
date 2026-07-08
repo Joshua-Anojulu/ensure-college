@@ -1,0 +1,102 @@
+{
+  "category_name": "Component and iconography tells",
+  "definition": "This category covers component-level UI signals — as opposed to page-level layout or color/typography choices — that observers use to identify a website as AI-generated. It includes the specific widgets and micro-patterns that recur across AI-built sites: icon treatments (emoji, uniform Lucide/Heroicons chips), badge/chip decorations, gradient pill buttons, testimonial cards with placeholder avatars, stat/KPI counters, and uniform hover-lift card grids. These are the smallest, most 'inspectable' unit of AI design tells, since they show up as repeated, near-identical DOM/component structures rather than one-off stylistic choices.",
+  "why_flagged_as_ai": "Three root causes are consistently cited. (1) Training-data bias: LLM code generators (Claude, GPT, Gemini) were trained on a corpus of Tailwind CSS tutorials, shadcn/ui examples, and GitHub SaaS templates from roughly 2019-2024, so their 'default' output is the statistical median of that corpus rather than a designed choice — one source calls it 'the median of every Tailwind CSS tutorial scraped from GitHub between 2019 and 2024.' (2) Tool/scaffold defaults: AI site builders (v0, Lovable, Bolt.new, Cursor, Replit Agent) are optimized around the shadcn/ui + Tailwind + lucide-react stack, so every generated feature card, badge, and button inherits the same unstyled-but-pretty defaults unless a developer explicitly overrides them. (3) Template reuse without iteration: because generation is fast and cheap, builders rarely revisit or vary the first output, so the same component shape (icon-chip + h3 + two lines of copy, repeated three or four times) gets shipped unmodified across thousands of unrelated sites, making the pattern instantly recognizable at scale.",
+  "features": [
+    {
+      "feature": "Emoji used as feature icons",
+      "description": "Raw emoji characters (e.g. car, basket, star, sparkles) embedded directly in markup in place of a designed icon/SVG for feature cards, sidebar items, or badges. Cited as breaking single-accent color discipline because each emoji injects its own uncontrolled hue.",
+      "ai_association_strength": "strong",
+      "first_or_notable_mention": "dev.to 'I catalogued every tell that makes a UI look AI-generated' (2026); reiterated in publishd.app's AI-built-site guide, which explicitly lists 'sparkle icons, checkmark glyphs, emoji as iconography' as detection triggers"
+    },
+    {
+      "feature": "Identical Lucide/Heroicons icon-chip repeated per feature card",
+      "description": "A single line-icon from lucide-react (or Heroicons) placed inside an identically-shaped rounded-square container with a pastel/tinted background, repeated verbatim across every card in a 3-4 column features grid ('icon tile stacked above heading'). Described as 'the universal AI feature-card template' because every generator outputs the exact same shape.",
+      "ai_association_strength": "strong",
+      "first_or_notable_mention": "publishd.app 'How to make an AI-built website stop looking AI-built' (2026)"
+    },
+    {
+      "feature": "Gradient pill buttons",
+      "description": "CTA buttons using fully-rounded ('pill') shape combined with a purple-to-blue (or cyan-to-violet) linear gradient fill, often paired with a plain secondary/ghost button in a two-button hero CTA layout. Framed as the 'safe' choice an LLM learned from thousands of SaaS landing pages.",
+      "ai_association_strength": "strong",
+      "first_or_notable_mention": "925studios.co 'AI Slop Web Design' guide (2026); prg.sh 'Why Your AI Keeps Building the Same Purple Gradient Website'"
+    },
+    {
+      "feature": "Floating badge chips (\"New\", \"AI-powered\", sparkle badge)",
+      "description": "A small pill-shaped label — often with a sparkle glyph — positioned directly above the hero H1 or floating over a card corner, announcing a feature or product status. Frequently paired with a tiny uppercase, letter-spaced 'eyebrow' label above the headline.",
+      "ai_association_strength": "moderate",
+      "first_or_notable_mention": "publishd.app blog: 'a tiny uppercase letter-spaced label sitting immediately above an oversized hero headline... is the default AI SaaS hero'"
+    },
+    {
+      "feature": "Testimonial cards with generated/placeholder avatars",
+      "description": "Testimonial or social-proof cards using stock/placeholder avatar generators (Pravatar, UI Faces, DiceBear/avataaars, randomuser.me) rather than real photos, sometimes paired with generic names and job titles. Considered one of the most reliable AI/vibe-coded tells because it is easy to spot in page source (predictable avatar-service URLs).",
+      "ai_association_strength": "strong",
+      "first_or_notable_mention": "publishd.app guide: 'Placeholder avatars from generators (UI Faces, Pravatar) are a major tell'"
+    },
+    {
+      "feature": "Stat counters / KPI card rows",
+      "description": "A row of 3-4 identically-styled cards, each with an uppercase overline label and a large bold number (e.g. '10,000+ Users'), repeated with no visual variation between cards. Sometimes accompanied by a count-up animation on scroll with no functional purpose.",
+      "ai_association_strength": "moderate",
+      "first_or_notable_mention": "dev.to catalogue article, describing 'UPPERCASE-overline + big-number cards repeated identically for every KPI' as a 'generation-two escape hatch' pattern once the plain feature-card template was called out"
+    },
+    {
+      "feature": "Card hover-lift grids",
+      "description": "Every card in a feature/pricing/testimonial grid receiving the identical hover treatment — translateY lift plus enlarged box-shadow (hover:-translate-y-1, hover:shadow-xl) — applied uniformly via one shared card component, regardless of whether the interaction conveys new information.",
+      "ai_association_strength": "moderate",
+      "first_or_notable_mention": "Multiple sources (Monet Design blog, DEV Community 'Why every AI-generated landing page looks the same') describe hover-lift as purely decorative motion with no informational payoff"
+    },
+    {
+      "feature": "Colored left/side border accent on cards (\"side-tab accent\")",
+      "description": "A thick (3-4px) solid-colored border on one side of an otherwise rounded card, clashing stylistically with the rounded corners. Called out as 'the most recognizable tell of AI-generated UIs' by one detection framework.",
+      "ai_association_strength": "strong",
+      "first_or_notable_mention": "publishd.app: 'colored left borders are almost as reliable a sign of AI-generated design as em-dashes for text'"
+    },
+    {
+      "feature": "Nested card structures (\"Cardocalypse\")",
+      "description": "Cards placed inside cards inside cards, each level adding its own padding, border, and shadow, producing excessive visual depth and noise. Given the specific name 'Cardocalypse' in one design-rules catalogue.",
+      "ai_association_strength": "moderate",
+      "first_or_notable_mention": "publishd.app blog, described alongside 'ghost cards' (hairline border + wide diffuse shadow) as a recurring generated-UI signature"
+    },
+    {
+      "feature": "Rainbow status badges",
+      "description": "In status/list UIs, every row is given a differently colored badge/pill — including neutral states like 'normal' or 'pending' that conventionally should be grey — because the model treats color variety as visual interest rather than semantic signal.",
+      "ai_association_strength": "moderate",
+      "first_or_notable_mention": "dev.to catalogue article: 'Rainbow status lists where every row gets a differently-colored badge, including normal, which should be grey'"
+    }
+  ],
+  "tools_that_produce_it": "v0 (Vercel), Lovable, Bolt.new, Cursor, Replit Agent, and general-purpose chat assistants (ChatGPT/Claude/Gemini) generating React/Tailwind code all default to the same shadcn/ui + Tailwind CSS + lucide-react stack, which is the direct source of the identical icon-chip, gradient-pill-button, and card-hover-lift defaults; one source notes v0 in particular has been tuned to produce 'better' (less generic) output than raw chat-based generation because of specialized training, while ChatGPT/Claude/Gemini used without design constraints tend toward the most generic versions of these components. [uncertain]",
+  "canonical_examples": "No single named public site is repeatedly cited by name in the sources reviewed; critiques instead point to aggregate populations — e.g. 'more than half of Show HN submissions' exhibiting these patterns (dev.to catalogue), and the general population of v0/Lovable/Bolt-built landing pages referenced across the 925studios and publishd.app guides. The open-source 'StyleSeed' rule set (74 rules, read by Claude Code/Cursor/Codex) and the 'Impeccable / slop' style guide catalogue these components as anti-patterns to avoid, functioning as de facto reference catalogs. [uncertain]",
+  "sources": [
+    "https://dev.to/kiwibreaksme/i-catalogued-every-tell-that-makes-a-ui-look-ai-generated-my-own-tool-kept-failing-the-test-n52",
+    "https://www.developersdigest.tech/blog/ai-design-slop-and-how-to-spot-it",
+    "https://impeccable.style/slop/",
+    "https://publishd.app/blog/make-ai-built-site-not-look-ai",
+    "https://prg.sh/ramblings/Why-Your-AI-Keeps-Building-the-Same-Purple-Gradient-Website",
+    "https://www.925studios.co/blog/ai-slop-web-design-guide",
+    "https://moelkholy1995.medium.com/beyond-make-it-beautiful-the-anti-slop-framework-for-ai-frontend-craftsmanship-c99bbee6c994",
+    "https://medium.com/@chiragthummar16/your-ai-built-websites-look-identical-to-everyone-elses-these-10-skills-fix-that-046ddf58e4d5",
+    "https://dev.to/_46ea277e677b888e0cd13/why-every-ai-generated-landing-page-looks-the-same-and-how-to-fix-it-1kmo",
+    "https://geoffgraham.me/struggling-with-ai-iconography-for-ui-design/",
+    "https://www.monet.design/blog/posts/escape-ai-slop-landing-page-design"
+  ],
+  "community_sentiment": "Predominantly mocking and fatigued. Designers and developers writing on dev.to, Medium, and independent blogs treat these component patterns as an in-joke ('AI slop', 'Cardocalypse', 'vibe-coded') and explicitly compare visual tells like colored left borders to textual tells like em-dashes — i.e., a marker so reliable it has become a punchline. Several authors note the irony that their own detection tools or rule sets initially reproduced the same patterns they were trying to flag. There is also a secondary, more measured strand of sentiment acknowledging that shadcn/ui, Tailwind, and Lucide are legitimate, widely-used-by-humans-too tools, and that the real complaint is lack of iteration/customization rather than the tools themselves — the criticism is about sameness and conversion-killing genericness (one source cites 'AI slop sites record conversion rates 91% lower than quality inventory' [uncertain]) rather than the components being inherently bad.",
+  "detection_signals": [
+    "Icon imports from 'lucide-react' (or '@heroicons/react') where the same icon-wrapper markup (e.g. div with rounded-lg/rounded-full + bg-{color}-100 + p-3/p-4) is repeated for every card in a features section with only the icon and text swapped",
+    "Emoji characters (🚗, ⭐, 🧺, ✨, 🚀) appearing directly as text nodes inside otherwise componentized markup, standing in for an icon or badge glyph",
+    "Button class strings combining bg-gradient-to-r / from-*-500 / to-*-500 with rounded-full (or 'pill', 'rounded-3xl') on primary CTAs",
+    "Badge/chip elements with copy text like 'New', 'Beta', 'AI-Powered', or a sparkle character (✨), styled text-xs + uppercase + tracking-wide, positioned absolute or immediately above an h1",
+    "<img> or background-image src values pointing to known placeholder-avatar services: i.pravatar.cc, ui-avatars.com, avataaars/dicebear, randomuser.me, thispersondoesnotexist",
+    "Repeated stat/KPI components sharing an identical class structure (e.g. text-4xl font-bold paired with text-sm uppercase text-gray-500), appearing 3-4 times with only the number/label changed",
+    "A single shared '.card' or Card component applying hover:scale-105 / hover:-translate-y-1 / hover:shadow-xl / hover:shadow-2xl uniformly to every instance in a grid, regardless of card content",
+    "border-l-4 (or border-t-4) with a saturated color utility (border-indigo-500, border-purple-600, etc.) on an otherwise rounded-xl card — the 'side-tab accent' clashing with rounded corners",
+    "Deeply nested wrapper divs each carrying their own rounded-*, shadow-*, and border/bg classes (card-in-card-in-card structure, 'Cardocalypse')",
+    "Status/tag lists where className-driven badge colors are distinct per row with no semantic color mapping (e.g. a 'normal'/'default' status rendered in a bright color instead of neutral grey)"
+  ],
+  "human_design_contrast": "Intentionally designed sites tend to vary icon treatment across a page rather than repeating one chip shape verbatim (custom illustration, inline icon with no container, or icon dropped entirely in favor of typographic hierarchy); use a single accent color applied sparingly instead of a different hue per emoji/badge; source testimonials from named, verifiable people (or omit avatars entirely rather than use a placeholder-avatar service); reserve hover/motion for interactions that communicate state change rather than decorating static cards; and choose asymmetric or list-based layouts over the identical 3-4-card grid when a grid doesn't fit the content.",
+  "false_positive_notes": "None of these components are exclusively AI-generated — shadcn/ui, Tailwind, and lucide-react are mainstream open-source choices used deliberately by many human frontend developers, and pill buttons, hover-lift cards, and stat rows all predate LLM code generation by years as legitimate, well-established UI patterns. Early-stage startups often use placeholder avatars honestly (before they have collected real customer testimonials) rather than because AI generated the page. A badge reading 'New' is a normal, human-designed way to flag a real feature update. Because of this, no single feature in this list should be treated as proof of AI generation; the signal strengthens only when several of these patterns co-occur on the same page (e.g. emoji icons + gradient pill button + placeholder avatars + identical hover-lift cards all together) and especially when combined with tells from other categories (copy, color, layout).",
+  "uncertain": [
+    "tools_that_produce_it",
+    "canonical_examples",
+    "community_sentiment"
+  ]
+}

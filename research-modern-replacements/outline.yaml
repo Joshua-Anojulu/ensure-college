@@ -1,0 +1,93 @@
+topic: Modern non-AI replacements for flagged design features (EnsureCollege)
+description: >
+  Follow-up to research-ai-design-tells/cross-reference.md. For each AI-flagged
+  feature the EnsureCollege site currently incorporates, research what modern,
+  intentional, human-crafted sites (2025-2026) do instead. Constraints for all
+  recommendations: hand-written vanilla CSS/JS (no Tailwind/shadcn/React), light-only
+  editorial identity (Fraunces serif display, Hanken Grotesk body, Space Mono labels,
+  marigold accent on warm paper), CSP forbids inline scripts, accessibility matters
+  (prefers-reduced-motion, WCAG). Owner preference: professional, trustworthy,
+  dashboard-like product feel over trendy marketing-site feel.
+items:
+  - name: Header and app-shell patterns
+    category: structure
+    description: >
+      OWNER DIRECTION - highest priority. Current site uses a floating detached
+      pill-shaped sticky header with backdrop-filter glass blur (an AI-flagged
+      pattern). Owner wants a professional dashboard-like header instead: a
+      structured full-width box/bar anchored flush to the top of the screen, like a
+      real product app shell (login, saved items, settings live in it). Research
+      modern professional header/top-bar design in real products and dashboards
+      (Stripe, Linear, Vercel, GitHub, banking/edu portals, gov design systems):
+      full-width vs contained, border vs shadow, height, sticky/scroll behavior,
+      how brand + nav + account actions are arranged, and what separates a
+      professional app bar from a floating marketing pill.
+  - name: Section entrance and scroll motion alternatives
+    category: motion
+    description: >
+      Current site applies scroll-triggered fade-in-up (opacity + translateY via
+      IntersectionObserver) to all 7 landing sections with staggered delays - the
+      strongest AI animation tell. Research what modern intentional sites do
+      instead: no entrance motion, single hero-only moment, CSS scroll-driven
+      animations, content-first instant rendering, or other current best practice
+      for section reveals that reads deliberate rather than templated.
+  - name: Card interaction alternatives
+    category: motion
+    description: >
+      Current site uses uniform hover lift (translateY(-3px) + shadow grow) on all
+      cards - a flagged tell. Research modern card/list hover and focus treatments
+      that read professional: border/ink color shifts, background tint, underline
+      or arrow reveals, inset press states, cursor treatments, and when the modern
+      answer is no hover effect at all (especially for dashboard/data UIs).
+  - name: Background treatment alternatives
+    category: visual
+    description: >
+      Current site uses two fixed radial gradient glows on the body plus a drifting
+      blurred gradient orb behind the hero (aurora/blob tell). Research modern
+      non-AI background treatments for light editorial/professional sites: flat
+      color fields, paper/grain texture, hairline rules and grid lines, geometric
+      or print-inspired patterns, solid section banding, and how premium editorial
+      sites create depth without gradient blobs or glassmorphism.
+  - name: Card accent and status system alternatives
+    category: visual
+    description: >
+      Current site uses 4px colored left-border "side-tab" accents on cards (a
+      tell called as reliable as em-dashes) and a multi-color tint badge system
+      (success/amber/violet/danger) for statuses. Research modern professional
+      status and metadata treatments in dashboards and data products: restrained
+      badge design, dot+label status indicators, typographic-only status, single-hue
+      systems, table-like metadata rows, and how products like Linear/Stripe/GitHub
+      show state without rainbow chips or side-tabs.
+  - name: Microcopy and UX writing alternatives
+    category: content
+    description: >
+      Current site copy has AI-flagged rhythms: frequent em-dashes, rule-of-three
+      triads everywhere, the power verb "unlock", and "More than X" false-contrast
+      constructions. Research modern UX-writing and product-copy norms (2025-2026
+      style guides, plain-language movements, voice-and-tone systems from respected
+      products) for how professional trustworthy products write headlines, section
+      intros, and microcopy that reads human and specific.
+  - name: Eyebrow label and heading treatment alternatives
+    category: typography
+    description: >
+      Current site places small uppercase Space Mono "eyebrow" labels above every
+      section heading including the hero - a moderate AI tell that is also core to
+      its editorial identity. Research whether/how modern editorial and product
+      sites use kickers/eyebrows without reading templated: alternatives (numbered
+      sections, inline kickers, rules, no eyebrow), variation strategies, and what
+      distinguishes editorial kickers in real magazines/newspapers from AI-slop
+      eyebrow labels.
+  - name: Hero visual alternatives
+    category: visual
+    description: >
+      Current hero includes a fabricated stylized "Match review" UI card (floating,
+      animated meter, pulsing status dot) - cousin of the fake-mockup tell - plus
+      an ambient orb and card-float animation. Research modern hero visual
+      strategies that read credible: real product screenshots (framed honestly),
+      data-true visualizations, photography-led heroes, typographic-only heroes,
+      and how trustworthy products present the product in the hero without a
+      fake dashboard.
+execution:
+  batch_size: 8
+  items_per_agent: 1
+  output_dir: ./results

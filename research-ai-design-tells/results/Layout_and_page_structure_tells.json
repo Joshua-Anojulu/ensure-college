@@ -1,0 +1,111 @@
+{
+  "name": "Layout and page-structure tells",
+  "category": "structure",
+  "category_name": "Layout and page-structure tells",
+  "definition": "This category covers page-level skeletons and section anatomy — not colors, fonts, or copy, but the arrangement of blocks on the page — that observers point to as evidence a website was AI-generated or template-cloned. It includes the specific sequence and shape of sections (centered hero, feature grid, alternating rows, pricing trio, logo cloud, mega-footer) that recurs almost verbatim across sites built with v0, Lovable, Bolt, ChatGPT/Claude, and similar tools.",
+  "why_flagged_as_ai": "LLM-based UI generators are next-token predictors trained overwhelmingly on public marketing sites, component-library docs, and starter templates (shadcn/ui, Tailwind UI, React boilerplates), so when given an underspecified prompt like 'build a landing page' they regress to the statistical center of that corpus — described in commentary as 'distributional convergence.' The dominant genre in that corpus is the B2B SaaS landing page, whose skeleton (hero -> logo cloud -> feature grid/bento -> alternating feature rows -> pricing trio -> testimonials -> mega-footer) has itself become a widely copied industry template even among human designers. Because AI tools default to this skeleton with almost no variation, and do so at far higher volume and speed than individual human designers ever produced near-identical pages, the pattern has become strongly associated with AI (or template) authorship even though every individual piece (3-column grid, 3-tier pricing, logo cloud) pre-dates AI tools and has legitimate, non-AI design rationale.",
+  "features": [
+    {
+      "feature": "Centered hero + 3-feature-card grid",
+      "description": "A vertically stacked, center-aligned hero (eyebrow label, headline, subhead, one or two CTA buttons, sometimes a staggered/overlapping image collage) sits above a row of exactly three (sometimes four) equal-width cards, each with an icon, a short bold title, and one line of description. Cards use uniform border-radius, identical padding, and identical height regardless of content length.",
+      "ai_association_strength": "strong",
+      "first_or_notable_mention": "Described as 'the visual equivalent of beige carpet' in commentary on why AI-generated layouts look identical (dev.to/alanwest, 'How to fix the AI-generated look in your frontend'); DEV Community piece 'Why Every AI-Generated Landing Page Looks the Same' states at least two of any three AI-generated landing pages have 'three feature boxes with icons arranged in a grid.'"
+    },
+    {
+      "feature": "Bento grid feature/hero layout",
+      "description": "An asymmetric multi-cell grid (one large 'anchor' cell plus several smaller cells of mixed size, usually with rounded corners and a border) used to showcase product features or as a hero variant. Legitimate as a 2023-2026 design trend, but flagged as an AI tell when every cell has near-identical padding/radius/hue-tinted-background treatment and the composition is only lightly asymmetric.",
+      "ai_association_strength": "moderate",
+      "first_or_notable_mention": "solodesign.cc, 'AI design slop: the tells' names 'hero, bento' as one of the component archetypes its detector specifically tests for, and calls out 'the bento of six different accent hues' as a recurring giveaway; 925studios.co ties bento popularity (67% of top-100 Product Hunt SaaS sites) to its overuse in AI output."
+    },
+    {
+      "feature": "Alternating image/text feature rows (zig-zag layout)",
+      "description": "A sequence of full-width rows below the hero, each pairing a screenshot/illustration with a text block, alternating left-right, right-left down the page — used to walk through 3-5 product features/benefits in sequence.",
+      "ai_association_strength": "moderate",
+      "first_or_notable_mention": "A long-standing, non-AI-specific pattern (NN/Group, 'Zigzag Image-Text Layouts Make Scanning Less Efficient') that has been folded into the 'generic AI SaaS anatomy' critique because AI generators reproduce it as a default filler section between the hero/feature-grid and pricing, with little variation in image treatment or copy length row to row."
+    },
+    {
+      "feature": "Pricing-table trio with highlighted middle tier",
+      "description": "Three pricing cards (e.g., Starter/Pro/Enterprise) side by side, the center one visually elevated (scaled up, colored border/background, 'Most Popular' badge), each listing a near-identical bullet list of checkmarked features.",
+      "ai_association_strength": "moderate",
+      "first_or_notable_mention": "Documented broadly as SaaS pricing-page 'industry orthodoxy' driven by the 'center-stage effect' / Goldilocks pricing psychology (pipelineroad.com, kalungi.com, maxio.com); flagged as an AI tell specifically when it appears unmodified with placeholder-like tier names/features, per solodesign.cc's detector, which lists 'pricing' as a standardized component archetype it audits."
+    },
+    {
+      "feature": "Logo/trust cloud ('Trusted by...' strip)",
+      "description": "A row (often a horizontal auto-scrolling marquee) of grayscale/monochrome company logos beneath the hero, captioned 'Trusted by...' or 'Powering teams at...', frequently using placeholder or unrelated/aspirational logos on new AI-built products.",
+      "ai_association_strength": "weak",
+      "first_or_notable_mention": "Longstanding, non-AI-originated landing-page convention (Medium/exceptionalfrontend, 'Why The Logos In Trusted By X Companies On Most Landing Pages Are Gray'; abmatic.ai on trust icons); becomes an AI tell mainly through context (brand-new/unlaunched product already showing an enterprise logo wall) rather than the structural element itself."
+    },
+    {
+      "feature": "Generic SaaS landing-page anatomy / near-identical section ordering",
+      "description": "The full page skeleton repeating in fixed order: nav bar -> centered hero -> logo cloud -> feature grid or bento -> alternating feature rows -> stats/social-proof band -> pricing trio -> testimonial cards -> FAQ accordion -> CTA band -> mega-footer, with almost no sections added, removed, or reordered between sites.",
+      "ai_association_strength": "strong",
+      "first_or_notable_mention": "Called out repeatedly as the core complaint in 2026 commentary, e.g. dev.to '_46ea277e677b888e0cd13', 'Why Every AI-Generated Landing Page Looks the Same', and a Hacker News-linked Medium piece ('Your AI-Built Websites Look Identical to Everyone Else's') stating 'every AI-generated website in 2026 looks the same: purple gradient, Inter font, four cards in a grid, and faint hover states... anyone can identify a vibe-coded page from across the room.'"
+    },
+    {
+      "feature": "Footer mega-columns",
+      "description": "A large multi-column footer (Product/Company/Resources/Legal/Social, 4-6 columns) with dense link lists, appearing even on brand-new single-product sites that don't yet have enough real content/pages to justify that much navigation depth.",
+      "ai_association_strength": "weak",
+      "first_or_notable_mention": "The 'mega footer' is documented as a broader 2020s web-design trend independent of AI (kristineneil.com, 'Web Design Trend: The Mega Footer'); flagged as an AI/template tell specifically when the column categories and link labels look generic/placeholder-like relative to the site's actual (thin) content."
+    },
+    {
+      "feature": "Uniform card sizing/spacing system-wide",
+      "description": "Every card on the page — feature cards, testimonial cards, pricing cards, blog-post cards — shares the exact same border-radius (commonly 16px), padding, shadow, and hover-lift treatment, regardless of content type, producing a flattened visual hierarchy across otherwise distinct sections.",
+      "ai_association_strength": "moderate",
+      "first_or_notable_mention": "925studios.co, 'AI Slop Web Design' guide: 'card-based layouts with uniform 16px border radius everywhere' and 'identical padding, identical border radius, and identical card heights' listed as a top AI-slop pattern."
+    }
+  ],
+  "tools_that_produce_it": [
+    "v0 (Vercel) - shadcn/ui + Tailwind + Radix defaults; most opinionated toward the standard component set (hero/feature-grid/pricing) since it is built to compose shadcn primitives",
+    "Lovable - still tends toward the same section skeleton but layers in more animation/polish (Framer Motion, micro-interactions) on top of it, per comparison articles",
+    "Bolt.new - described in comparisons as producing 'generic-looking but functional' layouts, i.e. the stock skeleton with minimal customization",
+    "ChatGPT / Claude (via canvas, artifacts, or generated React/HTML) - default to the same hero->grid->pricing->footer skeleton absent explicit design constraints, per multiple 2026 commentary pieces",
+    "Cursor / Claude Code - flagged in the same discussions as reproducing the skeleton unless an explicit anti-slop/design-system skill or style guide is loaded first"
+  ],
+  "canonical_examples": [
+    "No single named production site is consistently cited as 'the' canonical AI-slop layout example in the sources reviewed [uncertain]",
+    "Performative-UI (vorpus.github.io/performativeUI) - a satirical React component library explicitly packaging these layout tropes (hero/feature-grid/pricing/etc.) as a parody of generic AI/startup design",
+    "Counter-examples repeatedly cited as what disciplined, non-generic layout looks like: Linear, Stripe, Vercel, Notion, Figma, Loom, Amplitude, Basecamp, Superhuman, Duolingo, Wired, Apple"
+  ],
+  "sources": [
+    "https://dev.to/alanwest/how-to-fix-the-ai-generated-look-in-your-frontend-1ahh",
+    "https://dev.to/_46ea277e677b888e0cd13/why-every-ai-generated-landing-page-looks-the-same-and-how-to-fix-it-1kmo",
+    "https://dev.to/alanwest/why-every-ai-built-website-looks-the-same-blame-tailwinds-indigo-500-3h2p",
+    "https://solodesign.cc/blog/ai-design-slop-the-tells/",
+    "https://www.925studios.co/blog/ai-slop-web-design-guide",
+    "https://moelkholy1995.medium.com/beyond-make-it-beautiful-the-anti-slop-framework-for-ai-frontend-craftsmanship-c99bbee6c994",
+    "https://andrew.ooo/posts/taste-skill-anti-slop-ai-frontend-review/",
+    "https://medium.com/@chiragthummar16/your-ai-built-websites-look-identical-to-everyone-elses-these-10-skills-fix-that-046ddf58e4d5",
+    "https://news.ycombinator.com/item?id=48671684",
+    "https://news.ycombinator.com/item?id=48445554",
+    "https://www.newyorker.com/culture/infinite-scroll/the-ai-design-aesthetic-thats-taking-over-the-internet",
+    "https://vorpus.github.io/performativeUI/",
+    "https://saaspo.com/style/bento",
+    "https://www.lapa.ninja/category/bento-grid/",
+    "https://www.nngroup.com/articles/zigzag-page-layout/",
+    "https://exceptionalfrontend.medium.com/why-the-logos-in-trusted-by-x-companies-on-most-landing-pages-are-gray-afe0013d9f8c",
+    "https://abmatic.ai/blog/role-of-trust-icons-in-building-credibility-on-landing-page",
+    "https://kristineneil.com/blog/web-design-trend-the-mega-footer",
+    "https://pipelineroad.com/agency/blog/saas-pricing-page-best-practices",
+    "https://www.kalungi.com/blog/best-saas-pricing-pages",
+    "https://www.maxio.com/blog/tiered-pricing-examples-for-saas-businesses"
+  ],
+  "community_sentiment": "Predominantly mockery and fatigue, escalating through 2025-2026: designers and developers describe the pattern as 'AI slop,' joke that 'anyone can identify a vibe-coded page from across the room,' and have built satirical component libraries (Performative-UI) and literal AI-slop detectors (solodesign.cc's 50-rule checker) around it. Tailwind's creator publicly semi-apologized for indigo-500 becoming the internet's default AI purple, a comment that itself went viral as shorthand for the fatigue. Some pushback exists (New Yorker piece commenters call the aesthetic 'mostly okay' and note templated/formulaic web design predates AI by decades, from clip art to stock photos to Bootstrap/Squarespace themes), but the dominant tone in developer-facing discussion (dev.to, Medium, Hacker News, X/Twitter per secondary reporting) is derisive rather than neutral.",
+  "detection_signals": [
+    "Section order matches, near-exactly, nav -> centered hero -> logo strip -> feature grid (3 or 4 equal cards) or bento grid -> alternating image/text rows -> stats band -> pricing (3 tiers, center emphasized) -> testimonials -> FAQ accordion -> CTA band -> multi-column footer, with no sections added/removed/reordered relative to a generic SaaS template",
+    "All cards site-wide (feature/testimonial/pricing/blog) share identical border-radius, padding, and box-shadow values (e.g. `rounded-2xl`/`rounded-xl` + `shadow-sm`/`shadow-md` repeated verbatim in class names) regardless of content type",
+    "Feature grid is exactly 3 or 4 items even when the underlying product would naturally group into a different number of features (padding out or truncating to hit the 'safe' count)",
+    "Bento grid cells use uniform corner radius/border/background treatment differentiated only by a rotating accent hue, rather than genuinely asymmetric sizing tied to content importance",
+    "Pricing section has exactly 3 tiers, center tier scaled ~5-10% larger with a colored border/badge, and each tier's feature list is near-identical length with generic checkmark bullets",
+    "Logo cloud/trust strip appears on a pre-launch or very new product/domain (checkable via WHOIS/domain age or lack of case-study pages linking to the named logos)",
+    "Footer has 4+ columns of links (Product/Company/Resources/Legal/Social) that outnumber the site's actual number of real pages (many links 404 or point to '#')",
+    "HTML/class inspection: shadcn/ui component class fingerprints (`data-slot=`, Radix `data-state=` attributes) combined with default Tailwind spacing scale and no custom CSS variables overriding radius/shadow tokens",
+    "Alternating feature rows have identical image aspect ratio and identical text block word count row after row, suggesting placeholder-length copy rather than content-driven layout",
+    "Zero deviation from 12-column centered container width across all sections (no full-bleed, no overlap, no asymmetric section widths)"
+  ],
+  "human_design_contrast": "Deliberately human-designed sites (frequently cited: Linear, Stripe, Vercel, Notion, Figma, Loom) tend to break the section-order template: they omit sections that don't serve their narrative (e.g., no pricing trio if pricing is usage-based or enterprise-only, no logo cloud if not warranted), vary card/section widths and use full-bleed or off-grid elements, size components by actual content weight (a bento-style anchor cell is genuinely larger because that feature matters more, not decoratively), and vary copy length naturally rather than padding every card to matching height. Human-designed pricing pages more often use tables, sliders, or non-tripartite tier counts. Zig-zag/alternating rows appear more sparingly and only when the content genuinely benefits from sequential storytelling, per NN/Group's usability critique of the pattern.",
+  "false_positive_notes": "Nearly every individual element in this category predates AI tools and has an independent, legitimate design rationale: the 3-tier pricing table exploits well-documented pricing psychology (center-stage/Goldilocks effect, cited lift up to 38% on tier selection) and is industry standard regardless of who built the site; logo clouds and grayscale 'trusted by' treatments were standard B2B landing-page practice years before AI builders existed, chosen specifically so colored logos don't distract from the CTA; bento grids are a legitimate, popular 2023+ design trend independent of AI generation (Saaspo/Lapa Ninja catalog hundreds of hand-designed examples); zig-zag/alternating rows are a decades-old brochure-site convention. Template-based site builders (Squarespace, Webflow, WordPress themes, Framer templates) and design agencies reusing a proven internal boilerplate will also produce this exact skeleton without any AI involvement. The stronger signal is not any single section but the *combination* of near-zero deviation in section order, count, and per-card sizing across an entire site, especially paired with other categories' tells (Inter font, indigo/purple palette, Lucide icons, 'Elevate/Supercharge' copy) — any one layout choice alone should not be treated as AI evidence.",
+  "uncertain": [
+    "canonical_examples",
+    "tools_that_produce_it (attribution of degree of skeleton-conformity to specific tools is based on comparison-article characterizations, not systematic side-by-side testing)"
+  ]
+}

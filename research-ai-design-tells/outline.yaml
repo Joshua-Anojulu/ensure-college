@@ -1,0 +1,62 @@
+topic: AI-generated web design tells (features that make a website look AI-made)
+description: >
+  Widespread web research into specific web design features that people commonly
+  flag as "this looks AI-generated" (v0/Lovable/Bolt/ChatGPT-built sites, generic
+  AI SaaS aesthetic). Results are cross-referenced against the EnsureCollege
+  frontend (FastAPI + vanilla JS, "Highlighter" editorial restyle) to list which
+  flagged features the live site currently incorporates.
+items:
+  - name: Color and gradient tells
+    category: visual-style
+    description: >
+      Color-scheme signals people associate with AI-generated sites: indigo/purple/
+      violet palettes, blue-to-purple gradients, gradient text, neon glows on dark
+      backgrounds, glassmorphism, default Tailwind palette colors.
+  - name: Typography tells
+    category: visual-style
+    description: >
+      Typeface and text-styling signals flagged as AI: Inter/generic geometric
+      sans everywhere, huge tight-tracked hero headlines, gradient headline text,
+      identical font stacks across AI-built sites, default shadcn/Tailwind type scales.
+  - name: Layout and page-structure tells
+    category: structure
+    description: >
+      Page skeletons flagged as AI-generated: centered hero + 3-feature-card grid,
+      bento grids, alternating image/text feature rows, pricing-table trios,
+      logo/trust clouds, generic SaaS landing page anatomy, footer mega-columns.
+  - name: Component and iconography tells
+    category: structure
+    description: >
+      Component-level signals: emoji used as feature icons, generic Lucide/Heroicons
+      rows, gradient pill buttons, floating badge chips ("New", "AI-powered"),
+      testimonial cards with generated avatars, stat counters, card hover-lift grids.
+  - name: Copywriting and microcopy tells
+    category: content
+    description: >
+      Text patterns people flag as AI-written on websites: "Elevate/Unlock/Seamless/
+      Empower/Supercharge" verbs, em-dash-heavy sentences, rule-of-three phrasing,
+      "It's not just X, it's Y" constructions, vague value props, "in today's
+      fast-paced world" style filler.
+  - name: Imagery and illustration tells
+    category: content
+    description: >
+      Image signals: AI-generated hero art and photos (Midjourney/DALL-E look),
+      corporate-Memphis-style flat illustrations, fake device mockups, uncanny
+      stock-like people, over-smooth 3D renders and abstract blobs/meshes.
+  - name: Animation and interaction tells
+    category: behavior
+    description: >
+      Motion signals flagged as AI: scroll-triggered fade-in-up on every section,
+      typewriter/word-cycling hero text, marquee logo strips, hover lift+shadow on
+      all cards, parallax orbs/blurred gradient blobs drifting in the background.
+  - name: Framework and template fingerprints
+    category: provenance
+    description: >
+      Technical fingerprints of AI site builders: shadcn/ui default look, unmodified
+      Tailwind config, v0/Lovable/Bolt/Cursor-generated markup patterns, default
+      Next.js starter structure, telltale class soup, identical component naming,
+      and how people detect these in page source.
+execution:
+  batch_size: 8
+  items_per_agent: 1
+  output_dir: ./results

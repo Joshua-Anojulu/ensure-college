@@ -1,0 +1,88 @@
+{
+  "category_name": "Color and gradient tells",
+  "definition": "This category covers the color-palette and gradient conventions that observers use as a quick visual heuristic for 'this site was built by an AI tool.' It centers on one dominant pattern - blue-to-purple/indigo gradients and an indigo/violet accent color used near-universally by AI website builders and code-generation LLMs - plus a cluster of adjacent stylistic habits (gradient text, neon glow on dark backgrounds, glassmorphism/frosted-glass panels, and blurred 'aurora' gradient blobs) that tend to co-occur with it. Together these form the single most cited and most meme-ified 'AI tell' in web design discourse as of 2025-2026.",
+  "why_flagged_as_ai": "The root cause is a well-documented training-data bias: Tailwind CSS's component library (Tailwind UI), released around 2019-2020, used `bg-indigo-500` as the default accent color in nearly all of its demo components - not for aesthetic reasons but because Tailwind's creator Adam Wathan needed a neutral, inoffensive placeholder color for documentation and examples. Because Tailwind UI code was reproduced across an enormous number of tutorials, boilerplates, and open-source repos scraped for LLM pretraining (2019-2024), models learned indigo/violet buttons and blue-to-purple gradients as the statistical 'default' for a modern web button or hero section - a correlation, not a genuine design judgment. Modern AI site builders (v0, Lovable, Bolt, Claude, ChatGPT, Cursor+shadcn) compound this because they are specifically optimized around shadcn/ui, whose own default theme token (`--primary`) is a violet/indigo hue, and because glassmorphism, neon glow, and gradient blobs were themselves popular in the 2020-2022 design-trend cycle that forms a large slice of scraped design content. A self-reinforcing feedback loop then sets in: AI tools generate purple/indigo sites, those sites go live and get re-scraped as training data for the next model generation, further skewing the statistical 'average' toward indigo. Because these palettes/effects require zero explicit color decision-making from the user (they are what appears when no color is specified), their presence signals 'the defaults were accepted' rather than 'a color was chosen' - which is what observers are actually detecting.",
+  "features": [
+    {
+      "feature": "Blue-to-purple/indigo gradient backgrounds and buttons",
+      "description": "Hero sections, CTA buttons, and section backgrounds rendered as a linear or radial gradient running from blue/cyan through indigo to purple/violet (e.g. Tailwind's `bg-gradient-to-r from-indigo-500 to-purple-600` or similar). Cited across nearly every source as 'the single most reliable tell' of an AI-generated site.",
+      "ai_association_strength": "strong",
+      "first_or_notable_mention": "Adam Wathan (Tailwind CSS creator) posted a viral apology on X in August 2025 ('I'd like to formally apologize for making every button in Tailwind UI bg-indigo-500 five years ago, leading to every AI generated UI on earth also being indigo'), which received over 1 million views and became the canonical reference point for the phenomenon."
+    },
+    {
+      "feature": "Gradient (multi-color) headline/hero text",
+      "description": "Large hero headlines styled with a CSS `background-clip: text` gradient (typically blue-to-purple or purple-to-pink) instead of a solid color, making the text itself appear to shimmer across hues.",
+      "ai_association_strength": "strong",
+      "first_or_notable_mention": "Listed explicitly as a top AI-site cue in the Reddit-mined 'vibecoded-design-tells' dataset (JCarterJohnson/vibecoded-design-tells) and in utsubo.com's 'Built with AI' 12-signal list (2026)."
+    },
+    {
+      "feature": "Unmodified Tailwind/shadcn default accent palette",
+      "description": "The site ships with Tailwind's or shadcn/ui's out-of-the-box theme tokens untouched - `indigo-500`/`violet-600` as primary, default gray neutrals, no custom `tailwind.config` color overrides - indicating no deliberate brand palette was chosen.",
+      "ai_association_strength": "strong",
+      "first_or_notable_mention": "dev.to article 'Why Every AI-Built Website Looks the Same (Blame Tailwind's Indigo-500)' (Alan West) frames this as the core detection signal for code audits."
+    },
+    {
+      "feature": "Glassmorphism / frosted-glass panels",
+      "description": "Semi-transparent card/panel surfaces with `backdrop-filter: blur(...)`, low-opacity white/dark backgrounds, and thin light borders, layered over a colorful gradient backdrop.",
+      "ai_association_strength": "moderate",
+      "first_or_notable_mention": "Discussed as an AI-slop hallmark alongside gradients and neon glow on impeccable.style's 'Slop' style-critique page and in the vibecoded-design-tells dataset; predates AI tools as a standalone trend (Apple/Windows Fluent, ~2020-2021), so treated as moderate rather than strong on its own."
+    },
+    {
+      "feature": "Neon glow effects on dark backgrounds",
+      "description": "Dark (near-black or deep-navy) page backgrounds paired with glowing colored borders/shadows (e.g. a purple or cyan `box-shadow` blur around cards or buttons), evoking a 'cyberpunk SaaS' dark-mode aesthetic.",
+      "ai_association_strength": "moderate",
+      "first_or_notable_mention": "Flagged as 'unprompted neon glow' in the vibecoded-design-tells Reddit-mined ranking of vibe-coded site tells."
+    },
+    {
+      "feature": "Blurred gradient 'aurora'/mesh blob backgrounds",
+      "description": "Large, absolutely-positioned, heavily-blurred colorful blobs (`blur-3xl`, low opacity) placed behind hero content to add ambient color depth without a hard gradient edge.",
+      "ai_association_strength": "weak",
+      "first_or_notable_mention": "The vibecoded-design-tells study notes this pattern ranks lower than expected in its data and one related 'aurora' tell was rejected during adversarial verification as a keyword artifact - included here with caveats about its weaker evidentiary strength."
+    },
+    {
+      "feature": "Monochrome-plus-single-accent palette",
+      "description": "Overall white/light-gray (or all-dark) UI with exactly one accent hue (almost always indigo/violet) used for buttons, links, and icons - the 'safe default' palette shape rather than a considered multi-color brand system.",
+      "ai_association_strength": "weak",
+      "first_or_notable_mention": "Described as part of the 'AI slop hallmarks' checklist in prg.sh's 'Why Your AI Keeps Building the Same Purple Gradient Website'."
+    }
+  ],
+  "tools_that_produce_it": "v0 (Vercel) - built directly on shadcn/ui + Tailwind, whose default theme token is violet/indigo; Lovable; Bolt.new; Cursor when scaffolding with shadcn/ui; Replit Agent; Framer AI; ChatGPT (code interpreter/canvas-generated HTML/CSS); Claude (Artifacts and Claude Code default web scaffolds) - though several 2026 comparison articles note Claude Sonnet and v0 are considered relatively better at accepting explicit constraints to avoid the default when prompted.",
+  "canonical_examples": "[uncertain] No single named production website is consistently cited across sources as 'the' canonical example; instead, commentators point to the genre as a whole (\"any random SaaS landing page you'll find on Product Hunt built with v0/Lovable/Bolt\"). The clearest named artifact is nomorepurple.com itself, a tool built specifically to help AI-assisted developers pick palettes other than the default indigo/purple for Claude, ChatGPT, v0, Bolt, and Lovable output.",
+  "sources": [
+    "https://x.com/adamwathan/status/1953510802159219096",
+    "https://dev.to/alanwest/why-every-ai-built-website-looks-the-same-blame-tailwinds-indigo-500-3h2p",
+    "https://prg.sh/ramblings/Why-Your-AI-Keeps-Building-the-Same-Purple-Gradient-Website",
+    "https://nomorepurple.com/",
+    "https://www.utsubo.com/blog/built-with-ai-trust-signals-2026",
+    "https://github.com/JCarterJohnson/vibecoded-design-tells",
+    "https://newsletters.ai/p/ai-vs-purple",
+    "https://medium.com/@kai.ni/design-observation-why-do-ai-generated-websites-always-favour-blue-purple-gradients-ea91bf038d4c",
+    "https://medium.com/@ai.in.motion.blog/the-purple-problem-why-ai-cant-stop-generating-purple-websites-4381fb066883",
+    "https://dev.to/jaainil/ai-purple-problem-make-your-ui-unmistakable-3ono",
+    "https://www.ai-unchained.com/blog/ai-design/ai-picked-our-colors-theyre-generic",
+    "https://impeccable.style/slop/",
+    "https://www.braingrid.ai/blog/design-system-optimized-for-ai-coding",
+    "https://gradientshub.com/blog/why-does-ai-have-and-indigo-obsession-in-web-design/",
+    "https://www.communeify.com/en/blog/why-ai-loves-purple-global-design-convergence/",
+    "https://www.wheelsupcollective.com/post/we-dont-want-a-beige-internet",
+    "https://publishd.app/blog/make-ai-built-site-not-look-ai"
+  ],
+  "community_sentiment": "Predominantly mockery and fatigue, tipping into genuine professional concern about trust erosion. Adam Wathan's public apology tweet (Aug 2025, 1M+ views) turned the phenomenon into a widely-shared industry in-joke almost overnight; it is now routinely used as shorthand ('this looks so AI', 'purple gradient special') in designer and founder communities on X/Reddit/HN when critiquing a landing page. A dedicated tool (nomorepurple.com) and multiple blog posts/checklists exist purely to help builders avoid the look, and several 2026 pieces (utsubo.com, publishd.app) frame the tell as a measurable business risk - citing visitor abandonment tied to perceived generic/AI-made design - rather than just an aesthetic quibble. There is a secondary, smaller counter-thread arguing purple/violet are legitimate, pleasant brand colors in their own right and that the backlash is overblown for products where speed-to-ship matters more than visual differentiation.",
+  "detection_signals": [
+    "Tailwind utility classes: `bg-indigo-500`, `bg-violet-600`, `text-indigo-600`, `from-indigo-500 to-purple-600` / `bg-gradient-to-r`, `bg-gradient-to-br` combined with indigo-purple-pink stops",
+    "shadcn/ui CSS variable theme left at default: `--primary` resolving to a violet/indigo HSL value (e.g. hsl(263 ...)) with no custom override in `globals.css` or `tailwind.config`",
+    "`background-clip: text` (or Tailwind `bg-clip-text text-transparent`) combined with a gradient background utility, used on `<h1>`/hero headline text",
+    "`backdrop-filter: blur(...)` / Tailwind `backdrop-blur-md` paired with translucent fill (`bg-white/10`, `bg-black/20`) and a 1px semi-transparent border - glassmorphism panel signature",
+    "Colored `box-shadow` with large blur radius and no spread on buttons/cards against a dark (`#0a0a0f`-`#0d0d1a` range) page background - neon glow signature",
+    "Absolutely-positioned `<div>`s with large blur (`blur-3xl`), low opacity (`opacity-10`-`opacity-30`), and a solid bright fill color, stacked behind hero content - 'aurora blob' background",
+    "Entire palette traceable to unmodified Tailwind default color scale (no bespoke hex values anywhere in the stylesheet/config) combined with no brand style-guide or design-token documentation in the repo",
+    "Absence of any `tailwind.config.js`/`.ts` `theme.extend.colors` customization despite Tailwind being present - strong indicator defaults were never touched"
+  ],
+  "human_design_contrast": "Intentionally human-designed sites typically tie color to a documented brand system - custom hex values recorded in a style guide or design-token file, often derived from a logo or existing brand identity, and used sparingly and purposefully rather than applied uniformly to every button/heading/card. Human designers tend to restrain gradient and glow usage to one or two focal moments (or omit them entirely in editorial/print-inspired layouts), prioritize text contrast and accessibility (WCAG contrast ratios) over decorative glass/glow effects, and will deliberately avoid indigo/violet specifically because of its current 'default AI' connotation, choosing distinctive or muted palettes instead.",
+  "false_positive_notes": "Purple/indigo and gradients are not inherently AI signals - several major brands (Twitch, Yahoo, FTX-era fintechs, many dev-tool startups) use purple as a legitimate, pre-existing brand color, and gradients have been a recurring web design trend since well before LLM code generation existed (e.g. Stripe's gradient work, 2016-2019 'gradient renaissance'). Glassmorphism specifically was a mainstream design trend in 2020-2021 (driven by Apple's macOS Big Sur and Windows Fluent Design) independent of AI tooling, so its presence alone should not be treated as AI evidence. To avoid over-flagging, look for co-occurrence of multiple signals (default Tailwind/shadcn classes left unmodified, generic copy, identical card-grid structure, no brand documentation) rather than color alone, and check whether the palette is documented/customized versus left at framework defaults - a customized indigo palette with bespoke shades is a weaker signal than the literal unmodified `indigo-500`/`violet-600` scale."
+  ,
+  "uncertain": [
+    "canonical_examples",
+    "detection_signals"
+  ]
+}

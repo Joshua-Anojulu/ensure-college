@@ -25,7 +25,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Hanken+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/static/css/style.css?v=20260708-2">
+  <link rel="stylesheet" href="/static/css/style.css?v=20260708-4">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -191,9 +191,9 @@
   </dialog>
 
   <main id="main" class="main">
-    <section class="intro hero reveal-on-scroll" data-reveal-delay="0ms">
+    <section class="intro hero">
       <div class="hero-copy">
-        <p class="eyebrow">A clearer path to opportunity</p>
+        <p class="eyebrow">For US high-school students</p>
         <h1>Find scholarships and elite summer programs that <span class="mark mark-strong">fit you.</span></h1>
         <p class="intro-copy">
           Build one profile, compare real opportunities, and turn your best matches into an application plan.
@@ -201,74 +201,55 @@
         <div class="hero-actions">
           <a class="btn-primary hero-cta" href="#profile-form">Build my profile <span aria-hidden="true">↓</span></a>
           <button type="button" class="btn-secondary hero-secondary" id="browse-catalog-btn">Browse full catalog</button>
-          <p class="hero-note">Scholarships, summer programs, and source-linked next steps.</p>
+          <p class="hero-note">Free to use. No account needed to preview matches.</p>
         </div>
+        <p class="hero-stats" aria-label="What is in the catalog">
+          <span class="hero-stat"><strong>__COUNT_SCHOLARSHIPS__</strong> <span>scholarships</span></span>
+          <span class="hero-stat"><strong>__COUNT_PROGRAMS__</strong> <span>summer programs</span></span>
+          <span class="hero-stat"><strong>__COUNT_COMPETITIONS__</strong> <span>competitions</span></span>
+        </p>
       </div>
-      <div class="hero-visual" aria-hidden="true">
-        <div class="hero-visual-top"><span class="hero-status-dot"></span>Match review</div>
-        <p class="hero-visual-title">One profile<br><span>two opportunity lanes</span></p>
-        <div class="hero-visual-meter"><span></span></div>
-        <div class="hero-visual-row">
-          <span>Field logic</span>
-          <strong>Specific</strong>
-        </div>
-        <div class="hero-visual-row">
-          <span>Summer programs</span>
-          <strong>First-class</strong>
-        </div>
-        <div class="hero-visual-row">
-          <span>Next step</span>
-          <strong>Checklist ready</strong>
-        </div>
-      </div>
-      <div class="hero-photo photo" aria-hidden="true">
-        <img src="/static/img/students-walking.jpg" alt="" loading="lazy" decoding="async" width="600" height="800">
-      </div>
-    </section>
-
-    <section class="preview-panel panel reveal-on-scroll" data-reveal-delay="45ms" aria-labelledby="preview-title">
-      <div class="preview-intro">
+      <div class="hero-demo panel" aria-labelledby="preview-title">
         <p class="eyebrow">60-second preview</p>
         <h2 id="preview-title">See three real matches first.</h2>
-        <p>Three questions, no account. Your full profile then applies citizenship and state checks and unlocks every match.</p>
-      </div>
-      <form id="preview-form" class="preview-form" novalidate>
-        <div class="field">
-          <label for="preview-gpa">GPA</label>
-          <input type="number" id="preview-gpa" min="0" max="4" step="0.1" inputmode="decimal" placeholder="e.g. 3.8" required>
-        </div>
-        <div class="field">
-          <label for="preview-grade">Grade level</label>
-          <select id="preview-grade" required>
-            <option value="">Select grade level</option>
-          </select>
-        </div>
-        <div class="field">
-          <label for="preview-field">Main academic interest</label>
-          <select id="preview-field" required>
-            <option value="">Select a field</option>
-          </select>
-        </div>
-        <button type="submit" class="btn-primary" id="preview-submit">Show my 3 matches</button>
-      </form>
-      <div id="preview-error" class="form-error" role="alert" hidden></div>
-      <div id="preview-results" hidden>
-        <div id="preview-cards" class="preview-cards"></div>
-        <div class="preview-cta">
-          <p id="preview-total" class="preview-total"></p>
-          <button type="button" class="btn-primary" id="preview-complete-btn">Finish my full profile <span aria-hidden="true">↓</span></button>
-          <p class="preview-note">The full profile applies citizenship and state checks and adds summer programs and competitions.</p>
+        <p class="hero-demo-note">Three questions, no account.</p>
+        <form id="preview-form" class="preview-form" novalidate>
+          <div class="field">
+            <label for="preview-gpa">GPA</label>
+            <input type="number" id="preview-gpa" min="0" max="4" step="0.1" inputmode="decimal" placeholder="e.g. 3.8" required>
+          </div>
+          <div class="field">
+            <label for="preview-grade">Grade level</label>
+            <select id="preview-grade" required>
+              <option value="">Select grade level</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="preview-field">Main academic interest</label>
+            <select id="preview-field" required>
+              <option value="">Select a field</option>
+            </select>
+          </div>
+          <button type="submit" class="btn-primary" id="preview-submit">Show my 3 matches</button>
+        </form>
+        <div id="preview-error" class="form-error" role="alert" hidden></div>
+        <div id="preview-results" hidden>
+          <div id="preview-cards" class="preview-cards"></div>
+          <div class="preview-cta">
+            <p id="preview-total" class="preview-total"></p>
+            <button type="button" class="btn-primary" id="preview-complete-btn">Finish my full profile <span aria-hidden="true">↓</span></button>
+            <p class="preview-note">The full profile applies citizenship and state checks and adds summer programs and competitions.</p>
+          </div>
         </div>
       </div>
     </section>
 
-    <section class="proof-band reveal-on-scroll" data-reveal-delay="55ms" aria-label="How EnsureCollege works">
+    <section class="proof-band" aria-label="How EnsureCollege works">
       <div class="proof-photo photo">
         <img src="/static/img/campus-quad.jpg" alt="Students walking across a college campus between classes" loading="lazy" decoding="async" width="1200" height="800">
         <p class="photo-caption">Real opportunities, real deadlines</p>
       </div>
       <div class="proof-copy">
-        <p class="eyebrow">Built to be trusted</p>
         <h2>Every match traces back to an official source.</h2>
         <p>No guessed deadlines, no invented requirements. EnsureCollege shows you why each scholarship, program, or competition fits — and links the proof.</p>
         <div class="proof-points">
@@ -279,16 +260,15 @@
       </div>
     </section>
 
-    <section class="trust-strip reveal-on-scroll" data-reveal-delay="65ms" aria-label="How EnsureCollege works">
-      <div class="trust-item"><span class="trust-number">01</span><span>Scholarships with clear fit reasons</span></div>
-      <div class="trust-item"><span class="trust-number">02</span><span>Elite summer programs, not an afterthought</span></div>
-      <div class="trust-item"><span class="trust-number">03</span><span>Application steps tied to official sources</span></div>
+    <section class="trust-strip" aria-label="How EnsureCollege works">
+      <div class="trust-item"><span>Scholarships with clear fit reasons</span></div>
+      <div class="trust-item"><span>Elite summer programs with the same fit logic</span></div>
+      <div class="trust-item"><span>Application steps tied to official sources</span></div>
     </section>
 
-    <section class="difference-panel panel reveal-on-scroll" data-reveal-delay="100ms" aria-labelledby="difference-title">
+    <section class="difference-panel panel" aria-labelledby="difference-title">
       <div class="difference-copy">
-        <p class="eyebrow">Why this is different</p>
-        <h2 id="difference-title">More than a list of links.</h2>
+        <h2 id="difference-title">Every match explains itself.</h2>
         <p>
           EnsureCollege explains why each opportunity appears, flags eligibility risk, and turns saved
           scholarships and programs into a source-linked application plan.
@@ -296,26 +276,22 @@
       </div>
       <div class="difference-grid">
         <article class="difference-card">
-          <span class="difference-icon" aria-hidden="true">01</span>
           <h3>Transparent fit logic</h3>
           <p>See whether a match comes from field, grade, school, financial need, special eligibility, or verified program fit.</p>
         </article>
         <article class="difference-card">
-          <span class="difference-icon" aria-hidden="true">02</span>
           <h3>Source-linked next steps</h3>
           <p>Checklist steps are tied to official sponsor pages, with unverified deadlines and requirements labeled instead of guessed.</p>
         </article>
         <article class="difference-card">
-          <span class="difference-icon" aria-hidden="true">03</span>
           <h3>A real application plan</h3>
           <p>Saved opportunities become a tracker with deadlines, strict eligibility checks, essay reuse themes, and requirement comparisons.</p>
         </article>
       </div>
     </section>
 
-    <section class="resume-import panel reveal-on-scroll" id="resume-import-section" data-reveal-delay="135ms" hidden>
+    <section class="resume-import panel" id="resume-import-section" hidden>
       <div class="resume-intro">
-        <p class="eyebrow">Optional shortcut</p>
         <h2 class="resume-import-title">Start with what you already have.</h2>
       </div>
       <p class="field-hint">
@@ -339,7 +315,7 @@
       <div id="resume-note" class="resume-note" hidden></div>
     </section>
 
-    <form id="profile-form" class="profile-form panel reveal-on-scroll" data-reveal-delay="170ms" novalidate>
+    <form id="profile-form" class="profile-form panel" novalidate>
       <div class="form-heading">
         <div>
           <p class="eyebrow">01 / Your profile</p>
@@ -682,7 +658,7 @@
       </div>
 
       <p class="catalog-note">
-        Browsing the full catalog — not personalized to your profile. Save anything interesting, then run a match to see fit scoring.
+        Browsing the full catalog. These results are not personalized: save anything interesting, then run a match to see fit scoring.
       </p>
 
       <div id="catalog-empty" class="results-empty panel" hidden>
@@ -706,7 +682,7 @@
       <div id="saved-empty" class="results-empty panel" hidden>
         <h3>You have not saved anything yet</h3>
         <p>
-          Run a match, then save scholarships, programs, or competitions to unlock the planning layer:
+          Run a match, then save scholarships, programs, or competitions to build your application plan:
           checklist steps, strict eligibility checks, verified deadlines, and essay-reuse guidance.
         </p>
       </div>
@@ -775,6 +751,6 @@
     </div>
   </div>
 
-  <script src="/static/js/app.js?v=20260708-2"></script>
+  <script src="/static/js/app.js?v=20260708-4"></script>
 </body>
 </html>

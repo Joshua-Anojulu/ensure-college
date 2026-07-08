@@ -1,0 +1,90 @@
+{
+  "category_name": "Framework and template fingerprints",
+  "category": "provenance",
+  "definition": "Technical, source-level fingerprints left behind by AI website/app builders (v0, Lovable, Bolt.new, Cursor-assisted, ChatGPT/Claude-generated) as distinct from purely visual style tells. This covers unmodified default configuration and theming inherited from shadcn/ui and Tailwind CSS, component code/naming that matches library documentation examples verbatim, builder-specific DOM attributes, meta tags, JS bundle strings, CDN and hosting signatures, and leftover default scaffolding from starters like create-next-app. It also covers how third-party detector tools and technical observers actually inspect page source, network requests, and compiled bundles to identify which builder (if any) produced a given site.",
+  "why_flagged_as_ai": "Four root causes drive these tells. (1) Tool defaults: v0, Lovable, and Bolt.new all scaffold new projects on the same stack (Next.js or Vite + Tailwind CSS + shadcn/ui + Radix UI + Lucide icons), so every generated app inherits identical default design tokens and component code unless a human explicitly overrides them. (2) Training-data bias / distributional convergence: LLMs trained on public code learn that shadcn + Tailwind + Inter is the single most common modern web stack, so at every independent styling decision the model defaults to the statistically safest, most common pattern (muted indigo/zinc accent, 8px radius, Inter font) rather than a distinctive choice. (3) Platform infrastructure embedded in the shipped app: hosted builders bake their own runtime/build artifacts into the compiled bundle (Lovable's data-lov-id DOM attributes, gptengineer.app legacy script tags, Vite chunk-naming conventions, Supabase REST/GraphQL endpoint calls, builder-specific CDN response headers) because the authoring platform and the hosting/backend platform are the same product. (4) Low second-pass editing: one-shot or lightly-supervised agentic generation frequently ships without a human doing a customization/cleanup pass, so default boilerplate (favicon, Open Graph tags, README text, the stock create-next-app page.tsx copy) survives all the way to production.",
+  "features": [
+    {
+      "feature": "Unmodified shadcn/ui default theme",
+      "description": "Sites keep shadcn/ui's out-of-the-box design tokens: slate or zinc neutral scale, a muted indigo/violet primary accent, an 8px (--radius: 0.5rem) corner radius applied everywhere, Inter at default sizes, and Card components with a 1px slate-200 border matching the shadcn documentation examples pixel-for-pixel.",
+      "ai_association_strength": "strong",
+      "first_or_notable_mention": "freedesignmd.com 'The shadcn trap: why shadcn looks generic and how to fix it'; superdesign.dev 'Why AI Design Looks Generic'"
+    },
+    {
+      "feature": "Component code/naming identical to library docs examples",
+      "description": "Generated DataTable, Dialog, and Card components reproduce the shadcn/ui documentation's example code and naming almost verbatim, rather than being adapted to the product's domain language, because the AI's 'safest' choice at each decision point is the most common training-data pattern.",
+      "ai_association_strength": "strong",
+      "first_or_notable_mention": "freedesignmd.com blog post; Hacker News 'shadcn-ification of the web' discussion"
+    },
+    {
+      "feature": "Radix UI primitive attributes and shadcn/Radix class combinations in the DOM",
+      "description": "data-radix-* attributes, Radix state attributes, and shadcn-generated Tailwind utility combinations appear throughout the rendered DOM, used by third-party detectors as one signal (among several) that a site's component architecture is AI-tool-shaped.",
+      "ai_association_strength": "moderate",
+      "first_or_notable_mention": "aiwebsitedetector.com detection methodology (component architecture analysis); vibe-eval.com Lovable Detector"
+    },
+    {
+      "feature": "Exclusive use of Lucide icon set",
+      "description": "Nearly every AI-builder-generated app uses Lucide icons exclusively (visible as lucide-react import/class names in the bundle), because Lucide ships as the shadcn/ui default icon library.",
+      "ai_association_strength": "moderate",
+      "first_or_notable_mention": "aiwebsitedetector.com AI-code-signal detection (Next.js + Tailwind + shadcn/ui + Lucide + Radix stack)"
+    },
+    {
+      "feature": "Unmodified Tailwind config and default palette classes",
+      "description": "Class names use Tailwind's stock palette and scale directly (bg-blue-500, text-gray-900, default breakpoints) instead of custom brand tokens, and compiled CSS retains unmodified --tw- prefixed custom properties (--tw-ring-offset-shadow, --tw-shadow, --tw-translate-x) with no evidence of a customized tailwind.config.",
+      "ai_association_strength": "moderate",
+      "first_or_notable_mention": "Tailwind CSS docs 'Detecting classes in source files'; detectzestack.com 'How to Detect Tailwind CSS on Any Website'"
+    },
+    {
+      "feature": "Tailwind 'class soup'",
+      "description": "Extremely long, repeated horizontal strings of utility classes on nearly identical elements across many components/files, criticized as unreadable 'class soup.' LLMs are described as fluent at composing these utility strings but much weaker at maintaining coherent, evolving class architecture across files, so the soup tends to be denser and more duplicated in AI output than in hand-tuned code.",
+      "ai_association_strength": "moderate",
+      "first_or_notable_mention": "ctol.digital 'The Paradox of Success: How AI Brought Tailwind CSS to the Brink'; joaquinmarti.com 'Tailwind Utility Classes as an antipattern'"
+    },
+    {
+      "feature": "Lovable-specific DOM/meta/CDN artifacts",
+      "description": "Trailing data-lov-id attribute on DOM elements, data-lovable HTML attributes, legacy gptengineer.app script tags (Lovable's former brand, 'GPT Engineer'), assets served from a lovable-uploads S3 CDN, deployment on *.lovable.app subdomains, and distinctive x-served-by/cache-control response headers that differ from Vercel or Netlify's signatures.",
+      "ai_association_strength": "strong",
+      "first_or_notable_mention": "vibe-eval.com 'Lovable Detector'; aiwebsitedetector.com/builder/lovable"
+    },
+    {
+      "feature": "Supabase backend call patterns shared by Lovable/Bolt-built apps",
+      "description": "Network requests to <project>.supabase.co/rest/v1/ (PostgREST), /functions/v1/ (Edge Functions), and /graphql/v1/, plus apikey headers carrying JWTs — the default backend wiring both Lovable and Bolt scaffold automatically for full-stack apps.",
+      "ai_association_strength": "moderate",
+      "first_or_notable_mention": "vibe-eval.com Lovable Detector network-traffic signal list"
+    },
+    {
+      "feature": "v0 (Vercel)-specific code and font patterns",
+      "description": "v0-generated snippets are clean React + Tailwind + shadcn/ui components, often paired with Vercel's Geist font stack (or Inter via next/font), tight coupling to Vercel deployment/env-var setup, and occasional leftover v0.app/v0.dev chat references in comments or history when code is copy-pasted rather than fully cleaned up.",
+      "ai_association_strength": "moderate",
+      "first_or_notable_mention": "refine.dev 'Vercel v0'; mindstudio.ai 'What Is Vercel v0?'"
+    },
+    {
+      "feature": "Bolt.new / StackBlitz runtime identifiers and naming drift at scale",
+      "description": "JavaScript bundles contain Bolt/StackBlitz WebContainer runtime identifiers. Separately, once a Bolt-generated project grows past roughly 15-20 components, commentators report the AI 'forgets' earlier conventions: duplicate components appear, naming becomes inconsistent, and architecture drifts — an inconsistency signal rather than a uniformity signal.",
+      "ai_association_strength": "weak",
+      "first_or_notable_mention": "Comparative reviews of Bolt.new (e.g. betterstack.com, uibakery.io 'Bolt vs Lovable vs V0')"
+    },
+    {
+      "feature": "Unedited create-next-app / default Next.js starter scaffolding",
+      "description": "The stock create-next-app boilerplate is shipped to production untouched: default page.tsx copy ('Get started by editing app/page.tsx'), the default Next.js <title> ('Create Next App'), the default README, and the default favicon — evidence that no human customization pass happened after generation.",
+      "ai_association_strength": "strong",
+      "first_or_notable_mention": "Next.js create-next-app documentation; general observation repeated across Next.js boilerplate comparison articles (adminlte.io, dev.to)"
+    },
+    {
+      "feature": "Third-party AI-builder detector scoring",
+      "description": "Dedicated tools (aiwebsitedetector.com, vibe-eval.com's Lovable Detector) operationalize these fingerprints into an automated scoring pipeline: builder fingerprinting across 80+ platforms, tech-stack detection, component-architecture analysis, AI-code-signal scanning, design heuristics, hidden-pattern scanning, and JS-bundle artifact detection, producing a 0-99% 'AI probability' score and verdict label (e.g. 'AI-Augmented Development' at 65%+).",
+      "ai_association_strength": "moderate",
+      "first_or_notable_mention": "aiwebsitedetector.com homepage and changelog; vibe-eval.com/lovable-detector/"
+    }
+  ],
+  "tools_that_produce_it": "v0 (Vercel): outputs clean React + Tailwind + shadcn/ui component snippets, commonly paired with the Geist font and tight Vercel deployment coupling; meant to be copy-pasted into an existing project rather than shipped whole. Lovable (formerly 'GPT Engineer'/gptengineer.app): builds a full running app (Vite + React + shadcn/ui + Supabase for backend/auth/db), leaving data-lov-id DOM attributes, lovable-uploads CDN assets, and *.lovable.app hosting signatures. Bolt.new: builds full apps in a StackBlitz WebContainer; output consistency (naming, component structure) degrades as project size grows past ~15-20 components. Cursor: an IDE/agent rather than a hosted builder, so it leaves no unique runtime fingerprint, but code it generates still trends toward the same shadcn+Tailwind+Inter defaults because it draws on the same training distribution. ChatGPT/Claude (asked directly for UI code): default to the shadcn/ui + Tailwind CSS component shape because that pairing dominates the modern web code in their training data ('distributional convergence').",
+  "canonical_examples": "r/vibecoding thread 'Let's be honest, AI UI all looks the same' (reported ~426 upvotes, 200+ comments) [uncertain: exact URL not recovered]; Hacker News discussion of the 'shadcn-ification of the web'; Hacker News 'The Vibe Coding Wall of Shame' (news.ycombinator.com/item?id=47566491) — a site cataloging alleged vibe-coding production failures that commenters noted appears to be vibe-coded itself, an ironic self-referential example; aiwebsitedetector.com/builder/lovable and vibe-eval.com/lovable-detector/, which apply their detection methodology to real sites as worked examples.",
+  "sources": "https://freedesignmd.com/blog/shadcn-looks-generic ; https://superdesign.dev/blog/why-ai-design-looks-generic ; https://www.youtube.com/watch?v=Z1vpBWc5uuc (\"Why Your ShadCN Website Looks Generic\") ; https://ui.shadcn.com/docs ; https://medium.com/design-bootcamp/the-most-important-design-system-in-2026-that-designers-missed-was-built-by-a-developer-d5617753882e ; https://aiwebsitedetector.com/ , https://aiwebsitedetector.com/builder/lovable , https://aiwebsitedetector.com/changelog ; https://vibe-eval.com/lovable-detector/ ; https://news.ycombinator.com/item?id=47566491 (\"The Vibe Coding Wall of Shame\") ; https://www.ctol.digital/news/paradox-of-success-how-ai-brought-tailwind-css-to-brink/ ; https://joaquinmarti.com/posts/tailwind-utility-classes-as-an-antipattern/ ; https://tailwindcss.com/docs/detecting-classes-in-source-files ; https://detectzestack.com/blog/how-to-detect-tailwind-css ; https://stackcrawler.com/tools/tailwind-css ; https://tailscan.com/ ; https://lovable.dev/guides/lovable-vs-bolt-vs-v0 ; https://betterstack.com/community/comparisons/bolt-vs-v0-vs-lovable/ ; https://uibakery.io/blog/bolt-vs-lovable-vs-v0 ; https://www.mindstudio.ai/blog/what-is-vercel-v0 ; https://refine.dev/blog/vercel-v0/ ; https://vercel.com/font ; https://github.com/vercel/geist-font ; https://github.com/ixartz/Next-js-Boilerplate",
+  "community_sentiment": "Mixed fatigue and mockery. The r/vibecoding and Hacker News 'shadcn-ification of the web' discussions treat visual sameness as a running joke/genuine anxiety among developers who feel every AI-generated product now looks identical. The shadcn maintainers publicly acknowledged the criticism and shipped 'Shadcn Create' in late 2025 (a design-preset-first workflow) specifically to counter the 'looks generic' complaint, indicating the criticism reached the tool authors themselves. Separately, there is skepticism directed at detector tools and 'gotcha' catalogs: the Hacker News thread on the 'Vibe Coding Wall of Shame' site mocks both the catalogued incidents (weak causal evidence, unverified vendor claims) and the irony that the catalog site itself reads as AI-generated, with commenters flagging things like low-contrast dark-gray-on-black text as 'a hallmark of many LLM assisted websites.' Overall tone: equal parts humor, professional frustration among designers/developers, and pushback against over-claiming when evidence for 'AI wrote this' is circumstantial.",
+  "detection_signals": "HTML/DOM: data-lov-id attribute (Lovable), data-radix-* / Radix state attributes, cmdk-related classes, shadcn Card/Dialog markup matching the documentation examples verbatim. Meta/head: default/unedited Open Graph tags, default favicon (e.g. stock Next.js or Vercel favicon left in place), default page <title> such as 'Create Next App'. CSS: unmodified --tw- prefixed custom properties (--tw-ring-offset-shadow, --tw-shadow, --tw-translate-x), --radius fixed at the shadcn default (0.5rem/8px), --primary/--font-sans tokens left at shadcn defaults (Inter, muted indigo/zinc). Class-name patterns: raw default-palette utility classes (bg-blue-500, bg-indigo-600, text-gray-900) instead of custom brand tokens; very long, near-duplicate utility-class strings repeated across many elements ('class soup'). JS bundle strings: gptengineer.app (Lovable's legacy brand), lovable-uploads paths, v0.app/v0.dev references in comments, Bolt/StackBlitz WebContainer identifiers, Vite chunk-naming conventions specific to Lovable's build pipeline. Network/backend calls: <project>.supabase.co/rest/v1/, /functions/v1/, /graphql/v1/ endpoints with apikey JWT headers. Hosting/CDN signatures: *.lovable.app subdomains, distinctive x-served-by and cache-control header defaults that differ from Vercel/Netlify. File/asset leftovers: stock create-next-app README and app/page.tsx boilerplate copy, unedited robots.txt/sitemap. Third-party detector tools (aiwebsitedetector.com, vibe-eval.com) formalize all of the above into a weighted, multi-signal score (e.g., 3+ matching signals in a category = positive detection, 2 = probable, 1 = hint only) producing a 0-99% AI-probability verdict.",
+  "human_design_contrast": "Intentional human-built sites typically customize the small set of tokens that drive shadcn's generic look: the neutral color scale, the --radius value, the font pairing (moving off default Inter), a saturated/distinctive accent color, and at least one signature visual element — the fix explicitly recommended by design critics of the shadcn default look. They also tend to: write semantic or component-scoped styling (via @apply, CVA variants, or a design-token layer) rather than shipping raw, duplicated utility-class soup; strip or rebrand all default scaffolding (favicon, OG tags, README, page title) before shipping; keep component/file naming consistent across the whole codebase without the drift seen in agent-extended Bolt projects; and avoid leaving any builder-specific runtime artifacts (data-lov-id, gptengineer.app scripts) because the code was hand-written or heavily edited rather than shipped as-generated.",
+  "false_positive_notes": "shadcn/ui, Tailwind CSS, Radix UI, Lucide icons, and Next.js are extremely popular general-purpose tools used by huge numbers of professional human developers who have never touched an AI builder — the mere presence of data-radix-* attributes, Lucide icons, or Tailwind utility classes is evidence of a popular stack choice, not proof of AI authorship. Teams often deliberately keep Tailwind/shadcn defaults for development velocity or because the components are well-tested, not because an AI generated them. 'Class soup' is also an inherent property of the utility-first CSS methodology itself, independent of who or what wrote the markup. Left-over Next.js/create-next-app boilerplate more reliably indicates an unfinished or low-effort project (human hobby projects frequently ship with the default page.tsx untouched) than it proves AI authorship specifically. Third-party detector tools (aiwebsitedetector.com, Lovable Detector) score probabilistically from indirect signals and can misfire on human-built sites that happen to share infrastructure choices, e.g., a hand-coded Next.js app deployed on Vercel, or a human team that chose Supabase for its own reasons. Builder-specific artifacts (data-lov-id, gptengineer.app scripts, lovable.app subdomains, Bolt/StackBlitz runtime strings) are the most reliable signals precisely because they are platform infrastructure markers rather than generic stack choices — but they can still be stripped or absent if a human significantly reworks the exported code before deployment.",
+  "uncertain": [
+    "canonical_examples"
+  ]
+}

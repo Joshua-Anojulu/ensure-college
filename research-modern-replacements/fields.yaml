@@ -1,0 +1,58 @@
+field_categories:
+  - category: basic_info
+    fields:
+      - name: pattern_area
+        description: Name of the design pattern area being replaced
+        required: true
+        detail_level: brief
+      - name: current_flagged_state
+        description: What the EnsureCollege site does today in this area and why it was flagged (from the item description)
+        required: true
+        detail_level: moderate
+      - name: goal
+        description: What a modern non-AI professional replacement should achieve in this area
+        required: true
+        detail_level: moderate
+  - category: replacements
+    fields:
+      - name: options
+        description: >
+          List of modern replacement options. Each entry:
+          {option, description, why_it_reads_human, adoption_examples (real sites/products),
+          effort (low/medium/high for a vanilla CSS/JS site)}
+        required: true
+        detail_level: detailed
+      - name: recommended
+        description: >
+          The single best option (or small combination) for a light-only editorial site with
+          Fraunces/Hanken Grotesk/Space Mono, marigold accent, vanilla CSS/JS, professional
+          dashboard-leaning owner preference - with reasoning
+        required: true
+        detail_level: detailed
+  - category: evidence
+    fields:
+      - name: sources
+        description: URLs of articles, design-system docs, teardowns, galleries, discussions supporting the options
+        required: true
+        detail_level: detailed
+      - name: trend_context
+        description: Where modern (2025-2026) design is heading in this area; what reads current vs dated vs AI-templated
+        required: false
+        detail_level: moderate
+  - category: implementation
+    fields:
+      - name: vanilla_css_notes
+        description: >
+          Concrete implementation guidance for hand-written vanilla CSS/JS - properties,
+          techniques, snippets. Constraint: CSP script-src 'self' forbids inline scripts;
+          any JS must be an external static file
+        required: true
+        detail_level: detailed
+      - name: accessibility_notes
+        description: WCAG / prefers-reduced-motion / contrast / focus considerations for the recommended option
+        required: false
+        detail_level: moderate
+      - name: pitfalls
+        description: How each replacement could itself become a cliche or tell; what to avoid when applying it
+        required: false
+        detail_level: moderate

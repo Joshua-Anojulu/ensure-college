@@ -1,0 +1,57 @@
+field_categories:
+  - category: basic_info
+    fields:
+      - name: category_name
+        description: Name of this category of AI design tells
+        required: true
+        detail_level: brief
+      - name: definition
+        description: What this category covers, in 2-3 sentences
+        required: true
+        detail_level: moderate
+      - name: why_flagged_as_ai
+        description: Why observers associate these features with AI-generated sites (root causes - training data bias, tool defaults, template reuse)
+        required: true
+        detail_level: detailed
+  - category: flagged_features
+    fields:
+      - name: features
+        description: >
+          List of specific concrete features in this category flagged as AI. Each entry:
+          {feature, description, ai_association_strength (strong/moderate/weak), first_or_notable_mention}
+        required: true
+        detail_level: detailed
+      - name: tools_that_produce_it
+        description: Which AI tools/builders (v0, Lovable, Bolt, ChatGPT, Claude, Cursor, etc.) are known to output these features by default
+        required: false
+        detail_level: moderate
+      - name: canonical_examples
+        description: Named example sites or screenshots people point to as exhibiting this tell
+        required: false
+        detail_level: brief
+  - category: evidence
+    fields:
+      - name: sources
+        description: URLs of articles, blog posts, Reddit/HN/X threads, design critiques discussing these tells
+        required: true
+        detail_level: detailed
+      - name: community_sentiment
+        description: Summary of how designers/users talk about this tell (mockery, fatigue, neutral adoption)
+        required: false
+        detail_level: moderate
+  - category: detection
+    fields:
+      - name: detection_signals
+        description: >
+          Concrete inspectable patterns for auditing a codebase: CSS properties/values,
+          class names, HTML structures, font names, copy phrases, file/asset patterns
+        required: true
+        detail_level: detailed
+      - name: human_design_contrast
+        description: What intentional human-designed sites tend to do differently in this category
+        required: false
+        detail_level: moderate
+      - name: false_positive_notes
+        description: Legitimate non-AI reasons a site might have these features; how to avoid over-flagging
+        required: false
+        detail_level: moderate
