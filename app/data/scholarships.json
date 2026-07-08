@@ -7732,6 +7732,445 @@
         }
       ],
       "estimated_deadline": "2027-05-01"
+    },
+    {
+      "id": "national-beta-club-scholarship",
+      "name": "National Beta Club Scholarship",
+      "sponsor": "National Beta Club",
+      "award_amount": "Varies",
+      "deadline": "VERIFY",
+      "estimated_deadline": "2026-01-15",
+      "url": "https://www.betaclub.org/scholarship-2/",
+      "eligibility": {
+        "min_gpa": "VERIFY",
+        "fields_of_study": [],
+        "grade_levels": [
+          "high_school_senior"
+        ],
+        "demographics": [],
+        "states": "any",
+        "essay_required": true,
+        "citizenship_requirement": "VERIFY",
+        "special_requirements": [
+          {
+            "kind": "membership",
+            "label": "Must be an active National Beta (Beta Club) Senior member",
+            "details": "Applicant must be a registered, active National Beta member with a valid membership ID number, registered with National Beta Headquarters by the application deadline; verified via member ID and last name at scholarship.betaclub.org."
+          }
+        ]
+      },
+      "description": "The National Beta Club awards over $300,000 annually to active 12th-grade Senior Beta Members, with 260 recipients receiving amounts ranging from $1,000 to $20,000 based on academic excellence, leadership, and service.",
+      "application_requirements": [
+        {
+          "id": "verify-membership",
+          "label": "Verify active National Beta membership using member ID number and last name",
+          "details": "Applicants must be high school seniors with an active National Beta membership ID to access the online application at scholarship.betaclub.org.",
+          "required": true,
+          "source_url": "https://scholarship.betaclub.org/"
+        },
+        {
+          "id": "submit-phase-1-application",
+          "label": "Submit Phase 1 application with GPA, test scores, and transcript",
+          "details": "Includes contact information, unweighted GPA, ACT/SAT scores, high school transcript, National Beta event attendance, leadership roles/awards, service hours, and a resume of extracurriculars and honors.",
+          "required": true,
+          "source_url": "https://www.betaclub.org/scholarship-2/"
+        },
+        {
+          "id": "upload-transcript-and-scores",
+          "label": "Upload high school transcript and ACT/SAT score documentation",
+          "details": null,
+          "required": true,
+          "source_url": "https://www.betaclub.org/scholarship-2/"
+        },
+        {
+          "id": "phase-2-materials-if-semifinalist",
+          "label": "If selected as a top-100 semifinalist, submit Phase 2 materials",
+          "details": "Includes one sponsor recommendation, one to three candidate evaluations, two student essays, and work history (if applicable), due by the semifinalist materials deadline.",
+          "required": false,
+          "source_url": "https://support.betaclub.org/support/solutions/articles/153000198528-scholarship-frequently-asked-questions"
+        }
+      ],
+      "verification": {
+        "source_url": "https://www.betaclub.org/scholarship-2/",
+        "last_verified_at": "2026-07-08"
+      },
+      "verified": true
+    },
+    {
+      "id": "terry-foundation-scholarship",
+      "name": "Terry Foundation Traditional (Freshman) Scholarship",
+      "sponsor": "The Terry Foundation",
+      "award_amount": "Varies",
+      "deadline": "VERIFY",
+      "estimated_deadline": null,
+      "url": "https://terryfoundation.org/apply/",
+      "eligibility": {
+        "min_gpa": "VERIFY",
+        "fields_of_study": [],
+        "grade_levels": [
+          "high_school_senior"
+        ],
+        "demographics": [],
+        "states": [
+          "TX"
+        ],
+        "essay_required": false,
+        "citizenship_requirement": "us_citizen_or_permanent_resident",
+        "special_requirements": [
+          {
+            "kind": "institution_channel",
+            "label": "Must apply through and be nominated by a Terry-affiliated Texas public university",
+            "details": "Students cannot apply directly to the Terry Foundation. Application is submitted through one of 11 affiliated Texas public universities (UT Austin, Texas A&M, University of Houston, Texas State, UT Dallas, UT San Antonio, UT Arlington, UT El Paso, Texas Tech, University of North Texas, Texas Woman's University), which nominates candidates to the Foundation."
+          },
+          {
+            "kind": "no_direct_application",
+            "label": "No direct application to the Terry Foundation is accepted",
+            "details": "Applications, deadlines, and nomination processes are managed individually by each of the 11 affiliated universities, not by the Terry Foundation itself."
+          }
+        ]
+      },
+      "description": "The Terry Foundation awards full-ride, last-dollar scholarships to Texas high school graduates enrolling as full-time freshmen at one of 11 affiliated Texas public universities, based on academic achievement, leadership, and demonstrated financial need.",
+      "application_requirements": [
+        {
+          "id": "graduate-tx-high-school",
+          "label": "Graduate from an accredited Texas high school or homeschool",
+          "details": "Applicants must not have taken a gap year immediately following graduation.",
+          "required": true,
+          "source_url": "https://terryfoundation.org/apply/"
+        },
+        {
+          "id": "apply-affiliated-university",
+          "label": "Apply to and gain admission to a Terry-affiliated Texas public university as a full-time entering freshman",
+          "details": "Applications are submitted through the chosen affiliated university's own process and timeline, not directly to the Terry Foundation.",
+          "required": true,
+          "source_url": "https://terryfoundation.org/apply/"
+        },
+        {
+          "id": "complete-fafsa",
+          "label": "Complete and submit the FAFSA to demonstrate financial need",
+          "details": "Must be submitted according to the deadlines specified by the nominating university.",
+          "required": true,
+          "source_url": "https://terryfoundation.org/apply/traditional-scholarship-faqs/"
+        },
+        {
+          "id": "university-nomination",
+          "label": "Be nominated by the affiliated university",
+          "details": "Campus partners submit nominee lists (approximately 26-90 candidates per school) to the Terry Foundation in mid-February.",
+          "required": true,
+          "source_url": "https://terryfoundation.org/apply/counselors/"
+        },
+        {
+          "id": "foundation-interview",
+          "label": "Complete a required interview with the Terry Foundation Interview Panel",
+          "details": "Interviews occur in late March/early April at panels held in El Paso, Dallas, or Houston; candidates must attend their assigned date.",
+          "required": true,
+          "source_url": "https://terryfoundation.org/apply/traditional-scholarship-faqs/"
+        },
+        {
+          "id": "reside-on-campus",
+          "label": "Commit to residing on campus for the first year",
+          "details": null,
+          "required": true,
+          "source_url": "https://terryfoundation.org/apply/"
+        }
+      ],
+      "verification": {
+        "source_url": "https://terryfoundation.org/apply/",
+        "last_verified_at": "2026-07-08"
+      },
+      "verified": true
+    },
+    {
+      "id": "afsa-high-school-senior-scholarship-contest",
+      "name": "AFSA High School Senior Scholarship Contest",
+      "sponsor": "American Fire Sprinkler Association (AFSA)",
+      "award_amount": 1000,
+      "deadline": "VERIFY",
+      "estimated_deadline": "2025-12-31",
+      "url": "https://www.afsascholarship.org/high-school-scholarships/",
+      "eligibility": {
+        "min_gpa": "VERIFY",
+        "fields_of_study": [],
+        "grade_levels": [
+          "high_school_senior"
+        ],
+        "demographics": [],
+        "states": "any",
+        "essay_required": false,
+        "citizenship_requirement": "us_citizen_or_permanent_resident",
+        "special_requirements": [
+          {
+            "kind": "family_or_affiliation",
+            "label": "Family members of AFSA staff or national board members are ineligible",
+            "details": "The official site states the contest is not open to family members of AFSA staff or national board members."
+          },
+          {
+            "kind": "competition_or_finalist",
+            "label": "Winners chosen by random drawing weighted by quiz score",
+            "details": "Applicants read a short passage about fire sprinklers and answer an 8-question quiz; each correct answer earns one entry into a random computer drawing for one of five $1,000 awards. This is not a merit-ranked competition."
+          }
+        ]
+      },
+      "description": "The AFSA High School Senior Scholarship Contest, run by the American Fire Sprinkler Association, is a no-essay scholarship contest in which eligible high school seniors read a short passage about fire sprinklers and answer an 8-question quiz for a chance to win one of five $1,000 scholarships, awarded by random drawing.",
+      "application_requirements": [
+        {
+          "id": "complete-online-entry-form",
+          "label": "Complete the online entry form",
+          "details": "Applicants fill out a brief online form on the AFSA scholarship site to begin the contest entry.",
+          "required": true,
+          "source_url": "https://www.afsascholarship.org/high-school-scholarships/"
+        },
+        {
+          "id": "read-fire-sprinkler-passage",
+          "label": "Read the provided passage about fire sprinklers and industry careers",
+          "details": "Entrants review short educational content about fire sprinkler safety and careers before taking the quiz.",
+          "required": true,
+          "source_url": "https://www.afsascholarship.org/"
+        },
+        {
+          "id": "complete-8-question-quiz",
+          "label": "Answer the 8-question reading comprehension quiz",
+          "details": "Each correct answer earns one entry into the random drawing for a $1,000 scholarship.",
+          "required": true,
+          "source_url": "https://www.afsascholarship.org/high-school-entry-form/"
+        },
+        {
+          "id": "submit-single-entry",
+          "label": "Submit only one entry",
+          "details": "Multiple entries from the same applicant result in disqualification.",
+          "required": true,
+          "source_url": "https://www.afsascholarship.org/high-school-entry-form/"
+        },
+        {
+          "id": "verify-eligibility-if-selected",
+          "label": "If selected as a winner, provide identity verification and school paperwork within 60 days",
+          "details": "Winners must submit two forms of ID (e.g., birth certificate, U.S. passport, or green card) and complete required school paperwork within 60 days of contest close, or forfeit the award.",
+          "required": true,
+          "source_url": "https://www.afsascholarship.org/high-school-scholarships/"
+        }
+      ],
+      "verification": {
+        "source_url": "https://www.afsascholarship.org/high-school-scholarships/",
+        "last_verified_at": "2026-07-08"
+      },
+      "verified": true
+    },
+    {
+      "id": "nshss-nobel-academic-excellence-scholarship",
+      "name": "NSHSS Nobel Academic Excellence Scholarship",
+      "sponsor": "National Society of High School Scholars (NSHSS)",
+      "award_amount": 5000,
+      "deadline": "2026-10-01",
+      "estimated_deadline": null,
+      "url": "https://www.nshss.org/scholarships/s/nshss-nobel-academic-excellence-scholarship-2025/",
+      "eligibility": {
+        "min_gpa": "VERIFY",
+        "fields_of_study": [],
+        "grade_levels": [
+          "high_school"
+        ],
+        "demographics": [],
+        "states": "VERIFY",
+        "essay_required": true,
+        "citizenship_requirement": "VERIFY",
+        "special_requirements": [
+          {
+            "kind": "membership",
+            "label": "Must be a current NSHSS high school member",
+            "details": "Open to NSHSS high school members graduating in 2026, 2027, 2028, or 2029; NSHSS membership itself has separate eligibility criteria and is required before applying."
+          }
+        ]
+      },
+      "description": "The NSHSS Nobel Academic Excellence Scholarship is a merit-based award from the National Society of High School Scholars (NSHSS), open to NSHSS high school members graduating 2026-2029, recognizing academic excellence, leadership, and positive impact on society; top winners receive $5,000.",
+      "application_requirements": [
+        {
+          "id": "educator-recommendation",
+          "label": "Submit an educator recommendation",
+          "details": null,
+          "required": true,
+          "source_url": "https://www.nshss.org/scholarships/s/nshss-nobel-academic-excellence-scholarship-2025/"
+        },
+        {
+          "id": "essay-prompt-response",
+          "label": "Write a 500-800 word prompt response",
+          "details": "Prompt: how you are making a positive impact on society and how your college plans will help you continue that impact.",
+          "required": true,
+          "source_url": "https://www.nshss.org/scholarships/s/nshss-nobel-academic-excellence-scholarship-2025/"
+        },
+        {
+          "id": "leadership-media",
+          "label": "Submit optional pictures/videos/media showing leadership",
+          "details": null,
+          "required": false,
+          "source_url": "https://www.nshss.org/scholarships/s/nshss-nobel-academic-excellence-scholarship-2025/"
+        },
+        {
+          "id": "headshot",
+          "label": "Provide a color headshot suitable for website posting",
+          "details": null,
+          "required": true,
+          "source_url": "https://www.nshss.org/scholarships/s/nshss-nobel-academic-excellence-scholarship-2025/"
+        },
+        {
+          "id": "academic-resume",
+          "label": "Submit an academic resume",
+          "details": null,
+          "required": true,
+          "source_url": "https://www.nshss.org/scholarships/s/nshss-nobel-academic-excellence-scholarship-2025/"
+        },
+        {
+          "id": "transcript",
+          "label": "Submit a current transcript",
+          "details": "Official or unofficial transcript accepted.",
+          "required": true,
+          "source_url": "https://www.nshss.org/scholarships/s/nshss-nobel-academic-excellence-scholarship-2025/"
+        }
+      ],
+      "verification": {
+        "source_url": "https://www.nshss.org/scholarships/s/nshss-nobel-academic-excellence-scholarship-2025/",
+        "last_verified_at": "2026-07-08"
+      },
+      "verified": true
+    },
+    {
+      "id": "davis-putter-scholarship-fund",
+      "name": "Davis-Putter Scholarship Fund",
+      "sponsor": "Davis-Putter Scholarship Fund",
+      "award_amount": "Varies",
+      "deadline": "VERIFY",
+      "estimated_deadline": "2026-04-01",
+      "url": "https://davisputter.org/apply",
+      "eligibility": {
+        "min_gpa": "VERIFY",
+        "fields_of_study": [],
+        "grade_levels": [
+          "college_undergraduate"
+        ],
+        "demographics": [],
+        "states": "any",
+        "essay_required": true,
+        "citizenship_requirement": "any",
+        "special_requirements": [
+          {
+            "kind": "family_or_affiliation",
+            "label": "Must be an active participant in movements for progressive social change",
+            "details": "Site states no application will be seriously considered without evidence of active engagement in social justice / progressive movement work (opposing capitalism, racism/white supremacy, hetero-patriarchy and gender-based violence, and environmental exploitation); aspiring to be involved is not sufficient."
+          }
+        ]
+      },
+      "description": "The Davis-Putter Scholarship Fund provides need-based grants to students who are active participants in movements for progressive social change, including work opposing capitalism, racism/white supremacy, hetero-patriarchy and gender-based violence, and environmental exploitation. Applicants must be enrolled in or have applied to a degree, certificate, or trade/technical program and demonstrate financial need.",
+      "application_requirements": [
+        {
+          "id": "application-form",
+          "label": "Complete the online application form",
+          "details": "Applications are available starting January 1 each year via the official Davis-Putter website.",
+          "required": true,
+          "source_url": "https://davisputter.org/apply"
+        },
+        {
+          "id": "personal-statement",
+          "label": "Submit a personal statement describing movement involvement and financial need",
+          "details": "The fund states no application will be seriously considered without evidence of active engagement in social justice/progressive movement work; aspiring to be involved is not sufficient.",
+          "required": true,
+          "source_url": "https://davisputter.org/apply"
+        },
+        {
+          "id": "letters-of-recommendation",
+          "label": "Provide two letters of recommendation",
+          "details": null,
+          "required": true,
+          "source_url": "https://davisputter.org/apply"
+        },
+        {
+          "id": "transcripts",
+          "label": "Submit recent academic transcripts",
+          "details": "Unofficial transcripts are acceptable.",
+          "required": true,
+          "source_url": "https://davisputter.org/apply"
+        },
+        {
+          "id": "financial-aid-documentation",
+          "label": "Submit Student Aid Report (SAR) or equivalent",
+          "details": "Applicants can submit a SAR, state equivalent, or complete the FAFSA Worksheet to the best of their ability; FAFSA itself is not required.",
+          "required": true,
+          "source_url": "https://davisputter.org/apply"
+        }
+      ],
+      "verification": {
+        "source_url": "https://davisputter.org/apply",
+        "last_verified_at": "2026-07-08"
+      },
+      "verified": true
+    },
+    {
+      "id": "simon-youth-foundation-shari-simon-greenberg-community-scholarship",
+      "name": "Shari Simon Greenberg Community Scholarship",
+      "sponsor": "Simon Youth Foundation",
+      "award_amount": 1500,
+      "deadline": "VERIFY",
+      "estimated_deadline": "2026-02-13",
+      "url": "https://syf.org/scholarships/",
+      "eligibility": {
+        "min_gpa": "VERIFY",
+        "fields_of_study": [],
+        "grade_levels": [
+          "high_school_senior"
+        ],
+        "demographics": [],
+        "states": "VERIFY",
+        "essay_required": true,
+        "citizenship_requirement": "VERIFY",
+        "special_requirements": [
+          {
+            "kind": "institution_channel",
+            "label": "Must live near a Simon mall, Mills, or Premium Outlets community",
+            "details": "Eligibility is limited to graduating high school seniors who reside in a community surrounding a Simon-owned mall, Mills, or Premium Outlet location; applications are submitted through the Simon Youth Foundation's designated portal (apply.mykaleidoscope.com)."
+          }
+        ]
+      },
+      "description": "The Shari Simon Greenberg Community Scholarship (formerly the SYF Community Scholarship) is offered by the Simon Youth Foundation to graduating high school seniors living near a Simon mall or in surrounding communities, awarding one-time Community Awards (up to $1,500) or renewable Awards of Excellence based on academic promise, financial need, and other factors.",
+      "application_requirements": [
+        {
+          "id": "confirm-community-eligibility",
+          "label": "Confirm residency near a qualifying Simon mall/Mills/Premium Outlets community",
+          "details": "Applicant must live in a community surrounding a Simon Property Group mall, Mills, or Premium Outlet location.",
+          "required": true,
+          "source_url": "https://syf.org/simon-youth-foundation-names-community-scholarship-program-in-memory-of-shari-simon-greenberg/"
+        },
+        {
+          "id": "complete-online-application",
+          "label": "Complete the online scholarship application via the SYF application portal",
+          "details": "Applications are submitted through apply.mykaleidoscope.com during the announced application window.",
+          "required": true,
+          "source_url": "https://syf.org/scholarships/"
+        },
+        {
+          "id": "submit-written-response",
+          "label": "Submit written response(s)/essay as part of the application",
+          "details": "Selection criteria explicitly include a 'written response' component alongside academic promise and financial need.",
+          "required": true,
+          "source_url": "https://syf.org/simon-youth-foundation-names-community-scholarship-program-in-memory-of-shari-simon-greenberg/"
+        },
+        {
+          "id": "demonstrate-financial-need",
+          "label": "Demonstrate financial need",
+          "details": "Financial need is one of the stated evaluation criteria; first-generation college students are given close consideration.",
+          "required": true,
+          "source_url": "https://syf.org/simon-youth-foundation-names-community-scholarship-program-in-memory-of-shari-simon-greenberg/"
+        },
+        {
+          "id": "plan-full-time-enrollment",
+          "label": "Plan to enroll at an accredited college, university, or vocational/technical school",
+          "details": "Scholarship funds must be applied toward tuition at an accredited postsecondary institution.",
+          "required": true,
+          "source_url": "https://syf.org/simon-youth-foundation-names-community-scholarship-program-in-memory-of-shari-simon-greenberg/"
+        }
+      ],
+      "verification": {
+        "source_url": "https://syf.org/scholarships/",
+        "last_verified_at": "2026-07-08"
+      },
+      "verified": true
     }
   ]
 }
