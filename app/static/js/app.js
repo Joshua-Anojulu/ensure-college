@@ -26,6 +26,10 @@ let programSearchQuery = "";
 let competitionSearchQuery = "";
 let catalogSearchQuery = "";
 let catalogKindFilter = "all";
+let catalogSort = "name";
+let catalogFieldFilter = "";
+let catalogNoEssay = false;
+let catalogVerifiedOnly = false;
 let searchInDescriptions = false;
 
 let currentUser = null;
@@ -128,6 +132,11 @@ const competitionsSearchPanel = document.getElementById("competitions-search-pan
 const catalogSection = document.getElementById("catalog-section");
 const catalogSummary = document.getElementById("catalog-summary");
 const catalogSearch = document.getElementById("catalog-search");
+const catalogField = document.getElementById("catalog-field");
+const catalogSortSelect = document.getElementById("catalog-sort");
+const catalogNoEssayCheck = document.getElementById("catalog-no-essay");
+const catalogVerifiedOnlyCheck = document.getElementById("catalog-verified-only");
+const catalogClear = document.getElementById("catalog-clear");
 const catalogEmpty = document.getElementById("catalog-empty");
 const catalogContainer = document.getElementById("catalog-container");
 
@@ -182,6 +191,7 @@ async function init() {
   wirePasswordReset();
   wireOpportunityTabs();
   wireCatalogKindTabs();
+  wireCatalogFilters();
   wirePreviewForm();
   wireFormSteps();
   wireFilterControls();
@@ -2899,6 +2909,7 @@ function populateForm(vocab) {
   fillCheckboxes("demographic-tags", vocab.demographic_tags, "demographics");
   fillSelect("preview-grade", vocab.grade_level);
   fillSelect("preview-field", vocab.fields_of_study);
+  fillSelect("catalog-field", vocab.fields_of_study);
   applyProfileHelp();
 }
 
@@ -3517,6 +3528,93 @@ async function showCatalogView() {
   renderCatalog();
 }
 
+function wireCatalogFilters() {
+  catalogField?.addEventListener("change", () => {
+    catalogFieldFilter = catalogField.value;
+    renderCatalog();
+  });
+  catalogSortSelect?.addEventListener("change", () => {
+    catalogSort = catalogSortSelect.value;
+    renderCatalog();
+  });
+  catalogNoEssayCheck?.addEventListener("change", () => {
+    catalogNoEssay = catalogNoEssayCheck.checked;
+    renderCatalog();
+  });
+  catalogVerifiedOnlyCheck?.addEventListener("change", () => {
+    catalogVerifiedOnly = catalogVerifiedOnlyCheck.checked;
+    renderCatalog();
+  });
+  catalogClear?.addEventListener("click", resetCatalogFilters);
+}
+
+function resetCatalogFilters() {
+  catalogFieldFilter = "";
+  catalogSort = "name";
+  catalogNoEssay = false;
+  catalogVerifiedOnly = false;
+  catalogSearchQuery = "";
+  if (catalogField) catalogField.value = "";
+  if (catalogSortSelect) catalogSortSelect.value = "name";
+  if (catalogNoEssayCheck) catalogNoEssayCheck.checked = false;
+  if (catalogVerifiedOnlyCheck) catalogVerifiedOnlyCheck.checked = false;
+  if (catalogSearch) catalogSearch.value = "";
+  renderCatalog();
+}
+
+// Catalog items are raw dataset records (scholarship / program / competition),
+// all of which carry name, eligibility, verified, deadline, estimated_deadline.
+function catalogItemFields(item) {
+  return (item.eligibility && item.eligibility.fields_of_study) || [];
+}
+
+function catalogItemPassesFilters(item) {
+  if (catalogFieldFilter) {
+    // As a discovery filter, "Field of study" surfaces entries that target that
+    // field. Open-to-all entries (no listed fields) stay under "All fields" so
+    // picking a field actually narrows the list.
+    if (!catalogItemFields(item).includes(catalogFieldFilter)) {
+      return false;
+    }
+  }
+  if (catalogNoEssay && item.eligibility && item.eligibility.essay_required) {
+    return false;
+  }
+  if (catalogVerifiedOnly && item.verified !== true) {
+    return false;
+  }
+  return true;
+}
+
+function catalogAwardValue(item) {
+  return typeof item.award_amount === "number" ? item.award_amount : -1;
+}
+
+function catalogDeadlineValue(item) {
+  const parsed = parseRealDeadline(item.deadline);
+  // Unknown/rolling deadlines sort last so the soonest real dates lead.
+  return parsed ? parsed.getTime() : Number.POSITIVE_INFINITY;
+}
+
+function sortCatalogItems(items) {
+  const arr = [...items];
+  const byName = (a, b) => String(a.name || "").localeCompare(String(b.name || ""));
+  if (catalogSort === "award") {
+    arr.sort((a, b) => catalogAwardValue(b) - catalogAwardValue(a) || byName(a, b));
+  } else if (catalogSort === "deadline") {
+    arr.sort((a, b) => catalogDeadlineValue(a) - catalogDeadlineValue(b) || byName(a, b));
+  } else {
+    arr.sort(byName);
+  }
+  return arr;
+}
+
+function catalogFiltersActive() {
+  return Boolean(
+    catalogSearchQuery || catalogFieldFilter || catalogNoEssay || catalogVerifiedOnly
+  );
+}
+
 function updateCatalogKindCounts() {
   const counts = {
     scholarships: catalogScholarships ? catalogScholarships.length : null,
@@ -3546,21 +3644,23 @@ function renderCatalog() {
   }
   updateCatalogKindCounts();
   const wantKind = (kind) => catalogKindFilter === "all" || catalogKindFilter === kind;
+  const filterAndSort = (list, searchValuesFn) =>
+    sortCatalogItems(
+      list.filter(
+        (item) =>
+          itemMatchesSearch(searchValuesFn(item), catalogSearchQuery) &&
+          catalogItemPassesFilters(item)
+      )
+    );
   const scholarships = !wantKind("scholarships")
     ? []
-    : catalogScholarships.filter((scholarship) =>
-        itemMatchesSearch(scholarshipSearchValues(scholarship), catalogSearchQuery)
-      );
+    : filterAndSort(catalogScholarships, scholarshipSearchValues);
   const programs = !wantKind("programs")
     ? []
-    : catalogPrograms.filter((program) =>
-        itemMatchesSearch(programSearchValues(program), catalogSearchQuery)
-      );
+    : filterAndSort(catalogPrograms, programSearchValues);
   const competitions = !wantKind("competitions")
     ? []
-    : catalogCompetitions.filter((competition) =>
-        itemMatchesSearch(competitionSearchValues(competition), catalogSearchQuery)
-      );
+    : filterAndSort(catalogCompetitions, competitionSearchValues);
   const kindTotal =
     (wantKind("scholarships") ? catalogScholarships.length : 0) +
     (wantKind("programs") ? catalogPrograms.length : 0) +
@@ -3573,7 +3673,7 @@ function renderCatalog() {
     programs: "summer programs",
     competitions: "competitions",
   }[catalogKindFilter];
-  catalogSummary.textContent = catalogSearchQuery
+  catalogSummary.textContent = catalogFiltersActive()
     ? `Showing ${shown} of ${kindTotal} ${kindLabel}.`
     : `${kindTotal} ${kindLabel} available to browse.`;
 

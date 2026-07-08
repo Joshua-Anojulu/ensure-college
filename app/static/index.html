@@ -636,10 +636,39 @@
           <label for="catalog-search">Search all scholarships, summer programs, and competitions</label>
           <input id="catalog-search" type="search" placeholder="Name, sponsor, host, or subject..." autocomplete="off" />
         </div>
-        <label class="filter-check">
-          <input type="checkbox" class="search-descriptions-toggle" />
-          <span>Search descriptions</span>
-        </label>
+
+        <div class="filter-group">
+          <label for="catalog-field">Field of study</label>
+          <select id="catalog-field">
+            <option value="">All fields</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label for="catalog-sort">Sort by</label>
+          <select id="catalog-sort">
+            <option value="name">Name (A&ndash;Z)</option>
+            <option value="award">Award (high&rarr;low)</option>
+            <option value="deadline">Deadline (soonest)</option>
+          </select>
+        </div>
+
+        <div class="filter-checks">
+          <label class="filter-check">
+            <input type="checkbox" class="search-descriptions-toggle" />
+            <span>Search descriptions</span>
+          </label>
+          <label class="filter-check">
+            <input id="catalog-no-essay" type="checkbox" />
+            <span>No essay required</span>
+          </label>
+          <label class="filter-check">
+            <input id="catalog-verified-only" type="checkbox" />
+            <span>Verified data only</span>
+          </label>
+        </div>
+
+        <button id="catalog-clear" type="button" class="btn-ghost filter-clear">Clear filters</button>
       </div>
 
       <p class="catalog-note">
@@ -706,6 +735,6 @@
     </div>
   </div>
 
-  <script src="/static/js/app.js?v=20260707-7"></script>
+  <script src="/static/js/app.js?v=20260707-8"></script>
 </body>
 </html>
