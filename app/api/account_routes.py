@@ -8,10 +8,20 @@ from sqlalchemy.orm import Session
 
 from app.auth.dependencies import get_current_user
 from app.db.database import get_db
-from app.db.models import SavedCompetition, SavedProgram, SavedScholarship, User, UserProfile
+from app.db.models import (
+    RecommendationLetter,
+    SavedCompetition,
+    SavedProgram,
+    SavedScholarship,
+    User,
+    UserProfile,
+)
 from app.ics import build_calendar
 from app.models.auth import (
     ProfileResponse,
+    RecommendationLetterCreate,
+    RecommendationLetterItem,
+    RecommendationLetterUpdate,
     SavedCompetitionItem,
     SavedListResponse,
     SavedProgramItem,
@@ -554,6 +564,114 @@ def unsave_program(
         .filter(
             SavedProgram.user_id == user.id,
             SavedProgram.program_id == program_id,
+        )
+        .first()
+    )
+    if row is not None:
+        db.delete(row)
+        db.commit()
+    return {"ok": True}
+
+
+def _rec_letter_item(row: RecommendationLetter) -> RecommendationLetterItem:
+    return RecommendationLetterItem(
+        id=row.id,
+        recommender_name=row.recommender_name,
+        relationship_note=row.relationship_note,
+        status=row.status,
+        due_date=row.due_date,
+        notes=row.notes,
+        created_at=row.created_at,
+    )
+
+
+@router.get("/rec-letters", response_model=list[RecommendationLetterItem])
+def list_rec_letters(
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+) -> list[RecommendationLetterItem]:
+    rows = (
+        db.query(RecommendationLetter)
+        .filter(RecommendationLetter.user_id == user.id)
+        .order_by(RecommendationLetter.created_at.asc())
+        .all()
+    )
+    return [_rec_letter_item(row) for row in rows]
+
+
+@router.post(
+    "/rec-letters",
+    response_model=RecommendationLetterItem,
+    status_code=status.HTTP_201_CREATED,
+)
+def create_rec_letter(
+    body: RecommendationLetterCreate,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+) -> RecommendationLetterItem:
+    row = RecommendationLetter(
+        user_id=user.id,
+        recommender_name=body.recommender_name.strip(),
+        relationship_note=body.relationship_note.strip(),
+        status=body.status,
+        due_date=body.due_date,
+        notes=body.notes.strip(),
+    )
+    db.add(row)
+    db.commit()
+    db.refresh(row)
+    return _rec_letter_item(row)
+
+
+@router.patch("/rec-letters/{letter_id}", response_model=RecommendationLetterItem)
+def update_rec_letter(
+    letter_id: int,
+    body: RecommendationLetterUpdate,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+) -> RecommendationLetterItem:
+    row = (
+        db.query(RecommendationLetter)
+        .filter(
+            RecommendationLetter.id == letter_id,
+            RecommendationLetter.user_id == user.id,
+        )
+        .first()
+    )
+    if row is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail={"error": "That recommendation letter is not in your list."},
+        )
+    if body.recommender_name is not None:
+        row.recommender_name = body.recommender_name.strip()
+    if body.relationship_note is not None:
+        row.relationship_note = body.relationship_note.strip()
+    if body.status is not None:
+        row.status = body.status
+    if body.notes is not None:
+        row.notes = body.notes.strip()
+    # A cleared date and a new date are distinct intents; clear wins if set.
+    if body.clear_due_date:
+        row.due_date = None
+    elif body.due_date is not None:
+        row.due_date = body.due_date
+    db.commit()
+    db.refresh(row)
+    return _rec_letter_item(row)
+
+
+@router.delete("/rec-letters/{letter_id}", status_code=status.HTTP_200_OK)
+def delete_rec_letter(
+    letter_id: int,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+) -> dict[str, bool]:
+    row = (
+        db.query(RecommendationLetter)
+        .filter(
+            RecommendationLetter.id == letter_id,
+            RecommendationLetter.user_id == user.id,
         )
         .first()
     )

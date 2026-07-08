@@ -111,6 +111,10 @@ const savedSection = document.getElementById("saved-section");
 const savedSummary = document.getElementById("saved-summary");
 const savedEmpty = document.getElementById("saved-empty");
 const savedContainer = document.getElementById("saved-container");
+const recLettersPanel = document.getElementById("rec-letters-panel");
+const recLetterForm = document.getElementById("rec-letter-form");
+const recLettersList = document.getElementById("rec-letters-list");
+const recLettersEmpty = document.getElementById("rec-letters-empty");
 
 const resultsFilters = document.getElementById("results-filters");
 const filterQuality = document.getElementById("filter-quality");
@@ -192,6 +196,7 @@ async function init() {
   wireOpportunityTabs();
   wireCatalogKindTabs();
   wireCatalogFilters();
+  wireRecLetters();
   wirePreviewForm();
   wireFormSteps();
   wireFilterControls();
@@ -359,11 +364,13 @@ async function activateOpportunityView(view, options = {}) {
   if (view === "saved") {
     if (currentUser) {
       await showSavedView({ scroll: false });
+      loadRecLetters();
     } else {
       savedSection.hidden = false;
       savedContainer.innerHTML = "";
       savedEmpty.hidden = false;
       savedSummary.textContent = "Log in to save scholarships, summer programs, and competitions to your application plan.";
+      if (recLettersPanel) recLettersPanel.hidden = true;
     }
   }
 
@@ -1339,7 +1346,9 @@ async function handleLogout() {
   currentUser = null;
   savedIds.clear();
   savedProgramIds.clear();
+  savedCompetitionIds.clear();
   savedSection.hidden = true;
+  if (recLettersPanel) recLettersPanel.hidden = true;
   renderAuthState();
   updateSavedCount();
   if (lastResults) {
@@ -1582,6 +1591,167 @@ function refreshTrackerSummary() {
     if (existingPlan) {
       existingPlan.replaceWith(buildPlanGuidance(trackerItems));
     }
+  }
+}
+
+/* ---------- Recommendation-letter tracker ---------- */
+
+const REC_LETTER_STATUSES = [
+  { value: "requested", label: "Requested" },
+  { value: "received", label: "Received" },
+  { value: "submitted", label: "Submitted" },
+];
+
+function wireRecLetters() {
+  recLetterForm?.addEventListener("submit", handleAddRecLetter);
+}
+
+function showRecLetterError(message) {
+  const el = document.getElementById("rec-letter-error");
+  if (!el) return;
+  el.textContent = message;
+  el.hidden = false;
+}
+
+async function loadRecLetters() {
+  if (!currentUser || !recLettersPanel) {
+    return;
+  }
+  recLettersPanel.hidden = false;
+  try {
+    const response = await fetch("/account/rec-letters");
+    if (!response.ok) {
+      return;
+    }
+    renderRecLetters(await response.json());
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+function renderRecLetters(letters) {
+  recLettersList.innerHTML = "";
+  recLettersEmpty.hidden = letters.length > 0;
+  for (const letter of letters) {
+    recLettersList.appendChild(buildRecLetterRow(letter));
+  }
+}
+
+function buildRecLetterRow(letter) {
+  const row = document.createElement("div");
+  row.className = `rec-letter-row status-${letter.status}`;
+
+  const main = document.createElement("div");
+  main.className = "rec-letter-main";
+  const name = document.createElement("p");
+  name.className = "rec-letter-name";
+  name.textContent = letter.recommender_name;
+  main.appendChild(name);
+  const meta = [letter.relationship_note, letter.due_date ? `Due ${formatVerifiedDate(letter.due_date)}` : ""]
+    .filter(Boolean)
+    .join(" · ");
+  if (meta) {
+    const metaEl = document.createElement("p");
+    metaEl.className = "rec-letter-meta";
+    metaEl.textContent = meta;
+    main.appendChild(metaEl);
+  }
+  row.appendChild(main);
+
+  const controls = document.createElement("div");
+  controls.className = "rec-letter-controls";
+
+  const select = document.createElement("select");
+  select.className = "rec-letter-status";
+  select.setAttribute("aria-label", `Status for ${letter.recommender_name}`);
+  for (const opt of REC_LETTER_STATUSES) {
+    const option = document.createElement("option");
+    option.value = opt.value;
+    option.textContent = opt.label;
+    option.selected = letter.status === opt.value;
+    select.appendChild(option);
+  }
+  select.addEventListener("change", async () => {
+    const ok = await patchRecLetter(letter.id, { status: select.value });
+    if (ok) {
+      row.className = `rec-letter-row status-${select.value}`;
+    }
+  });
+  controls.appendChild(select);
+
+  const remove = document.createElement("button");
+  remove.type = "button";
+  remove.className = "rec-letter-remove";
+  remove.setAttribute("aria-label", `Remove ${letter.recommender_name}`);
+  remove.textContent = "Remove";
+  remove.addEventListener("click", async () => {
+    remove.disabled = true;
+    try {
+      const response = await fetch(`/account/rec-letters/${letter.id}`, { method: "DELETE" });
+      if (response.ok) {
+        row.remove();
+        recLettersEmpty.hidden = recLettersList.children.length > 0;
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      remove.disabled = false;
+    }
+  });
+  controls.appendChild(remove);
+  row.appendChild(controls);
+  return row;
+}
+
+async function patchRecLetter(id, payload) {
+  try {
+    const response = await fetch(`/account/rec-letters/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    return response.ok;
+  } catch (err) {
+    console.error(err);
+    return false;
+  }
+}
+
+async function handleAddRecLetter(event) {
+  event.preventDefault();
+  document.getElementById("rec-letter-error").hidden = true;
+  const name = document.getElementById("rec-name").value.trim();
+  if (!name) {
+    showRecLetterError("Enter the recommender's name.");
+    return;
+  }
+  const payload = {
+    recommender_name: name,
+    relationship_note: document.getElementById("rec-relationship").value.trim(),
+  };
+  const due = document.getElementById("rec-due").value;
+  if (due) {
+    payload.due_date = due;
+  }
+  const btn = document.getElementById("rec-add-btn");
+  btn.disabled = true;
+  try {
+    const response = await fetch("/account/rec-letters", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    if (!response.ok) {
+      showRecLetterError("Could not add that recommender. Check your entries and try again.");
+      return;
+    }
+    recLetterForm.reset();
+    await loadRecLetters();
+  } catch (err) {
+    showRecLetterError("Could not reach the server. Check your connection and try again.");
+    console.error(err);
+  } finally {
+    btn.disabled = false;
   }
 }
 

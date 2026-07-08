@@ -25,7 +25,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Hanken+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/static/css/style.css?v=20260707-5">
+  <link rel="stylesheet" href="/static/css/style.css?v=20260707-6">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -702,6 +702,36 @@
       </div>
 
       <div id="saved-container"></div>
+
+      <div id="rec-letters-panel" class="rec-letters panel" hidden>
+        <div class="rec-letters-head">
+          <div>
+            <p class="eyebrow">Recommendation letters</p>
+            <h3>Track who you asked</h3>
+            <p class="rec-letters-intro">Keep tabs on your recommenders, what you asked them for, and where each letter stands.</p>
+          </div>
+        </div>
+
+        <form id="rec-letter-form" class="rec-letter-form" novalidate>
+          <div class="field">
+            <label for="rec-name">Recommender</label>
+            <input type="text" id="rec-name" maxlength="200" placeholder="e.g. Ms. Rivera" required>
+          </div>
+          <div class="field">
+            <label for="rec-relationship">Relationship <span class="optional">(optional)</span></label>
+            <input type="text" id="rec-relationship" maxlength="200" placeholder="e.g. Chemistry teacher">
+          </div>
+          <div class="field">
+            <label for="rec-due">Due date <span class="optional">(optional)</span></label>
+            <input type="date" id="rec-due">
+          </div>
+          <button type="submit" class="btn-primary" id="rec-add-btn">Add recommender</button>
+        </form>
+        <div id="rec-letter-error" class="form-error" role="alert" hidden></div>
+
+        <div id="rec-letters-list" class="rec-letters-list"></div>
+        <p id="rec-letters-empty" class="rec-letters-empty" hidden>No recommenders tracked yet.</p>
+      </div>
     </section>
   </main>
 
@@ -735,6 +765,6 @@
     </div>
   </div>
 
-  <script src="/static/js/app.js?v=20260707-8"></script>
+  <script src="/static/js/app.js?v=20260707-9"></script>
 </body>
 </html>

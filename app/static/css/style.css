@@ -1791,3 +1791,50 @@ input:user-invalid, select:user-invalid, textarea:user-invalid { border-color: v
 .form-step-tab.is-done { color: var(--ink-soft); }
 .form-step-tab.is-done span { background: var(--accent-tint); color: var(--accent-strong); }
 .form-error ul { margin: 0.35rem 0 0; padding-left: 1.2rem; }
+
+/* Recommendation-letter tracker (in the Application Plan). */
+.rec-letters { margin-top: 1rem; padding: clamp(1.2rem, 3vw, 1.8rem); }
+.rec-letters-head h3 { margin: 0.1rem 0 0.2rem; font-size: clamp(1.3rem, 3vw, 1.7rem); }
+.rec-letters-intro { max-width: 62ch; margin: 0; color: var(--muted); font-size: 0.9rem; line-height: 1.55; }
+.rec-letter-form {
+  display: grid;
+  grid-template-columns: 1.2fr 1.2fr 0.8fr auto;
+  gap: 0.7rem;
+  align-items: end;
+  margin: 1.1rem 0 0.4rem;
+}
+.rec-letter-form .field { margin: 0; }
+.rec-letters-list { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.9rem; }
+.rec-letter-row {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.75rem 0.95rem;
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--line-strong);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+.rec-letter-row.status-received { border-left-color: var(--amber); }
+.rec-letter-row.status-submitted { border-left-color: var(--success); }
+.rec-letter-main { flex: 1 1 auto; min-width: 0; }
+.rec-letter-name { margin: 0; font-weight: 600; }
+.rec-letter-meta { margin: 0.15rem 0 0; color: var(--muted); font-size: 0.82rem; }
+.rec-letter-controls { display: flex; align-items: center; gap: 0.5rem; flex: 0 0 auto; }
+.rec-letter-status { min-height: 2.1rem; padding: 0.3rem 0.5rem; font-size: 0.82rem; }
+.rec-letter-remove {
+  padding: 0.4rem 0.7rem;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  color: var(--muted);
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+.rec-letter-remove:hover { color: var(--danger); border-color: var(--danger-line); }
+.rec-letters-empty { margin: 0.6rem 0 0; color: var(--muted); font-size: 0.88rem; }
+@media (max-width: 720px) {
+  .rec-letter-form { grid-template-columns: 1fr 1fr; }
+  .rec-letter-form .btn-primary { grid-column: 1 / -1; }
+  .rec-letter-row { flex-wrap: wrap; }
+}

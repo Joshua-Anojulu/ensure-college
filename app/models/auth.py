@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import date, datetime
 from typing import Literal, Optional
 
 from pydantic import BaseModel, EmailStr, Field, field_validator
@@ -132,3 +132,35 @@ class SavedListResponse(BaseModel):
     saved: list[SavedScholarshipItem]
     programs: list[SavedProgramItem] = Field(default_factory=list)
     competitions: list[SavedCompetitionItem] = Field(default_factory=list)
+
+
+RecLetterStatus = Literal["requested", "received", "submitted"]
+
+
+class RecommendationLetterCreate(BaseModel):
+    recommender_name: str = Field(min_length=1, max_length=200)
+    relationship_note: str = Field(default="", max_length=200)
+    status: RecLetterStatus = "requested"
+    due_date: Optional[date] = None
+    notes: str = Field(default="", max_length=2000)
+
+
+class RecommendationLetterUpdate(BaseModel):
+    """Patch a rec-letter row. Omitted fields are left unchanged."""
+
+    recommender_name: Optional[str] = Field(default=None, min_length=1, max_length=200)
+    relationship_note: Optional[str] = Field(default=None, max_length=200)
+    status: Optional[RecLetterStatus] = None
+    due_date: Optional[date] = None
+    clear_due_date: bool = False
+    notes: Optional[str] = Field(default=None, max_length=2000)
+
+
+class RecommendationLetterItem(BaseModel):
+    id: int
+    recommender_name: str
+    relationship_note: str = ""
+    status: RecLetterStatus = "requested"
+    due_date: Optional[date] = None
+    notes: str = ""
+    created_at: datetime
