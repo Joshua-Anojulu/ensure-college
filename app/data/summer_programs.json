@@ -3025,6 +3025,637 @@
         "last_verified_at": "2026-06-21",
         "notes": "Official Georgetown summer.georgetown.edu: Hoya Summer High School Sessions, academies and college prep, application open for Summer 2026."
       }
+    },
+    {
+      "id": "kode-with-klossy",
+      "name": "Kode With Klossy Summer Camps",
+      "host": "Kode With Klossy",
+      "subject": "Computer science",
+      "url": "https://www.kodewithklossy.com/camp",
+      "cost": "Free",
+      "cost_category": "free",
+      "selectivity": "VERIFY",
+      "program_format": "hybrid",
+      "location": "Virtual (open to scholars globally) plus in-person camps in Dallas TX, St. Louis MO, Chicago IL, Oakland CA (hybrid), Washington DC, San Francisco CA, Seattle WA, New York NY, and London, England",
+      "program_dates": "Four 2-week summer 2026 sessions: June 1-12, July 6-17, July 20-31, and Aug 3-14 (specific cities assigned to specific windows)",
+      "deadline": "rolling",
+      "estimated_deadline": null,
+      "eligibility": {
+        "min_gpa": "VERIFY",
+        "fields_of_study": [
+          "computer_science",
+          "technology"
+        ],
+        "grade_levels": [
+          "middle_school",
+          "high_school"
+        ],
+        "demographics": [],
+        "states": "any",
+        "essay_required": true,
+        "citizenship_requirement": "any",
+        "special_requirements": []
+      },
+      "description": "Kode With Klossy is a free nonprofit coding program for young women and gender-expansive teens ages 13-18, offering 2-week summer camps (virtual and in select US/UK cities) in AI/machine learning, data science, and web development. No prior coding experience is required.",
+      "application_requirements": [
+        {
+          "id": "start-application",
+          "label": "Start the online Scholar Application (basic info) and select camp preferences (session, location, and curriculum track).",
+          "details": "The 2026 application is a Typeform titled 'Summer 2026 Scholar Application'; applicants provide contact details and choose their preferred session window, virtual or in-person location, and curriculum (AI/ML, data science, or web development).",
+          "required": true,
+          "source_url": "https://www.kodewithklossy.com/application-tips"
+        },
+        {
+          "id": "essay-questions",
+          "label": "Answer two short-response essay prompts (150-250 words each); one response may be submitted as a video instead of writing.",
+          "details": "New applicants answer 'Why do you want to participate in camp this summer? How will you use your new coding superpower?' plus a choice between two follow-up prompts. Returning scholars receive different prompts.",
+          "required": true,
+          "source_url": "https://www.kodewithklossy.com/application-tips"
+        },
+        {
+          "id": "technology-and-additional-info",
+          "label": "Complete the Technology Access and Additional Information sections.",
+          "details": "Applicants flag any device/equipment access needs (equipment is not required to participate) and provide any additional information. The full application takes roughly 30 minutes.",
+          "required": true,
+          "source_url": "https://www.kodewithklossy.com/application-tips"
+        },
+        {
+          "id": "submit-application",
+          "label": "Submit the application via the official Kode With Klossy form.",
+          "details": "The application can be started and resumed on the same non-incognito browser before final submission. As of this session the 2026 form is accepting waitlist applications, open through the beginning of August.",
+          "required": true,
+          "source_url": "https://forms.kodewithklossy.com/t/4rNM5QCxJgus"
+        }
+      ],
+      "verification": {
+        "source_url": "https://www.kodewithklossy.com/camp",
+        "last_verified_at": "2026-07-08"
+      },
+      "verified": true
+    },
+    {
+      "id": "launchx-entrepreneurship-program",
+      "name": "LaunchX Entrepreneurship Program",
+      "host": "LaunchX (LaunchX LLC)",
+      "subject": "Entrepreneurship",
+      "url": "https://www.launchx.com/programs",
+      "cost": "Tuition-based (Online Entrepreneurship $6,495; San Diego in-person Flagship $11,495; other tracks $1,995-$6,495); need-based financial awards available, including for international students",
+      "cost_category": "paid",
+      "selectivity": "Competitive (~30% acceptance rate for Flagship programs, per official FAQ)",
+      "program_format": "hybrid",
+      "location": "Online (open worldwide) and in-person/residential at UC San Diego, San Diego, CA for Summer 2026 (in-person host campus rotates by year)",
+      "program_dates": "Summer 2026 tracks: Online Entrepreneurship (Flagship) July 13-Aug 14, 2026; San Diego in-person Flagship July 12-Aug 8, 2026; plus shorter Innovation, Exploration, BootCamp, and Startup Experience tracks across June-August 2026",
+      "deadline": "VERIFY",
+      "estimated_deadline": "2026-03-04",
+      "eligibility": {
+        "min_gpa": "VERIFY",
+        "fields_of_study": [
+          "business"
+        ],
+        "grade_levels": [
+          "high_school"
+        ],
+        "demographics": [],
+        "states": "any",
+        "essay_required": true,
+        "citizenship_requirement": "any",
+        "special_requirements": []
+      },
+      "description": "LaunchX is a high school entrepreneurship program (online and in-person residential tracks) in which teams of students, guided by mentors and founders, move from problem identification through prototyping to launching a real venture and generating customer revenue, culminating in a Demo Day.",
+      "application_requirements": [
+        {
+          "id": "general-info",
+          "label": "Complete the General Info section (contact details, how you heard about LaunchX, program interest, and financial-award interest).",
+          "details": null,
+          "required": true,
+          "source_url": "https://www.launchx.com/admissions/how-to-apply"
+        },
+        {
+          "id": "activities-and-academics",
+          "label": "Complete the Activities Involvement section (business experience, clubs, fundraising) and the Academics section (student/school background).",
+          "details": null,
+          "required": true,
+          "source_url": "https://www.launchx.com/admissions/how-to-apply"
+        },
+        {
+          "id": "entrepreneurial-mindset-essays",
+          "label": "Complete the Entrepreneurial Mindset section: short-answer/essay prompts on your problem-solving approach and entrepreneurial type.",
+          "details": "Example prompts include 'What is your main driver for wanting to be an entrepreneur?' and 'What is your entrepreneurial type?'",
+          "required": true,
+          "source_url": "https://www.launchx.com/admissions/how-to-apply"
+        },
+        {
+          "id": "submit-and-decision",
+          "label": "Pay the non-refundable application fee, submit the application, and receive an admissions decision.",
+          "details": "A non-refundable application fee applies (tiered by deadline). Decisions are delivered through the applicant portal ('Mission Control').",
+          "required": true,
+          "source_url": "https://www.launchx.com/admissions/how-to-apply"
+        },
+        {
+          "id": "post-acceptance-steps",
+          "label": "If admitted: pay a non-refundable deposit, complete a scheduled interview, and (if seeking aid) submit the Financial Award Application.",
+          "details": "Admitted students secure their spot with a non-refundable deposit, schedule an interview via Mission Control, and submit a separate detailed need-based Financial Award Application if requesting aid, then make final payment.",
+          "required": false,
+          "source_url": "https://www.launchx.com/admissions/financial-awards"
+        }
+      ],
+      "verification": {
+        "source_url": "https://www.launchx.com/admissions/how-to-apply",
+        "last_verified_at": "2026-07-08"
+      },
+      "verified": true
+    },
+    {
+      "id": "cornell-summer-college",
+      "name": "Summer College for High School Students",
+      "host": "Cornell University (School of Continuing Education)",
+      "subject": "Multidisciplinary pre-college",
+      "url": "https://sce.cornell.edu/precollege",
+      "cost": "Tuition-based (e.g., ~$16,754-$20,434 for the residential program depending on credits); financial aid available",
+      "cost_category": "paid",
+      "selectivity": "VERIFY",
+      "program_format": "residential",
+      "location": "Cornell University, Ithaca, NY (commuter and fully online tracks also offered)",
+      "program_dates": "Three-week sessions: June 1-18, June 22-July 10, and July 13-31, 2026; six-week session: June 22-July 31, 2026",
+      "deadline": "VERIFY",
+      "estimated_deadline": "2026-05-14",
+      "eligibility": {
+        "min_gpa": "VERIFY",
+        "fields_of_study": [
+          "architecture",
+          "arts",
+          "business",
+          "computer_science",
+          "engineering",
+          "environmental_science",
+          "health_medicine",
+          "humanities",
+          "law",
+          "natural_sciences",
+          "research",
+          "science",
+          "social_sciences"
+        ],
+        "grade_levels": [
+          "high_school_sophomore",
+          "high_school_junior",
+          "high_school_senior"
+        ],
+        "demographics": [],
+        "states": "any",
+        "essay_required": true,
+        "citizenship_requirement": "any",
+        "special_requirements": []
+      },
+      "description": "Summer College is Cornell University's precollege program offering three- and six-week undergraduate-level courses to high school students in residential, commuter, and online formats. Students choose from subjects spanning architecture, business, computer science, engineering, humanities, law, medicine, and veterinary science while earning Cornell course credit.",
+      "application_requirements": [
+        {
+          "id": "online-application",
+          "label": "Submit the online application before the deadline for your chosen session and format",
+          "details": "Deadlines vary by program type (residential vs. commuter/online) and session; only complete applications submitted with all materials by the deadline are reviewed.",
+          "required": true,
+          "source_url": "https://sce.cornell.edu/precollege/admission/residential"
+        },
+        {
+          "id": "application-fee",
+          "label": "Pay the non-refundable application fee (approx. $75)",
+          "details": "Paid online through Cornell's application system when the application is submitted.",
+          "required": true,
+          "source_url": "https://sce.cornell.edu/precollege/admission"
+        },
+        {
+          "id": "transcript",
+          "label": "Submit a complete high school transcript and most current grade report",
+          "details": "School materials can be sent separately from the application form, by the materials deadline.",
+          "required": true,
+          "source_url": "https://sce.cornell.edu/precollege/admission/eligibility"
+        },
+        {
+          "id": "recommendation",
+          "label": "Provide one teacher or counselor recommendation letter",
+          "details": null,
+          "required": true,
+          "source_url": "https://sce.cornell.edu/precollege/admission/statements"
+        },
+        {
+          "id": "personal-statement",
+          "label": "Submit a personal statement (roughly 1,000-1,500 words, max 2,000) on your academic area of interest",
+          "details": "Sourced from Cornell's official Application Statements page content; word-count details could not be independently re-confirmed via direct page fetch this session.",
+          "required": true,
+          "source_url": "https://sce.cornell.edu/precollege/admission/statements"
+        },
+        {
+          "id": "english-proficiency",
+          "label": "International applicants: demonstrate English language proficiency",
+          "details": null,
+          "required": false,
+          "source_url": "https://sce.cornell.edu/precollege/admission/eligibility"
+        }
+      ],
+      "verification": {
+        "source_url": "https://sce.cornell.edu/precollege/admission/eligibility",
+        "last_verified_at": "2026-07-08"
+      },
+      "verified": true
+    },
+    {
+      "id": "uiowa-sstp",
+      "name": "Secondary Student Training Program (SSTP)",
+      "host": "University of Iowa - Belin-Blank Center",
+      "subject": "Research (STEM and humanities)",
+      "url": "https://belinblank.education.uiowa.edu/students/sstp/",
+      "cost": "$7,500 program fee (covers room, board, materials, and 3 semester hours of credit); financial aid can cover up to 95% of cost",
+      "cost_category": "paid",
+      "selectivity": "Highly selective and intensive (official site language); no numeric acceptance rate published",
+      "program_format": "residential",
+      "location": "University of Iowa, Iowa City, IA",
+      "program_dates": "June 17 - July 24, 2026 (five-and-a-half weeks)",
+      "deadline": "VERIFY",
+      "estimated_deadline": "2026-02-16",
+      "eligibility": {
+        "min_gpa": "VERIFY",
+        "fields_of_study": [
+          "research",
+          "natural_sciences",
+          "engineering",
+          "business",
+          "social_sciences",
+          "communications"
+        ],
+        "grade_levels": [
+          "high_school_sophomore",
+          "high_school_junior"
+        ],
+        "demographics": [],
+        "states": "any",
+        "essay_required": true,
+        "citizenship_requirement": "any",
+        "special_requirements": []
+      },
+      "description": "The Secondary Student Training Program is a five-and-a-half week residential research program at the University of Iowa's Belin-Blank Center, pairing academically talented students in grades 10-11 with UI faculty mentors across roughly 16 departments. Participants earn three semester hours of university credit for their supervised research work.",
+      "application_requirements": [
+        {
+          "id": "online-application",
+          "label": "Submit the online application with demographic and background information",
+          "details": null,
+          "required": true,
+          "source_url": "https://belinblank.education.uiowa.edu/students/sstp/"
+        },
+        {
+          "id": "application-fee",
+          "label": "Pay the $95 non-refundable application fee",
+          "details": null,
+          "required": true,
+          "source_url": "https://belinblank.education.uiowa.edu/students/sstp/"
+        },
+        {
+          "id": "essays",
+          "label": "Write two essays (750 words maximum each)",
+          "details": null,
+          "required": true,
+          "source_url": "https://belinblank.education.uiowa.edu/students/sstp/"
+        },
+        {
+          "id": "transcript",
+          "label": "Submit a current high school transcript",
+          "details": null,
+          "required": true,
+          "source_url": "https://belinblank.education.uiowa.edu/students/sstp/"
+        },
+        {
+          "id": "references",
+          "label": "Provide two letters of reference (one academic, one character)",
+          "details": null,
+          "required": true,
+          "source_url": "https://belinblank.education.uiowa.edu/students/sstp/"
+        },
+        {
+          "id": "test-scores",
+          "label": "Submit SAT or ACT scores (optional but recommended)",
+          "details": null,
+          "required": false,
+          "source_url": "https://belinblank.education.uiowa.edu/students/sstp/"
+        }
+      ],
+      "verification": {
+        "source_url": "https://belinblank.education.uiowa.edu/students/sstp/",
+        "last_verified_at": "2026-07-08"
+      },
+      "verified": true
+    },
+    {
+      "id": "princeton-laboratory-learning-program",
+      "name": "Laboratory Learning Program (LLP)",
+      "host": "Princeton University - Science Outreach",
+      "subject": "STEM research internship",
+      "url": "https://scienceoutreach.princeton.edu/laboratory-learning-program",
+      "cost": "Free",
+      "cost_category": "free",
+      "selectivity": "Highly competitive (over 3,000 applicants annually; not all are accepted, per official site)",
+      "program_format": "commuter",
+      "location": "Princeton University, Princeton, NJ",
+      "program_dates": "5-6 week internships during summer 2026; exact dates set by each research lab/department (weekday daytime only, no evenings/weekends)",
+      "deadline": "VERIFY",
+      "estimated_deadline": "2026-03-15",
+      "eligibility": {
+        "min_gpa": "VERIFY",
+        "fields_of_study": [
+          "science",
+          "engineering",
+          "research"
+        ],
+        "grade_levels": [],
+        "demographics": [],
+        "states": [
+          "NJ"
+        ],
+        "essay_required": false,
+        "citizenship_requirement": "us_citizen",
+        "special_requirements": []
+      },
+      "description": "The Laboratory Learning Program is a free, full-time summer research internship placing local New Jersey high school students into Princeton University science and engineering labs for 5-6 weeks under faculty and staff supervision. It is a commuter-only outreach program (no housing or transportation provided, no virtual option) restricted to U.S. citizens enrolled in local NJ high schools who are at least 16 by June 15.",
+      "application_requirements": [
+        {
+          "id": "online-application",
+          "label": "Submit one online application during the open window (Feb 15 - Mar 15, 2026 for the 2026 cycle)",
+          "details": "Only one application per student is accepted; no supplemental materials or recommendations are accepted at the time of application.",
+          "required": true,
+          "source_url": "https://scienceoutreach.princeton.edu/laboratory-learning-program"
+        },
+        {
+          "id": "select-opportunity",
+          "label": "Select a specific research opportunity/lab that matches all stated eligibility requirements",
+          "details": "Research opportunities and their requirements are posted on the LLP site and change each year based on participating faculty.",
+          "required": true,
+          "source_url": "https://scienceoutreach.princeton.edu/laboratory-learning-program"
+        },
+        {
+          "id": "eligibility-confirmation",
+          "label": "Confirm eligibility: at least 16 by June 15, 2026, U.S. citizen, enrolled in a local NJ high school",
+          "details": "Green cards, EAD, or permanent residency cards are not accepted in place of citizenship; local housing/school enrollment is verified during the application process.",
+          "required": true,
+          "source_url": "https://scienceoutreach.princeton.edu/laboratory-learning-program"
+        },
+        {
+          "id": "post-acceptance-forms",
+          "label": "If selected: submit parental consent form, proof of health insurance, and a high school teacher nomination form",
+          "details": "Transcripts and reference letters are not required at application time but are required after selection, along with proof of housing and transportation arrangements.",
+          "required": true,
+          "source_url": "https://scienceoutreach.princeton.edu/laboratory-learning-program"
+        },
+        {
+          "id": "safety-training",
+          "label": "Complete required safety training before beginning laboratory work",
+          "details": null,
+          "required": true,
+          "source_url": "https://scienceoutreach.princeton.edu/laboratory-learning-program"
+        }
+      ],
+      "verification": {
+        "source_url": "https://scienceoutreach.princeton.edu/laboratory-learning-program",
+        "last_verified_at": "2026-07-08"
+      },
+      "verified": true
+    },
+    {
+      "id": "hutton-junior-fisheries-biology-program",
+      "name": "Hutton Junior Fisheries Biology Program",
+      "host": "American Fisheries Society (AFS)",
+      "subject": "Fisheries and aquatic science",
+      "url": "https://hutton.fisheries.org/",
+      "cost": "Free; paid internship with a $3,000 stipend",
+      "cost_category": "stipend",
+      "selectivity": "VERIFY",
+      "program_format": "commuter",
+      "location": "Nationwide; mentor placement within ~30-45 minute commute of student's home (all 50 U.S. states, Puerto Rico, Canada, Mexico)",
+      "program_dates": "8-week summer internship (June-August), ~32 hours/week (256 hours total); exact dates arranged between mentor and student",
+      "deadline": "VERIFY",
+      "estimated_deadline": "2026-01-25",
+      "eligibility": {
+        "min_gpa": "VERIFY",
+        "fields_of_study": [
+          "environmental_science",
+          "natural_sciences",
+          "science",
+          "research"
+        ],
+        "grade_levels": [
+          "high_school_junior",
+          "high_school_senior"
+        ],
+        "demographics": [],
+        "states": "any",
+        "essay_required": true,
+        "citizenship_requirement": "VERIFY",
+        "special_requirements": []
+      },
+      "description": "The Hutton Junior Fisheries Biology Program is an eight-week paid summer internship sponsored by the American Fisheries Society that pairs high school students with a local fisheries or aquatic-science professional mentor for hands-on field, lab, and office work. Its stated goal is to introduce students from underrepresented backgrounds to careers in fisheries and aquatic science.",
+      "application_requirements": [
+        {
+          "id": "online-application",
+          "label": "Submit the online application via the AFS awards platform",
+          "details": "Application is completed through https://afsawards.awardsplatform.com/ and includes multiple required sections; an incomplete application can disqualify the applicant.",
+          "required": true,
+          "source_url": "https://hutton.fisheries.org/students/"
+        },
+        {
+          "id": "statement-of-interest",
+          "label": "Write a statement of interest",
+          "details": "A written statement describing the applicant's interest in the program and fisheries/aquatic science.",
+          "required": true,
+          "source_url": "https://hutton.fisheries.org/students/"
+        },
+        {
+          "id": "short-answer-and-video",
+          "label": "Complete a short-answer question response and a 1-2 minute video response",
+          "details": "Applicants submit a written short-answer response plus a 1-2 minute video response as part of the application.",
+          "required": true,
+          "source_url": "https://hutton.fisheries.org/students/what-is-fisheries-science/faqs-2/"
+        },
+        {
+          "id": "student-reference-form",
+          "label": "Submit a Hutton Student Reference Form from a non-family, non-peer adult",
+          "details": "Completed by a teacher, coach, supervisor, or community member (not a family member or peer).",
+          "required": true,
+          "source_url": "https://hutton.fisheries.org/students/"
+        },
+        {
+          "id": "high-school-transcript",
+          "label": "Submit most recent high school transcript",
+          "details": "Official preferred but unofficial accepted; can be uploaded by the student or emailed directly by a school administrator.",
+          "required": true,
+          "source_url": "https://hutton.fisheries.org/students/"
+        }
+      ],
+      "verification": {
+        "source_url": "https://hutton.fisheries.org/",
+        "last_verified_at": "2026-07-08"
+      },
+      "verified": true
+    },
+    {
+      "id": "freedom-and-citizenship-columbia",
+      "name": "Freedom and Citizenship",
+      "host": "Columbia University - Center for American Studies (in partnership with the Double Discovery Center)",
+      "subject": "Humanities and political philosophy",
+      "url": "https://freedomandcitizenship.columbia.edu/",
+      "cost": "Free; $2,500 stipend awarded on successful completion of the program",
+      "cost_category": "stipend",
+      "selectivity": "Cohort capped at up to 45 NYC high school juniors",
+      "program_format": "hybrid",
+      "location": "Columbia University campus, New York City (Morningside Heights)",
+      "program_dates": "Four-week residential summer seminar (approx. June 29 - July 24/25, 2026) followed by an academic-year civic leadership program (Sept 2026 - May 2027); ~11-month program overall",
+      "deadline": "VERIFY",
+      "estimated_deadline": "2026-03-30",
+      "eligibility": {
+        "min_gpa": "VERIFY",
+        "fields_of_study": [
+          "humanities",
+          "philosophy",
+          "social_sciences"
+        ],
+        "grade_levels": [
+          "high_school_junior"
+        ],
+        "demographics": [],
+        "states": [
+          "NY"
+        ],
+        "essay_required": true,
+        "citizenship_requirement": "any",
+        "special_requirements": []
+      },
+      "description": "Freedom and Citizenship is a free, roughly 11-month college-preparatory program for New York City high school juniors, combining a four-week residential summer seminar in political philosophy on Columbia's campus with a year-long after-school civic leadership project and college-application mentoring. It is run by Columbia's Center for American Studies in partnership with the Double Discovery Center, with priority given to first-generation and low-income students.",
+      "application_requirements": [
+        {
+          "id": "confirm-eligibility",
+          "label": "Confirm eligibility: current NYC high school junior entering senior year, able to commit to the full summer and academic-year program",
+          "details": "Students must live in New York City; priority is given to first-generation college-bound and low-income students, but this is a preference, not a strict requirement.",
+          "required": true,
+          "source_url": "https://freedomandcitizenship.columbia.edu/eligibility"
+        },
+        {
+          "id": "parental-permission",
+          "label": "Obtain signed parental permission for participation and the dormitory residential stay",
+          "details": "Parent/guardian must agree to program participation, the Sunday-Friday dormitory stay during the four summer weeks, and the full-year commitment.",
+          "required": true,
+          "source_url": "https://freedomandcitizenship.columbia.edu/how-to-apply"
+        },
+        {
+          "id": "three-essays",
+          "label": "Write three short essays",
+          "details": "The application requires three short essays.",
+          "required": true,
+          "source_url": "https://freedomandcitizenship.columbia.edu/how-to-apply"
+        },
+        {
+          "id": "high-school-transcript",
+          "label": "Submit a high school transcript",
+          "details": "A high school transcript is required as part of the application.",
+          "required": true,
+          "source_url": "https://freedomandcitizenship.columbia.edu/how-to-apply"
+        },
+        {
+          "id": "letter-of-recommendation",
+          "label": "Submit a letter of recommendation (optional)",
+          "details": "An optional letter of recommendation; the recommender's email is submitted in-app and the program contacts them directly.",
+          "required": false,
+          "source_url": "https://freedomandcitizenship.columbia.edu/how-to-apply"
+        },
+        {
+          "id": "submit-online-application",
+          "label": "Submit the online application through the application portal",
+          "details": "Application is submitted via the online portal; it cannot be saved across different browsers/computers and must be completed in one session/device.",
+          "required": true,
+          "source_url": "https://freedomandcitizenship.columbia.edu/how-to-apply"
+        }
+      ],
+      "verification": {
+        "source_url": "https://freedomandcitizenship.columbia.edu/",
+        "last_verified_at": "2026-07-08"
+      },
+      "verified": true
+    },
+    {
+      "id": "economics-for-leaders-fte",
+      "name": "Economics for Leaders (EFL)",
+      "host": "Foundation for Teaching Economics (FTE)",
+      "subject": "Economics and leadership",
+      "url": "https://fte.org/students/economics-for-leaders-program/",
+      "cost": "Tuition-based: $2,800 residential (includes tuition, room and board); $35 processing fee; scholarship aid available",
+      "cost_category": "paid",
+      "selectivity": "Competitive, roughly two applicants per available spot; ~25-40 students accepted per site, one student per high school",
+      "program_format": "residential",
+      "location": "Multiple host university campuses nationwide (Summer 2026 included Rice, Yale, UVA, UC Berkeley, UCLA, Vanderbilt, Cornell, U. Washington, U. Penn, Boston College, Duke, U. Michigan, UC Santa Barbara)",
+      "program_dates": "One-week residential sessions held early June through early August (Summer 2026 sessions ran June 8 - August 9, 2026)",
+      "deadline": "VERIFY",
+      "estimated_deadline": "2026-04-15",
+      "eligibility": {
+        "min_gpa": "VERIFY",
+        "fields_of_study": [
+          "business",
+          "social_sciences"
+        ],
+        "grade_levels": [
+          "high_school_sophomore",
+          "high_school_junior"
+        ],
+        "demographics": [],
+        "states": "any",
+        "essay_required": true,
+        "citizenship_requirement": "any",
+        "special_requirements": []
+      },
+      "description": "Economics for Leaders (EFL) is a one-week, selective residential summer program run by the Foundation for Teaching Economics for high school sophomores and juniors, held at college campuses nationwide, that combines instruction in economic reasoning with leadership development. A synchronous virtual version is also offered.",
+      "application_requirements": [
+        {
+          "id": "create-application-account",
+          "label": "Create an online application account and start the application",
+          "details": "Applicants create a profile in the FTE application portal to begin the application.",
+          "required": true,
+          "source_url": "https://fte.org/students/frequently-asked-questions/"
+        },
+        {
+          "id": "personal-insight-questions",
+          "label": "Answer three personal insight questions",
+          "details": "Short essay-style responses to three personal insight questions.",
+          "required": true,
+          "source_url": "https://fte.org/students/frequently-asked-questions/"
+        },
+        {
+          "id": "letter-of-recommendation",
+          "label": "Submit one letter of recommendation from a counselor, teacher, coach, or other adult",
+          "details": "A letter from an adult who can offer a comprehensive assessment; not restricted to a teacher and not a formal nomination.",
+          "required": true,
+          "source_url": "https://fte.org/students/frequently-asked-questions/"
+        },
+        {
+          "id": "transcript",
+          "label": "Submit complete high school transcripts",
+          "details": "Complete high school transcripts are required.",
+          "required": true,
+          "source_url": "https://fte.org/students/frequently-asked-questions/"
+        },
+        {
+          "id": "processing-fee",
+          "label": "Pay the non-refundable $35 processing fee",
+          "details": "A $35 non-refundable processing fee is required to submit the application.",
+          "required": true,
+          "source_url": "https://fte.org/students/frequently-asked-questions/"
+        },
+        {
+          "id": "scholarship-section",
+          "label": "Complete the scholarship section of the application (optional, if requesting aid)",
+          "details": "Optional; only for applicants requesting financial aid. Scholarship funding is limited to US citizens or US residents.",
+          "required": false,
+          "source_url": "https://fte.org/students/costs-scholarships/"
+        }
+      ],
+      "verification": {
+        "source_url": "https://fte.org/students/economics-for-leaders-program/",
+        "last_verified_at": "2026-07-08"
+      },
+      "verified": true
     }
   ]
 }

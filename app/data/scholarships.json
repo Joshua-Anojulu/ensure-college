@@ -8171,6 +8171,494 @@
         "last_verified_at": "2026-07-08"
       },
       "verified": true
+    },
+    {
+      "id": "gen-and-kelly-tanabe-scholarship",
+      "name": "Gen and Kelly Tanabe Scholarship",
+      "sponsor": "Gen and Kelly Tanabe",
+      "award_amount": 1000,
+      "deadline": "2026-07-31",
+      "estimated_deadline": null,
+      "url": "https://www.genkellyscholarship.com/scholarship-details",
+      "eligibility": {
+        "min_gpa": "VERIFY",
+        "fields_of_study": [],
+        "grade_levels": [
+          "high_school_freshman",
+          "high_school_sophomore",
+          "high_school_junior",
+          "high_school_senior",
+          "college_undergraduate"
+        ],
+        "demographics": [],
+        "states": "any",
+        "essay_required": true,
+        "citizenship_requirement": "VERIFY",
+        "special_requirements": []
+      },
+      "description": "A merit-based scholarship funded by authors Gen and Kelly Tanabe, open to U.S.-resident high school (grades 9-12), college, and graduate students, with winners chosen primarily on their submitted personal statement.",
+      "application_requirements": [
+        {
+          "id": "submit-online-application",
+          "label": "Submit the official online application",
+          "details": "Official FAQ states: \"Only online applications will be accepted.\"",
+          "required": true,
+          "source_url": "https://www.genkellyscholarship.com/faqs"
+        },
+        {
+          "id": "write-personal-statement",
+          "label": "Write and submit a personal statement",
+          "details": "Winners are chosen by committee based primarily on the submitted personal statement.",
+          "required": true,
+          "source_url": "https://www.genkellyscholarship.com/scholarship-details"
+        },
+        {
+          "id": "confirm-us-residency",
+          "label": "Confirm U.S. residency status",
+          "details": "Applicants must be legal residents of the U.S.; studying abroad is permitted.",
+          "required": true,
+          "source_url": "https://www.genkellyscholarship.com/scholarship-details"
+        },
+        {
+          "id": "meet-grade-level",
+          "label": "Be enrolled in grades 9-12, college, or graduate school (or a home-schooled/adult learner)",
+          "details": null,
+          "required": true,
+          "source_url": "https://www.genkellyscholarship.com/faqs"
+        }
+      ],
+      "verification": {
+        "source_url": "https://www.genkellyscholarship.com/scholarship-details",
+        "last_verified_at": "2026-07-08"
+      },
+      "verified": true
+    },
+    {
+      "id": "aws-national-scholarships",
+      "name": "American Welding Society (AWS) National Scholarships",
+      "sponsor": "American Welding Society (AWS) Foundation",
+      "award_amount": "Varies",
+      "deadline": "VERIFY",
+      "estimated_deadline": "2026-03-01",
+      "url": "https://www.aws.org/career-resources/students/scholarships/national-scholarships/",
+      "eligibility": {
+        "min_gpa": "VERIFY",
+        "fields_of_study": [
+          "engineering",
+          "technology"
+        ],
+        "grade_levels": [
+          "college_undergraduate"
+        ],
+        "demographics": [],
+        "states": "any",
+        "essay_required": true,
+        "citizenship_requirement": "VERIFY",
+        "special_requirements": [
+          {
+            "kind": "membership",
+            "label": "AWS Membership required or preferred for some scholarships",
+            "details": "FAQ states: \"AWS Membership is required for some welding scholarships. For scholarships that do not require membership, selection committees typically prioritize applicants that are AWS Members.\""
+          }
+        ]
+      },
+      "description": "AWS Foundation National Scholarships are a portfolio of 130+ donor-funded awards for students pursuing a bachelor's or associate degree in welding or a related discipline, selected through a centralized online application portal.",
+      "application_requirements": [
+        {
+          "id": "create-application-account",
+          "label": "Register or log in to the AWS scholarship application portal",
+          "details": null,
+          "required": true,
+          "source_url": "https://scholarship.aws.org/applications/"
+        },
+        {
+          "id": "complete-contact-academic-profile",
+          "label": "Complete the Contact Information and Academic Profile sections",
+          "details": "After these sections are complete, the portal displays all scholarships the applicant is eligible for.",
+          "required": true,
+          "source_url": "https://www.aws.org/career-resources/students/scholarships/"
+        },
+        {
+          "id": "submit-personal-statement",
+          "label": "Submit a Personal Statement essay (background, welding/work experience, career goals)",
+          "details": null,
+          "required": true,
+          "source_url": "https://www.aws.org/career-resources/students/scholarships/"
+        },
+        {
+          "id": "provide-transcript-recommendations",
+          "label": "Provide an official transcript and two letters of recommendation",
+          "details": "Letters must be from teachers, work supervisors, or mentors who can attest to work ethic and accomplishments.",
+          "required": true,
+          "source_url": "https://www.aws.org/career-resources/students/scholarships/national-scholarships/"
+        },
+        {
+          "id": "submit-cost-of-attendance",
+          "label": "Upload a summary of school costs (tuition, fees, books, supplies) and a headshot photo",
+          "details": null,
+          "required": true,
+          "source_url": "https://www.aws.org/career-resources/students/scholarships/national-scholarships/"
+        },
+        {
+          "id": "optional-fafsa-membership",
+          "label": "For need-based awards, submit FAFSA Submission Summary; free AWS student membership encouraged",
+          "details": "Some National Scholarships require demonstrated financial need (cost of attendance exceeding the Student Aid Index).",
+          "required": false,
+          "source_url": "https://scholarship.aws.org/applications/faq.asp"
+        }
+      ],
+      "verification": {
+        "source_url": "https://www.aws.org/career-resources/students/scholarships/national-scholarships/",
+        "last_verified_at": "2026-07-08"
+      },
+      "verified": true
+    },
+    {
+      "id": "zonta-young-women-in-leadership-award",
+      "name": "Zonta Young Women in Leadership Award (formerly Young Women in Public Affairs Award)",
+      "sponsor": "Zonta International / Zonta Foundation for Women",
+      "award_amount": 5000,
+      "deadline": "VERIFY",
+      "estimated_deadline": null,
+      "url": "https://www.zonta.org/ywpaaward",
+      "eligibility": {
+        "min_gpa": "VERIFY",
+        "fields_of_study": [],
+        "grade_levels": [],
+        "demographics": [],
+        "states": "any",
+        "essay_required": false,
+        "citizenship_requirement": "any",
+        "special_requirements": [
+          {
+            "kind": "institution_channel",
+            "label": "Must apply through a local Zonta club (or e-club/district) rather than directly to Zonta International",
+            "details": "Official page states: 'The application process must start with a Zonta club. All application materials must be received at a Zonta club by the deadline printed on the application.' Applicants in areas with no local club may apply via a Zonta e-club or directly to the district."
+          }
+        ]
+      },
+      "description": "The Zonta Young Women in Leadership Award recognizes women aged 16-19 for leadership skills and commitment to public service and civic causes, awarding US$5,000 to each of 37 international recipients selected from club- and district-level competitions.",
+      "application_requirements": [
+        {
+          "id": "locate-zonta-club",
+          "label": "Locate a Zonta club or e-club in your area using the Club Locator, or contact Zonta International Headquarters if no local club exists",
+          "details": "Applicants from geographic areas within a Zonta district where no clubs are located may apply via a Zonta e-club or directly to the district.",
+          "required": true,
+          "source_url": "https://www.zonta.org/ywpaaward"
+        },
+        {
+          "id": "submit-to-club-by-club-deadline",
+          "label": "Submit completed application directly to a Zonta club by the deadline printed on that club's application (not to Zonta International)",
+          "details": "The international site states local club deadlines vary and are not published centrally; applicants must contact a club directly for deadline information.",
+          "required": true,
+          "source_url": "https://www.zonta.org/ywpaaward"
+        },
+        {
+          "id": "meet-age-eligibility",
+          "label": "Be a woman aged 16-19 as of April 1 of the award year, living in a Zonta district or a citizen of a Zonta country",
+          "details": null,
+          "required": true,
+          "source_url": "https://www.zonta.org/ywpaaward"
+        },
+        {
+          "id": "demonstrate-leadership-and-service",
+          "label": "Demonstrate active commitment to volunteerism, leadership experience, and knowledge of Zonta International",
+          "details": "Leadership experience may be in government, student government, or the workplace.",
+          "required": true,
+          "source_url": "https://www.zonta.org/ywpaaward"
+        },
+        {
+          "id": "advance-club-to-district-to-international",
+          "label": "Be selected by the local club, then advanced by the district (each district may submit 1-2 applicants) for international-level consideration",
+          "details": "This step is performed by the club/district on the applicant's behalf, not a direct applicant action.",
+          "required": false,
+          "source_url": "https://www.zonta.org/ywpaaward"
+        }
+      ],
+      "verification": {
+        "source_url": "https://www.zonta.org/ywpaaward",
+        "last_verified_at": "2026-07-08"
+      },
+      "verified": true
+    },
+    {
+      "id": "naba-national-scholarship-program",
+      "name": "NABA National Scholarship Program",
+      "sponsor": "National Association of Black Accountants, Inc. (NABA Foundation)",
+      "award_amount": "$2,500-$10,000 (varies)",
+      "deadline": "VERIFY",
+      "estimated_deadline": null,
+      "url": "https://nabainc.org/scholarships/",
+      "eligibility": {
+        "min_gpa": "VERIFY",
+        "fields_of_study": [
+          "business",
+          "technology"
+        ],
+        "grade_levels": [
+          "college_undergraduate"
+        ],
+        "demographics": [],
+        "states": "any",
+        "essay_required": false,
+        "citizenship_requirement": "us_citizen_or_permanent_resident",
+        "special_requirements": [
+          {
+            "kind": "membership",
+            "label": "Must be an active NABA student member (free to join) per NABA Bylaws Section 2.2(b)",
+            "details": "Official page requires applicants to 'Be an active NABA student member, as defined under NABA Bylaws, Section 2.2 (b)(i) and (ii)'; student membership is free."
+          }
+        ]
+      },
+      "description": "The NABA Foundation's National Scholarship Program awards over 150 scholarships annually, ranging from $2,500 to $10,000, to active NABA student members enrolled full-time at accredited U.S. colleges/universities pursuing accounting, finance, technology, or business-related degrees.",
+      "application_requirements": [
+        {
+          "id": "become-naba-student-member",
+          "label": "Become an active NABA student member at no cost",
+          "details": "Required under NABA Bylaws Section 2.2(b) before a scholarship application can be considered.",
+          "required": true,
+          "source_url": "https://nabainc.org/scholarships/"
+        },
+        {
+          "id": "confirm-full-time-enrollment",
+          "label": "Be currently enrolled full time at an accredited 2-year or 4-year U.S. college/university for the 2025-2026 academic year",
+          "details": null,
+          "required": true,
+          "source_url": "https://nabainc.org/scholarships/"
+        },
+        {
+          "id": "confirm-citizenship-status",
+          "label": "Be a U.S. citizen or lawful permanent resident (green card holder); IRS 'resident alien' tax status does not qualify",
+          "details": null,
+          "required": true,
+          "source_url": "https://nabainc.org/scholarships/"
+        },
+        {
+          "id": "submit-via-scholarship-portal",
+          "label": "Submit an application through the NABA scholarship portal (\"Apply Here\" link on the official scholarships page)",
+          "details": null,
+          "required": true,
+          "source_url": "https://nabainc.org/scholarships/"
+        },
+        {
+          "id": "demonstrate-merit-and-engagement",
+          "label": "Demonstrate academic achievement, leadership, service, professional promise, and engagement with NABA's mission",
+          "details": "Selection is merit-based and evaluated on these factors per the official page.",
+          "required": true,
+          "source_url": "https://nabainc.org/scholarships/"
+        }
+      ],
+      "verification": {
+        "source_url": "https://nabainc.org/scholarships/",
+        "last_verified_at": "2026-07-08"
+      },
+      "verified": true
+    },
+    {
+      "id": "golden-door-scholars",
+      "name": "Golden Door Scholars",
+      "sponsor": "Golden Door Scholars (a program of Road to Hire)",
+      "award_amount": "VERIFY",
+      "deadline": "VERIFY",
+      "estimated_deadline": null,
+      "url": "https://www.roadtohire.org/golden-door-scholars",
+      "eligibility": {
+        "min_gpa": 3.2,
+        "fields_of_study": [],
+        "grade_levels": [
+          "high_school_senior"
+        ],
+        "demographics": [],
+        "states": [
+          "NC",
+          "SC",
+          "GA"
+        ],
+        "essay_required": false,
+        "citizenship_requirement": "VERIFY",
+        "special_requirements": [
+          {
+            "kind": "institution_channel",
+            "label": "Must attend one of ~20 Golden Door Scholars partner colleges/universities",
+            "details": "roadtohire.org/faq/gds states the scholarship 'funds a four-year bachelor's degree at a regional partner school only.' Partners listed include Davidson, Duke, Elon, Guilford, Meredith, Oglethorpe, Queens, Wingate, Bard (regional) and Case Western, Georgetown, Hamilton, Oberlin, Rhodes, Smith, Tufts, Belmont Abbey. Receiving the award does not guarantee admission to any one school."
+          },
+          {
+            "kind": "family_or_affiliation",
+            "label": "Restricted to students ineligible for federal aid due to immigration status (undocumented/DACA/TPS)",
+            "details": "The official domain's page title is 'Scholarship for Undocumented Students - Golden Door Scholars' and Road to Hire content describes bridging the financial-aid gap for undocumented students. This restriction does not map to any citizenship_requirement enum value, so that field is set to VERIFY and the restriction is captured here; exact eligibility wording should be confirmed by a reviewer in..."
+          }
+        ]
+      },
+      "description": "Golden Door Scholars, a Road to Hire program, funds a four-year bachelor's degree exclusively at designated partner colleges for high-achieving students who cannot access federal financial aid due to immigration status, with a required unweighted high school GPA of 3.2 and a 3.0 GPA maintained each semester in college.",
+      "application_requirements": [
+        {
+          "id": "submit-online-application",
+          "label": "Submit the Golden Door Scholars online application during the open application window",
+          "details": "As of this verification, roadtohire.org/golden-door-scholars states 'Applications for the Golden Door Scholarship are Closed'; no current-cycle open date/deadline was posted.",
+          "required": true,
+          "source_url": "https://www.roadtohire.org/golden-door-scholars"
+        },
+        {
+          "id": "submit-transcripts",
+          "label": "Submit high school transcripts (unofficial transcripts are accepted)",
+          "details": "If official transcripts aren't ready, a placeholder document noting they will follow is accepted per the FAQ.",
+          "required": true,
+          "source_url": "https://www.roadtohire.org/faq/gds"
+        },
+        {
+          "id": "optional-recommendations-scores",
+          "label": "Optionally submit recommendation letters and/or standardized test scores",
+          "details": "FAQ states these are optional, not required, for the application.",
+          "required": false,
+          "source_url": "https://www.roadtohire.org/faq/gds"
+        },
+        {
+          "id": "complete-finalist-interview",
+          "label": "Complete an interview if selected as a finalist",
+          "details": "Finalists are assessed on academic achievement, college readiness, community engagement, leadership, and resilience per the FAQ.",
+          "required": true,
+          "source_url": "https://www.roadtohire.org/faq/gds"
+        }
+      ],
+      "verification": {
+        "source_url": "https://www.roadtohire.org/faq/gds",
+        "last_verified_at": "2026-07-08"
+      },
+      "verified": true
+    },
+    {
+      "id": "vegetarian-resource-group-college-scholarship",
+      "name": "Vegetarian Resource Group College Scholarship",
+      "sponsor": "The Vegetarian Resource Group (VRG)",
+      "award_amount": "Varies",
+      "deadline": "VERIFY",
+      "estimated_deadline": "2026-02-20",
+      "url": "https://www.vrg.org/student/scholar.htm",
+      "eligibility": {
+        "min_gpa": "VERIFY",
+        "fields_of_study": [],
+        "grade_levels": [
+          "high_school_senior"
+        ],
+        "demographics": [],
+        "states": "any",
+        "essay_required": true,
+        "citizenship_requirement": "VERIFY",
+        "special_requirements": []
+      },
+      "description": "VRG awards one $10,000 scholarship, five $5,000 scholarships, and additional runner-up prizes to graduating U.S. high school seniors who have shown compassion, courage, and a strong commitment to promoting a vegan diet/lifestyle in their school or community; payment is made directly to a U.S.-based college.",
+      "application_requirements": [
+        {
+          "id": "complete-personal-info",
+          "label": "Complete the personal information section (contact info, GPA, high school, and college plans)",
+          "details": null,
+          "required": true,
+          "source_url": "https://www.vrg.org/student/scholar.htm"
+        },
+        {
+          "id": "write-essay",
+          "label": "Write an essay addressing all 16 required prompts about vegan/vegetarian advocacy and future goals",
+          "details": null,
+          "required": true,
+          "source_url": "https://www.vrg.org/student/scholar.htm"
+        },
+        {
+          "id": "submit-transcripts",
+          "label": "Submit a copy of transcripts or report cards for the past two years",
+          "details": null,
+          "required": true,
+          "source_url": "https://www.vrg.org/student/scholar.htm"
+        },
+        {
+          "id": "submit-recommendation-letters",
+          "label": "Submit three or more recommendation letters, including at least one from a teacher",
+          "details": null,
+          "required": true,
+          "source_url": "https://www.vrg.org/student/scholar.htm"
+        },
+        {
+          "id": "submit-advocacy-documentation",
+          "label": "Submit documentation of vegetarian/vegan promotion activities (photos, news clippings, etc.)",
+          "details": "Listed among the requested application materials on the official page.",
+          "required": true,
+          "source_url": "https://www.vrg.org/student/scholar.htm"
+        }
+      ],
+      "verification": {
+        "source_url": "https://www.vrg.org/student/scholar.htm",
+        "last_verified_at": "2026-07-08"
+      },
+      "verified": true
+    },
+    {
+      "id": "elizabeth-greenshields-foundation-grant",
+      "name": "Elizabeth Greenshields Foundation Grant",
+      "sponsor": "The Elizabeth Greenshields Foundation",
+      "award_amount": "CAD $17,000 (first grant); CAD $20,000 (second/third grants)",
+      "deadline": "2026-08-28",
+      "estimated_deadline": null,
+      "url": "https://www.elizabethgreenshieldsfoundation.ca/en/apply",
+      "eligibility": {
+        "min_gpa": "VERIFY",
+        "fields_of_study": [
+          "arts"
+        ],
+        "grade_levels": [],
+        "demographics": [],
+        "states": "any",
+        "essay_required": true,
+        "citizenship_requirement": "any",
+        "special_requirements": [
+          {
+            "kind": "family_or_affiliation",
+            "label": "Restricted to representational/figurative artists in painting, sculpture, printmaking, or drawing, aged 18-41 at...",
+            "details": "Eligibility uses an age band (18-41 at first application; former recipients may reapply beyond 41) and a 'student or emerging artist' career stage. Disciplines are limited to representational/figurative painting, sculpture, printmaking, and drawing; abstract, photography, digital, video, installation, and craft are excluded. No geographic, citizenship, or residency requirement."
+          }
+        ]
+      },
+      "description": "A grant from the Elizabeth Greenshields Foundation supporting young representational/figurative artists worldwide who are studying or working in painting, sculpture, printmaking, or drawing, to fund studio practice, exhibitions, residencies, or fine-arts/studio-arts education. Grants of CAD $17,000 (first grant) to CAD $20,000 (second/third grants) may be awarded to an artist up to three times in their lifetime.",
+      "application_requirements": [
+        {
+          "id": "eligibility-questionnaire",
+          "label": "Complete the online Eligibility Questionnaire before starting an application",
+          "details": "Applicants must first complete an Eligibility Questionnaire on the application portal to confirm they meet all eligibility criteria before an application can be submitted.",
+          "required": true,
+          "source_url": "https://www.elizabethgreenshieldsfoundation.ca/en/apply"
+        },
+        {
+          "id": "personal-info-and-proposal",
+          "label": "Submit personal info, grant request description, artist statement, artistic proposal, and budget",
+          "details": "The online application consists of seven mandatory tasks, including personal information/professional history, description of grant request, artist statement, artistic proposal, and budget.",
+          "required": true,
+          "source_url": "https://www.elizabethgreenshieldsfoundation.ca/en/apply"
+        },
+        {
+          "id": "portfolio-six-works",
+          "label": "Submit a portfolio of six representative works from the last two years plus one installation view",
+          "details": "Images of six representative works produced by the applicant alone within the two years preceding the application, plus an installation view of one work in the portfolio, are required.",
+          "required": true,
+          "source_url": "https://www.elizabethgreenshieldsfoundation.ca/en/apply"
+        },
+        {
+          "id": "letter-of-recommendation",
+          "label": "Have a referee submit a letter of recommendation directly through the application site",
+          "details": "A letter of recommendation from a teacher, professor, artist, or curator familiar with the applicant and their work must be submitted directly through the application portal by the referee.",
+          "required": true,
+          "source_url": "https://www.elizabethgreenshieldsfoundation.ca/en/apply"
+        },
+        {
+          "id": "apply-before-cycle-close",
+          "label": "Apply online before the current application cycle's close date",
+          "details": "Applications must be submitted through the official online portal before the cycle close date; applications by email or physical mail are not accepted. Grant funds may only be used for future expenses.",
+          "required": true,
+          "source_url": "https://www.elizabethgreenshieldsfoundation.ca/en/apply"
+        }
+      ],
+      "verification": {
+        "source_url": "https://www.elizabethgreenshieldsfoundation.ca/en/apply",
+        "last_verified_at": "2026-07-08"
+      },
+      "verified": true
     }
   ]
 }
