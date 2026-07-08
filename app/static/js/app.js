@@ -4174,11 +4174,42 @@ function deadlineParts(deadline, estimated) {
   }
   if (!deadline || deadline === "VERIFY" || String(deadline).startsWith("VERIFY")) {
     if (estimated) {
+      // A past estimate is last cycle's closed date; showing it as an upcoming
+      // deadline reads as "already passed." Present it honestly instead: the new
+      // date is not announced yet (these are annual awards that reopen).
+      if (isPastDate(estimated)) {
+        return {
+          value: "Not yet announced",
+          note: `Last cycle closed ${formatMonthYear(estimated)} \u2014 check sponsor site`,
+        };
+      }
       return { value: formatVerifiedDate(estimated), note: "Estimated \u2014 confirm on sponsor site" };
     }
     return { value: "Not listed", note: "Confirm on sponsor site" };
   }
   return { value: formatVerifiedDate(deadline), note: "" };
+}
+
+function isPastDate(isoDate) {
+  const parsed = parseRealDeadline(isoDate);
+  if (!parsed) {
+    return false;
+  }
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  return parsed < today;
+}
+
+function formatMonthYear(isoDate) {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(isoDate || ""));
+  if (!match) {
+    return isoDate;
+  }
+  const months = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December",
+  ];
+  return `${months[Number(match[2]) - 1]} ${match[1]}`;
 }
 
 // Circular fit gauge: gives every match a single, scannable anchor and fills
