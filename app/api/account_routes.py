@@ -22,6 +22,7 @@ from app.models.auth import (
     RecommendationLetterCreate,
     RecommendationLetterItem,
     RecommendationLetterUpdate,
+    ReminderPrefUpdate,
     SavedCompetitionItem,
     SavedListResponse,
     SavedProgramItem,
@@ -571,6 +572,17 @@ def unsave_program(
         db.delete(row)
         db.commit()
     return {"ok": True}
+
+
+@router.patch("/reminders")
+def set_reminder_pref(
+    body: ReminderPrefUpdate,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+) -> dict[str, bool]:
+    user.reminders_enabled = body.enabled
+    db.commit()
+    return {"enabled": user.reminders_enabled}
 
 
 def _rec_letter_item(row: RecommendationLetter) -> RecommendationLetterItem:

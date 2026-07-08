@@ -54,6 +54,11 @@ class UserResponse(BaseModel):
     created_at: datetime
     has_password: bool = True
     google_connected: bool = False
+    reminders_enabled: bool = True
+
+
+class ReminderPrefUpdate(BaseModel):
+    enabled: bool
 
 
 class ProfileResponse(BaseModel):

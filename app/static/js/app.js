@@ -933,12 +933,38 @@ function wireSettings() {
   document
     .getElementById("delete-account-btn")
     .addEventListener("click", handleDeleteAccount);
+  document.getElementById("reminders-toggle")?.addEventListener("change", handleReminderToggle);
+}
+
+async function handleReminderToggle(event) {
+  const enabled = event.target.checked;
+  try {
+    const response = await fetch("/account/reminders", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ enabled }),
+    });
+    if (response.ok) {
+      if (currentUser) {
+        currentUser.reminders_enabled = enabled;
+      }
+    } else {
+      event.target.checked = !enabled; // revert on failure
+    }
+  } catch (err) {
+    event.target.checked = !enabled;
+    console.error(err);
+  }
 }
 
 function openSettingsModal() {
   hideSettingsMessages();
   document.getElementById("change-password-form").reset();
   updateSettingsControls();
+  const remindersToggle = document.getElementById("reminders-toggle");
+  if (remindersToggle) {
+    remindersToggle.checked = currentUser?.reminders_enabled !== false;
+  }
   if (!settingsModal.open) {
     settingsModal.showModal();
   }
