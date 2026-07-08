@@ -8659,6 +8659,626 @@
         "last_verified_at": "2026-07-08"
       },
       "verified": true
+    },
+    {
+      "id": "korean-american-scholarship-foundation-kasf",
+      "name": "KASF Scholarships",
+      "sponsor": "Korean American Scholarship Foundation (KASF)",
+      "award_amount": "Varies",
+      "deadline": "VERIFY",
+      "estimated_deadline": "2026-06-30",
+      "url": "https://www.kasf.org/scholarships/",
+      "eligibility": {
+        "min_gpa": 3.0,
+        "fields_of_study": [],
+        "grade_levels": [
+          "high_school_senior",
+          "high_school",
+          "college_freshman",
+          "college_sophomore",
+          "college_junior",
+          "college_senior",
+          "college_undergraduate"
+        ],
+        "demographics": [],
+        "states": "any",
+        "essay_required": true,
+        "citizenship_requirement": "any",
+        "special_requirements": [
+          {
+            "kind": "family_or_affiliation",
+            "label": "Korean heritage requirement",
+            "details": "Must be of Korean heritage (Korean parent, grandparent, or great-grandparent, or adopted from Korea); non-Korean students may qualify only if extra funds remain available in a given region."
+          },
+          {
+            "kind": "institution_channel",
+            "label": "Must apply through the correct regional chapter",
+            "details": "KASF is organized into 7 regional chapters (Eastern, Midwestern, Mountain States, Northeastern, Southern, Southwestern, Western). Applicants must apply to the region where their school is located; applications submitted to the wrong region are disqualified."
+          },
+          {
+            "kind": "military_affiliation",
+            "label": "Korean War veteran descendant track (select regions)",
+            "details": "Descendants of American veterans who served in the Korean War (June 25, 1950 - January 31, 1955) may qualify for a dedicated scholarship track, available only in select regions."
+          }
+        ]
+      },
+      "description": "KASF is a national nonprofit, volunteer-managed foundation that awards need- and merit-based scholarships (generally $500-$5,000) to students of Korean heritage enrolled full-time at U.S. schools, administered through seven regional chapters.",
+      "application_requirements": [
+        {
+          "id": "select-regional-chapter",
+          "label": "Determine and apply through the correct KASF regional chapter",
+          "details": "Applicants must apply to the region where their school is/will be located during the scholarship year; applications submitted to the wrong region are disqualified.",
+          "required": true,
+          "source_url": "https://www.kasf.org/apply/"
+        },
+        {
+          "id": "meet-eligibility",
+          "label": "Confirm Korean heritage, full-time enrollment, and GPA eligibility",
+          "details": "Must be of Korean heritage, enrolled full-time during the scholarship application year, and hold a minimum cumulative GPA of 3.0.",
+          "required": true,
+          "source_url": "https://www.kasf.org/apply/"
+        },
+        {
+          "id": "submit-application-online",
+          "label": "Submit online application by June 30 at 12:00am EST",
+          "details": "The application deadline each cycle is June 30 at 12am EST; a 7-day grace period applies for supporting documents only.",
+          "required": true,
+          "source_url": "https://www.kasf.org/faq/"
+        },
+        {
+          "id": "submit-essay",
+          "label": "Submit required essay",
+          "details": "Essay is one of the evaluation criteria alongside financial need, scholastic achievement, recommendations, and community service/extracurricular activities.",
+          "required": true,
+          "source_url": "https://www.kasf.org/scholarships/"
+        },
+        {
+          "id": "submit-recommendation-letters",
+          "label": "Provide letters of recommendation",
+          "details": "Recommenders are emailed a link to an online form, or may write and upload a letter.",
+          "required": true,
+          "source_url": "https://www.kasf.org/faq/"
+        },
+        {
+          "id": "submit-financial-documents",
+          "label": "Submit financial documentation",
+          "details": "International/self-supporting students submit a Personal Financial Statement form; other applicants submit tax documents demonstrating financial need.",
+          "required": false,
+          "source_url": "https://www.kasf.org/apply-wrc/"
+        }
+      ],
+      "verification": {
+        "source_url": "https://www.kasf.org/scholarships/",
+        "last_verified_at": "2026-07-08"
+      },
+      "verified": true
+    },
+    {
+      "id": "sons-of-norway-foundation-scholarships",
+      "name": "Sons of Norway Foundation Scholarships",
+      "sponsor": "Sons of Norway Foundation",
+      "award_amount": "Varies",
+      "deadline": "VERIFY",
+      "estimated_deadline": "2026-01-15",
+      "url": "https://www.sofn.com/foundation/scholarships/",
+      "eligibility": {
+        "min_gpa": "VERIFY",
+        "fields_of_study": [],
+        "grade_levels": [],
+        "demographics": [],
+        "states": "VERIFY",
+        "essay_required": true,
+        "citizenship_requirement": "VERIFY",
+        "special_requirements": [
+          {
+            "kind": "membership",
+            "label": "Membership required for some (not all) of the 17 funds",
+            "details": "Some of the seventeen scholarship funds require Sons of Norway membership; others are open to non-members. An online eligibility quiz determines which funds an applicant qualifies for."
+          },
+          {
+            "kind": "family_or_affiliation",
+            "label": "Connection to Sons of Norway / Norwegian heritage emphasized",
+            "details": "The required essay must address the applicant's 'connection to Sons of Norway.' Individual funds (e.g., King Olav V Norwegian-American Heritage Scholarship) may carry specific ancestry requirements not detailed at the program-overview level."
+          }
+        ]
+      },
+      "description": "The Sons of Norway Foundation administers seventeen distinct scholarship funds supporting students pursuing education in the United States, Canada, and Norway (including Norwegian folk high schools), open to both Sons of Norway members and non-members depending on the specific fund.",
+      "application_requirements": [
+        {
+          "id": "take-eligibility-quiz",
+          "label": "Complete the eligibility quiz to identify qualifying scholarship funds",
+          "details": "An online eligibility quiz on the Foundation's site determines which of the 17 scholarship funds an applicant qualifies for.",
+          "required": true,
+          "source_url": "https://www.sofn.com/foundation/scholarships/"
+        },
+        {
+          "id": "submit-online-application",
+          "label": "Submit application through the grants and scholarship portal by January 15",
+          "details": "The application must be complete and submitted on or before January 15 each cycle; the portal allows saving drafts.",
+          "required": true,
+          "source_url": "https://www.sofn.com/foundation/scholarships/"
+        },
+        {
+          "id": "write-essay",
+          "label": "Write the required essay",
+          "details": "Essay must address why the applicant is applying and their connection to Sons of Norway.",
+          "required": true,
+          "source_url": "https://www.sofn.com/foundation/scholarships/"
+        },
+        {
+          "id": "provide-recommendation-letters",
+          "label": "Provide two letters of recommendation",
+          "details": "Applicant must supply email addresses for two recommenders; letters do not need to be complete by the January 15 deadline but should follow soon after.",
+          "required": true,
+          "source_url": "https://www.sofn.com/foundation/scholarships/"
+        },
+        {
+          "id": "list-academic-institutions",
+          "label": "List academic institutions applied to or accepted by",
+          "details": "If the applicant has not decided on a school, they should list the schools applied to and note any acceptances.",
+          "required": false,
+          "source_url": "https://www.sofn.com/foundation/scholarships/"
+        }
+      ],
+      "verification": {
+        "source_url": "https://www.sofn.com/foundation/scholarships/",
+        "last_verified_at": "2026-07-08"
+      },
+      "verified": true
+    },
+    {
+      "id": "osdia-national-leadership-grants",
+      "name": "National Leadership Grants (Sons of Italy Foundation Scholarship Program)",
+      "sponsor": "Sons of Italy Foundation (SIF), the philanthropic foundation of the Order Sons and Daughters of Italy in America (OSDIA/OSIA)",
+      "award_amount": "Varies",
+      "deadline": "VERIFY",
+      "estimated_deadline": "2026-02-27",
+      "url": "https://osdia.org/programs-initiatives/scholarships/",
+      "eligibility": {
+        "min_gpa": "VERIFY",
+        "fields_of_study": [],
+        "grade_levels": [
+          "college_undergraduate"
+        ],
+        "demographics": [],
+        "states": "any",
+        "essay_required": true,
+        "citizenship_requirement": "us_citizen_or_permanent_resident",
+        "special_requirements": [
+          {
+            "kind": "family_or_affiliation",
+            "label": "Italian ancestry required (parent or grandparent)",
+            "details": "Applicant must trace Italian ancestry to at least one parent or grandparent. Open to U.S. citizens or green card holders only. Prior SIF National Leadership Grant recipients are ineligible to reapply."
+          },
+          {
+            "kind": "membership",
+            "label": "$35 application fee includes one-year OSDIA At-Large membership",
+            "details": "A non-refundable $35 fee is required to process the application; the fee includes a one-year At-Large membership in OSDIA."
+          }
+        ]
+      },
+      "description": "National Leadership Grants are merit-based scholarships awarded annually by the Sons of Italy Foundation to students of Italian descent enrolled in a four-year undergraduate, graduate, or professional program at an accredited U.S. institution.",
+      "application_requirements": [
+        {
+          "id": "register-account",
+          "label": "Register and create an online application account",
+          "details": null,
+          "required": true,
+          "source_url": "https://scholarships.osdia.org/"
+        },
+        {
+          "id": "pay-application-fee",
+          "label": "Pay the $35 non-refundable application fee",
+          "details": "Fee includes a one-year At-Large OSDIA membership.",
+          "required": true,
+          "source_url": "https://osdia.org/programs-initiatives/scholarships/"
+        },
+        {
+          "id": "submit-transcripts",
+          "label": "Submit unofficial transcripts",
+          "details": "Transcripts through the most recent completed term are required.",
+          "required": true,
+          "source_url": "https://osdia.org/programs-initiatives/scholarships/"
+        },
+        {
+          "id": "submit-recommendation-letters",
+          "label": "Submit 2 letters of recommendation",
+          "details": "Letters must be from professional contacts, not family or friends.",
+          "required": true,
+          "source_url": "https://osdia.org/programs-initiatives/scholarships/"
+        },
+        {
+          "id": "submit-essays",
+          "label": "Submit required essay(s)",
+          "details": "Essays are a mandatory evaluation component; Italian-language majors may submit one essay in Italian. AI-generated content results in disqualification.",
+          "required": true,
+          "source_url": "https://scholarships.osdia.org/"
+        },
+        {
+          "id": "submit-test-scores",
+          "label": "Submit official standardized test scores from the past 5 years",
+          "details": "E.g., ACT, SAT, GMAT, GRE, LSAT, MCAT, as applicable.",
+          "required": true,
+          "source_url": "https://osdia.org/programs-initiatives/scholarships/"
+        }
+      ],
+      "verification": {
+        "source_url": "https://osdia.org/programs-initiatives/scholarships/",
+        "last_verified_at": "2026-07-08"
+      },
+      "verified": true
+    },
+    {
+      "id": "sme-education-foundation-scholarships",
+      "name": "SME Education Foundation Scholarships",
+      "sponsor": "SME Education Foundation",
+      "award_amount": "Varies",
+      "deadline": "VERIFY",
+      "estimated_deadline": "2026-02-01",
+      "url": "https://www.smeef.org/scholarships/",
+      "eligibility": {
+        "min_gpa": 2.0,
+        "fields_of_study": [
+          "engineering",
+          "technology"
+        ],
+        "grade_levels": [
+          "high_school_senior",
+          "college_undergraduate"
+        ],
+        "demographics": [],
+        "states": "any",
+        "essay_required": true,
+        "citizenship_requirement": "VERIFY",
+        "special_requirements": []
+      },
+      "description": "The SME Education Foundation offers a single unified application covering more than 60 distinct merit- and need-based scholarship programs for graduating high school seniors and current college students pursuing associate or bachelor's degrees in technical fields that directly support manufacturing.",
+      "application_requirements": [
+        {
+          "id": "register-account",
+          "label": "Register and create an account at the application portal",
+          "details": "Portal: scholarships.smeef.org.",
+          "required": true,
+          "source_url": "https://scholarships.smeef.org/"
+        },
+        {
+          "id": "submit-unified-application",
+          "label": "Submit one unified application",
+          "details": "Applicants are automatically considered for every scholarship they are eligible for across 60+ programs.",
+          "required": true,
+          "source_url": "https://www.smeef.org/scholarships/"
+        },
+        {
+          "id": "answer-short-answer-questions",
+          "label": "Answer short-answer questions on educational/career objectives",
+          "details": "Includes explaining educational and career objectives related to manufacturing, motivation, and how the scholarship will help.",
+          "required": true,
+          "source_url": "https://www.smeef.org/sme-education-foundation-scholarships/scholarship-application-tips/"
+        },
+        {
+          "id": "submit-transcripts",
+          "label": "Submit transcripts",
+          "details": null,
+          "required": true,
+          "source_url": "https://www.smeef.org/sme-education-foundation-scholarships/scholarship-application-tips/"
+        },
+        {
+          "id": "submit-stem-course-list",
+          "label": "Submit a list of completed STEM courses",
+          "details": null,
+          "required": true,
+          "source_url": "https://www.smeef.org/sme-education-foundation-scholarships/scholarship-application-tips/"
+        },
+        {
+          "id": "submit-recommendation-letters",
+          "label": "Provide two letters of recommendation",
+          "details": "One reference must be a faculty member.",
+          "required": true,
+          "source_url": "https://www.smeef.org/sme-education-foundation-scholarships/scholarship-application-tips/"
+        }
+      ],
+      "verification": {
+        "source_url": "https://www.smeef.org/scholarships/",
+        "last_verified_at": "2026-07-08"
+      },
+      "verified": true
+    },
+    {
+      "id": "aist-foundation-steel-intern-scholarship",
+      "name": "AIST Foundation Steel Intern Scholarship",
+      "sponsor": "AIST Foundation (Association for Iron & Steel Technology)",
+      "award_amount": "Varies",
+      "deadline": "2026-10-05",
+      "estimated_deadline": null,
+      "url": "https://www.aist.org/students-faculty/scholarships/steel-intern-scholarships",
+      "eligibility": {
+        "min_gpa": 2.5,
+        "fields_of_study": [
+          "engineering",
+          "technology",
+          "computer_science",
+          "environmental_science",
+          "science"
+        ],
+        "grade_levels": [
+          "college_sophomore",
+          "college_junior",
+          "college_senior"
+        ],
+        "demographics": [],
+        "states": "any",
+        "essay_required": true,
+        "citizenship_requirement": "VERIFY",
+        "special_requirements": [
+          {
+            "kind": "institution_channel",
+            "label": "Requires paid summer internship/co-op at a North American steel company",
+            "details": "Recipients must complete a paid summer internship or co-op at a North American steel company as part of the award, must be available and willing to relocate for the placement, and must maintain a 2.5+ GPA plus a satisfactory internship performance review to retain the award."
+          }
+        ]
+      },
+      "description": "The AIST Foundation Steel Intern Scholarship provides up to 50 one-year scholarships (plus a top Premier Intern Scholarship) paired with a paid summer internship or co-op at a North American steel company, for undergraduates in engineering, computer science, data science, environmental/sustainability science, or industrial safety fields pursuing careers in the steel industry.",
+      "application_requirements": [
+        {
+          "id": "submit-resume",
+          "label": "Submit resume in PDF format",
+          "details": null,
+          "required": true,
+          "source_url": "https://www.aist.org/students-faculty/scholarships/steel-intern-scholarships"
+        },
+        {
+          "id": "submit-essay",
+          "label": "Submit essay (max 2 pages)",
+          "details": "Essay must cite professional goals and explain interest in a steel-industry career.",
+          "required": true,
+          "source_url": "https://www.aist.org/students-faculty/scholarships/steel-intern-scholarships"
+        },
+        {
+          "id": "obtain-recommendation-letters",
+          "label": "Obtain 1-5 letters of recommendation",
+          "details": "Letters are sent directly to the program contact.",
+          "required": true,
+          "source_url": "https://www.aist.org/students-faculty/scholarships/steel-intern-scholarships"
+        },
+        {
+          "id": "submit-transcript",
+          "label": "Submit academic transcript",
+          "details": null,
+          "required": true,
+          "source_url": "https://www.aist.org/students-faculty/scholarships/steel-intern-scholarships"
+        },
+        {
+          "id": "complete-online-application",
+          "label": "Complete the online application by the deadline",
+          "details": "Deadline: 5 October 2026 for 2027-2028 awards.",
+          "required": true,
+          "source_url": "https://www.aist.org/students-faculty/scholarships/steel-intern-scholarships/application"
+        }
+      ],
+      "verification": {
+        "source_url": "https://www.aist.org/students-faculty/scholarships/steel-intern-scholarships",
+        "last_verified_at": "2026-07-08"
+      },
+      "verified": true
+    },
+    {
+      "id": "women-in-aviation-international-scholarships",
+      "name": "WAI Scholarship Program (WAI2027 Scholarships)",
+      "sponsor": "Women in Aviation International (WAI)",
+      "award_amount": "Varies",
+      "deadline": "2026-09-01",
+      "estimated_deadline": null,
+      "url": "https://www.wai.org/scholarships",
+      "eligibility": {
+        "min_gpa": "VERIFY",
+        "fields_of_study": [],
+        "grade_levels": [],
+        "demographics": [],
+        "states": "any",
+        "essay_required": true,
+        "citizenship_requirement": "VERIFY",
+        "special_requirements": [
+          {
+            "kind": "membership",
+            "label": "Active WAI membership required to apply",
+            "details": "Applicants must be current WAI members by August 30, 2026, or hold a membership with an expiration date of March 30, 2027 or later, to apply for the WAI2027 scholarship cycle."
+          },
+          {
+            "kind": "family_or_affiliation",
+            "label": "Program intended for women in aviation/aerospace",
+            "details": "WAI is a women-in-aviation organization; its scholarship program is intended for women pursuing aviation/aerospace careers, though the FAQ states WAI does not consider gender in judging individual awards."
+          }
+        ]
+      },
+      "description": "WAI's annual scholarship program is a large umbrella portfolio of dozens of individually named scholarships covering flight training and aviation/aerospace education costs, open only to current WAI members. Award amounts, GPA minimums, and citizenship rules vary by individual named scholarship within the portfolio rather than being fixed program-wide.",
+      "application_requirements": [
+        {
+          "id": "confirm-wai-membership",
+          "label": "Obtain or maintain active WAI membership",
+          "details": "Must be a WAI member by August 30, 2026, or hold membership expiring March 30, 2027 or later.",
+          "required": true,
+          "source_url": "https://www.wai.org/how-to-apply"
+        },
+        {
+          "id": "submit-online-application",
+          "label": "Submit application through the WAI online scholarship portal",
+          "details": "Applications open June 1, 2026 and close September 1, 2026 at 11:59 p.m. ET; only online portal submissions are accepted.",
+          "required": true,
+          "source_url": "https://www.wai.org/scholarships"
+        },
+        {
+          "id": "submit-essay",
+          "label": "Submit a 500-word essay",
+          "details": "Essay must address what inspired the applicant's aviation/aerospace career interest, community involvement, and how the scholarship helps achieve goals.",
+          "required": true,
+          "source_url": "https://www.wai.org/how-to-apply"
+        },
+        {
+          "id": "submit-resume",
+          "label": "Submit a resume",
+          "details": "Maximum two pages, no photos.",
+          "required": true,
+          "source_url": "https://www.wai.org/how-to-apply"
+        },
+        {
+          "id": "submit-recommendation-letters",
+          "label": "Provide letters of recommendation",
+          "details": "Two letters (max one page each) for general scholarships, or one letter for Harvard-track scholarships; cannot be from family members. Applicant is responsible for uploading them.",
+          "required": true,
+          "source_url": "https://www.wai.org/how-to-apply"
+        }
+      ],
+      "verification": {
+        "source_url": "https://www.wai.org/scholarships",
+        "last_verified_at": "2026-07-08"
+      },
+      "verified": true
+    },
+    {
+      "id": "eaa-aviation-scholarships",
+      "name": "EAA Aviation Scholarships (Flight Training & Post-Secondary Scholarships)",
+      "sponsor": "EAA (Experimental Aircraft Association) / EAA Aviation Foundation",
+      "award_amount": "Varies",
+      "deadline": "2026-12-19",
+      "estimated_deadline": "2025-12-19",
+      "url": "https://www.eaa.org/eaa/learn-to-fly/scholarships",
+      "eligibility": {
+        "min_gpa": 2.5,
+        "fields_of_study": [
+          "engineering",
+          "business",
+          "technology",
+          "science"
+        ],
+        "grade_levels": [
+          "high_school",
+          "college_undergraduate"
+        ],
+        "demographics": [],
+        "states": "any",
+        "essay_required": true,
+        "citizenship_requirement": "VERIFY",
+        "special_requirements": []
+      },
+      "description": "EAA runs a large annual portfolio of 80+ individually named Flight Training and Post-Secondary aviation scholarships (plus the separately-administered Ray Aviation Scholarship for youth flight training via EAA chapters) through a single online application window each fall. Amounts are set by individual donor funding and are not finalized until near the award date, so no fixed dollar figure applies program-wide.",
+      "application_requirements": [
+        {
+          "id": "confirm-eligibility",
+          "label": "Confirm age and citizenship/residency eligibility",
+          "details": "Must be at least 16 years old by the March 2 award date; must be a US/Canada citizen or resident, or otherwise eligible to study/work in the US or Canada (e.g. via visa), with proof of eligibility required for international applicants.",
+          "required": true,
+          "source_url": "https://www.eaa.org/eaa/learn-to-fly/scholarships"
+        },
+        {
+          "id": "submit-online-application",
+          "label": "Submit application via the EAA online scholarship portal",
+          "details": "Applications open October 1 and close December 19 each year; late or incomplete applications are not accepted, no exceptions.",
+          "required": true,
+          "source_url": "https://apply.mykaleidoscope.com/program/EAAScholarship2026"
+        },
+        {
+          "id": "submit-essay-responses",
+          "label": "Complete essay/short-answer responses",
+          "details": "All essays and responses must be the applicant's own original work; AI-generated content exceeding 25% will disqualify the application.",
+          "required": true,
+          "source_url": "https://apply.mykaleidoscope.com/program/EAAScholarship2026"
+        },
+        {
+          "id": "provide-reference",
+          "label": "Provide a character/reference contact",
+          "details": "Reference receives a link to complete a recommendation as part of the application.",
+          "required": true,
+          "source_url": "https://www.eaa.org/eaa/learn-to-fly/scholarships"
+        },
+        {
+          "id": "submit-transcript-gpa",
+          "label": "Submit transcript with unweighted GPA (post-secondary applicants)",
+          "details": "Post-secondary applicants must report an unweighted 4.0-scale GPA; a minimum 2.5 GPA is required for post-secondary scholarships (not stated as required for flight-training-only applicants).",
+          "required": false,
+          "source_url": "https://apply.mykaleidoscope.com/program/EAAScholarship2026"
+        }
+      ],
+      "verification": {
+        "source_url": "https://www.eaa.org/eaa/learn-to-fly/scholarships",
+        "last_verified_at": "2026-07-08"
+      },
+      "verified": true
+    },
+    {
+      "id": "afsa-national-high-school-essay-contest",
+      "name": "AFSA National High School Essay Contest",
+      "sponsor": "American Foreign Service Association (AFSA)",
+      "award_amount": 2500,
+      "deadline": "VERIFY",
+      "estimated_deadline": "2026-03-01",
+      "url": "https://afsa.org/essay-contest",
+      "eligibility": {
+        "min_gpa": "VERIFY",
+        "fields_of_study": [
+          "social_sciences",
+          "communications"
+        ],
+        "grade_levels": [
+          "high_school_freshman",
+          "high_school_sophomore",
+          "high_school_junior",
+          "high_school_senior"
+        ],
+        "demographics": [],
+        "states": "any",
+        "essay_required": true,
+        "citizenship_requirement": "us_citizen_or_permanent_resident",
+        "special_requirements": [
+          {
+            "kind": "competition_or_finalist",
+            "label": "1,000-1,500 word essay on assigned foreign policy topic",
+            "details": "Essay must be 1,000-1,500 words (excluding sources), double-spaced, 12-pt font, one-inch margins, MLA style, citing at least three primary sources; general encyclopedias like Wikipedia are not acceptable. Previous first-place winners and immediate relatives of AFSA/NSLC/Semester at Sea staff are ineligible."
+          }
+        ]
+      },
+      "description": "The AFSA National High School Essay Contest, sponsored by the American Foreign Service Association, invites U.S. students in grades 9-12 to write an essay on a current U.S. foreign policy and diplomacy topic. The first-place winner receives $2,500, an all-expenses-paid trip to Washington, D.C., and a Semester at Sea scholarship; the runner-up receives $1,250 and a National Student Leadership Conference scholarship.",
+      "application_requirements": [
+        {
+          "id": "complete-online-registration",
+          "label": "Complete the online registration form",
+          "details": "All fields are mandatory and the registration form must include a teacher or sponsor name.",
+          "required": true,
+          "source_url": "https://afsa.org/rules-and-guidelines"
+        },
+        {
+          "id": "write-essay-on-assigned-topic",
+          "label": "Write a 1,000-1,500 word essay on the assigned foreign policy topic",
+          "details": "Word count excludes the source list. Essay must argue one of two specified positions on the current year's topic.",
+          "required": true,
+          "source_url": "https://afsa.org/essay-contest"
+        },
+        {
+          "id": "cite-primary-sources",
+          "label": "Support the essay with at least three primary sources and a bibliography",
+          "details": "Sources should include academic journals, news magazines, newspapers, books, government documents, and research publications; general encyclopedias (e.g. Wikipedia) are not acceptable.",
+          "required": true,
+          "source_url": "https://afsa.org/rules-and-guidelines"
+        },
+        {
+          "id": "format-essay-per-mla",
+          "label": "Format the essay per contest guidelines",
+          "details": "Double-spaced, 12-point font, one-inch margins, following MLA Handbook style with a bibliography; do not include the student's or school's name on the essay pages.",
+          "required": true,
+          "source_url": "https://afsa.org/rules-and-guidelines"
+        },
+        {
+          "id": "submit-via-portal-by-deadline",
+          "label": "Upload the essay as a Word document via the official submission portal by the deadline",
+          "details": "Submit at afsascholarships.communityforce.com by March 1 at 11:59 p.m. EDT; late submissions are automatically disqualified.",
+          "required": true,
+          "source_url": "https://afsa.org/essay-contest"
+        }
+      ],
+      "verification": {
+        "source_url": "https://afsa.org/essay-contest",
+        "last_verified_at": "2026-07-08"
+      },
+      "verified": true
     }
   ]
 }
