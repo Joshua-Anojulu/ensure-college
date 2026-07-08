@@ -82,5 +82,5 @@ class TestProductionHygiene:
         assert response.status_code == 200
         assert 'id="google-login-link"' in response.text
         assert 'href="/auth/google/login"' in response.text
-        assert "/static/css/style.css?v=20260707-6" in response.text
-        assert "/static/js/app.js?v=20260707-9" in response.text
+        assert "/static/css/style.css?v=20260708-1" in response.text
+        assert "/static/js/app.js?v=20260708-1" in response.text
