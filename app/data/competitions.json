@@ -938,6 +938,1264 @@
           "source_url": "https://jfkessaycontest.smapply.io/prog/john_f_kennedy_profile_in_courage_essay_contest/"
         }
       ]
+    },
+    {
+      "id": "usa-biology-olympiad",
+      "name": "USA Biolympiad (USABO)",
+      "host": "Center for Excellence in Education (CEE)",
+      "category": "STEM olympiad",
+      "url": "https://usabo-trc.org/",
+      "cost": "$125 registration fee per school (covers all participating students at that school; no per-student fee). An optional nonrefundable 10% ($12.50) processor contribution is offered at checkout but can be declined. Homeschooled students arranging their own test site may be responsible for the $125 fee.",
+      "cost_category": "paid",
+      "recognition": "Certificates at the Open Exam stage (Honorable Mention = top 20%, Certificate of Merit = top 30%) and Semifinal stage (Recognition of Academic Excellence = top 50, Honorable Mention = next 75, Certificate of Merit = next 100). Top 20 Semifinalists attend in-person National Finals where medals are awarded; the top 4 gold medalists form Team USA at the International Biology Olympiad (IBO). No direct cash prize.",
+      "participation_format": "individual",
+      "location": "Open and Semifinal Exams administered online at registered schools/authorized USABO Test Centers nationwide. 2027 National Finals host location not yet published (VERIFY).",
+      "competition_dates": "2027 cycle: Registration opens Aug 7, 2026; Practice Exam Jan 8-22, 2027; Open Exam Feb 3, 2027; Semifinal Exam Mar 2, 2027; National Finalists announced Mar 30, 2027; National Finals Jun 20-30, 2027; IBO Jul 18-25, 2027 (Warsaw, Poland).",
+      "deadline": "2026-10-30",
+      "estimated_deadline": null,
+      "eligibility": {
+        "grade_levels": [
+          "high_school"
+        ],
+        "citizenship_requirement": "US citizen or legal permanent resident (green card) required to advance past the Open Exam round; the Open Exam itself has no citizenship requirement",
+        "fields_of_study": [
+          "natural_sciences",
+          "science",
+          "research"
+        ],
+        "essay_required": false,
+        "special_requirements": [
+          {
+            "kind": "institution_channel",
+            "label": "Register through a participating school",
+            "details": "The USABO Open Exam is taken through a registered school; there is no direct individual sign-up."
+          }
+        ]
+      },
+      "description": "The USA Biolympiad (USABO), run by the Center for Excellence in Education, is a multi-round national biology exam competition for U.S. high school students in grades 9-12, progressing from an online Open Exam through a Semifinal Exam to an in-person National Finals, from which the top four students represent the United States at the International Biology Olympiad.",
+      "application_requirements": [
+        {
+          "id": "school-registration",
+          "label": "School/Test Center registers and pays the $125 fee",
+          "details": "A teacher or administrator registers the school (new or returning) at usabo-trc.org and pays the $125 registration fee, due no later than October 30, 2026 for the 2027 cycle.",
+          "required": true,
+          "source_url": "https://usabo-trc.org/usabo-registration"
+        },
+        {
+          "id": "student-registration",
+          "label": "Student verifies host school and registers individually",
+          "details": "Each student confirms their school is a registered USABO host, then registers themselves online (registration is by students only; parents may not register a child or use a parent email). Registration closes November 15, 2026.",
+          "required": true,
+          "source_url": "https://usabo-trc.org/usabo-guidelines-and-eligibility"
+        },
+        {
+          "id": "open-exam",
+          "label": "Take the online Open Exam (Round 1)",
+          "details": "50-minute multiple-choice exam administered at the registered school/test center on February 3, 2027; open to any registered high school biology student in grades 9-12, no citizenship requirement.",
+          "required": true,
+          "source_url": "https://usabo-trc.org/usabo-about-exams"
+        },
+        {
+          "id": "semifinal-exam",
+          "label": "Qualify for and take the online Semifinal Exam (Round 2)",
+          "details": "Available to the top 10% of Open Exam scorers who are U.S. citizens or legal permanent residents; 120-minute exam on March 2, 2027.",
+          "required": true,
+          "source_url": "https://usabo-trc.org/usabo-about-exams"
+        },
+        {
+          "id": "national-finals",
+          "label": "Advance to in-person National Finals (Round 3)",
+          "details": "Top 20 of the top 50 Semifinal scorers attend a 12-day in-person National Finals at a host university (June 20-30, 2027; 2027 location not yet published).",
+          "required": false,
+          "source_url": "https://usabo-trc.org/usabo-about-exams"
+        },
+        {
+          "id": "ibo-team",
+          "label": "Top 4 medalists represent USA at IBO",
+          "details": "The four gold medalists from National Finals form Team USA and compete at the International Biology Olympiad, July 18-25, 2027, in Warsaw, Poland.",
+          "required": false,
+          "source_url": "https://usabo-trc.org/usabo-about-exams"
+        }
+      ],
+      "verification": {
+        "source_url": "https://usabo-trc.org/usabo-registration",
+        "last_verified_at": "2026-07-08"
+      },
+      "verified": true
+    },
+    {
+      "id": "us-national-chemistry-olympiad",
+      "name": "U.S. National Chemistry Olympiad (USNCO)",
+      "host": "American Chemical Society (ACS)",
+      "category": "STEM olympiad",
+      "url": "https://www.acs.org/education/olympiad.html",
+      "cost": "VERIFY",
+      "cost_category": "VERIFY",
+      "recognition": "Certificates for 'High Honors' (~top 50 nationally) and 'Honors' (~next 100) on the National Exam; special recognition for the highest-scoring student and teacher from each ACS Local Section; top 20 National Exam scorers invited to the Study Camp; top 4 Study Camp performers selected to represent the U.S. at the International Chemistry Olympiad (IChO).",
+      "participation_format": "individual",
+      "location": "Local Exams administered at students' own schools nationwide (organized through ACS Local Sections); National Exam sat by 1,000+ nominated students; Study Camp held at the University of Maryland, College Park; IChO hosted each July by a different country (2026 host not stated on official pages, VERIFY).",
+      "competition_dates": "2025-2026 cycle (most recent posted): Registration opened Oct 6, 2025; Local Exam Feb 27-Mar 16, 2026; National Exam Apr 10-19, 2026; Study Camp May 31-Jun 13, 2026; IChO Jul 10-19, 2026. 2026-2027 dates not yet posted.",
+      "deadline": "VERIFY",
+      "estimated_deadline": "2026-02-27",
+      "eligibility": {
+        "grade_levels": [
+          "high_school_freshman",
+          "high_school_sophomore",
+          "high_school_junior",
+          "high_school_senior"
+        ],
+        "citizenship_requirement": "U.S. citizen or legal permanent resident (green card) required to take the National Exam; non-citizen/non-permanent-resident students may compete only in the Local Exam",
+        "fields_of_study": [
+          "natural_sciences",
+          "science"
+        ],
+        "essay_required": false,
+        "special_requirements": [
+          {
+            "kind": "competition_or_finalist",
+            "label": "Qualify through your local ACS section",
+            "details": "Students enter via their local American Chemical Society section's local exam."
+          }
+        ]
+      },
+      "description": "The U.S. National Chemistry Olympiad is a multi-tiered chemistry competition for high school students in grades 9-12, sponsored by the American Chemical Society since 1984. It progresses from Local Exams through a National Exam, a Study Camp, and ultimately selection of four students to represent the U.S. at the International Chemistry Olympiad.",
+      "application_requirements": [
+        {
+          "id": "register-student",
+          "label": "Parent/guardian registers the student via the USNCO registration platform",
+          "details": "Registration is completed by a parent or guardian at usncoreg.acs.org; registration does not guarantee participation, as the local USNCO Coordinator confirms acceptance.",
+          "required": true,
+          "source_url": "https://www.acs.org/education/olympiad/participate.html"
+        },
+        {
+          "id": "find-coordinator",
+          "label": "Locate your local USNCO Coordinator",
+          "details": "Coordinators are found via an ACS Local Sections lookup tool; teachers should direct interested students' families to their local Coordinator for program details.",
+          "required": true,
+          "source_url": "https://www.acs.org/education/olympiad/participate.html"
+        },
+        {
+          "id": "meet-eligibility",
+          "label": "Confirm eligibility (grade, citizenship/residency, age, enrollment)",
+          "details": "Student must be in grades 9-12, a U.S. citizen or legal permanent resident to advance past the Local Exam, under 20 as of July 1 of the competition year, and enrolled in an American school for at least one year.",
+          "required": true,
+          "source_url": "https://www.acs.org/education/olympiad/rules-and-eligibility.html"
+        },
+        {
+          "id": "take-local-exam",
+          "label": "Take the Local Exam administered by your school/Local Section",
+          "details": "60 multiple-choice questions, 110 minutes; administered during the local exam window (e.g., Feb 27-Mar 16, 2026 for the 2025-2026 cycle).",
+          "required": true,
+          "source_url": "https://www.acs.org/education/olympiad/prepare-for-exams/exam-information.html"
+        },
+        {
+          "id": "national-exam-nomination",
+          "label": "If nominated, take the three-part National Exam",
+          "details": "No more than two students per school per Local Section may be nominated; exam includes a multiple-choice section, written-response section, and lab practical, sat by 1,000+ students each April.",
+          "required": false,
+          "source_url": "https://www.acs.org/education/olympiad/prepare-for-exams/exam-information.html"
+        }
+      ],
+      "verification": {
+        "source_url": "https://www.acs.org/education/olympiad.html",
+        "last_verified_at": "2026-07-08"
+      },
+      "verified": true
+    },
+    {
+      "id": "usa-physics-olympiad",
+      "name": "U.S. Physics Team / F=ma Exam / USA Physics Olympiad (USAPhO)",
+      "host": "American Association of Physics Teachers (AAPT), jointly sponsored with the American Institute of Physics (AIP)",
+      "category": "STEM olympiad",
+      "url": "https://aapt.org/physicsteam/PT-landing.cfm",
+      "cost": "2026 cycle: School registration fee $75 ($37.50 for AAPT-member schools/teachers) plus a $15.50 per-student fee for the F=ma exam. Not yet confirmed for a future cycle.",
+      "cost_category": "paid",
+      "recognition": "USAPhO awards Gold medals (~top 10-12%), Silver (~next 14-16%), Bronze (~next 20-22%), and Honorable Mention (~next 24-26%); cutoffs vary yearly. Top performers are invited to the U.S. Physics Team Training & Development Camp, with eventual selection to represent the U.S. at the International Physics Olympiad (IPhO) / European Physics Olympiad (EuPhO).",
+      "participation_format": "individual",
+      "location": "F=ma and USAPhO exams administered online (via Educational Vistas) with required in-person proctoring at the student's school/site within the U.S. (Puerto Rico and some territories excluded). Training camp held on a U.S. university campus (2026: University of Maryland).",
+      "competition_dates": "2026 cycle: F=ma Exam Feb 12, 2026; USAPhO Exam Apr 10, 2026; USAPhO Plus Exam May 10, 2026; Training & Development Camp May 30-Jun 9, 2026 (Univ. of Maryland); EuPhO Jun 12-16, 2026 (Gothenburg, Sweden). 2027 cycle not yet posted.",
+      "deadline": "VERIFY",
+      "estimated_deadline": "2026-01-21",
+      "eligibility": {
+        "grade_levels": [
+          "high_school"
+        ],
+        "citizenship_requirement": "Tiered. F=ma exam: U.S. citizens, U.S. permanent residents, or students attending a U.S. school (physically in the U.S. during the exam). USAPhO exam: U.S. citizens or permanent residents only. Training Camp/IPhO team: U.S. citizen or green card holder, age <=20 by June 30.",
+        "fields_of_study": [
+          "natural_sciences",
+          "science",
+          "mathematics"
+        ],
+        "essay_required": false,
+        "special_requirements": [
+          {
+            "kind": "competition_or_finalist",
+            "label": "Qualify via the F=ma exam",
+            "details": "USAPhO invitations come from performance on the earlier F=ma qualifying exam."
+          }
+        ]
+      },
+      "description": "The U.S. Physics Team program, jointly sponsored by AAPT and AIP, is an annual competition for U.S. high school students that begins with the F=ma exam and progresses through the USAPhO exam and a training camp toward selecting the team that represents the United States at the International Physics Olympiad.",
+      "application_requirements": [
+        {
+          "id": "school-registration",
+          "label": "School/teacher registers the school for the F=ma exam",
+          "details": "A teacher/coach registers their school online; school registration fee is $75 ($37.50 for AAPT members).",
+          "required": true,
+          "source_url": "https://aapt.org/physicsteam/2026/Registration.cfm"
+        },
+        {
+          "id": "student-registration",
+          "label": "Register individual students and pay per-student fee",
+          "details": "Each participating student is registered with a $15.50 fee, via online credit card payment or PDF form (checks/purchase orders accepted).",
+          "required": true,
+          "source_url": "https://aapt.org/physicsteam/2026/Registration.cfm"
+        },
+        {
+          "id": "arrange-proctor",
+          "label": "Arrange an approved in-person proctor",
+          "details": "Proctor must not be a parent, relative, or close friend/acquaintance of the student; must hold at least a 2-year degree and provide an official school email; for-profit test centers are prohibited.",
+          "required": true,
+          "source_url": "https://aapt.org/physicsteam/2026/Registration.cfm"
+        },
+        {
+          "id": "confirm-eligibility",
+          "label": "Confirm citizenship/residency and location eligibility",
+          "details": "Students must be U.S. citizens, permanent residents, or attending a U.S. school, and physically located in the U.S. (excluding Puerto Rico and some territories) during the exam window.",
+          "required": true,
+          "source_url": "https://aapt.org/physicsteam/PT-rules.cfm"
+        },
+        {
+          "id": "take-fma-exam",
+          "label": "Take the F=ma exam during the designated online window",
+          "details": "Exam is administered online via Educational Vistas only (no printable version), with in-person proctoring required, during a single scheduled test window.",
+          "required": true,
+          "source_url": "https://aapt.org/physicsteam/2026/ImportantDates.cfm"
+        }
+      ],
+      "verification": {
+        "source_url": "https://aapt.org/physicsteam/PT-landing.cfm",
+        "last_verified_at": "2026-07-08"
+      },
+      "verified": true
+    },
+    {
+      "id": "usa-computing-olympiad",
+      "name": "USA Computing Olympiad (USACO)",
+      "host": "USA Computing Olympiad (USACO)",
+      "category": "STEM olympiad (competitive programming)",
+      "url": "https://usaco.org/",
+      "cost": "Free. 'There is never any fee for participation.'",
+      "cost_category": "free",
+      "recognition": "Top scorers are promoted through four divisions (bronze, silver, gold, platinum) based on contest performance. Top USA competitors from the proctored US Open contest are invited to an intensive summer Training Camp; from the camp, 4 students are selected for the International Olympiad in Informatics (IOI) team and the top 4 female high-school students for the European Girls' Olympiad in Informatics (EGOI). USACO pays all IOI/EGOI expenses.",
+      "participation_format": "individual",
+      "location": "Online (contests are web-based, self-scheduled within a Friday-Monday window). Training Camp: Clemson University, South Carolina (per History page). IOI 2026: Uzbekistan; EGOI 2026: Italy.",
+      "competition_dates": "2025-2026 season: Online Contest 1 Jan 9-12, 2026; Contest 2 Jan 30-Feb 2, 2026; Contest 3 Feb 20-23, 2026; US Open (proctored) Mar 28, 2026; Training Camp May 21-30, 2026; IOI Aug 9-16, 2026. 2026-2027 schedule not yet posted.",
+      "deadline": "rolling",
+      "estimated_deadline": null,
+      "eligibility": {
+        "grade_levels": [],
+        "citizenship_requirement": "any",
+        "fields_of_study": [
+          "computer_science",
+          "mathematics"
+        ],
+        "essay_required": false
+      },
+      "description": "The USA Computing Olympiad (USACO) is a free, web-based competitive programming series with four skill divisions (bronze, silver, gold, platinum) open to participants worldwide, run to identify and train USA computing talent and select the USA teams for the International Olympiad in Informatics (IOI) and European Girls' Olympiad in Informatics (EGOI).",
+      "application_requirements": [
+        {
+          "id": "create-account",
+          "label": "Create a USACO account",
+          "details": "Visit usaco.org, click 'Register for New Account,' and provide username, email, real first/last name, school, graduation year, and country/region. Fake names may result in deleted results.",
+          "required": true,
+          "source_url": "https://usaco.org/index.php?page=register"
+        },
+        {
+          "id": "start-bronze",
+          "label": "Begin competing in the Bronze division",
+          "details": "All new participants start in the bronze division; strong scorers are promoted to silver, gold, then platinum in subsequent contests.",
+          "required": true,
+          "source_url": "https://usaco.org/index.php?page=instructions"
+        },
+        {
+          "id": "complete-contest-window",
+          "label": "Complete a contest within the scheduled weekend window",
+          "details": "Each of the season's 3 online contests runs Friday-Monday; participants self-schedule a continuous ~4-hour block (5 hours for US Open) after logging in and downloading problems. Solutions submitted in C, C++, Java, or Python.",
+          "required": true,
+          "source_url": "https://usaco.org/index.php?page=instructions"
+        },
+        {
+          "id": "certified-score-timing",
+          "label": "(Optional, gold/platinum) Start at the official release time for a certified score",
+          "details": "USA students wanting a certified score in gold or platinum must start at 12:00 ET Saturday when those divisions' problems are first released.",
+          "required": false,
+          "source_url": "https://usaco.org/index.php?page=viewcontest"
+        },
+        {
+          "id": "us-open-qualify",
+          "label": "Qualify for and complete the proctored US Open contest",
+          "details": "Performance in the US Open is the primary determinant for Training Camp finalist invitations.",
+          "required": false,
+          "source_url": "https://usaco.org/index.php?page=details"
+        },
+        {
+          "id": "training-camp-invite",
+          "label": "(Elite path) Accept Training Camp invitation if selected",
+          "details": "Top USA competitors (pre-college, US citizen/resident) are invited to the late-May training camp; USACO covers camp costs, participants pay their own transportation to camp.",
+          "required": false,
+          "source_url": "https://usaco.org/index.php?page=history"
+        }
+      ],
+      "verification": {
+        "source_url": "https://usaco.org/index.php?page=details",
+        "last_verified_at": "2026-07-08"
+      },
+      "verified": true
+    },
+    {
+      "id": "science-olympiad-national-tournament",
+      "name": "Science Olympiad National Tournament",
+      "host": "Science Olympiad, Inc.",
+      "category": "STEM competition",
+      "url": "https://www.soinc.org/2026-national-tournament",
+      "cost": "Team-based, not individual. Official 'Start a Team' page: team costs are typically $125-$300 per team depending on state; the national membership fee (paid via state affiliate) is a minimum of $75 per team.",
+      "cost_category": "paid",
+      "recognition": "From the 2026 National Tournament page: Founders' Scholarships totaling $50,000 ($10,000 each to 5 Division C seniors on a registered team), two Spirit Awards ($2,000 each), six Coaching Excellence Awards, plus sponsor-provided prizes/scholarships. Event medals/team trophies are customary but exact medal structure was not confirmed on an official page this session (VERIFY).",
+      "participation_format": "team",
+      "location": "Hosted each year at a different university. 2026: University of Southern California; 2027: The Ohio State University; 2028: Georgia Tech; 2029: University of Illinois at Urbana-Champaign.",
+      "competition_dates": "Most recent confirmed: May 22-23, 2026 (USC). Next: 'May 2027' at Ohio State (exact 2027 dates not yet published, VERIFY).",
+      "deadline": "VERIFY",
+      "estimated_deadline": null,
+      "eligibility": {
+        "grade_levels": [
+          "high_school_freshman",
+          "high_school_sophomore",
+          "high_school_junior",
+          "high_school_senior",
+          "high_school"
+        ],
+        "citizenship_requirement": "VERIFY",
+        "fields_of_study": [
+          "science",
+          "natural_sciences",
+          "engineering",
+          "technology"
+        ],
+        "essay_required": false,
+        "special_requirements": [
+          {
+            "kind": "competition_or_finalist",
+            "label": "Advance through school team and state tournament",
+            "details": "National teams qualify by placing at regional and state Science Olympiad tournaments."
+          }
+        ]
+      },
+      "description": "Science Olympiad is a 501(c)(3) nonprofit STEM organization running a national hierarchy of ~450 regional, state, and invitational tournaments culminating each May in a National Tournament, where roughly 120 top Division B (middle school) and Division C (high school, grades 9-12) teams compete in 23 hands-on STEM events. The 2026 National Tournament was hosted by the University of Southern California, with the 2027 tournament set for The Ohio State University.",
+      "application_requirements": [
+        {
+          "id": "form-team",
+          "label": "Form a school-based team and secure institutional support",
+          "details": "Obtain school administration approval and identify funding sources before recruiting; teams may start at any time of year, though spring is recommended for budget planning.",
+          "required": true,
+          "source_url": "https://www.soinc.org/join/start-team"
+        },
+        {
+          "id": "recruit-students",
+          "label": "Recruit up to 15 student competitors",
+          "details": "Typical recruitment happens in September/October; roster is capped at 15 official members per team, with division-specific grade caps (e.g., max 7 twelfth-graders on a Division C team).",
+          "required": true,
+          "source_url": "https://www.soinc.org/start-team/team-size-grade-levels"
+        },
+        {
+          "id": "register-with-state",
+          "label": "Register the team through your state Science Olympiad director",
+          "details": "National registration/membership is paid as part of state-level registration; the national fee is a minimum of $75 per team, with total team costs typically $125-$300 depending on state.",
+          "required": true,
+          "source_url": "https://www.soinc.org/join/start-team"
+        },
+        {
+          "id": "study-rules-manuals",
+          "label": "Study the current year's Division B/C Rules Manuals",
+          "details": "Rules Manuals for the ~23 rotating events are released 'the Tuesday after Labor Day' each year and govern event preparation.",
+          "required": true,
+          "source_url": "https://www.soinc.org/join/start-team"
+        },
+        {
+          "id": "compete-qualifying-tournaments",
+          "label": "Compete at Invitational, Regional, and State tournaments",
+          "details": "Teams must advance through the regional/state tournament hierarchy (~450 tournaments nationally) to qualify for the National Tournament; only top state teams advance.",
+          "required": true,
+          "source_url": "https://www.soinc.org/info/about-science-olympiad"
+        },
+        {
+          "id": "attend-nationals",
+          "label": "Attend the National Tournament if qualified",
+          "details": "Approximately 120 qualifying Division B and C teams compete each May at the host university (2026: USC; 2027: Ohio State University).",
+          "required": false,
+          "source_url": "https://www.soinc.org/2026-national-tournament"
+        }
+      ],
+      "verification": {
+        "source_url": "https://www.soinc.org/2026-national-tournament",
+        "last_verified_at": "2026-07-08"
+      },
+      "verified": true
+    },
+    {
+      "id": "mathcounts-competition-series",
+      "name": "MATHCOUNTS Competition Series",
+      "host": "MATHCOUNTS Foundation",
+      "category": "math competition",
+      "url": "https://www.mathcounts.org/programs/mathcounts-competition-series",
+      "cost": "Per school/student, tiered by deadline (2025-2026 cycle): Early Bird $40/school competitor; Regular $45/school competitor or $70/non-school competitor; Late $50/school competitor or $80/NSC. Fee covers the entire series (school through national); no extra fee to advance. Title I schools get a 50% discount. 2026-2027 fees not yet posted.",
+      "cost_category": "paid",
+      "recognition": "Per the official 2026 National Competition Fact Sheet: nine top national competitors share $44,000 in college scholarships. National Champion receives the $20,000 Donald G. Weinert Scholarship; Countdown Round Runner-Up $7,500; two Countdown Round Semifinalists $3,000 each; Written Competition Champion $2,500; the four members of the 1st-place team $2,000 each.",
+      "participation_format": "either",
+      "location": "Nationwide. School competitions at individual schools; ~500 Chapter (local) competitions; State competitions in all 50 states plus territories; the 2026 RTX MATHCOUNTS National Competition was held at the Hilton Orlando Lake Buena Vista, Orlando, FL.",
+      "competition_dates": "2025-2026 cycle: School Competitions ~Aug 2025-Jan 2026; Chapter Competitions Feb 1-28, 2026; State Competitions Mar 1-31, 2026; National Competition May 10-11, 2026 (Orlando, FL).",
+      "deadline": "VERIFY",
+      "estimated_deadline": "2025-12-15",
+      "eligibility": {
+        "grade_levels": [
+          "middle_school"
+        ],
+        "citizenship_requirement": "U.S. student, defined as one who attends a school in a U.S. state or territory, or an overseas school affiliated with the U.S. Department of Defense or State Department Office of Overseas Schools",
+        "fields_of_study": [
+          "mathematics"
+        ],
+        "essay_required": false,
+        "special_requirements": [
+          {
+            "kind": "institution_channel",
+            "label": "Compete through your school's MATHCOUNTS program",
+            "details": "Students advance from school to chapter, state, and national rounds via a registered school."
+          }
+        ]
+      },
+      "description": "MATHCOUNTS Competition Series is a national, in-person math competition open to U.S. students in grades 6-8 (middle school only), run in four progressive levels (school, chapter, state, and national), each featuring Sprint, Target, Team, and optional Countdown rounds. Top state-level performers advance to the RTX MATHCOUNTS National Competition, where top individual and team competitors win college scholarships.",
+      "application_requirements": [
+        {
+          "id": "register-online",
+          "label": "School representative or parent/guardian registers online during the registration window",
+          "details": "A teacher, administrator, or parent volunteer (with school permission) registers school-based competitors online; for non-school competitors (NSCs), a parent/guardian registers after confirming the student's school will not register or support participation.",
+          "required": true,
+          "source_url": "https://www.mathcounts.org/programs/official-rules-procedures"
+        },
+        {
+          "id": "pay-registration-fee",
+          "label": "Pay the applicable per-student registration fee by the relevant deadline tier",
+          "details": "Fee tier (Early Bird/Regular/Late) depends on submission date; NSC registration must be completed online with a credit card. Title I schools receive a 50% discount.",
+          "required": true,
+          "source_url": "https://www.mathcounts.org/programs/critical-dates"
+        },
+        {
+          "id": "receive-kit-prepare",
+          "label": "Coach receives School Competition Kit and prepares students using official MATHCOUNTS materials",
+          "details": "Kits (including the School Handbook) ship on a rolling basis mid-August through late January; the School Competition is typically administered in January.",
+          "required": true,
+          "source_url": "https://www.mathcounts.org/programs/critical-dates"
+        },
+        {
+          "id": "complete-roster",
+          "label": "Coach completes the Competitor Roster on the Coach Dashboard before the Chapter Competition",
+          "details": "Required before the local coordinator's specific chapter competition date; up to 14 competitors per school (4 team+individual, 10 individual-only).",
+          "required": true,
+          "source_url": "https://www.mathcounts.org/programs/official-rules-procedures"
+        },
+        {
+          "id": "compete-chapter",
+          "label": "Compete at the Chapter (local) Competition, held Feb 1-28",
+          "details": "Top scorers (including NSCs, who advance individually) qualify for the State Competition; no additional fee required to advance.",
+          "required": true,
+          "source_url": "https://www.mathcounts.org/programs/mathcounts-competition-series"
+        },
+        {
+          "id": "advance-state-national",
+          "label": "Advance to State Competition (Mar 1-31) and, if a top-4 state finisher, the National Competition (May)",
+          "details": "Top 4 individuals per state/territory (including NSCs) earn an all-expenses-paid trip to the RTX MATHCOUNTS National Competition.",
+          "required": false,
+          "source_url": "https://www.mathcounts.org/programs/mathcounts-competition-series"
+        }
+      ],
+      "verification": {
+        "source_url": "https://www.mathcounts.org/programs/mathcounts-competition-series",
+        "last_verified_at": "2026-07-08"
+      },
+      "verified": true
+    },
+    {
+      "id": "toshiba-nsta-exploravision",
+      "name": "Toshiba/NSTA ExploraVision",
+      "host": "National Science Teaching Association (NSTA), sponsored by Toshiba",
+      "category": "STEM invention/research competition",
+      "url": "https://www.exploravision.org/",
+      "cost": "Free. 'There is no entry fee for the program. It's FREE to enter.'",
+      "cost_category": "free",
+      "recognition": "National 1st Prize: U.S. EE Savings Bond worth $10,000 at maturity per student (4 teams); 2nd Prize: $5,000 bond per student; 8 National Finalist teams get an expense-paid trip to Washington, DC for Awards Week; 24 Regional Winner teams each receive a Chromebook per student and awards; ~500 Honorable Mention teams get a prize/certificate; all teams submitting a complete project get a certificate and gift. Coaches/schools also receive recognition.",
+      "participation_format": "team",
+      "location": "Online submission (US, US Territories, DoDEA schools abroad, or Canada); National Finalists travel to Washington, D.C. for Awards Week in June.",
+      "competition_dates": "2025-2026 cycle (34th annual): entries due February 3, 2026; National Finalists' Awards Week trip to Washington, D.C. in June 2026. 2026-2027 (35th annual) cycle dates not yet published.",
+      "deadline": "VERIFY",
+      "estimated_deadline": "2026-02-03",
+      "eligibility": {
+        "grade_levels": [
+          "middle_school",
+          "high_school"
+        ],
+        "citizenship_requirement": "US or Canadian citizens, living in the United States, U.S. Territories, U.S. Armed Forces, Canada, or a DoDEA school abroad",
+        "fields_of_study": [
+          "science",
+          "technology",
+          "engineering",
+          "research"
+        ],
+        "essay_required": true
+      },
+      "description": "Toshiba/NSTA ExploraVision is a free, team-based K-12 STEM competition in which teams of 2-4 students (with a coach and optional mentor) research a current technology and predict/design its evolution 20 years into the future, submitting a written project with abstract, description, bibliography, and sample web pages. The program spans four grade divisions (Primary K-3, Upper Elementary 4-6, Middle 7-9, High School 10-12), with national winners receiving U.S. EE Savings Bonds and a trip to Washington, D.C.",
+      "application_requirements": [
+        {
+          "id": "form-team",
+          "label": "Form a team of 2-4 students with a coach",
+          "details": "Students enter as a team of 2-4 (no individual entries), with a teacher/coach (21+) and optional mentor; each student may submit only one project per year.",
+          "required": true,
+          "source_url": "https://www.exploravision.org/rules-requirements/"
+        },
+        {
+          "id": "confirm-eligibility",
+          "label": "Confirm citizenship and enrollment eligibility",
+          "details": "Students must be US or Canadian citizens/residents (incl. US Territories, DoDEA schools abroad, or Canada) and full-time K-12 students in public, private, parochial, virtual, or home school.",
+          "required": true,
+          "source_url": "https://www.exploravision.org/rules-requirements/"
+        },
+        {
+          "id": "research-project",
+          "label": "Research a current technology and envision its future",
+          "details": "Team develops a project predicting how a chosen technology will evolve over the next 20 years, addressing a real-world problem.",
+          "required": true,
+          "source_url": "https://www.exploravision.org/faqs/"
+        },
+        {
+          "id": "prepare-submission",
+          "label": "Prepare written project materials",
+          "details": "Title (max 50 characters), 150-word abstract, project description (max 11 pages), bibliography, and five sample web pages.",
+          "required": true,
+          "source_url": "https://www.exploravision.org/rules-requirements/"
+        },
+        {
+          "id": "coach-submit",
+          "label": "Coach submits the project online before the deadline",
+          "details": "The team's coach submits the completed project through ExploraVision.org by 7:00 PM ET on the entry deadline (Feb 3, 2026 for the 2025-2026/34th annual cycle).",
+          "required": true,
+          "source_url": "https://www.exploravision.org/faqs/"
+        }
+      ],
+      "verification": {
+        "source_url": "https://www.exploravision.org/rules-requirements/",
+        "last_verified_at": "2026-07-08"
+      },
+      "verified": true
+    },
+    {
+      "id": "junior-science-and-humanities-symposium",
+      "name": "Junior Science and Humanities Symposium (JSHS)",
+      "host": "Sponsored by the U.S. Department of Defense (Departments of the Army, Navy, and Air Force); administered by the National Science Teaching Association (NSTA)",
+      "category": "research symposium",
+      "url": "https://www.jshs.org/",
+      "cost": "VERIFY",
+      "cost_category": "VERIFY",
+      "recognition": "Confirmed for the most recent completed cycle (63rd National JSHS, NSTA press release, 2025): the National Symposium awarded $192,000 in scholarships and $10,800 in cash awards to 48 national winners across 8 categories. Oral-presentation category winners received tuition scholarships of $12,000 (1st), $8,000 (2nd), $4,000 (3rd); poster winners received cash awards. Current 2026-2027 award amounts: VERIFY.",
+      "participation_format": "individual",
+      "location": "Regional symposia held at ~49 designated regional host sites (universities/colleges) across all 50 states, U.S. territories, and DoD schools overseas. The 2025 National Symposium was held at the Westfields Marriott Washington Dulles, Chantilly, Virginia. Current cycle's national location: VERIFY.",
+      "competition_dates": "Most recent confirmed: National Symposium April 22-26, 2025 (63rd Annual). 2026-2027 cycle regional/national dates: VERIFY (not yet published on the official site).",
+      "deadline": "VERIFY",
+      "estimated_deadline": null,
+      "eligibility": {
+        "grade_levels": [
+          "high_school_freshman",
+          "high_school_sophomore",
+          "high_school_junior",
+          "high_school_senior"
+        ],
+        "citizenship_requirement": "VERIFY",
+        "fields_of_study": [
+          "research",
+          "science",
+          "natural_sciences",
+          "engineering",
+          "mathematics",
+          "technology",
+          "health_medicine",
+          "environmental_science"
+        ],
+        "essay_required": false,
+        "special_requirements": [
+          {
+            "kind": "competition_or_finalist",
+            "label": "Advance from a regional symposium",
+            "details": "National JSHS finalists are selected at regional symposia."
+          }
+        ]
+      },
+      "description": "The Junior Science and Humanities Symposium (JSHS) is a U.S. Department of Defense-sponsored STEM competition, administered by the National Science Teaching Association, in which high school students (grades 9-12) conduct and present original STEM research at regional symposia, with the opportunity to advance to a National Symposium for scholarships and recognition.",
+      "application_requirements": [
+        {
+          "id": "original-research",
+          "label": "Conduct an original, independent STEM research investigation",
+          "details": "Program is built around students' original research in science, technology, engineering, or mathematics.",
+          "required": true,
+          "source_url": "https://usaeop.com/program/jshs-2026-2/"
+        },
+        {
+          "id": "regional-entry",
+          "label": "Apply/submit research to a designated regional JSHS symposium",
+          "details": "Students must first participate in one of ~49 regional symposia held at university/college host sites; exact submission process not confirmable on an official page this session (VERIFY).",
+          "required": true,
+          "source_url": "https://www.nsta.org/press-release/exceptional-young-scientists-awarded-scholarships-and-awards-63rd-annual-national"
+        },
+        {
+          "id": "regional-presentation",
+          "label": "Present research at the regional symposium (oral or poster)",
+          "details": "Students compete for selection to advance based on their regional presentation.",
+          "required": true,
+          "source_url": "https://usaeop.com/program/jshs-2026-2/"
+        },
+        {
+          "id": "national-advancement",
+          "label": "Top 5 regional finalists may be invited to the National JSHS",
+          "details": "Of the top 5, the top 2 compete via oral presentation for tuition scholarships; the remaining 3 compete in the poster competition for cash awards.",
+          "required": false,
+          "source_url": "https://www.nsta.org/press-release/exceptional-young-scientists-awarded-scholarships-and-awards-63rd-annual-national"
+        },
+        {
+          "id": "scholarship-payment-form",
+          "label": "Submit the 2026 JSHS Scholarship Form (for prior winners collecting payment)",
+          "details": "Current site instructs award recipients to download/complete the 2026 JSHS Scholarship Form and email it with required documents to admin@jshs.org.",
+          "required": false,
+          "source_url": "https://www.jshs.org/"
+        }
+      ],
+      "verification": {
+        "source_url": "https://www.jshs.org/",
+        "provenance_recorded_at": "2026-07-08",
+        "notes": "Official jshs.org was a site-wide relaunch placeholder on 2026-07-08; identity and structure sourced from adjacent official domains (usaeop.com, nsta.org). Re-verify when the primary site is operational."
+      },
+      "verified": false
+    },
+    {
+      "id": "first-robotics-competition",
+      "name": "FIRST Robotics Competition",
+      "host": "FIRST (For Inspiration and Recognition of Science and Technology)",
+      "category": "Robotics",
+      "url": "https://www.firstinspires.org/robotics/frc",
+      "cost": "$6,500 season team registration fee (2026-2027 season), which includes one Regional event (Regional Model) or two District events (District Model); additional events cost extra (e.g., $3,200 per additional Regional, $4,000 for District Championship, $6,000 for FIRST Championship)",
+      "cost_category": "paid",
+      "recognition": "FIRST Impact Award (the program's most prestigious award, recognizing the team that best embodies the FIRST mission) plus numerous other awards such as the Autonomous Award, Creativity Award, Excellence in Engineering Award, Engineering Inspiration Award, Rookie All-Star Award, Woodie Flowers Finalist Award, and Winner/Finalist Alliance designations",
+      "participation_format": "team",
+      "location": "Regional and District competition events held across the U.S. and internationally, culminating in the FIRST Championship at the George R. Brown Convention Center, Houston, Texas (confirmed as host site through 2027)",
+      "competition_dates": "2027 season kickoff (game reveal) is January 9, 2027 at 12:00 p.m. ET, with Regional/District events following through winter-spring; exact 2027 FIRST Championship dates are not yet published (for reference, the 2026 FIRST Championship ran April 28 - May 3, 2026 in Houston, TX)",
+      "deadline": "2026-11-17",
+      "estimated_deadline": null,
+      "eligibility": {
+        "grade_levels": [
+          "high_school"
+        ],
+        "citizenship_requirement": "any",
+        "fields_of_study": [
+          "engineering",
+          "technology",
+          "computer_science",
+          "science"
+        ],
+        "essay_required": false,
+        "special_requirements": [
+          {
+            "kind": "membership",
+            "label": "Compete as part of a registered team",
+            "details": "FRC is entered by a registered school or community robotics team, not individually."
+          }
+        ]
+      },
+      "description": "FIRST Robotics Competition is an international STEM program in which teams of high school students (grades 9-12, ages 14-18) design, build, and program industrial-sized robots to play a new game released each January, competing as alliances at Regional and District events before advancing toward the FIRST Championship.",
+      "application_requirements": [
+        {
+          "id": "create-first-account",
+          "label": "Create or log into a FIRST account on the FIRST Dashboard",
+          "details": "The first step to starting or joining a FIRST Robotics Competition team is creating a FIRST account (or logging in with an existing one).",
+          "required": true,
+          "source_url": "https://www.firstinspires.org/robotics/frc/start-a-team"
+        },
+        {
+          "id": "create-new-team",
+          "label": "From 'My Teams,' select 'Create a New Team' and choose FIRST Robotics Competition",
+          "details": "Teams are created through the FIRST Dashboard's My Teams screen.",
+          "required": true,
+          "source_url": "https://www.firstinspires.org/robotics/frc/start-a-team"
+        },
+        {
+          "id": "recruit-two-lead-coaches",
+          "label": "Recruit two adult Lead Coaches to guide the team",
+          "details": "Every team is required to have two adult lead coaches; additional mentors are optional.",
+          "required": true,
+          "source_url": "https://www.firstinspires.org/robotics/frc/start-a-team"
+        },
+        {
+          "id": "complete-storefront-registration",
+          "label": "Go to the FIRST Storefront to pay the season registration fee and add materials",
+          "details": "Registration is completed by clicking 'Go to FIRST Storefront' to add items (season registration, Kickoff Kit, etc.) and checking out; 2026-2027 season registration fee is $6,500.",
+          "required": true,
+          "source_url": "https://www.firstinspires.org/robotics/frc/cost-and-registration"
+        },
+        {
+          "id": "select-kickoff-option",
+          "label": "Select a Kickoff location or kit-shipping option during the Kickoff selection window",
+          "details": "Kickoff selection is open September 24, 2026 (Noon ET) through November 17, 2026 (Noon ET); teams choose a local Kickoff event or MySite kit shipping.",
+          "required": true,
+          "source_url": "https://www.firstinspires.org/programs/frc/game-and-season"
+        }
+      ],
+      "verification": {
+        "source_url": "https://www.firstinspires.org/robotics/frc",
+        "last_verified_at": "2026-07-08"
+      },
+      "verified": true
+    },
+    {
+      "id": "american-rocketry-challenge",
+      "name": "American Rocketry Challenge (ARC, formerly Team America Rocketry Challenge / TARC)",
+      "host": "Aerospace Industries Association (AIA) and National Association of Rocketry (NAR)",
+      "category": "Aerospace/STEM",
+      "url": "https://www.rocketrychallenge.org/",
+      "cost": "VERIFY",
+      "cost_category": "paid",
+      "recognition": "Teams competing for a spot in the National Finals compete for a share of over $100,000 in cash awards; the National Champion team represents the United States at the International Rocketry Challenge, an international airshow event.",
+      "participation_format": "team",
+      "location": "VERIFY",
+      "competition_dates": "Registration for the current cycle opens July 15, 2026 and closes December 6, 2026; qualification flights are flown locally through spring 2027; National Finals are scheduled for May 15, 2027 (rain date May 16, 2027).",
+      "deadline": "2026-12-06",
+      "estimated_deadline": null,
+      "eligibility": {
+        "grade_levels": [
+          "middle_school",
+          "high_school"
+        ],
+        "citizenship_requirement": "any",
+        "fields_of_study": [
+          "engineering",
+          "science",
+          "technology",
+          "mathematics"
+        ],
+        "essay_required": false
+      },
+      "description": "The American Rocketry Challenge (ARC), the world's largest student rocket competition, is a yearlong program in which teams of 3-10 students in grades 6-12 design, build, test, and launch model rockets to meet official engineering requirements, with top-scoring teams competing at the National Finals for cash awards and the National Championship title.",
+      "application_requirements": [
+        {
+          "id": "form-eligible-team",
+          "label": "Form a team of 3-10 students in grades 6-12, sponsored by a single school or a single U.S. incorporated non-profit youth organization",
+          "details": "Application must come from one school or one U.S. incorporated non-profit youth organization (e.g., Scouts, 4-H, Civil Air Patrol), excluding NAR/Tripoli or other rocket clubs. Team must be supervised by an adult approved by the school principal or an officially-appointed leader of the youth organization.",
+          "required": true,
+          "source_url": "https://www.rocketrychallenge.org/faq/"
+        },
+        {
+          "id": "register-team-online",
+          "label": "Register the team online through the official ARC registration portal and pay the registration fee during the open registration window",
+          "details": "Registration for the current cycle opens 9:00 AM ET July 15, 2026 and closes 11:59 PM ET December 6, 2026, per the official Important Dates timeline.",
+          "required": true,
+          "source_url": "https://www.rocketrychallenge.org/how-to-compete/"
+        },
+        {
+          "id": "build-rocket-to-spec",
+          "label": "Design and build a model rocket that meets the official rules and technical parameters for the current competition year",
+          "details": "Rules and specifications (altitude/duration goals, payload requirements, construction limits) are published in the current-year Rules document and Rocketry Starter Kit.",
+          "required": true,
+          "source_url": "https://www.rocketrychallenge.org/how-to-compete/"
+        },
+        {
+          "id": "complete-qualification-flights",
+          "label": "Complete official qualification flights observed by a National Association of Rocketry (NAR) member",
+          "details": "Teams must fly a minimum of two and up to three qualification flights in front of an NAR observer to record an official score, historically within a window running from mid-July through late March/early April.",
+          "required": true,
+          "source_url": "https://www.rocketrychallenge.org/faq/"
+        },
+        {
+          "id": "submit-qualification-scores",
+          "label": "Submit qualification flight results through the online registration portal by the posted deadline",
+          "details": "For the current cycle, qualification flight submissions are due April 4, 2027, per the official Important Dates timeline.",
+          "required": true,
+          "source_url": "https://www.rocketrychallenge.org/how-to-compete/"
+        },
+        {
+          "id": "attend-national-finals",
+          "label": "If your team ranks among the top 100 nationally, attend the National Finals to compete for cash awards and the National Championship title",
+          "details": "Top 100 finalists for the current cycle are expected to be announced no later than noon on April 13, 2027; National Finals are scheduled for May 15, 2027 (rain date May 16, 2027).",
+          "required": false,
+          "source_url": "https://www.rocketrychallenge.org/how-to-compete/"
+        }
+      ],
+      "verification": {
+        "source_url": "https://www.rocketrychallenge.org/how-to-compete/",
+        "last_verified_at": "2026-07-08"
+      },
+      "verified": true
+    },
+    {
+      "id": "national-economics-challenge",
+      "name": "National Economics Challenge",
+      "host": "Council for Economic Education",
+      "category": "Economics",
+      "url": "https://www.councilforeconed.org/programs/for-students/national-economic-challenge/",
+      "cost": "No entry fee mentioned on official site; CEE covers lodging and group meals for National Finals teams (team members + one coach), but teams are responsible for their own travel/transportation costs to Atlanta.",
+      "cost_category": "free",
+      "recognition": "National Finals cash prizes per division: 1st place $1,000, 2nd place $500, 3rd place $250, 4th place $200 (plus trophies); top state teams receive an all-expenses-paid trip (lodging/meals, excluding travel) to the in-person National Finals in Atlanta, GA.",
+      "participation_format": "team",
+      "location": "Varies by state (state-level competitions run through local Councils on Economic Education); National Semi-Finals held online; 2026 National Finals held in Atlanta, Georgia.",
+      "competition_dates": "2026 cycle (concluded, per official rules PDF): Online National Semi-Finals April 20-24, 2026; National Finals May 27-29, 2026 in Atlanta, GA. 2026-2027 cycle dates were not published on the official councilforeconed.org site as of verification.",
+      "deadline": "VERIFY",
+      "estimated_deadline": null,
+      "eligibility": {
+        "grade_levels": [
+          "high_school"
+        ],
+        "citizenship_requirement": "VERIFY",
+        "fields_of_study": [
+          "business",
+          "social_sciences"
+        ],
+        "essay_required": false,
+        "special_requirements": [
+          {
+            "kind": "competition_or_finalist",
+            "label": "Qualify through your state competition",
+            "details": "Teams reach the national challenge by winning their state round."
+          }
+        ]
+      },
+      "description": "The National Economics Challenge is a team-based economics competition for U.S. high school students, run by the Council for Economic Education, in which state-champion teams advance through an online National Semi-Finals to an in-person National Finals featuring a Critical Thinking Round and an oral Quiz Bowl.",
+      "application_requirements": [
+        {
+          "id": "form-eligible-team",
+          "label": "Form a team of 3-4 students from the same school, club, or afterschool program (or eligible homeschool group), with a supervising coach affiliated with that...",
+          "details": "Form a team of 3-4 students from the same school, club, or afterschool program (or eligible homeschool group), with a supervising coach affiliated with that school/organization. Teams are placed in the David Ricardo Division (one or fewer general economics courses) or the Adam Smith Division (AP/IB/multiple economics courses); any student with more than one economics course must compete in Adam Smith.",
+          "required": true,
+          "source_url": "https://www.councilforeconed.org/wp-content/uploads/2026-NEC-Rules-and-Eligibility-1.pdf"
+        },
+        {
+          "id": "find-state-program",
+          "label": "Locate and connect with your state's Council on Economic Education program to join the state-level competition.",
+          "details": "The official CEE page directs students to 'Find a Program in Your State' to enter, since NEC is administered through state affiliates.",
+          "required": true,
+          "source_url": "https://www.councilforeconed.org/programs/for-students/national-economic-challenge/"
+        },
+        {
+          "id": "register-state-competition",
+          "label": "Register your team for the state competition through the national registration portal.",
+          "details": "Official rules state: 'To register for your state competition visit: https://econchallenge.unl.edu/'.",
+          "required": true,
+          "source_url": "https://www.councilforeconed.org/wp-content/uploads/2026-NEC-Rules-and-Eligibility-1.pdf"
+        },
+        {
+          "id": "win-state-championship",
+          "label": "Win your state championship in your division to earn the state's spot in the Online National Semi-Finals.",
+          "details": "Each state identifies one state champion team per division (David Ricardo and Adam Smith) to advance.",
+          "required": true,
+          "source_url": "https://www.councilforeconed.org/wp-content/uploads/2026-NEC-Rules-and-Eligibility-1.pdf"
+        },
+        {
+          "id": "compete-semifinals-finals",
+          "label": "Compete in the Online National Semi-Finals (45-question multiple-choice exam); top-scoring teams advance to the in-person National Finals (Critical Thinking...",
+          "details": "Compete in the Online National Semi-Finals (45-question multiple-choice exam); top-scoring teams advance to the in-person National Finals (Critical Thinking Round and Quiz Bowl) in Atlanta.",
+          "required": true,
+          "source_url": "https://www.councilforeconed.org/wp-content/uploads/2026-NEC-Rules-and-Eligibility-1.pdf"
+        }
+      ],
+      "verification": {
+        "source_url": "https://www.councilforeconed.org/programs/for-students/national-economic-challenge/",
+        "last_verified_at": "2026-07-08"
+      },
+      "verified": true
+    },
+    {
+      "id": "poetry-out-loud",
+      "name": "Poetry Out Loud",
+      "host": "National Endowment for the Arts, in partnership with the Poetry Foundation and state/jurisdictional arts agencies",
+      "category": "Poetry/Performing Arts",
+      "url": "https://www.poetryoutloud.org/about-poetry-out-loud/",
+      "cost": "Free to participants; no participation fees. Program provides free lesson plans, educational materials, and an online poem anthology.",
+      "cost_category": "free",
+      "recognition": "National Finals distribute $50,000 total annually in awards and school/organizational stipends; National Champion receives $20,000; each state/jurisdiction champion receives $200 plus an all-expenses-paid trip (with adult chaperone) to the National Finals in Washington, DC, and their school/organization receives an additional $500 stipend.",
+      "participation_format": "individual",
+      "location": "Nationwide - competitions run at school, local/regional, and state/jurisdictional levels; National Finals held in Washington, DC",
+      "competition_dates": "2026-2027 cycle: state finals occur by early March 2027 (state-by-state dates vary); National Finals Events held Monday, April 26 - Wednesday, April 28, 2027 in Washington, DC",
+      "deadline": "2027-03-07",
+      "estimated_deadline": null,
+      "eligibility": {
+        "grade_levels": [
+          "high_school"
+        ],
+        "citizenship_requirement": "VERIFY",
+        "fields_of_study": [
+          "arts",
+          "literature"
+        ],
+        "essay_required": false,
+        "special_requirements": [
+          {
+            "kind": "competition_or_finalist",
+            "label": "Advance from classroom to school to state",
+            "details": "Poetry Out Loud finalists advance from classroom, school, and state contests."
+          }
+        ]
+      },
+      "description": "Poetry Out Loud is a national poetry recitation competition for high school students, run by the National Endowment for the Arts with participating state and jurisdictional arts agencies, designed to build public speaking skills, confidence, and knowledge of literary history. Students advance through classroom/school, regional/state, and national levels, culminating in the National Finals in Washington, DC.",
+      "application_requirements": [
+        {
+          "id": "contact-state-coordinator",
+          "label": "Contact your state's Poetry Out Loud coordinator to sign up your school or organization as an official participant",
+          "details": "Participating state and jurisdictional arts agencies recruit high schools to take part in the official program; schools/organizations must register with their state coordinator before running a competition.",
+          "required": true,
+          "source_url": "https://poetryoutloud.org/faq/"
+        },
+        {
+          "id": "organize-school-competition",
+          "label": "Organize a classroom or school-level competition",
+          "details": "Identify 1-2 lead organizers/coordinators and staff needed roles (emcee, judges, prompter, score tabulator); competitions can be held in-person or virtually.",
+          "required": true,
+          "source_url": "https://poetryoutloud.org/teachers-and-organizers/organize-a-competition/"
+        },
+        {
+          "id": "select-poems-from-anthology",
+          "label": "Students select and recite poems from the official Poetry Out Loud online anthology",
+          "details": "Poems must be chosen from the 'Poetry Out Loud America 250 Online Anthology' provided on the official site.",
+          "required": true,
+          "source_url": "https://poetryoutloud.org/teachers-and-organizers/organize-a-competition/"
+        },
+        {
+          "id": "advance-through-levels",
+          "label": "Winners advance from school level to regional/state competition, then to the National Finals",
+          "details": "Students cannot advance to state finals without first competing at a lower (school/local) level. State finals must be completed by the State Contest Deadline.",
+          "required": true,
+          "source_url": "https://www.poetryoutloud.org/about-poetry-out-loud/key-dates/"
+        },
+        {
+          "id": "state-champion-registration",
+          "label": "State/jurisdiction champions and their chaperone must complete registration for National Finals",
+          "details": "State Champion and Chaperone Registration Deadline is Wednesday, March 10, 2027, ahead of National Finals Events (April 26-28, 2027) in Washington, DC.",
+          "required": true,
+          "source_url": "https://www.poetryoutloud.org/about-poetry-out-loud/key-dates/"
+        }
+      ],
+      "verification": {
+        "source_url": "https://www.poetryoutloud.org/about-poetry-out-loud/key-dates/",
+        "last_verified_at": "2026-07-08"
+      },
+      "verified": true
+    },
+    {
+      "id": "technovation-girls",
+      "name": "Technovation Girls",
+      "host": "Technovation",
+      "category": "Technology/Entrepreneurship",
+      "url": "https://technovationchallenge.org/competition/",
+      "cost": "Free to participate; local program partners may incur their own costs and participants must provide their own technology",
+      "cost_category": "free",
+      "recognition": "Grand Prize winners (1 per division, 3 total): $750/person educational stipend. Finalist teams (15 selected globally): $500/person educational stipend plus travel/accommodations (~$10,000/team value) to the in-person World Summit in Bengaluru, India. Regional Honors teams (15 selected): $250/person educational stipend. Semifinalists are also eligible for non-monetary Special Prizes (Climate Prize, EmpowerED Excellence Award, Break the Scroll Prize).",
+      "participation_format": "either",
+      "location": "Global/international; teams participate locally or virtually, with in-person Regional Pitch Events in some areas; Finals/World Summit held in Bengaluru, India (October 2026 for the 2025-2026 season)",
+      "competition_dates": "2025-2026 season: registration Aug 13, 2025 - Mar 18, 2026; submission deadline Apr 20, 2026, 5pm PDT; Quarterfinal judging Apr 23 - approx. May 31, 2026; further judging rounds through mid-June 2026; World Summit (Finals) in Bengaluru, India, October 2026",
+      "deadline": "VERIFY",
+      "estimated_deadline": "2026-03-18",
+      "eligibility": {
+        "grade_levels": [
+          "middle_school",
+          "high_school"
+        ],
+        "citizenship_requirement": "any",
+        "fields_of_study": [
+          "technology",
+          "computer_science",
+          "business"
+        ],
+        "essay_required": false
+      },
+      "description": "Technovation Girls is a free, global technology and entrepreneurship competition in which teams of girls, nonbinary, and gender-nonconforming youth ages 8-18 build a mobile/web app or AI solution to a real-world problem in their community. Teams submit a pitch video, technical video, source code, and supporting materials for judging, with top teams advancing to an in-person World Summit.",
+      "application_requirements": [
+        {
+          "id": "register-team",
+          "label": "Register a team of 1-5 students (girls, nonbinary, trans, or gender-nonconforming) during the season registration window",
+          "details": "Registration for the 2025-2026 season ran Aug 13, 2025 - Mar 18, 2026 at my.technovationchallenge.org. All team members need individual profiles (name, age, location) and parental consent.",
+          "required": true,
+          "source_url": "https://technovationchallenge.org/submission-guidelines/"
+        },
+        {
+          "id": "build-project",
+          "label": "Use the free Technovation curriculum to build a tech solution (app/AI project) addressing a real-world community problem",
+          "details": null,
+          "required": true,
+          "source_url": "https://technovationchallenge.org/"
+        },
+        {
+          "id": "prepare-deliverables",
+          "label": "Prepare required submission materials: project description, ethics/safety statement, pitch video (max 3 min), technical video (max 3 min), source code, and...",
+          "details": "Prepare required submission materials: project description, ethics/safety statement, pitch video (max 3 min), technical video (max 3 min), source code, and learning journey Senior Division additionally requires a Business Canvas and bibliography; Junior Division requires a User Adoption Plan and bibliography; Beginner Division has a shortened (200-word) learning journey. All written items must be in English.",
+          "required": true,
+          "source_url": "https://technovationchallenge.org/submission-guidelines/"
+        },
+        {
+          "id": "agree-honor-code",
+          "label": "Agree to the Technovation Honor Code confirming the submission was created by the students on the team",
+          "details": "Mentors may help teams develop skills but cannot create, design, develop, or write any part of the team's submission deliverables.",
+          "required": true,
+          "source_url": "https://technovationchallenge.org/competition/"
+        },
+        {
+          "id": "submit-by-deadline",
+          "label": "Submit all deliverables by the season submission deadline",
+          "details": "For the 2025-2026 season: April 20, 2026 at 5pm PDT.",
+          "required": true,
+          "source_url": "https://technovationchallenge.org/submission-guidelines/"
+        }
+      ],
+      "verification": {
+        "source_url": "https://technovationchallenge.org/competition/",
+        "last_verified_at": "2026-07-08"
+      },
+      "verified": true
+    },
+    {
+      "id": "breakthrough-junior-challenge",
+      "name": "Breakthrough Junior Challenge",
+      "host": "Breakthrough Prize Foundation",
+      "category": "Science Communication",
+      "url": "https://breakthroughjuniorchallenge.org/",
+      "cost": "Free - \"No Purchase Or Payment Necessary To Enter Or Win\"",
+      "cost_category": "free",
+      "recognition": "$250,000 post-secondary scholarship for the winning student, up to $100,000 for a science lab at the winner's school, and $50,000 for a teacher of the winner's choice",
+      "participation_format": "individual",
+      "location": "Global - open worldwide; participants are grouped into one of seven regions (North America; South/Central America, Mexico & Caribbean; Europe; Asia including China; India; Middle East/Africa; Australia/New Zealand) based on the country listed on their ID",
+      "competition_dates": "Video submission window ends September 15, 2026; Peer-to-Peer Review September 17-30, 2026; Popular Vote November 24 - December 9, 2026; winner announcement date not yet posted",
+      "deadline": "2026-09-15",
+      "estimated_deadline": null,
+      "eligibility": {
+        "grade_levels": [],
+        "citizenship_requirement": "any",
+        "fields_of_study": [
+          "mathematics",
+          "natural_sciences",
+          "science"
+        ],
+        "essay_required": false
+      },
+      "description": "The Breakthrough Junior Challenge is an annual global science video competition in which entrants aged 13-18 create an original video (2 minutes or less) explaining a concept in the life sciences, physics, or mathematics. The winner receives a $250,000 college scholarship, plus prizes for their teacher and school science lab.",
+      "application_requirements": [
+        {
+          "id": "create-account-and-enter",
+          "label": "Sign up / log in on the official site and click \"Enter\" to start the application",
+          "details": "Click 'Enter' at the top of the webpage and follow the on-screen instructions to complete the application form.",
+          "required": true,
+          "source_url": "https://breakthroughjuniorchallenge.org/"
+        },
+        {
+          "id": "submit-original-video",
+          "label": "Create and submit an original video (2:00 or under, in English) explaining a life sciences, physics, or mathematics concept",
+          "details": "Video must be two minutes (2:00) or under according to the clock on YouTube, must be in English (including scripts/voiceovers), and must not be marked private; must comply with YouTube Community Guidelines.",
+          "required": true,
+          "source_url": "https://breakthroughjuniorchallenge.org/rules"
+        },
+        {
+          "id": "sole-creator",
+          "label": "Be the sole creator of the submission",
+          "details": "You must be the sole creator of your submission; you can brainstorm in a group, have others review your application, and use friends as actors, but group/team submissions are not eligible.",
+          "required": true,
+          "source_url": "https://breakthroughjuniorchallenge.org/rules"
+        },
+        {
+          "id": "peer-review",
+          "label": "Score at least 5 other entries during the Peer-to-Peer Review period",
+          "details": "Entrants must review at least five (5) other Entries from other entrants, by September 30, 2026 at 11:59 PM PDT, to validate their own participation.",
+          "required": true,
+          "source_url": "https://breakthroughjuniorchallenge.org/rules"
+        },
+        {
+          "id": "one-entry-limit",
+          "label": "Submit only one entry per person and confirm eligibility (age 13-18, no prior winners)",
+          "details": "Limit of one (1) Entry per person during the Competition Period; must be 13 by May 11, 2026 and not yet 19 by October 1, 2026; previous Competition winners are not eligible.",
+          "required": true,
+          "source_url": "https://breakthroughjuniorchallenge.org/rules"
+        },
+        {
+          "id": "parental-consent",
+          "label": "Obtain parent/legal guardian permission if a minor",
+          "details": "If You are a minor, You must have Your parent's or legal guardian's permission to enter.",
+          "required": true,
+          "source_url": "https://breakthroughjuniorchallenge.org/rules"
+        }
+      ],
+      "verification": {
+        "source_url": "https://breakthroughjuniorchallenge.org/rules",
+        "last_verified_at": "2026-07-08"
+      },
+      "verified": true
+    },
+    {
+      "id": "wharton-global-hs-investment-competition",
+      "name": "Wharton Global High School Investment Competition",
+      "host": "Wharton Global Youth Program, University of Pennsylvania",
+      "category": "Business/Finance",
+      "url": "https://globalyouth.wharton.upenn.edu/competitions/investment-competition/",
+      "cost": "free",
+      "cost_category": "free",
+      "recognition": "Top 50 teams (by written strategy review) advance to virtual Semifinals; top 10 teams advance to the Global Finale at Wharton in Philadelphia, presenting before a panel of investment-industry judges. All students on the 10 Global Finalist teams get the course fee waived for Wharton's online course 'Understanding Your Money.' The Global Champion school may fast-track one team to next year's Semifinals. Winners are judged on strategy quality/articulation, not portfolio performance.",
+      "participation_format": "team",
+      "location": "Virtual (trading simulation, deliverables, and Semifinal presentations); Global Finale held in person (or virtually, per rules page) at the Wharton School, Philadelphia, PA, USA",
+      "competition_dates": "Runs as a 10-week trading/strategy cycle; the just-concluded 2025-2026 cycle ran from registration in mid-2025 through a Global Finale on April 25-26, 2026. Exact 2026-2027 competition dates are not yet posted (registration opens August 2026).",
+      "deadline": "VERIFY",
+      "estimated_deadline": "2025-09-18",
+      "eligibility": {
+        "grade_levels": [
+          "high_school_freshman",
+          "high_school_sophomore",
+          "high_school_junior",
+          "high_school_senior"
+        ],
+        "citizenship_requirement": "any",
+        "fields_of_study": [
+          "business"
+        ],
+        "essay_required": false
+      },
+      "description": "The Wharton Global High School Investment Competition is a free, 10-week team-based investing challenge in which high school students (grades 9-12) analyze a client case study, build an investment strategy, and trade a virtual portfolio using the Wharton Investment Simulator (WInS), with top teams advancing to Semifinals and a Global Finale judged by investment professionals at Wharton in Philadelphia.",
+      "application_requirements": [
+        {
+          "id": "advisor-registers-team",
+          "label": "Have a teacher/educator advisor complete initial team registration",
+          "details": "Only advisors may register a team (students are not permitted to register); the advisor supplies the designated student team leader's information at initial sign-up.",
+          "required": true,
+          "source_url": "https://globalyouth.wharton.upenn.edu/investment-competition-registration-requirement/"
+        },
+        {
+          "id": "complete-step-2-registration",
+          "label": "Complete Step 2 registration with full team roster by the posted deadline",
+          "details": "In the prior (2025-2026) cycle, Step 2 registration was due September 18, 2025, with the official team roster due October 17. Exact 2026-2027 dates not yet posted.",
+          "required": true,
+          "source_url": "https://globalyouth.wharton.upenn.edu/investment-competition-registration-requirement/"
+        },
+        {
+          "id": "form-eligible-team",
+          "label": "Form a team of 4-6 students from the same high school with a teacher advisor",
+          "details": "All team members must attend the same institution and cannot participate on multiple teams; the team leader must be at least 16 years old at competition start; paid advisors/consultants are prohibited.",
+          "required": true,
+          "source_url": "https://globalyouth.wharton.upenn.edu/competitions/investment-competition/rules-roles/"
+        },
+        {
+          "id": "analyze-case-study-and-trade",
+          "label": "Analyze the client case study and build a portfolio using the Wharton Investment Simulator (WInS)",
+          "details": "Teams develop and execute an investment strategy with virtual cash over the 10-week trading window.",
+          "required": true,
+          "source_url": "https://globalyouth.wharton.upenn.edu/competitions/investment-competition/"
+        },
+        {
+          "id": "submit-two-deliverables",
+          "label": "Submit two written strategy deliverables during the competition",
+          "details": "Teams must submit two deliverables; the top 50 teams are selected for Semifinals based on review of these written reports.",
+          "required": true,
+          "source_url": "https://globalyouth.wharton.upenn.edu/competitions/investment-competition/"
+        },
+        {
+          "id": "advance-semifinals-finale",
+          "label": "If selected, present at virtual Semifinals; top 10 teams compete at the in-person/virtual Global Finale",
+          "details": "Global Finalists present before industry judges at Wharton in Philadelphia; participants are responsible for their own travel/lodging costs.",
+          "required": false,
+          "source_url": "https://globalyouth.wharton.upenn.edu/competitions/investment-competition/rules-roles/"
+        }
+      ],
+      "verification": {
+        "source_url": "https://globalyouth.wharton.upenn.edu/competitions/investment-competition/",
+        "last_verified_at": "2026-07-08"
+      },
+      "verified": true
+    },
+    {
+      "id": "naqt-high-school-championship",
+      "name": "NAQT High School National Championship Tournament (HSNCT)",
+      "host": "National Academic Quiz Tournaments, LLC (NAQT)",
+      "category": "Quiz Bowl / Academic Trivia",
+      "url": "https://www.naqt.com/hsnct/index.jsp",
+      "cost": "VERIFY",
+      "cost_category": "paid",
+      "recognition": "Team trophies (historically top 48 teams, i.e. those tied for 33rd place or better) and player medals (up to six per team); individual All-Star awards (historically top 40 scorers) and Freshman/Sophomore Rising Star awards (historically top 10 each), based on points per tossup heard in preliminary rounds. Exact cutoffs are set per-cycle; figures above are from the 2026 HSNCT and should be reverified for the 2027 cycle.",
+      "participation_format": "team",
+      "location": "Atlanta Marriott Marquis and Hilton Atlanta, Atlanta, Georgia (two connected hotels)",
+      "competition_dates": "May 28-30, 2027 (Memorial Day weekend)",
+      "deadline": "VERIFY",
+      "estimated_deadline": null,
+      "eligibility": {
+        "grade_levels": [
+          "high_school"
+        ],
+        "citizenship_requirement": "any",
+        "fields_of_study": [
+          "humanities",
+          "literature",
+          "mathematics",
+          "natural_sciences",
+          "science",
+          "social_sciences",
+          "arts",
+          "music"
+        ],
+        "essay_required": false,
+        "special_requirements": [
+          {
+            "kind": "competition_or_finalist",
+            "label": "Qualify at a sanctioned tournament or earn an at-large bid",
+            "details": "Teams qualify for the HSNCT via NAQT-sanctioned tournaments or at-large bids."
+          }
+        ]
+      },
+      "description": "The HSNCT is NAQT's premier high school quiz bowl event, held at the end of each school year and featuring the top quiz bowl teams from across the United States and, increasingly, the world. Teams qualify by their performance at regular-season tournaments using NAQT questions, or by winning a qualifying varsity state/regional championship.",
+      "application_requirements": [
+        {
+          "id": "qualify-via-regular-season-or-championship",
+          "label": "Qualify by finishing in the top 15% of a varsity high-school tournament using NAQT questions (min. 3 schools), or by winning a varsity state/regional...",
+          "details": "Qualify by finishing in the top 15% of a varsity high-school tournament using NAQT questions (min. 3 schools), or by winning a varsity state/regional championship Qualification is earned through on-field performance, not a written application. Wildcard invitations are also considered for strong teams that narrowly missed automatic qualification, particularly those with geographic barriers to NAQT events.",
+          "required": true,
+          "source_url": "https://www.naqt.com/hsnct/qualification.jsp"
+        },
+        {
+          "id": "register-team-and-pay-fee",
+          "label": "Register the qualified team online and pay the per-team base registration fee before the capped field fills",
+          "details": "The field is capped (320 teams in the 2026 cycle) and has historically filled before the school year ends; registering (not merely qualifying) guarantees a spot. The 2026 fee was $920/team; the 2027 fee had not been published as of this search.",
+          "required": true,
+          "source_url": "https://www.naqt.com/hsnct/2026/details.jsp"
+        },
+        {
+          "id": "submit-participation-agreements",
+          "label": "Submit signed participation agreements for every player (plus parent/guardian signature), coach, and chaperone by the finalized-roster deadline",
+          "details": "Agreements must be handwritten (not typed) and emailed as a scan/photo to participate@naqt.com. Missing the deadline can be treated as a cancellation.",
+          "required": true,
+          "source_url": "https://www.naqt.com/hsnct/2026/details.jsp"
+        },
+        {
+          "id": "arrange-adult-chaperone",
+          "label": "Arrange one official chaperone (age 21+) dedicated to the team, present for travel and able to reach the team within 10 minutes at all times",
+          "details": "One chaperone cannot cover multiple teams, and the chaperone must complete their own participation agreement.",
+          "required": true,
+          "source_url": "https://www.naqt.com/hsnct/2026/details.jsp"
+        },
+        {
+          "id": "finalize-team-roster",
+          "label": "Finalize the team roster by the announced deadline ahead of the tournament",
+          "details": "Rosters generally must match/derive from the qualifying event's eligible players under the NAQT High School Eligibility Rules.",
+          "required": true,
+          "source_url": "https://www.naqt.com/hsnct/2026/details.jsp"
+        }
+      ],
+      "verification": {
+        "source_url": "https://www.naqt.com/hsnct/index.jsp",
+        "last_verified_at": "2026-07-08"
+      },
+      "verified": true
     }
   ]
 }
