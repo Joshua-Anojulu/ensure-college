@@ -501,16 +501,76 @@ function normalizeSearch(text) {
   return String(text || "").toLowerCase();
 }
 
+// Levenshtein distance capped at maxDist, bailing out early once every cell in
+// a row exceeds the cap. Returns maxDist + 1 to signal "further than allowed".
+function boundedEditDistance(a, b, maxDist) {
+  const al = a.length;
+  const bl = b.length;
+  if (Math.abs(al - bl) > maxDist) {
+    return maxDist + 1;
+  }
+  let prev = Array.from({ length: bl + 1 }, (_, i) => i);
+  for (let i = 1; i <= al; i++) {
+    const curr = [i];
+    let rowMin = i;
+    for (let j = 1; j <= bl; j++) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      const value = Math.min(prev[j] + 1, curr[j - 1] + 1, prev[j - 1] + cost);
+      curr[j] = value;
+      if (value < rowMin) {
+        rowMin = value;
+      }
+    }
+    if (rowMin > maxDist) {
+      return maxDist + 1;
+    }
+    prev = curr;
+  }
+  return prev[bl];
+}
+
+// A query token matches a field if it is a substring (fast, exact) or, for
+// tokens long enough to be safe, within a small edit distance of some word in
+// the field. This tolerates typos ("standford") without re-ranking results.
+function tokenMatchesHaystacks(token, haystacks) {
+  if (haystacks.some((value) => value.includes(token))) {
+    return true;
+  }
+  if (token.length < 4) {
+    return false;
+  }
+  const maxDist = token.length <= 6 ? 1 : 2;
+  for (const value of haystacks) {
+    for (const word of value.split(/[^a-z0-9]+/)) {
+      if (word.length < 3) {
+        continue;
+      }
+      if (boundedEditDistance(token, word, maxDist) <= maxDist) {
+        return true;
+      }
+      // Typo inside a longer name: compare against a length-matched prefix.
+      if (word.length > token.length + maxDist) {
+        const prefix = word.slice(0, token.length + maxDist);
+        if (boundedEditDistance(token, prefix, maxDist) <= maxDist) {
+          return true;
+        }
+      }
+    }
+  }
+  return false;
+}
+
 function itemMatchesSearch(values, query) {
   // Require every whitespace-separated word to appear in at least one field
   // (AND across words, OR across fields), so multi-word queries narrow instead
-  // of looking for one literal substring.
+  // of looking for one literal substring. Each token may match exactly or via
+  // small typo tolerance.
   const tokens = normalizeSearch(query).split(/\s+/).filter(Boolean);
   if (!tokens.length) {
     return true;
   }
   const haystacks = values.filter(Boolean).map(normalizeSearch);
-  return tokens.every((token) => haystacks.some((value) => value.includes(token)));
+  return tokens.every((token) => tokenMatchesHaystacks(token, haystacks));
 }
 
 function noResultsMessage(query, noun) {
