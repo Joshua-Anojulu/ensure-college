@@ -1,10 +1,10 @@
 # EnsureCollege
 
-**Live demo:** [ensurecollege.com](https://ensurecollege.com/)
+**Live:** [ensurecollege.com](https://ensurecollege.com/)
 
-EnsureCollege is a **curated scholarship and summer-program planner** for U.S. students — a portfolio-grade web app backed by manually verified datasets of real scholarships and elite pre-college programs. Students build a profile once, see ranked matches with transparent scoring, track applications, and get practical essay guidance from a server-side LLM. Optional free accounts save the profile and bookmark scholarships between visits.
+EnsureCollege is a **college-planning web app** for U.S. high-school students. One profile finds the scholarships, elite summer programs, and academic competitions that fit; a built-in planning layer turns saved opportunities into an application plan with tracked deadlines, source-linked requirement checklists, recommendation-letter tracking, calendar export, and weekly email reminders. The catalog is curated and manually verified against official sponsor pages, and every opportunity has its own indexable public page.
 
-> **What this is:** a focused demo with honest data provenance, not a comprehensive scholarship search engine. Always confirm eligibility and deadlines on each sponsor's official site.
+> **What this is:** a student-built planner with honest data provenance, not a comprehensive search engine. Always confirm eligibility and deadlines on each sponsor's official site.
 
 ## Screenshots
 
@@ -12,27 +12,37 @@ EnsureCollege is a **curated scholarship and summer-program planner** for U.S. s
 | --- | --- | --- |
 | ![Homepage hero and profile form](docs/screenshots/hero.png) | ![Ranked scholarship matches](docs/screenshots/match-results.png) | ![Match card with scoring reasons](docs/screenshots/match-card.png) |
 
+Screenshots are captured with `scripts/capture_readme_screenshots.py` and may trail the live UI.
+
 ## How it works
 
-**Matching.** The app scores each scholarship with a transparent additive algorithm over field-of-study overlap, demographic tag overlap, an optional target-school match, activity keywords found in the scholarship description, and a need-based signal for students who indicated financial need. GPA, grade level, state, citizenship, and passed deadlines act as hard filters only when the dataset holds a real value (not a `VERIFY` placeholder). Students choose their actual class year; broad sponsor rules such as `high_school` or `college_undergraduate` are handled internally so a senior still sees awards open to all high school students, and a junior still sees broad undergraduate awards. Open-to-all scholarships receive a lower field score than specific field matches. A scholarship with a specific field or school but no corresponding student overlap stays visible as a **Possible** match with an eligibility caveat, never a **Strong** one. Scholarships with niche requirements the profile cannot verify (for example nomination, membership, finalist status, military affiliation, or no direct application) stay visible in a separate **Special opportunities to check** lane instead of being treated like ordinary matches. Every result shows human-readable reasons plus score-component chips. The results view can sort by fit, deadline, award, or name and filter by tier, minimum score, essay requirement, field/school/background overlap, closing-soon status, verified data, and special-check status. These display filters run in the browser over the current match response, which is appropriate for the small curated dataset.
+**Three opportunity lanes, one profile.** The profile form collects GPA, grade level, citizenship, state, financial-need level, fields of study, optional demographic tags, target schools, and activities across three short steps. The same profile powers three matchers:
 
-**Elite summer programs.** The same profile also powers a smaller source-verified summer-program catalog. Program matching reuses the scholarship gates for grade level, GPA, citizenship, field overlap, and deadlines, then adds a practical financial-access signal for free or stipend programs. Program cards show cost, format, dates, source provenance, and source-linked application steps. Programs with gates the profile cannot verify, such as a school nomination, are separated into a **Special programs to check** lane instead of being treated like ordinary Strong fits.
+- **Scholarships** are scored with a transparent additive algorithm over field-of-study overlap, demographic overlap, target-school match, activity keywords, and a need-based signal. GPA, grade level, state, citizenship, and passed deadlines act as hard gates only when the dataset holds a real value (never on a `VERIFY` placeholder). Results split into **Strong**, **Possible**, and **Special opportunities to check** (niche gates like nomination, membership, or finalist status the profile cannot verify).
+- **Elite summer programs** reuse the same gates and add a financial-access signal for free or stipend-paying programs.
+- **Competitions** mirror the program matcher over a curated set of national academic competitions (olympiads, research fairs, essay and speech contests), with qualification-gated events surfaced as special checks.
 
-**Essay advice.** When a student clicks **Get essay advice** on a result card, the backend sends the student's actual profile inputs and the scholarship description to the Anthropic API. The response suggests essay angles tied to the student's stated activities and background, notes what the sponsor likely values, and flags one common mistake. A separate **Review my draft** action sends a draft the student pastes in and returns targeted feedback (strengths, the highest-impact improvements, alignment with the sponsor, and mechanics) without rewriting the essay for them. Before any AI feature sends profile, resume, or essay content to Anthropic, the browser shows a clear consent prompt. The API key never leaves the server.
+Every match shows human-readable reasons plus score-component chips, and each lane has its own filters: match quality, sort (fit, name, deadline; award for scholarships), a minimum-fit-score slider, and applicable checkboxes (field match, closing soon, verified data; essay/school/background filters where they apply). Long result lists and the full catalog render in batches of 30 with a "Show more" control.
 
-**Resume auto-fill.** A student can upload a PDF resume or paste its text instead of filling the form by hand. With consent, the server sends it to the Anthropic API with a tool schema constrained to the app's vocabulary, and the model returns a structured profile that pre-fills the form. Every value is filtered against the allowed vocabulary on the server, so only known tags reach the form, and the student reviews and completes the profile before matching. Demographics are set only when the resume states them explicitly, uploaded files are not stored, and both file and text sizes are capped before content is sent upstream.
+**60-second preview.** The hero embeds a live three-question demo (GPA, grade, interest) that runs the real matcher without an account, shows three matches, and reports how many more a full profile unlocks. Residency gates are flagged rather than applied in preview mode.
 
-**Accounts.** Accounts are optional. Without one, the app works exactly as before and keeps no data between visits. With an account (email and password), the student's profile is saved and prefilled on their next visit, and they can bookmark scholarships and summer programs to a personal saved list. Saved items double as an application tracker: each one carries a status (interested, drafting, submitted, awarded, or rejected) and free-text notes, so the student can see where every application stands. Verified pilot awards and all seed summer programs include persistent, source-linked application checklists, so students can see the next required step instead of only a match score. Tracker cards use their application status, not a stale match tier, as their visual signal. Scholarship deadlines export to an `.ics` calendar file. Passwords are stored as bcrypt hashes, never in plain text. The login is kept in a signed, httponly session cookie, so the session identifier is not readable by client JavaScript.
+**Public opportunity pages.** Every catalog entry has a server-rendered page (for example `/scholarships/coca-cola-scholars`) with award, deadline, eligibility, application requirements, verification status with a link to the official source, and honest labeling for estimated or unverified data. A crawlable [`/browse`](https://ensurecollege.com/browse) directory and a full `sitemap.xml` make the catalog indexable; JSON-LD structured data uses honest schema.org types (`MonetaryGrant`, `EducationalOccupationalProgram`).
+
+**The planning layer.** With a free account (email/password or Google sign-in), saved opportunities become an application plan: per-item status (interested, drafting, submitted, awarded, rejected), notes, persistent source-linked application checklists, a deadline timeline, essay-reuse themes, requirement comparisons, and a recommendation-letter tracker (who you asked, for what, and where each letter stands). Verified deadlines export to an `.ics` calendar file. An opt-in weekly email digest covers saved items closing within 14 days, plus an alert when newly added opportunities are a strong match for the saved profile.
+
+**Accounts and privacy.** Accounts are optional; without one, nothing is retained between visits. Passwords are stored as bcrypt hashes; sessions use signed, httponly cookies; Google OAuth is supported. Account deletion removes the profile and every tracked opportunity.
+
+**AI features (dormant by default).** Earlier releases included Anthropic-powered essay advice, draft review, and resume auto-fill. That code remains but is gated behind `AI_FEATURES_ENABLED` (default `false`), so no student data is sent to any AI provider unless the flag is deliberately enabled.
 
 ## Tech stack
 
-- **Backend:** Python, FastAPI
-- **Frontend:** Vanilla HTML, CSS, and JavaScript (served by FastAPI), with a responsive light/dark interface (light by default, with a dark-mode toggle that remembers your choice and respects your OS setting) and source-linked match cards
-- **Curated data:** Pydantic models, local JSON files for scholarships and elite summer programs loaded at startup
-- **Accounts and saved data:** SQLAlchemy ORM, SQLite locally and Postgres in production, bcrypt password hashing, signed session cookies
-- **Schema migrations:** Alembic, run automatically at startup and before the Render web service starts
-- **LLM:** Anthropic API (Claude Sonnet) for essay advice, server-side only
-- **Transactional email:** Resend for password-reset links
+- **Backend:** Python, FastAPI; Jinja2 for the server-rendered opportunity/browse pages
+- **Frontend:** Vanilla HTML, CSS, and JavaScript served by FastAPI; a light-only, token-driven design system; batched rendering and View Transitions on lane switches
+- **Curated data:** Pydantic models over local JSON files (scholarships, summer programs, competitions) loaded at startup
+- **Accounts and saved data:** SQLAlchemy ORM, SQLite locally and Neon Postgres (pooled) in production, bcrypt hashing, signed session cookies, Google OAuth via Authlib
+- **Schema migrations:** Alembic (build-time on Vercel; automatic at startup elsewhere)
+- **Rate limiting:** Upstash Redis in production, in-memory fallback locally
+- **Email:** Resend for password resets and the weekly reminder/alert digest (Vercel cron)
 
 ## Run locally
 
@@ -42,264 +52,118 @@ EnsureCollege is a **curated scholarship and summer-program planner** for U.S. s
 python -m venv .venv
 ```
 
-Windows:
-
-```bash
-.venv\Scripts\activate
-```
-
-macOS or Linux:
-
-```bash
-source .venv/bin/activate
-```
+Windows: `.venv\Scripts\activate` · macOS/Linux: `source .venv/bin/activate`
 
 ### 2. Install dependencies
 
 ```bash
 pip install -r requirements.txt
+pip install -r requirements-dev.txt  # for tests
+alembic upgrade head                 # the app also does this at startup
 ```
 
-For development and tests:
+### 3. Configure the environment
 
 ```bash
-pip install -r requirements-dev.txt
+copy .env.example .env   # cp on macOS/Linux
 ```
 
-Apply the current database schema (the app also does this automatically at startup):
-
-```bash
-alembic upgrade head
-```
-
-### 3. Set the API key
-
-Copy the example env file and add your key:
-
-```bash
-copy .env.example .env
-```
-
-On macOS or Linux, use `cp .env.example .env`.
-
-Edit `.env` and set:
-
-```
-ANTHROPIC_API_KEY=your_key_here
-SESSION_SECRET=any_long_random_string
-```
-
-The real key belongs only in `.env`, which is gitignored. Do not put a real key in `.env.example`.
-
-`ANTHROPIC_API_KEY` is required for essay advice. Each request incurs Anthropic API usage cost. `SESSION_SECRET` signs login session cookies; any long random string works locally.
-
-`DATABASE_URL` is optional locally. When it is unset, the app creates a SQLite file (`scholarships4u.db`) in the project folder and uses it automatically, so accounts work with no extra setup.
+Set `SESSION_SECRET` (any long random string). Everything else is optional locally: without `DATABASE_URL` the app uses a local SQLite file; without Resend variables, password reset reports itself unavailable instead of pretending; `ANTHROPIC_API_KEY` only matters if you enable `AI_FEATURES_ENABLED`.
 
 ### 4. Start the server
 
 ```bash
-uvicorn app.main:app --reload
+uvicorn app.main:app --reload --port 8099
 ```
 
-Open the app at [http://127.0.0.1:8000/](http://127.0.0.1:8000/).
+Open [http://127.0.0.1:8099/](http://127.0.0.1:8099/). Port 8099 is the canonical dev port; the local Google OAuth configuration expects it.
 
-API docs: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
+## Deploy
 
-## Deploy (Render)
+Production runs on **Vercel** (`@vercel/python`, `api/index.py` + `vercel.json`) with Neon Postgres and Upstash Redis:
 
-This repo includes a [`render.yaml`](render.yaml) for [Render](https://render.com/) free-tier services. It defines both the web service and a free Postgres database.
+1. Import the repo into Vercel.
+2. Provision **Neon Postgres** (copy the **pooled** connection string; host contains `-pooler`) and **Upstash Redis** (REST URL + token).
+3. Set environment variables: `DATABASE_URL`, `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`, `RUN_MIGRATIONS_ON_STARTUP=false` (Alembic runs at build time), `PUBLIC_APP_URL`, `SESSION_SECRET`, `SESSION_COOKIE_SECURE=true`, `RESEND_API_KEY`, `EMAIL_FROM`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, and `CRON_SECRET` (guards the weekly reminder cron defined in `vercel.json`).
+4. Add the custom domain (`ensurecollege.com`) and set DNS as directed.
 
-1. Push the repository to GitHub (without `.env`).
-2. In Render, create a **Blueprint** from the repo. Render reads `render.yaml` and provisions:
-   - A web service with build `pip install -r requirements.txt` and start `uvicorn app.main:app --host 0.0.0.0 --port $PORT`.
-   - A free Postgres database, wired to the web service as `DATABASE_URL`.
-   - A generated `SESSION_SECRET`.
-   - `SESSION_COOKIE_SECURE=true` so session cookies are sent only over HTTPS.
-3. In the Render dashboard, set these secrets under **Environment Variables**:
-   - `ANTHROPIC_API_KEY` = your Anthropic API key
-   - `RESEND_API_KEY` = a Resend API key for transactional email
-   - `EMAIL_FROM` = a sender address verified in Resend, such as `EnsureCollege <no-reply@mail.ensurecollege.com>`
-   - `PUBLIC_APP_URL` = the public HTTPS URL for the app, such as `https://ensurecollege.com`
+`render.yaml` remains for a Render deployment (web service + free Postgres), and the app also runs on Railway with the standard `uvicorn` start command; see those platforms' docs. On any host, never commit secrets; set them in the host's environment UI.
 
-Do not commit API keys. Set them only in the host's environment variable UI. The app reads `DATABASE_URL` and switches from SQLite to Postgres automatically, so saved accounts persist across deploys.
-
-### Custom domain
-
-The production deployment is intended to run at [`https://ensurecollege.com`](https://ensurecollege.com). Add the custom domain in Render, copy Render's DNS records into the domain registrar, and wait for Render to verify the records and issue HTTPS. After the domain resolves, set `PUBLIC_APP_URL=https://ensurecollege.com` and redeploy so password-reset links, sitemap URLs, and social preview image URLs point at the public domain.
-
-### Password-reset email
-
-Password reset uses Resend over its HTTPS API. The app stores only a SHA-256 hash of each one-time reset token, expires tokens after one hour, uses the same response for known and unknown email addresses, and invalidates other active sessions after a successful reset. The production sender is expected to be a verified Resend domain such as `mail.ensurecollege.com`; until `RESEND_API_KEY`, `EMAIL_FROM`, and `PUBLIC_APP_URL` are configured and redeployed, the reset form safely reports that it is temporarily unavailable instead of pretending an email was sent.
-
-The free Postgres plan and free web service are enough for a demo. On the free tier the database can expire after a period of inactivity, so treat saved data as non-critical.
-
-### Railway (alternative)
-
-1. Create a new project from the GitHub repo.
-2. Set the start command:
-
-```bash
-uvicorn app.main:app --host 0.0.0.0 --port $PORT
-```
-
-3. Add a Postgres database to the project. Railway exposes its connection string as `DATABASE_URL`.
-4. In the **Variables** tab, set `ANTHROPIC_API_KEY`, `SESSION_SECRET` (any long random string), `SESSION_COOKIE_SECURE=true`, and the same email variables described in the Render section if password reset should be enabled.
-
-## Deploy (Vercel)
-
-This repo can also run on [Vercel](https://vercel.com/) serverless infrastructure using `@vercel/python`.
-
-1. Import the repository to Vercel from GitHub.
-2. In the Vercel project settings, provision or connect:
-   - **Neon Postgres** (free tier): create a project and copy the **pooled** connection string (host contains `-pooler`).
-   - **Upstash Redis** (free tier): create a Redis database and copy the REST URL and token.
-3. Set environment variables in Vercel:
-   - `DATABASE_URL` = your Neon pooled connection string
-   - `UPSTASH_REDIS_REST_URL` = your Upstash REST URL
-   - `UPSTASH_REDIS_REST_TOKEN` = your Upstash REST token
-   - `RUN_MIGRATIONS_ON_STARTUP=false` (Alembic runs at build time instead)
-   - `PUBLIC_APP_URL`, `SESSION_SECRET`, `SESSION_COOKIE_SECURE=true`, `RESEND_API_KEY`, `EMAIL_FROM`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` (same as Render section)
-4. On first deploy, the build step runs `alembic upgrade head` to initialize the database schema. Subsequent deploys skip migrations and reuse the pooled connection, suitable for serverless invocations.
-5. Add a custom domain and configure DNS records as directed by Vercel.
-
-## API endpoints
+## API and page routes
 
 | Method | Path | Description |
 |--------|------|-------------|
 | `GET` | `/` | Web app |
-| `GET` | `/health` | Health check |
-| `GET` | `/robots.txt` | Crawler rules |
-| `GET` | `/sitemap.xml` | Public page sitemap |
+| `GET` | `/health`, `/robots.txt`, `/sitemap.xml` | Health check and crawler surfaces (sitemap covers every opportunity page) |
+| `GET` | `/scholarships/{slug}`, `/programs/{slug}`, `/competitions/{slug}` | Server-rendered opportunity pages |
+| `GET` | `/browse`, `/browse/{kind}` | Crawlable catalog directories |
 | `GET` | `/vocabulary` | Form option lists |
-| `GET` | `/scholarships` | Full dataset |
-| `POST` | `/match` | Rank scholarships for a profile |
-| `POST` | `/essay-advice` | Generate essay guidance |
-| `POST` | `/essay-review` | Feedback on a student's essay draft |
-| `POST` | `/resume/extract` | Extract a profile from a resume (PDF or text) |
-| `POST` | `/auth/signup` | Create an account and start a session |
-| `POST` | `/auth/login` | Log in and start a session |
-| `POST` | `/auth/logout` | End the session |
-| `GET` | `/auth/me` | Current logged-in user |
-| `POST` | `/auth/change-password` | Change password (requires login) |
-| `POST` | `/auth/password-reset/request` | Send a one-time reset link without revealing whether the email exists |
-| `POST` | `/auth/password-reset/confirm` | Consume a valid reset token and set a new password |
-| `POST` | `/auth/delete-account` | Delete account and all saved data |
-| `GET` | `/account/profile` | Get the saved profile |
-| `PUT` | `/account/profile` | Save or update the profile |
-| `GET` | `/account/saved` | List saved scholarships |
-| `POST` | `/account/saved/{id}` | Save a scholarship |
-| `PATCH` | `/account/saved/{id}` | Update tracker status or notes |
-| `DELETE` | `/account/saved/{id}` | Remove a saved scholarship |
-| `GET` | `/account/saved/calendar.ics` | Download saved deadlines as a calendar |
+| `GET` | `/scholarships`, `/programs`, `/competitions` | Full datasets (JSON) |
+| `POST` | `/match`, `/programs/match`, `/competitions/match` | Rank each lane for a profile |
+| `POST` | `/match/preview` | Three-question hero preview (no account) |
+| `POST` | `/auth/signup`, `/auth/login`, `/auth/logout`, `/auth/change-password`, `/auth/delete-account` | Email/password accounts |
+| `GET` | `/auth/me`, `/auth/google/login` (+ callback) | Session info and Google OAuth |
+| `POST` | `/auth/password-reset/request`, `/auth/password-reset/confirm` | One-time reset links |
+| `GET/PUT` | `/account/profile` | Saved profile |
+| `GET` | `/account/saved` | Saved opportunities (all three kinds) |
+| `POST/PATCH/DELETE` | `/account/saved/{id}`, `/account/saved/programs/{id}`, `/account/saved/competitions/{id}` | Save, track status/notes/checklists, remove |
+| `GET` | `/account/saved/calendar.ics` | Verified deadlines as a calendar |
+| `GET/POST/PATCH/DELETE` | `/account/rec-letters`... | Recommendation-letter tracker |
+| `PATCH` | `/account/reminders` | Email digest opt-in/out |
+| `GET` | `/reminders/run` | Weekly digest + new-match alerts (cron, guarded by `CRON_SECRET`) |
+| `POST` | `/essay-advice`, `/essay-review`, `/resume/extract` | Dormant unless `AI_FEATURES_ENABLED=true` |
 
 ## Tests
 
 ```bash
-pip install -r requirements-dev.txt
 python -m pytest tests/ -v
 ```
 
-Tests mock Anthropic calls. No paid API usage during the test run.
+The suite (274 tests) mocks all external calls; no paid API usage. GitHub Actions runs tests and the dataset validator on every push.
 
-GitHub Actions runs the test suite and the dataset validator on every push and pull request.
+Smoke-test the live deployment with `python scripts/smoke_test_live.py`.
 
-To refresh the README screenshots after UI changes:
+## Data verification
 
-```bash
-pip install playwright
-python -m playwright install chromium
-python scripts/capture_readme_screenshots.py
-```
+The datasets in [`app/data/`](app/data/) — `scholarships.json`, `summer_programs.json`, and `competitions.json` — are **curated seed sets** of real opportunities, verified incrementally against official sponsor pages. As of July 2026 the catalog holds **225 scholarships, 60 elite summer programs, and 37 competitions**, every entry with official source provenance.
 
-The screenshot script defaults to `https://ensurecollege.com`. Set `SCHOLARSHIPS4U_URL` to target a staging or local deployment instead.
+- **`verified: true`** — key facts (award, eligibility, and the current cycle's deadline where published) were checked against the sponsor's official page.
+- **`verified: false`** — not yet confirmed; unknown fields hold `VERIFY` placeholders. The matcher treats `VERIFY` permissively (it never excludes on an unknown value) and the UI labels the entry.
+- Deadlines are set **only when the sponsor has published the current cycle's date**; otherwise an `estimated_deadline` from the previous cycle is shown explicitly as an estimate. A wrong deadline in a student-facing tool is worse than an honest placeholder.
+- `last_verified_at` records a fresh fact audit; audits older than 90 days are flagged for re-checking. Niche eligibility gates live in [`special_requirements.json`](app/data/special_requirements.json) and surface as special checks, never as ordinary Strong matches.
 
-To smoke-test the live deployment:
-
-```bash
-python scripts/smoke_test_live.py
-```
-
-The smoke test also defaults to `https://ensurecollege.com`; override it with `SCHOLARSHIPS4U_URL` when needed.
-
-### Dataset validation
-
-Audit the scholarship dataset for structural and vocabulary issues, and see how many fields still need verification:
-
-```bash
-python scripts/validate_dataset.py
-```
-
-It exits non-zero on structural errors (duplicate ids, unparseable deadlines), so it is suitable for a pre-commit or CI check.
-
-## Scholarship and summer-program data verification
-
-The scholarship dataset in [`app/data/scholarships.json`](app/data/scholarships.json) and the summer-program dataset in [`app/data/summer_programs.json`](app/data/summer_programs.json) are **curated seed sets** of real programs that are verified incrementally over time. Each entry carries a boolean `verified` flag:
-
-- **`verified: true`** — the entry's key facts (award, eligibility, and, where the current cycle is published, the deadline) have been checked against the sponsor's official page. These entries show no "Unverified data" badge in the app.
-- **`verified: false`** (the default) — not yet confirmed. These entries may hold `VERIFY` placeholders for fields that are not yet known (`deadline`, `min_gpa`, `citizenship_requirement`, or `states`). The matcher treats `VERIFY` permissively (it never excludes on an unknown value), and the UI shows an "Unverified data" badge.
-
-### Verification provenance
-
-Verification distinguishes a recorded official `source_url` from a fresh fact audit. `last_verified_at` appears only when the entry was independently checked on that date; older entries can carry a source link with `provenance_recorded_at` and no audit date. Result cards label those cases differently, and the dataset validator reports both counts. An audit older than 90 days is visibly flagged for re-checking; the validator's re-verification queue includes both those stale audits and source-only records that have not received a fresh audit.
-
-School-specific records list the eligible institutions and common aliases (for example, `UT Austin`). A matching target school adds a visible fit signal; a known mismatch is shown as **Possible** with an eligibility caveat instead of being silently hidden.
-
-### How entries get verified
-
-Verification is an ongoing pass, done in small batches so each fact is checked rather than guessed:
-
-1. Look the program up on its **official sponsor page** (not an aggregator).
-2. Fill the fields that can be confirmed: award amount, GPA floor, grade level, citizenship requirement, and demographic focus.
-3. Set a real ISO `deadline` **only when the sponsor has published the current cycle's date.** Deadlines change yearly, so an unconfirmed date is left as `VERIFY` on purpose — a wrong deadline in a student-facing tool is worse than an honest placeholder.
-4. Flip `verified` to `true` once the material facts are confirmed.
-
-Because some scholarships and programs have not yet announced their upcoming cycle, full verification is a moving target: a portion of the dataset stays honestly marked `VERIFY` until those dates are posted.
-
-### Checking current status
-
-Run the validator at any time to see how many entries are verified, which ones need re-verification, and how many `VERIFY` placeholders remain per field:
-
-```bash
-python scripts/validate_dataset.py
-```
-
-As of the July 3, 2026 dataset audit, the app includes **204 scholarships** and **52 elite summer programs**. Every entry has official source provenance at the record level. The raw files contain **230** remaining `VERIFY` strings in scholarships and **55** in summer programs; the validator's field-level counts are **227** scholarship placeholders (`citizenship_requirement`, `deadline`, `min_gpa`, and `states`) and **53** summer-program placeholders (`citizenship_requirement` and `deadline`). These remain where the official source does not yet publish or cleanly map the value. One scholarship, `foot-locker-scholar-athletes`, remains in the re-verification queue for human review because the official opportunity page could not be confirmed. A sidecar file, [`app/data/special_requirements.json`](app/data/special_requirements.json), records niche scholarship eligibility gates that should be surfaced as special checks rather than normal Strong matches. Summer programs can carry the same special-check metadata directly in their eligibility block. Run the validator for the current re-verification queue and placeholder counts.
+Run `python scripts/validate_dataset.py` for current verified counts, remaining placeholders, and the re-verification queue. It exits non-zero on structural errors, suitable for CI.
 
 ## Project structure
 
 ```
 ScholarMatch/
-├── render.yaml
-├── requirements.txt
-├── requirements-dev.txt
-├── .env.example
+├── vercel.json / render.yaml
+├── requirements.txt / requirements-dev.txt
+├── api/index.py        (Vercel entry)
 ├── tests/
+├── docs/               (specs, plans, brand)
 └── app/
-    ├── main.py
-    ├── vocabulary.py
-    ├── api/          (auth and account routes)
-    ├── auth/         (password hashing, session dependency)
-    ├── db/           (SQLAlchemy engine and ORM models)
-    ├── essay/
-    ├── matching/
-    ├── models/
-    ├── static/
-    └── data/
-        ├── scholarships.json
-        ├── special_requirements.json
-        └── summer_programs.json
+    ├── main.py         (routes, sitemap, security headers)
+    ├── seo_pages.py    (server-rendered opportunity + browse pages)
+    ├── templates/      (Jinja2: base, detail, browse, 404)
+    ├── api/            (account, saved, rec-letter, reminder routes)
+    ├── auth/           (passwords, sessions, Google OAuth, email)
+    ├── db/             (engine, ORM models, migrations glue)
+    ├── matching/       (scholarship, program, competition matchers)
+    ├── models/         (Pydantic domain models)
+    ├── alerts.py / reminders.py / ics.py
+    ├── static/         (index.html, css, js, images)
+    └── data/           (scholarships, summer_programs, competitions, special_requirements)
 ```
 
 ## Limitations
 
-- The scholarship dataset is a **curated set** (204 scholarships, including a small school-specific pilot), and the summer-program dataset is a **curated set** (52 programs), not a comprehensive directory.
-- Some fields are marked `VERIFY` and must be confirmed on each sponsor's official page before you rely on them. See [Scholarship and summer-program data verification](#scholarship-and-summer-program-data-verification) for how entries are confirmed over time.
-- Essay advice is generated guidance, not a guarantee of admission or funding.
-- Password reset depends on the Resend sender, API key, and `PUBLIC_APP_URL` environment variables being configured on the host. Email verification is still not implemented, so this is suited to a demo rather than production use.
-- The age and terms notice is a browser-stored acknowledgment, not age verification or parental consent. This is not a production-ready service for children under 13.
-- Sensitive endpoints (login, signup, password change, and the AI features) are rate limited per client IP. The limiter is in-memory, which suits a single-instance deploy; multi-instance hosting would need a shared store such as Redis.
-- On the free Postgres tier, saved data should be treated as non-critical because the database can expire after inactivity.
-- EnsureCollege is **not** an official scholarship search or application service — it is a student-built planner demo with curated, incrementally verified data.
+- The catalog is a curated set, not a comprehensive directory; some fields remain honestly marked `VERIFY` until sponsors publish current-cycle facts.
+- AI features are disabled by default and the code path is dormant; enabling them incurs Anthropic API costs and re-exposes the consent flows.
+- Email verification for accounts is not implemented; the age/terms notice is a stored acknowledgment, not age verification. Not a production service for children under 13.
+- Rate limiting uses Upstash Redis in production and an in-memory fallback locally; the fallback is per-instance only.
+- EnsureCollege is **not** an official scholarship search or application service; matches are suggestions, not guarantees.
 
 ## License
 
@@ -307,8 +171,7 @@ MIT — see [LICENSE](LICENSE).
 
 ## Future work
 
-- Expand and fully verify the scholarship dataset
-- Expand the school-specific scholarship pilot with verified institution records
-- Live data integration with sponsor feeds or APIs
-- Account improvement: email verification
-- Production monitoring for uptime, email deliverability, and stale scholarship audits
+- Matcher improvements (field-proximity scoring, richer explanations)
+- Decide the essay-tools fork (re-enable AI features or build non-AI essay support)
+- Continue dataset expansion and the seasonal re-verification pass (most sponsors post next-cycle deadlines August–October)
+- Accessibility (WCAG 2.2) audit and client bundle slimming
