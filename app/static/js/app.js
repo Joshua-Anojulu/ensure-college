@@ -1927,7 +1927,9 @@ function refreshTrackerSummary() {
 // checkbox here reuses that exact persistence path (patchSaved/patchSavedProgram/
 // patchSavedCompetition writing completed_requirement_ids).
 
-const REC_LETTER_PATTERN = /recommend|reference letter/i;
+// "recommendation"/"recommender" rather than bare "recommend": catalog copy
+// like "(optional but recommended)" or "5-6 recommended" is not a letter.
+const REC_LETTER_PATTERN = /recommendation|recommender|reference letter|letter of reference/i;
 
 function isRecLetterRequirement(requirement) {
   return REC_LETTER_PATTERN.test(requirement.id || "") || REC_LETTER_PATTERN.test(requirement.label || "");
@@ -1973,6 +1975,12 @@ function collectRecLetterNeeds(items) {
 
 function renderRecLettersRollup(items) {
   if (!recLettersPanel) {
+    return;
+  }
+  // With nothing saved, the saved-empty panel already explains the state;
+  // showing this panel's empty state too reads as two empty messages at once.
+  if (!items || items.length === 0) {
+    recLettersPanel.hidden = true;
     return;
   }
   const needs = collectRecLetterNeeds(items);
