@@ -208,6 +208,10 @@ app.add_middleware(
 app.include_router(auth_router)
 app.include_router(account_router)
 
+from app.seo_pages import seo_router  # noqa: E402  (import near use, matches file's route grouping)
+
+app.include_router(seo_router)
+
 
 def _find_scholarship(scholarships: list[Scholarship], scholarship_id: str) -> Scholarship | None:
     for scholarship in scholarships:

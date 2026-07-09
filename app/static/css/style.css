@@ -1477,6 +1477,24 @@ html.motion-ready .saved-count.count-pop { animation: count-pop 380ms var(--ease
 }
 
 /* =========================================================================
+   SEO detail + browse pages (server-rendered, no JS)
+   ========================================================================= */
+.detail-breadcrumb { margin: 0.4rem 0 0; color: var(--muted); font-size: 0.8rem; }
+.detail-breadcrumb a { color: var(--brand); font-weight: 600; }
+.detail-page { display: flex; flex-direction: column; gap: 1.1rem; padding: clamp(1.4rem, 3vw, 2.2rem); }
+.detail-head h1 { max-width: 24ch; margin: 0; font-family: var(--font-display); font-size: clamp(1.9rem, 4vw, 3rem); font-weight: 700; letter-spacing: -0.02em; line-height: 1.08; }
+.detail-description { max-width: 75ch; margin: 0; color: var(--ink-soft); line-height: 1.65; }
+.detail-section h2 { margin: 0 0 0.5rem; font-family: var(--font-display); font-size: 1.25rem; font-weight: 700; }
+.detail-eligibility { display: grid; margin: 0; gap: 0.4rem; }
+.detail-eligibility-row { display: grid; grid-template-columns: minmax(9rem, 0.3fr) 1fr; gap: 0.8rem; padding: 0.5rem 0; border-bottom: 1px solid var(--line); }
+.detail-eligibility-row:last-child { border-bottom: 0; }
+.detail-eligibility dt { color: var(--muted); font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; align-self: center; }
+.detail-eligibility dd { margin: 0; color: var(--ink-soft); font-size: 0.9rem; }
+.detail-requirements { display: grid; margin: 0; padding-left: 1.1rem; gap: 0.4rem; color: var(--ink-soft); font-size: 0.9rem; line-height: 1.5; }
+.detail-verification { margin: 0; }
+.detail-actions { border-top: 1px solid var(--line); }
+
+/* =========================================================================
    Responsive
    ========================================================================= */
 @media (max-width: 760px) {

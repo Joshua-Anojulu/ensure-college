@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block head_extra %}
+<script type="application/ld+json">{{ jsonld | safe }}</script>
+{% endblock %}
+{% block content %}
+  <nav class="detail-breadcrumb" aria-label="Breadcrumb">
+    <a href="/browse">Browse</a> <span aria-hidden="true">›</span>
+    <a href="/browse/{{ kind.plural }}">{{ kind.label_plural }}</a> <span aria-hidden="true">›</span>
+    <span>{{ entry.name }}</span>
+  </nav>
+
+  <article class="detail-page panel">
+    <header class="detail-head">
+      <p class="eyebrow">{{ kind.label_singular }}</p>
+      <h1>{{ entry.name }}</h1>
+      <p class="card-sponsor">{{ org }}</p>
+    </header>
+
+    <div class="card-stats">
+      {% if award_text %}
+      <div class="stat stat-award">
+        <span class="stat-label">{{ kind.award_label }}</span>
+        <span class="stat-value">{{ award_text }}</span>
+      </div>
+      {% endif %}
+      <div class="stat">
+        <span class="stat-label">Deadline</span>
+        <span class="stat-value">{{ deadline_text }}</span>
+        {% if deadline_note %}<span class="stat-note">{{ deadline_note }}</span>{% endif %}
+      </div>
+    </div>
+
+    <p class="detail-description">{{ entry.description }}</p>
+
+    {% if eligibility_rows %}
+    <section class="detail-section">
+      <h2>Eligibility</h2>
+      <dl class="detail-eligibility">
+        {% for label, value in eligibility_rows %}
+        <div class="detail-eligibility-row"><dt>{{ label }}</dt><dd>{{ value }}</dd></div>
+        {% endfor %}
+      </dl>
+    </section>
+    {% endif %}
+
+    {% if requirements %}
+    <section class="detail-section">
+      <h2>Application requirements</h2>
+      <ul class="detail-requirements">
+        {% for req in requirements %}
+        <li><strong>{{ req.label }}</strong>{% if req.details %}: {{ req.details }}{% endif %}</li>
+        {% endfor %}
+      </ul>
+    </section>
+    {% endif %}
+
+    <p class="verification-source detail-verification">
+      {% if verified_line %}
+        {{ verified_line }}{% if source_url %} · <a href="{{ source_url }}" rel="noopener noreferrer">View official source</a>{% endif %}
+      {% else %}
+        <span class="verification-stale-flag">Not yet verified</span>
+        Details come from the sponsor listing; confirm on sponsor site before applying.
+      {% endif %}
+    </p>
+
+    <div class="card-footer detail-actions">
+      <a class="card-link" href="{{ entry.url }}" rel="noopener noreferrer">View and apply</a>
+      <a class="btn-secondary" href="/#profile-form">See your fit</a>
+    </div>
+  </article>
+{% endblock %}
