@@ -1509,6 +1509,8 @@ html.motion-ready .saved-count.count-pop { animation: count-pop 380ms var(--ease
   .browse-kind-list { grid-template-columns: 1fr; }
   .browse-row { flex-direction: column; gap: 0.1rem; }
 }
+.card-title-link { color: inherit; text-decoration: none; }
+.card-title-link:hover, .card-title-link:focus-visible { color: var(--brand); text-decoration: underline; text-underline-offset: 3px; }
 
 /* =========================================================================
    Responsive

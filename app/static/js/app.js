@@ -4094,6 +4094,17 @@ function buildCompetitionStatRow(competition) {
   return row;
 }
 
+function makeCardTitle(tag, kindPath, item) {
+  const title = document.createElement(tag);
+  title.className = "card-title";
+  const link = document.createElement("a");
+  link.className = "card-title-link";
+  link.href = `/${kindPath}/${encodeURIComponent(item.id)}`;
+  link.textContent = item.name;
+  title.appendChild(link);
+  return title;
+}
+
 function buildCompetitionCard(competition, options = {}) {
   const competitionId = competition.competition_id || competition.id;
   const specialRequirements =
@@ -4124,9 +4135,7 @@ function buildCompetitionCard(competition, options = {}) {
   const headline = document.createElement("div");
   headline.className = "card-headline";
 
-  const title = document.createElement("h4");
-  title.className = "card-title";
-  title.textContent = competition.name;
+  const title = makeCardTitle("h4", "competitions", { ...competition, id: competitionId });
   headline.appendChild(title);
 
   if (competition.host) {
@@ -4288,9 +4297,7 @@ function buildProgramCard(program, options = {}) {
   const headline = document.createElement("div");
   headline.className = "card-headline";
 
-  const title = document.createElement("h4");
-  title.className = "card-title";
-  title.textContent = program.name;
+  const title = makeCardTitle("h4", "programs", { ...program, id: programId });
   headline.appendChild(title);
 
   if (program.host) {
@@ -4673,9 +4680,7 @@ function buildCard(card, tierClass) {
   const headline = document.createElement("div");
   headline.className = "card-headline";
 
-  const title = document.createElement("h4");
-  title.className = "card-title";
-  title.textContent = card.name;
+  const title = makeCardTitle("h4", "scholarships", { ...card, id: card.scholarship_id });
   headline.appendChild(title);
 
   if (card.sponsor) {

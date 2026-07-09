@@ -84,8 +84,8 @@ class TestProductionHygiene:
         assert response.status_code == 200
         assert 'id="google-login-link"' in response.text
         assert 'href="/auth/google/login"' in response.text
-        assert "/static/css/style.css?v=20260708-4" in response.text
-        assert "/static/js/app.js?v=20260708-4" in response.text
+        assert "/static/css/style.css?v=20260708-5" in response.text
+        assert "/static/js/app.js?v=20260708-5" in response.text
 
     def test_index_substitutes_live_catalog_counts(self, client):
         response = client.get("/")
