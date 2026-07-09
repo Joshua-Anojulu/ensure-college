@@ -62,7 +62,7 @@ def public_base_url(request: Request) -> str:
 def render_page(request: Request, template: str, status_code: int = 200, **context) -> HTMLResponse:
     context.setdefault("base_url", public_base_url(request))
     context.setdefault("page_title", "EnsureCollege")
-    context.setdefault("meta_description", "Scholarships, summer programs, and competitions with source-linked details.")
+    context.setdefault("meta_description", "Scholarships, summer programs, and competitions with source-linked details and application planning.")
     context.setdefault("canonical", context["base_url"] + request.url.path)
     html = _env.get_template(template).render(**context)
     return HTMLResponse(html, status_code=status_code, headers={"Cache-Control": SEO_CACHE_CONTROL})

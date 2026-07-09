@@ -2444,7 +2444,7 @@ function buildPlanGuidance(items) {
   head.innerHTML =
     "<div><p class=\"eyebrow\">Application command center</p>" +
     "<h3>What needs attention next</h3>" +
-    "<p>Built from your saved scholarships, summer programs, and source-linked checklist steps.</p></div>" +
+    "<p>Built from your saved opportunities and their source-linked checklist steps.</p></div>" +
     `<div class="plan-progress"><strong>${completedSteps}/${totalSteps || 0}</strong><span>steps complete</span></div>`;
   wrap.appendChild(head);
 
