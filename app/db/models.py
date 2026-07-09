@@ -77,10 +77,6 @@ class User(Base):
         back_populates="user",
         cascade="all, delete-orphan",
     )
-    recommendation_letters: Mapped[list["RecommendationLetter"]] = relationship(
-        back_populates="user",
-        cascade="all, delete-orphan",
-    )
 
     @property
     def has_password(self) -> bool:
@@ -195,26 +191,3 @@ class SavedProgram(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_utcnow)
 
     user: Mapped[User] = relationship(back_populates="saved_programs")
-
-
-class RecommendationLetter(Base):
-    """A recommendation letter a student is tracking (who they asked, status)."""
-
-    __tablename__ = "recommendation_letters"
-
-    id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    user_id: Mapped[int] = mapped_column(
-        ForeignKey("users.id", ondelete="CASCADE"), index=True, nullable=False
-    )
-    recommender_name: Mapped[str] = mapped_column(String(200), nullable=False)
-    relationship_note: Mapped[str] = mapped_column(
-        "relationship", String(200), nullable=False, default="", server_default=""
-    )
-    status: Mapped[str] = mapped_column(
-        String(20), nullable=False, default="requested", server_default="requested"
-    )
-    due_date: Mapped[date | None] = mapped_column(Date, nullable=True)
-    notes: Mapped[str] = mapped_column(Text, nullable=False, default="", server_default="")
-    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_utcnow)
-
-    user: Mapped[User] = relationship(back_populates="recommendation_letters")

@@ -377,7 +377,7 @@ class TestSavedPrograms:
 
 
 class TestStudentJourney:
-    def test_signup_match_save_track_and_export_calendar(self, client):
+    def test_signup_match_save_and_track(self, client):
         assert signup(client).status_code == 201
 
         matches = client.post("/match", json=VALID_PROFILE)
@@ -393,11 +393,6 @@ class TestStudentJourney:
         )
         assert tracked.status_code == 200
         assert tracked.json()["status"] == "drafting"
-
-        calendar = client.get("/account/saved/calendar.ics")
-        assert calendar.status_code == 200
-        assert calendar.headers["content-type"].startswith("text/calendar")
-        assert "BEGIN:VCALENDAR" in calendar.text
 
 
 class TestPasswordReset:
@@ -790,81 +785,6 @@ class TestReviewFixes:
         profile["activities"] = ["club"] * 51
         rejected = client.put("/account/profile", json=profile)
         assert rejected.status_code == 422
-
-
-class TestRecommendationLetters:
-    def test_requires_login(self, client):
-        assert client.get("/account/rec-letters").status_code == 401
-        assert client.post("/account/rec-letters", json={"recommender_name": "X"}).status_code == 401
-
-    def test_create_list_update_delete(self, client):
-        signup(client)
-        created = client.post(
-            "/account/rec-letters",
-            json={
-                "recommender_name": "  Ms. Rivera  ",
-                "relationship_note": "Chemistry teacher",
-                "status": "requested",
-                "due_date": "2026-11-01",
-            },
-        )
-        assert created.status_code == 201
-        item = created.json()
-        assert item["recommender_name"] == "Ms. Rivera"  # trimmed
-        assert item["due_date"] == "2026-11-01"
-        letter_id = item["id"]
-
-        listing = client.get("/account/rec-letters").json()
-        assert [x["id"] for x in listing] == [letter_id]
-
-        updated = client.patch(
-            f"/account/rec-letters/{letter_id}",
-            json={"status": "received", "notes": "signed, ready to send"},
-        )
-        assert updated.status_code == 200
-        assert updated.json()["status"] == "received"
-        assert updated.json()["notes"] == "signed, ready to send"
-        assert updated.json()["due_date"] == "2026-11-01"  # unchanged
-
-        cleared = client.patch(f"/account/rec-letters/{letter_id}", json={"clear_due_date": True})
-        assert cleared.status_code == 200
-        assert cleared.json()["due_date"] is None
-
-        removed = client.delete(f"/account/rec-letters/{letter_id}")
-        assert removed.status_code == 200
-        assert client.get("/account/rec-letters").json() == []
-
-    def test_blank_recommender_name_rejected(self, client):
-        signup(client)
-        assert client.post("/account/rec-letters", json={"recommender_name": ""}).status_code == 422
-
-    def test_invalid_status_rejected(self, client):
-        signup(client)
-        assert (
-            client.post(
-                "/account/rec-letters",
-                json={"recommender_name": "X", "status": "bogus"},
-            ).status_code
-            == 422
-        )
-
-    def test_update_unknown_returns_404(self, client):
-        signup(client)
-        assert client.patch("/account/rec-letters/9999", json={"status": "received"}).status_code == 404
-
-    def test_letters_are_per_user(self, client):
-        signup(client, email="a@example.com")
-        client.post("/account/rec-letters", json={"recommender_name": "A's teacher"})
-        client.post("/auth/logout")
-        signup(client, email="b@example.com")
-        assert client.get("/account/rec-letters").json() == []
-
-    def test_cascades_on_account_delete(self, client):
-        signup(client)
-        client.post("/account/rec-letters", json={"recommender_name": "Temp"})
-        client.post("/auth/delete-account", json={"password": "password123"})
-        signup(client)  # same email, fresh account
-        assert client.get("/account/rec-letters").json() == []
 
 
 class TestReminders:

@@ -182,9 +182,9 @@ const savedSummary = document.getElementById("saved-summary");
 const savedEmpty = document.getElementById("saved-empty");
 const savedContainer = document.getElementById("saved-container");
 const recLettersPanel = document.getElementById("rec-letters-panel");
-const recLetterForm = document.getElementById("rec-letter-form");
 const recLettersList = document.getElementById("rec-letters-list");
 const recLettersEmpty = document.getElementById("rec-letters-empty");
+const recLettersCount = document.getElementById("rec-letters-count");
 
 const resultsFilters = document.getElementById("results-filters");
 const filterQuality = document.getElementById("filter-quality");
@@ -282,7 +282,6 @@ async function init() {
   wireOpportunityTabs();
   wireCatalogKindTabs();
   wireCatalogFilters();
-  wireRecLetters();
   wirePreviewForm();
   wireFormSteps();
   wireFilterControls();
@@ -501,7 +500,6 @@ async function activateOpportunityView(view, options = {}) {
   if (view === "saved") {
     if (currentUser) {
       await showSavedView({ scroll: false });
-      loadRecLetters();
     } else {
       savedSection.hidden = false;
       savedContainer.innerHTML = "";
@@ -1920,167 +1918,142 @@ function refreshTrackerSummary() {
       existingPlan.replaceWith(buildPlanGuidance(trackerItems));
     }
   }
+  renderRecLettersRollup(trackerItems);
 }
 
-/* ---------- Recommendation-letter tracker ---------- */
+/* ---------- Recommendation-letters rollup ---------- */
+// Auto-derived from saved items' application_requirements: no separate storage,
+// no manual entry. Matching steps already live in each item's checklist, so the
+// checkbox here reuses that exact persistence path (patchSaved/patchSavedProgram/
+// patchSavedCompetition writing completed_requirement_ids).
 
-const REC_LETTER_STATUSES = [
-  { value: "requested", label: "Requested" },
-  { value: "received", label: "Received" },
-  { value: "submitted", label: "Submitted" },
-];
+const REC_LETTER_PATTERN = /recommend|reference letter/i;
 
-function wireRecLetters() {
-  recLetterForm?.addEventListener("submit", handleAddRecLetter);
+function isRecLetterRequirement(requirement) {
+  return REC_LETTER_PATTERN.test(requirement.id || "") || REC_LETTER_PATTERN.test(requirement.label || "");
 }
 
-function showRecLetterError(message) {
-  const el = document.getElementById("rec-letter-error");
-  if (!el) return;
-  el.textContent = message;
-  el.hidden = false;
+function savedItemKind(item) {
+  if (item.competition) return "competition";
+  if (item.program) return "program";
+  return "scholarship";
 }
 
-async function loadRecLetters() {
-  if (!currentUser || !recLettersPanel) {
-    return;
-  }
-  recLettersPanel.hidden = false;
-  try {
-    const response = await fetch("/account/rec-letters");
-    if (!response.ok) {
-      return;
-    }
-    renderRecLetters(await response.json());
-  } catch (err) {
-    console.error(err);
-  }
+function savedItemId(item, kind) {
+  if (kind === "program") return item.program_id;
+  if (kind === "competition") return item.competition_id;
+  return item.scholarship_id;
 }
 
-function renderRecLetters(letters) {
-  recLettersList.innerHTML = "";
-  recLettersEmpty.hidden = letters.length > 0;
-  for (const letter of letters) {
-    recLettersList.appendChild(buildRecLetterRow(letter));
-  }
+function savedItemPatcher(kind) {
+  if (kind === "program") return patchSavedProgram;
+  if (kind === "competition") return patchSavedCompetition;
+  return patchSaved;
 }
 
-function buildRecLetterRow(letter) {
-  const row = document.createElement("div");
-  row.className = `rec-letter-row status-${letter.status}`;
+function savedItemKindPath(kind) {
+  if (kind === "program") return "programs";
+  if (kind === "competition") return "competitions";
+  return "scholarships";
+}
 
-  const main = document.createElement("div");
-  main.className = "rec-letter-main";
-  const name = document.createElement("p");
-  name.className = "rec-letter-name";
-  name.textContent = letter.recommender_name;
-  main.appendChild(name);
-  const meta = [letter.relationship_note, letter.due_date ? `Due ${formatVerifiedDate(letter.due_date)}` : ""]
-    .filter(Boolean)
-    .join(" · ");
-  if (meta) {
-    const metaEl = document.createElement("p");
-    metaEl.className = "rec-letter-meta";
-    metaEl.textContent = meta;
-    main.appendChild(metaEl);
-  }
-  row.appendChild(main);
-
-  const controls = document.createElement("div");
-  controls.className = "rec-letter-controls";
-
-  const select = document.createElement("select");
-  select.className = "rec-letter-status";
-  select.setAttribute("aria-label", `Status for ${letter.recommender_name}`);
-  for (const opt of REC_LETTER_STATUSES) {
-    const option = document.createElement("option");
-    option.value = opt.value;
-    option.textContent = opt.label;
-    option.selected = letter.status === opt.value;
-    select.appendChild(option);
-  }
-  select.addEventListener("change", async () => {
-    const ok = await patchRecLetter(letter.id, { status: select.value });
-    if (ok) {
-      row.className = `rec-letter-row status-${select.value}`;
-    }
-  });
-  controls.appendChild(select);
-
-  const remove = document.createElement("button");
-  remove.type = "button";
-  remove.className = "rec-letter-remove";
-  remove.setAttribute("aria-label", `Remove ${letter.recommender_name}`);
-  remove.textContent = "Remove";
-  remove.addEventListener("click", async () => {
-    remove.disabled = true;
-    try {
-      const response = await fetch(`/account/rec-letters/${letter.id}`, { method: "DELETE" });
-      if (response.ok) {
-        row.remove();
-        recLettersEmpty.hidden = recLettersList.children.length > 0;
+function collectRecLetterNeeds(items) {
+  const needs = [];
+  for (const item of items || []) {
+    const kind = savedItemKind(item);
+    for (const requirement of savedOpportunityRequirements(item)) {
+      if (isRecLetterRequirement(requirement)) {
+        needs.push({ item, kind, requirement });
       }
-    } catch (err) {
-      console.error(err);
-    } finally {
-      remove.disabled = false;
     }
-  });
-  controls.appendChild(remove);
-  row.appendChild(controls);
-  return row;
-}
-
-async function patchRecLetter(id, payload) {
-  try {
-    const response = await fetch(`/account/rec-letters/${id}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-    return response.ok;
-  } catch (err) {
-    console.error(err);
-    return false;
   }
+  needs.sort((a, b) => timelineSortValue(a.item) - timelineSortValue(b.item));
+  return needs;
 }
 
-async function handleAddRecLetter(event) {
-  event.preventDefault();
-  document.getElementById("rec-letter-error").hidden = true;
-  const name = document.getElementById("rec-name").value.trim();
-  if (!name) {
-    showRecLetterError("Enter the recommender's name.");
+function renderRecLettersRollup(items) {
+  if (!recLettersPanel) {
     return;
   }
-  const payload = {
-    recommender_name: name,
-    relationship_note: document.getElementById("rec-relationship").value.trim(),
-  };
-  const due = document.getElementById("rec-due").value;
-  if (due) {
-    payload.due_date = due;
+  const needs = collectRecLetterNeeds(items);
+  recLettersPanel.hidden = false;
+  recLettersList.innerHTML = "";
+  recLettersEmpty.hidden = needs.length > 0;
+  if (recLettersCount) {
+    recLettersCount.textContent = needs.length
+      ? `${needs.length} recommendation letter${needs.length === 1 ? "" : "s"} across your saved items`
+      : "";
   }
-  const btn = document.getElementById("rec-add-btn");
-  btn.disabled = true;
-  try {
-    const response = await fetch("/account/rec-letters", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-    if (!response.ok) {
-      showRecLetterError("Could not add that recommender. Check your entries and try again.");
+  for (const need of needs) {
+    recLettersList.appendChild(buildRecLetterNeedRow(need));
+  }
+}
+
+function buildRecLetterNeedRow({ item, kind, requirement }) {
+  const itemId = savedItemId(item, kind);
+  const patcher = savedItemPatcher(kind);
+
+  const row = document.createElement("label");
+  row.className = "tracker-task rec-letter-need";
+
+  const checkbox = document.createElement("input");
+  checkbox.type = "checkbox";
+  checkbox.checked = (item.completed_requirement_ids || []).includes(requirement.id);
+
+  const copy = document.createElement("span");
+  copy.className = "tracker-task-copy";
+  const title = document.createElement("strong");
+  title.textContent = requirement.label;
+  copy.appendChild(title);
+
+  const details = document.createElement("span");
+  details.className = "tracker-task-details";
+  const link = document.createElement("a");
+  link.className = "card-title-link";
+  link.href = `/${savedItemKindPath(kind)}/${encodeURIComponent(itemId)}`;
+  link.target = "_blank";
+  link.rel = "noopener noreferrer";
+  link.textContent = savedOpportunityName(item);
+  link.addEventListener("click", (event) => event.stopPropagation());
+  details.appendChild(link);
+  const dl = deadlineParts(savedOpportunityDeadline(item), savedOpportunityEstimatedDeadline(item));
+  const deadlineText = document.createElement("span");
+  deadlineText.textContent = ` · ${dl.value}${dl.note ? ` (${dl.note})` : ""}`;
+  details.appendChild(deadlineText);
+  copy.appendChild(details);
+
+  row.appendChild(checkbox);
+  row.appendChild(copy);
+
+  checkbox.addEventListener("change", async () => {
+    const before = new Set(item.completed_requirement_ids || []);
+    const next = new Set(before);
+    if (checkbox.checked) {
+      next.add(requirement.id);
+    } else {
+      next.delete(requirement.id);
+    }
+    checkbox.disabled = true;
+    const ok = await patcher(itemId, { completed_requirement_ids: Array.from(next) });
+    checkbox.disabled = false;
+    if (!ok) {
+      checkbox.checked = before.has(requirement.id);
       return;
     }
-    recLetterForm.reset();
-    await loadRecLetters();
-  } catch (err) {
-    showRecLetterError("Could not reach the server. Check your connection and try again.");
-    console.error(err);
-  } finally {
-    btn.disabled = false;
-  }
+    item.completed_requirement_ids = Array.from(next);
+    // A saved card's own checklist checkbox for this same requirement is a
+    // separate DOM element; refreshTrackerSummary() alone would leave it
+    // stale (risking a later toggle there clobbering this change). Rebuild
+    // the saved cards from the already-updated trackerItems so both views
+    // agree on the truth.
+    renderSaved(
+      trackerItems.filter((i) => i.scholarship),
+      trackerItems.filter((i) => i.program),
+      trackerItems.filter((i) => i.competition)
+    );
+  });
+
+  return row;
 }
 
 function renderSaved(scholarshipItems, programItems = [], competitionItems = []) {
@@ -2091,6 +2064,7 @@ function renderSaved(scholarshipItems, programItems = [], competitionItems = [])
   ];
   trackerItems = items;
   savedContainer.innerHTML = "";
+  renderRecLettersRollup(items);
   if (items.length === 0) {
     savedSummary.textContent = "";
     savedEmpty.hidden = false;

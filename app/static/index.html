@@ -757,9 +757,6 @@
         <p class="eyebrow">Your application plan</p>
         <h2>Saved opportunities</h2>
         <p id="saved-summary" class="results-summary"></p>
-        <a id="export-ics" class="btn-ghost export-ics" href="/account/saved/calendar.ics" download>
-          Export verified deadlines (.ics)
-        </a>
       </div>
 
       <div id="saved-empty" class="results-empty panel" hidden>
@@ -776,30 +773,13 @@
         <div class="rec-letters-head">
           <div>
             <p class="eyebrow">Recommendation letters</p>
-            <h3>Track who you asked</h3>
-            <p class="rec-letters-intro">Keep tabs on your recommenders, what you asked them for, and where each letter stands.</p>
+            <h3>Recommendation letters needed</h3>
+            <p id="rec-letters-count" class="rec-letters-intro"></p>
           </div>
         </div>
 
-        <form id="rec-letter-form" class="rec-letter-form" novalidate>
-          <div class="field">
-            <label for="rec-name">Recommender</label>
-            <input type="text" id="rec-name" maxlength="200" placeholder="e.g. Ms. Rivera" required>
-          </div>
-          <div class="field">
-            <label for="rec-relationship">Relationship <span class="optional">(optional)</span></label>
-            <input type="text" id="rec-relationship" maxlength="200" placeholder="e.g. Chemistry teacher">
-          </div>
-          <div class="field">
-            <label for="rec-due">Due date <span class="optional">(optional)</span></label>
-            <input type="date" id="rec-due">
-          </div>
-          <button type="submit" class="btn-primary" id="rec-add-btn">Add recommender</button>
-        </form>
-        <div id="rec-letter-error" class="form-error" role="alert" hidden></div>
-
         <div id="rec-letters-list" class="rec-letters-list"></div>
-        <p id="rec-letters-empty" class="rec-letters-empty" hidden>No recommenders tracked yet.</p>
+        <p id="rec-letters-empty" class="rec-letters-empty" hidden>None of your saved items require recommendation letters.</p>
       </div>
     </section>
   </main>

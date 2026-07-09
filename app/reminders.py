@@ -16,7 +16,6 @@ from sqlalchemy.orm import Session
 
 from app.auth.email import EmailDeliveryError, send_email
 from app.db.models import (
-    RecommendationLetter,
     SavedCompetition,
     SavedProgram,
     SavedScholarship,
@@ -32,7 +31,7 @@ MIN_DAYS_BETWEEN_SENDS = 5
 @dataclass(frozen=True)
 class DueItem:
     name: str
-    kind: str  # "Scholarship" | "Summer program" | "Competition" | "Recommendation letter"
+    kind: str  # "Scholarship" | "Summer program" | "Competition"
     deadline: date
     days_left: int
     url: str | None
@@ -62,7 +61,7 @@ def due_items_for_user(
     today: date,
     window_days: int = REMINDER_WINDOW_DAYS,
 ) -> list[DueItem]:
-    """Return the user's saved opportunities (and rec letters) closing soon."""
+    """Return the user's saved opportunities closing soon."""
     items: list[DueItem] = []
 
     for row in db.query(SavedScholarship).filter(SavedScholarship.user_id == user.id):
@@ -88,15 +87,6 @@ def due_items_for_user(
         hit = _within_window(c.deadline, today, window_days)
         if hit:
             items.append(DueItem(c.name, "Competition", hit[0], hit[1], str(c.url)))
-
-    for row in db.query(RecommendationLetter).filter(RecommendationLetter.user_id == user.id):
-        if row.due_date is None or row.status == "submitted":
-            continue
-        days_left = (row.due_date - today).days
-        if 0 <= days_left <= window_days:
-            items.append(
-                DueItem(f"Rec letter — {row.recommender_name}", "Recommendation letter", row.due_date, days_left, None)
-            )
 
     items.sort(key=lambda i: (i.deadline, i.name.lower()))
     return items

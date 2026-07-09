@@ -2,7 +2,7 @@
 
 **Live:** [ensurecollege.com](https://ensurecollege.com/)
 
-EnsureCollege is a **college-planning web app** for U.S. high-school students. One profile finds the scholarships, elite summer programs, and academic competitions that fit; a built-in planning layer turns saved opportunities into an application plan with tracked deadlines, source-linked requirement checklists, recommendation-letter tracking, calendar export, and weekly email reminders. The catalog is curated and manually verified against official sponsor pages, and every opportunity has its own indexable public page.
+EnsureCollege is a **college-planning web app** for U.S. high-school students. One profile finds the scholarships, elite summer programs, and academic competitions that fit; a built-in planning layer turns saved opportunities into an application plan with tracked deadlines, source-linked requirement checklists, a recommendation-letters rollup, and weekly email reminders. The catalog is curated and manually verified against official sponsor pages, and every opportunity has its own indexable public page.
 
 > **What this is:** a student-built planner with honest data provenance, not a comprehensive search engine. Always confirm eligibility and deadlines on each sponsor's official site.
 
@@ -28,7 +28,7 @@ Every match shows human-readable reasons plus score-component chips, and each la
 
 **Public opportunity pages.** Every catalog entry has a server-rendered page (for example `/scholarships/coca-cola-scholars`) with award, deadline, eligibility, application requirements, verification status with a link to the official source, and honest labeling for estimated or unverified data. A crawlable [`/browse`](https://ensurecollege.com/browse) directory and a full `sitemap.xml` make the catalog indexable; JSON-LD structured data uses honest schema.org types (`MonetaryGrant`, `EducationalOccupationalProgram`).
 
-**The planning layer.** With a free account (email/password or Google sign-in), saved opportunities become an application plan: per-item status (interested, drafting, submitted, awarded, rejected), notes, persistent source-linked application checklists, a deadline timeline, essay-reuse themes, requirement comparisons, and a recommendation-letter tracker (who you asked, for what, and where each letter stands). Verified deadlines export to an `.ics` calendar file. An opt-in weekly email digest covers saved items closing within 14 days, plus an alert when newly added opportunities are a strong match for the saved profile.
+**The planning layer.** With a free account (email/password or Google sign-in), saved opportunities become an application plan: per-item status (interested, drafting, submitted, awarded, rejected), notes, persistent source-linked application checklists, a deadline timeline, essay-reuse themes, requirement comparisons, and a recommendation-letters rollup auto-derived from each saved item's checklist. An opt-in weekly email digest covers saved items closing within 14 days, plus an alert when newly added opportunities are a strong match for the saved profile.
 
 **Accounts and privacy.** Accounts are optional; without one, nothing is retained between visits. Passwords are stored as bcrypt hashes; sessions use signed, httponly cookies; Google OAuth is supported. Account deletion removes the profile and every tracked opportunity.
 
@@ -107,8 +107,6 @@ Production runs on **Vercel** (`@vercel/python`, `api/index.py` + `vercel.json`)
 | `GET/PUT` | `/account/profile` | Saved profile |
 | `GET` | `/account/saved` | Saved opportunities (all three kinds) |
 | `POST/PATCH/DELETE` | `/account/saved/{id}`, `/account/saved/programs/{id}`, `/account/saved/competitions/{id}` | Save, track status/notes/checklists, remove |
-| `GET` | `/account/saved/calendar.ics` | Verified deadlines as a calendar |
-| `GET/POST/PATCH/DELETE` | `/account/rec-letters`... | Recommendation-letter tracker |
 | `PATCH` | `/account/reminders` | Email digest opt-in/out |
 | `GET` | `/reminders/run` | Weekly digest + new-match alerts (cron, guarded by `CRON_SECRET`) |
 | `POST` | `/essay-advice`, `/essay-review`, `/resume/extract` | Dormant unless `AI_FEATURES_ENABLED=true` |
@@ -147,12 +145,12 @@ ScholarMatch/
     ├── main.py         (routes, sitemap, security headers)
     ├── seo_pages.py    (server-rendered opportunity + browse pages)
     ├── templates/      (Jinja2: base, detail, browse, 404)
-    ├── api/            (account, saved, rec-letter, reminder routes)
+    ├── api/            (account, saved, reminder routes)
     ├── auth/           (passwords, sessions, Google OAuth, email)
     ├── db/             (engine, ORM models, migrations glue)
     ├── matching/       (scholarship, program, competition matchers)
     ├── models/         (Pydantic domain models)
-    ├── alerts.py / reminders.py / ics.py
+    ├── alerts.py / reminders.py
     ├── static/         (index.html, css, js, images)
     └── data/           (scholarships, summer_programs, competitions, special_requirements)
 ```

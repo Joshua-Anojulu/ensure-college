@@ -197,28 +197,3 @@ def test_save_list_update_and_remove_competition():
         removed = client.delete(f"/account/saved/competitions/{competition_id}")
         assert removed.status_code == 200
         assert client.get("/account/saved").json()["competitions"] == []
-
-
-def test_saved_competition_deadline_appears_in_calendar_export():
-    from fastapi.testclient import TestClient
-
-    from app.main import app
-
-    with TestClient(app) as client:
-        signup = client.post(
-            "/auth/signup",
-            json={"email": "comp-calendar@example.com", "password": "password123"},
-        )
-        assert signup.status_code == 201
-
-        competitions = client.get("/competitions").json()
-        dated = next(
-            c for c in competitions
-            if c["deadline"] not in ("rolling",) and not c["deadline"].startswith("VERIFY")
-        )
-        client.post(f"/account/saved/competitions/{dated['id']}")
-
-        calendar = client.get("/account/saved/calendar.ics")
-        assert calendar.status_code == 200
-        unfolded = calendar.text.replace("\r\n ", "")
-        assert f"UID:competition-{dated['id']}@ensurecollege" in unfolded
