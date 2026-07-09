@@ -91,3 +91,33 @@ class TestScholarshipDetailPage:
             assert "confirm on sponsor site" in response.text
         finally:
             del state.scholarships_by_id[fake.id]
+
+
+class TestProgramAndCompetitionDetailPages:
+    def test_program_detail_renders(self, client):
+        program = client.app.state.programs[0]
+        response = client.get(f"/programs/{program.id}")
+        assert response.status_code == 200
+        assert program.name in response.text
+        assert "EducationalOccupationalProgram" in response.text
+
+    def test_competition_detail_renders(self, client):
+        competition = client.app.state.competitions[0]
+        response = client.get(f"/competitions/{competition.id}")
+        assert response.status_code == 200
+        assert competition.name in response.text
+
+    def test_unknown_program_and_competition_404(self, client):
+        assert client.get("/programs/nope").status_code == 404
+        assert client.get("/competitions/nope").status_code == 404
+
+    def test_every_catalog_entry_has_a_working_page(self, client):
+        state = client.app.state
+        for kind, entries in (
+            ("scholarships", state.scholarships),
+            ("programs", state.programs),
+            ("competitions", state.competitions),
+        ):
+            for entry in entries:
+                response = client.get(f"/{kind}/{entry.id}")
+                assert response.status_code == 200, f"/{kind}/{entry.id} -> {response.status_code}"

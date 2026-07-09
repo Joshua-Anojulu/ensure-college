@@ -208,3 +208,13 @@ def _detail_response(kind_key: str, slug: str, request: Request) -> HTMLResponse
 @seo_router.get("/scholarships/{slug}", response_class=HTMLResponse)
 def scholarship_detail(slug: str, request: Request) -> HTMLResponse:
     return _detail_response("scholarships", slug, request)
+
+
+@seo_router.get("/programs/{slug}", response_class=HTMLResponse)
+def program_detail(slug: str, request: Request) -> HTMLResponse:
+    return _detail_response("programs", slug, request)
+
+
+@seo_router.get("/competitions/{slug}", response_class=HTMLResponse)
+def competition_detail(slug: str, request: Request) -> HTMLResponse:
+    return _detail_response("competitions", slug, request)
