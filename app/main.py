@@ -161,6 +161,9 @@ async def lifespan(app: FastAPI):
     app.state.scholarships = load_scholarships()
     app.state.programs = load_summer_programs()
     app.state.competitions = load_competitions()
+    app.state.scholarships_by_id = {s.id: s for s in app.state.scholarships}
+    app.state.programs_by_id = {p.id: p for p in app.state.programs}
+    app.state.competitions_by_id = {c.id: c for c in app.state.competitions}
     yield
 
 
