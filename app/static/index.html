@@ -556,10 +556,51 @@
           <label for="program-search">Search matched summer programs</label>
           <input id="program-search" type="search" placeholder="Name, host, or subject..." autocomplete="off" />
         </div>
-        <label class="filter-check">
-          <input type="checkbox" class="search-descriptions-toggle" />
-          <span>Search descriptions</span>
-        </label>
+
+        <div class="filter-group">
+          <label for="program-filter-quality">Match quality</label>
+          <select id="program-filter-quality">
+            <option value="all">All matches</option>
+            <option value="strong">Strong only</option>
+            <option value="possible">Possible only</option>
+            <option value="special">Special checks only</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label for="program-filter-sort">Sort by</label>
+          <select id="program-filter-sort">
+            <option value="fit">Best fit</option>
+            <option value="name">Name (A&ndash;Z)</option>
+            <option value="deadline">Deadline (soonest)</option>
+          </select>
+        </div>
+
+        <div class="filter-group filter-group-range">
+          <label for="program-filter-min-score">Min fit score: <span id="program-filter-min-score-value">0</span></label>
+          <input id="program-filter-min-score" type="range" min="0" max="100" step="5" value="0" />
+        </div>
+
+        <div class="filter-checks">
+          <label class="filter-check">
+            <input id="program-filter-field-match" type="checkbox" />
+            <span>Matches my field</span>
+          </label>
+          <label class="filter-check">
+            <input id="program-filter-closing-soon" type="checkbox" />
+            <span>Closing soon</span>
+          </label>
+          <label class="filter-check">
+            <input id="program-filter-verified-only" type="checkbox" />
+            <span>Verified data only</span>
+          </label>
+          <label class="filter-check">
+            <input type="checkbox" class="search-descriptions-toggle" />
+            <span>Search descriptions</span>
+          </label>
+        </div>
+
+        <button id="program-filter-clear" type="button" class="btn-ghost filter-clear">Clear filters</button>
       </div>
 
       <div id="programs-empty" class="results-empty panel" hidden>
@@ -582,10 +623,51 @@
           <label for="competition-search">Search matched competitions</label>
           <input id="competition-search" type="search" placeholder="Name, host, or category..." autocomplete="off" />
         </div>
-        <label class="filter-check">
-          <input type="checkbox" class="search-descriptions-toggle" />
-          <span>Search descriptions</span>
-        </label>
+
+        <div class="filter-group">
+          <label for="competition-filter-quality">Match quality</label>
+          <select id="competition-filter-quality">
+            <option value="all">All matches</option>
+            <option value="strong">Strong only</option>
+            <option value="possible">Possible only</option>
+            <option value="special">Special checks only</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label for="competition-filter-sort">Sort by</label>
+          <select id="competition-filter-sort">
+            <option value="fit">Best fit</option>
+            <option value="name">Name (A&ndash;Z)</option>
+            <option value="deadline">Deadline (soonest)</option>
+          </select>
+        </div>
+
+        <div class="filter-group filter-group-range">
+          <label for="competition-filter-min-score">Min fit score: <span id="competition-filter-min-score-value">0</span></label>
+          <input id="competition-filter-min-score" type="range" min="0" max="100" step="5" value="0" />
+        </div>
+
+        <div class="filter-checks">
+          <label class="filter-check">
+            <input id="competition-filter-field-match" type="checkbox" />
+            <span>Matches my field</span>
+          </label>
+          <label class="filter-check">
+            <input id="competition-filter-closing-soon" type="checkbox" />
+            <span>Closing soon</span>
+          </label>
+          <label class="filter-check">
+            <input id="competition-filter-verified-only" type="checkbox" />
+            <span>Verified data only</span>
+          </label>
+          <label class="filter-check">
+            <input type="checkbox" class="search-descriptions-toggle" />
+            <span>Search descriptions</span>
+          </label>
+        </div>
+
+        <button id="competition-filter-clear" type="button" class="btn-ghost filter-clear">Clear filters</button>
       </div>
 
       <div id="competitions-empty" class="results-empty panel" hidden>

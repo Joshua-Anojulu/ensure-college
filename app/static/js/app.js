@@ -156,8 +156,24 @@ const filterClear = document.getElementById("filter-clear");
 const scholarshipSearch = document.getElementById("scholarship-search");
 const programSearch = document.getElementById("program-search");
 const programsSearchPanel = document.getElementById("programs-search-panel");
+const programFilterQuality = document.getElementById("program-filter-quality");
+const programFilterSort = document.getElementById("program-filter-sort");
+const programFilterMinScore = document.getElementById("program-filter-min-score");
+const programFilterMinScoreValue = document.getElementById("program-filter-min-score-value");
+const programFilterFieldMatch = document.getElementById("program-filter-field-match");
+const programFilterClosingSoon = document.getElementById("program-filter-closing-soon");
+const programFilterVerifiedOnly = document.getElementById("program-filter-verified-only");
+const programFilterClear = document.getElementById("program-filter-clear");
 const competitionSearch = document.getElementById("competition-search");
 const competitionsSearchPanel = document.getElementById("competitions-search-panel");
+const competitionFilterQuality = document.getElementById("competition-filter-quality");
+const competitionFilterSort = document.getElementById("competition-filter-sort");
+const competitionFilterMinScore = document.getElementById("competition-filter-min-score");
+const competitionFilterMinScoreValue = document.getElementById("competition-filter-min-score-value");
+const competitionFilterFieldMatch = document.getElementById("competition-filter-field-match");
+const competitionFilterClosingSoon = document.getElementById("competition-filter-closing-soon");
+const competitionFilterVerifiedOnly = document.getElementById("competition-filter-verified-only");
+const competitionFilterClear = document.getElementById("competition-filter-clear");
 const catalogSection = document.getElementById("catalog-section");
 const catalogSummary = document.getElementById("catalog-summary");
 const catalogSearch = document.getElementById("catalog-search");
@@ -304,9 +320,39 @@ function wireCatalogKindTabs() {
         other.classList.toggle("is-active", selected);
         other.setAttribute("aria-selected", selected ? "true" : "false");
       }
+      applyCatalogKindScoping();
       resetCatalogWindow();
       renderCatalog();
     });
+  }
+  applyCatalogKindScoping();
+}
+
+// "No essay required" and the "Award (high->low)" sort only make sense for
+// scholarships (programs and competitions do not carry an award amount, and
+// hiding essay requirement here keeps the control from implying a filter that
+// doesn't apply to the other two kinds). Hide both outside the scholarships
+// tab, and fall back any state/selection that no longer applies.
+function applyCatalogKindScoping() {
+  const scholarshipsOnly = catalogKindFilter === "scholarships";
+  const noEssayLabel = catalogNoEssayCheck?.closest(".filter-check");
+  if (noEssayLabel) {
+    noEssayLabel.hidden = !scholarshipsOnly;
+  }
+  const awardOption = catalogSortSelect?.querySelector('option[value="award"]');
+  if (awardOption) {
+    awardOption.hidden = !scholarshipsOnly;
+    awardOption.disabled = !scholarshipsOnly;
+  }
+  if (!scholarshipsOnly) {
+    if (catalogNoEssay) {
+      catalogNoEssay = false;
+      if (catalogNoEssayCheck) catalogNoEssayCheck.checked = false;
+    }
+    if (catalogSort === "award") {
+      catalogSort = "name";
+      if (catalogSortSelect) catalogSortSelect.value = "name";
+    }
   }
 }
 
@@ -439,6 +485,28 @@ function wireFilterControls() {
   filterClosingSoon.addEventListener("change", rerenderResults);
   filterVerifiedOnly.addEventListener("change", rerenderResults);
   filterClear.addEventListener("click", resetFilters);
+
+  programFilterQuality?.addEventListener("change", rerenderProgramResults);
+  programFilterSort?.addEventListener("change", rerenderProgramResults);
+  programFilterMinScore?.addEventListener("input", () => {
+    programFilterMinScoreValue.textContent = programFilterMinScore.value;
+    rerenderProgramResults();
+  });
+  programFilterFieldMatch?.addEventListener("change", rerenderProgramResults);
+  programFilterClosingSoon?.addEventListener("change", rerenderProgramResults);
+  programFilterVerifiedOnly?.addEventListener("change", rerenderProgramResults);
+  programFilterClear?.addEventListener("click", resetProgramFilters);
+
+  competitionFilterQuality?.addEventListener("change", rerenderCompetitionResults);
+  competitionFilterSort?.addEventListener("change", rerenderCompetitionResults);
+  competitionFilterMinScore?.addEventListener("input", () => {
+    competitionFilterMinScoreValue.textContent = competitionFilterMinScore.value;
+    rerenderCompetitionResults();
+  });
+  competitionFilterFieldMatch?.addEventListener("change", rerenderCompetitionResults);
+  competitionFilterClosingSoon?.addEventListener("change", rerenderCompetitionResults);
+  competitionFilterVerifiedOnly?.addEventListener("change", rerenderCompetitionResults);
+  competitionFilterClear?.addEventListener("click", resetCompetitionFilters);
 }
 
 function wireSearchControls() {
@@ -545,6 +613,52 @@ function resetFilters() {
 function rerenderResults() {
   if (lastResults) {
     renderResults(lastResults);
+  }
+}
+
+function resetProgramFilters() {
+  programFilterQuality.value = "all";
+  programFilterSort.value = "fit";
+  programFilterMinScore.value = "0";
+  programFilterMinScoreValue.textContent = "0";
+  programSearch.value = "";
+  programSearchQuery = "";
+  searchInDescriptions = false;
+  for (const toggle of document.querySelectorAll(".search-descriptions-toggle")) {
+    toggle.checked = false;
+  }
+  programFilterFieldMatch.checked = false;
+  programFilterClosingSoon.checked = false;
+  programFilterVerifiedOnly.checked = false;
+  rerenderProgramResults();
+}
+
+function rerenderProgramResults() {
+  if (lastPrograms) {
+    renderPrograms(lastPrograms);
+  }
+}
+
+function resetCompetitionFilters() {
+  competitionFilterQuality.value = "all";
+  competitionFilterSort.value = "fit";
+  competitionFilterMinScore.value = "0";
+  competitionFilterMinScoreValue.textContent = "0";
+  competitionSearch.value = "";
+  competitionSearchQuery = "";
+  searchInDescriptions = false;
+  for (const toggle of document.querySelectorAll(".search-descriptions-toggle")) {
+    toggle.checked = false;
+  }
+  competitionFilterFieldMatch.checked = false;
+  competitionFilterClosingSoon.checked = false;
+  competitionFilterVerifiedOnly.checked = false;
+  rerenderCompetitionResults();
+}
+
+function rerenderCompetitionResults() {
+  if (lastCompetitions) {
+    renderCompetitions(lastCompetitions);
   }
 }
 
@@ -686,8 +800,60 @@ function programSearchValues(program) {
   return values;
 }
 
+// Field score of 40 means a specific field/subject/category match (10 = open-to-all).
+const SPECIFIC_FIELD_SCORE = 40;
+
 function applyProgramFilters(programs) {
-  return programs.filter((program) => itemMatchesSearch(programSearchValues(program), programSearchQuery));
+  const minScore = Number(programFilterMinScore.value) || 0;
+  const quality = programFilterQuality.value;
+  return programs.filter((program) => {
+    if (!itemMatchesSearch(programSearchValues(program), programSearchQuery)) {
+      return false;
+    }
+    const requiresSpecialCheck = Boolean(program.requires_special_check);
+    if (quality === "special" && !requiresSpecialCheck) {
+      return false;
+    }
+    if (
+      quality !== "all" &&
+      quality !== "special" &&
+      (program.match_tier !== quality || requiresSpecialCheck)
+    ) {
+      return false;
+    }
+    if (program.score < minScore) {
+      return false;
+    }
+    if (
+      programFilterFieldMatch.checked &&
+      (program.score_breakdown?.subject ?? 0) < SPECIFIC_FIELD_SCORE
+    ) {
+      return false;
+    }
+    if (programFilterClosingSoon.checked && !computeClosingSoon(program.deadline)) {
+      return false;
+    }
+    if (programFilterVerifiedOnly.checked && !program.verified) {
+      return false;
+    }
+    return true;
+  });
+}
+
+function sortPrograms(programs) {
+  const sorted = programs.slice();
+  switch (programFilterSort.value) {
+    case "name":
+      sorted.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: "base" }));
+      break;
+    case "deadline":
+      sorted.sort((a, b) => deadlineSortValue(a) - deadlineSortValue(b));
+      break;
+    default:
+      // "fit": preserve the server's score/name ordering.
+      break;
+  }
+  return sorted;
 }
 
 function catalogCompetitionById(id) {
@@ -716,13 +882,57 @@ function competitionSearchValues(competition) {
 }
 
 function applyCompetitionFilters(competitions) {
-  return competitions.filter((competition) =>
-    itemMatchesSearch(competitionSearchValues(competition), competitionSearchQuery)
-  );
+  const minScore = Number(competitionFilterMinScore.value) || 0;
+  const quality = competitionFilterQuality.value;
+  return competitions.filter((competition) => {
+    if (!itemMatchesSearch(competitionSearchValues(competition), competitionSearchQuery)) {
+      return false;
+    }
+    const requiresSpecialCheck = Boolean(competition.requires_special_check);
+    if (quality === "special" && !requiresSpecialCheck) {
+      return false;
+    }
+    if (
+      quality !== "all" &&
+      quality !== "special" &&
+      (competition.match_tier !== quality || requiresSpecialCheck)
+    ) {
+      return false;
+    }
+    if (competition.score < minScore) {
+      return false;
+    }
+    if (
+      competitionFilterFieldMatch.checked &&
+      (competition.score_breakdown?.category ?? 0) < SPECIFIC_FIELD_SCORE
+    ) {
+      return false;
+    }
+    if (competitionFilterClosingSoon.checked && !computeClosingSoon(competition.deadline)) {
+      return false;
+    }
+    if (competitionFilterVerifiedOnly.checked && !competition.verified) {
+      return false;
+    }
+    return true;
+  });
 }
 
-// Field score of 40 means a specific field-of-study match (10 = open-to-all).
-const SPECIFIC_FIELD_SCORE = 40;
+function sortCompetitions(competitions) {
+  const sorted = competitions.slice();
+  switch (competitionFilterSort.value) {
+    case "name":
+      sorted.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: "base" }));
+      break;
+    case "deadline":
+      sorted.sort((a, b) => deadlineSortValue(a) - deadlineSortValue(b));
+      break;
+    default:
+      // "fit": preserve the server's score/name ordering.
+      break;
+  }
+  return sorted;
+}
 
 function applyResultFilters(results) {
   const minScore = Number(filterMinScore.value) || 0;
@@ -3576,11 +3786,19 @@ function renderPrograms(programs) {
   programsSearchPanel.hidden = false;
   programsEmpty.hidden = true;
 
-  const filtered = applyProgramFilters(programs);
+  const filtered = sortPrograms(applyProgramFilters(programs));
   if (filtered.length === 0) {
     programsSummary.textContent = `0 of ${programs.length} matched programs shown.`;
     programsEmpty.hidden = true;
-    programsContainer.appendChild(noResultsMessage(programSearchQuery, "summer program"));
+    if (programSearchQuery) {
+      programsContainer.appendChild(noResultsMessage(programSearchQuery, "summer program"));
+    } else {
+      const note = document.createElement("div");
+      note.className = "results-empty panel";
+      note.innerHTML =
+        "<h3>No matches with these filters</h3><p>Loosen a filter or use <strong>Clear filters</strong> to see all matches again.</p>";
+      programsContainer.appendChild(note);
+    }
     return;
   }
 
@@ -3654,11 +3872,19 @@ function renderCompetitions(competitions) {
   competitionsSearchPanel.hidden = false;
   competitionsEmpty.hidden = true;
 
-  const filtered = applyCompetitionFilters(competitions);
+  const filtered = sortCompetitions(applyCompetitionFilters(competitions));
   if (filtered.length === 0) {
     competitionsSummary.textContent = `0 of ${competitions.length} matched competitions shown.`;
     competitionsEmpty.hidden = true;
-    competitionsContainer.appendChild(noResultsMessage(competitionSearchQuery, "competition"));
+    if (competitionSearchQuery) {
+      competitionsContainer.appendChild(noResultsMessage(competitionSearchQuery, "competition"));
+    } else {
+      const note = document.createElement("div");
+      note.className = "results-empty panel";
+      note.innerHTML =
+        "<h3>No matches with these filters</h3><p>Loosen a filter or use <strong>Clear filters</strong> to see all matches again.</p>";
+      competitionsContainer.appendChild(note);
+    }
     return;
   }
 
