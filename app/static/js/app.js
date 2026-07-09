@@ -351,14 +351,40 @@ async function activateOpportunityView(view, options = {}) {
     button.setAttribute("aria-selected", selected ? "true" : "false");
   }
 
-  const applyViewVisibility = () => {
+  // Everything that changes layout — renders, visibility, and the scroll —
+  // runs together, so the scroll target's position is measured against the
+  // settled layout, never against an outgoing section that is about to
+  // collapse (which used to strand the viewport at the bottom of the page).
+  const applyView = (scrollBehavior) => {
     resultsSection.hidden = view !== "scholarships" || !lastResults;
     programsSection.hidden = view !== "programs" || lastPrograms === null;
     competitionsSection.hidden = view !== "competitions" || lastCompetitions === null;
     catalogSection.hidden = view !== "catalog";
     savedSection.hidden = view !== "saved";
+    if (view === "programs" && lastPrograms !== null) {
+      renderPrograms(lastPrograms);
+      programsSection.hidden = false;
+    }
+    if (view === "competitions" && lastCompetitions !== null) {
+      renderCompetitions(lastCompetitions);
+      competitionsSection.hidden = false;
+    }
+    if (options.scroll) {
+      const target =
+        view === "programs"
+          ? programsSection
+          : view === "competitions"
+          ? competitionsSection
+          : view === "catalog"
+          ? catalogSection
+          : view === "saved"
+          ? savedSection
+          : resultsSection;
+      (target || opportunityTabs).scrollIntoView({ behavior: scrollBehavior, block: "start" });
+    }
   };
-  // Lane switches crossfade via the View Transitions API where supported.
+  // Lane switches crossfade via the View Transitions API where supported;
+  // the scroll is instant under the crossfade (the fade covers the jump).
   // Only one transition at a time: starting another aborts the first with an
   // unhandled InvalidStateError, so rapid updates fall back to instant.
   if (
@@ -367,24 +393,14 @@ async function activateOpportunityView(view, options = {}) {
     !document.hidden &&
     !activeViewTransition
   ) {
-    activeViewTransition = document.startViewTransition(applyViewVisibility);
+    activeViewTransition = document.startViewTransition(() => applyView("auto"));
     const clearTransition = () => {
       activeViewTransition = null;
     };
     activeViewTransition.finished.then(clearTransition, clearTransition);
     activeViewTransition.ready.catch(() => {});
   } else {
-    applyViewVisibility();
-  }
-
-  if (view === "programs" && lastPrograms !== null) {
-    renderPrograms(lastPrograms);
-    programsSection.hidden = false;
-  }
-
-  if (view === "competitions" && lastCompetitions !== null) {
-    renderCompetitions(lastCompetitions);
-    competitionsSection.hidden = false;
+    applyView("smooth");
   }
 
   if (view === "catalog") {
@@ -405,20 +421,6 @@ async function activateOpportunityView(view, options = {}) {
   }
 
   updateOpportunityTabCounts();
-
-  if (options.scroll) {
-    const target =
-      view === "programs"
-        ? programsSection
-        : view === "competitions"
-        ? competitionsSection
-        : view === "catalog"
-        ? catalogSection
-        : view === "saved"
-        ? savedSection
-        : resultsSection;
-    (target || opportunityTabs).scrollIntoView({ behavior: "smooth", block: "start" });
-  }
 }
 
 /* ---------- Results filtering ---------- */
