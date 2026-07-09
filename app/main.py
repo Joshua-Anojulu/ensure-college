@@ -255,11 +255,18 @@ def robots_txt(request: Request) -> PlainTextResponse:
 @app.get("/sitemap.xml", response_class=Response)
 def sitemap_xml(request: Request) -> Response:
     base = _public_base_url(request)
+    paths: list[str] = list(_SITEMAP_PATHS) + ["/browse"]
+    for kind_key, attr in (
+        ("scholarships", "scholarships"),
+        ("programs", "programs"),
+        ("competitions", "competitions"),
+    ):
+        paths.append(f"/browse/{kind_key}")
+        for entry in getattr(request.app.state, attr):
+            paths.append(f"/{kind_key}/{entry.id}")
     urls = "\n".join(
-        f"  <url><loc>{base}{path if path != '/' else ''}/</loc></url>"
-        if path == "/"
-        else f"  <url><loc>{base}{path}</loc></url>"
-        for path in _SITEMAP_PATHS
+        f"  <url><loc>{base}/</loc></url>" if path == "/" else f"  <url><loc>{base}{path}</loc></url>"
+        for path in paths
     )
     body = (
         '<?xml version="1.0" encoding="UTF-8"?>\n'
@@ -267,7 +274,11 @@ def sitemap_xml(request: Request) -> Response:
         f"{urls}\n"
         "</urlset>\n"
     )
-    return Response(content=body, media_type="application/xml")
+    return Response(
+        content=body,
+        media_type="application/xml",
+        headers={"Cache-Control": "public, s-maxage=86400, stale-while-revalidate=604800"},
+    )
 
 
 @app.get("/privacy")

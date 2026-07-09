@@ -148,3 +148,24 @@ class TestBrowsePages:
     def test_homepage_footer_links_browse(self, client):
         response = client.get("/")
         assert 'href="/browse"' in response.text
+
+
+class TestSitemap:
+    def test_sitemap_lists_every_page(self, client):
+        state = client.app.state
+        response = client.get("/sitemap.xml")
+        assert response.status_code == 200
+        body = response.text
+        expected_urls = (
+            3  # /, /privacy, /terms
+            + 1  # /browse
+            + 3  # directories
+            + len(state.scholarships) + len(state.programs) + len(state.competitions)
+        )
+        assert body.count("<loc>") == expected_urls
+        assert f"/scholarships/{state.scholarships[0].id}</loc>" in body
+        assert "/browse/competitions</loc>" in body
+
+    def test_robots_txt_points_to_sitemap(self, client):
+        response = client.get("/robots.txt")
+        assert "Sitemap:" in response.text and "/sitemap.xml" in response.text
