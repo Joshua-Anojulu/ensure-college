@@ -34,11 +34,14 @@ def main() -> None:
 
         page.locator(".hero").screenshot(path=OUT_DIR / "hero.png")
 
+        # The profile form is three steps; fill each step, then advance.
         page.locator("#gpa").fill("3.8")
         page.locator("#grade-level").select_option(label="High school senior")
+        page.locator("#step-next-btn").click()
         page.locator("#citizenship").select_option(label="US citizen")
         page.locator("#state").select_option(label="Texas")
         page.locator("#financial-need").select_option(label="Medium")
+        page.locator("#step-next-btn").click()
         page.locator('#fields-of-study input[value="engineering"]').check()
         page.locator("#submit-btn").click()
 

@@ -4861,7 +4861,7 @@ function deadlineParts(deadline, estimated) {
       if (isPastDate(estimated)) {
         return {
           value: "Not yet announced",
-          note: `Last cycle closed ${formatMonthYear(estimated)} \u2014 check sponsor site`,
+          note: `Last cycle closed ${formatMonthYear(estimated)}; check sponsor site`,
         };
       }
       return { value: formatVerifiedDate(estimated), note: "Estimated; confirm on sponsor site" };
