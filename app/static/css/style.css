@@ -1479,6 +1479,10 @@ html.motion-ready .saved-count.count-pop { animation: count-pop 380ms var(--ease
 /* =========================================================================
    SEO detail + browse pages (server-rendered, no JS)
    ========================================================================= */
+/* Short static pages: keep the ink footer pinned to the viewport bottom. */
+.page-static { display: flex; min-height: 100vh; flex-direction: column; }
+.page-static .main { flex: 1 1 auto; width: 100%; }
+.page-static .site-footer { margin-top: auto; }
 .detail-breadcrumb { margin: 0.4rem 0 0; color: var(--muted); font-size: 0.8rem; }
 .detail-breadcrumb a { color: var(--brand); font-weight: 600; }
 .detail-page { display: flex; flex-direction: column; gap: 1.1rem; padding: clamp(1.4rem, 3vw, 2.2rem); }
