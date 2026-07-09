@@ -1493,6 +1493,22 @@ html.motion-ready .saved-count.count-pop { animation: count-pop 380ms var(--ease
 .detail-requirements { display: grid; margin: 0; padding-left: 1.1rem; gap: 0.4rem; color: var(--ink-soft); font-size: 0.9rem; line-height: 1.5; }
 .detail-verification { margin: 0; }
 .detail-actions { border-top: 1px solid var(--line); }
+.browse-kind-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.85rem; }
+.browse-kind-card { padding: 1.2rem; text-decoration: none; color: inherit; transition: border-color var(--dur-fast) var(--ease); }
+.browse-kind-card:hover, .browse-kind-card:focus-visible { border-color: var(--line-strong); }
+.browse-kind-card h3 { margin: 0 0 0.3rem; font-family: var(--font-display); font-size: 1.2rem; }
+.browse-kind-card p { margin: 0; color: var(--muted); font-size: 0.85rem; }
+.browse-kind-card strong { color: var(--ink); font-family: var(--font-mono); }
+.browse-list { display: grid; margin: 0; padding: 0.4rem 1.1rem; list-style: none; }
+.browse-row { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; padding: 0.55rem 0; border-bottom: 1px solid var(--line); }
+.browse-row:last-child { border-bottom: 0; }
+.browse-row a { color: var(--ink); font-weight: 600; text-decoration: none; }
+.browse-row a:hover, .browse-row a:focus-visible { color: var(--brand); text-decoration: underline; }
+.browse-row-meta { color: var(--muted); font-size: 0.78rem; font-variant-numeric: tabular-nums; white-space: nowrap; }
+@media (max-width: 760px) {
+  .browse-kind-list { grid-template-columns: 1fr; }
+  .browse-row { flex-direction: column; gap: 0.1rem; }
+}
 
 /* =========================================================================
    Responsive

@@ -218,3 +218,44 @@ def program_detail(slug: str, request: Request) -> HTMLResponse:
 @seo_router.get("/competitions/{slug}", response_class=HTMLResponse)
 def competition_detail(slug: str, request: Request) -> HTMLResponse:
     return _detail_response("competitions", slug, request)
+
+
+@seo_router.get("/browse", response_class=HTMLResponse)
+def browse_index(request: Request) -> HTMLResponse:
+    kinds = []
+    total = 0
+    for key, kind in KINDS.items():
+        count = len(getattr(request.app.state, kind["state_list"]))
+        total += count
+        kinds.append({**kind, "count": count})
+    return render_page(
+        request,
+        "browse_index.html",
+        page_title="Browse all opportunities | EnsureCollege",
+        meta_description="Every scholarship, summer program, and competition in the EnsureCollege catalog, with deadlines and official sources.",
+        kinds=kinds,
+        total=total,
+    )
+
+
+@seo_router.get("/browse/{kind_key}", response_class=HTMLResponse)
+def browse_directory(kind_key: str, request: Request) -> HTMLResponse:
+    kind = KINDS.get(kind_key)
+    if kind is None:
+        return render_page(request, "404.html", status_code=404, page_title="Not found | EnsureCollege")
+    entries = getattr(request.app.state, kind["state_list"])
+    rows = []
+    for entry in entries:
+        deadline_text, _note = _deadline_parts(entry)
+        award = _award_text(kind_key, entry)
+        meta = " · ".join(part for part in (award, f"deadline {deadline_text}") if part)
+        rows.append({"href": f"/{kind_key}/{entry.id}", "name": entry.name, "meta": meta})
+    rows.sort(key=lambda r: r["name"].lower())
+    return render_page(
+        request,
+        "browse.html",
+        page_title=f"All {kind['label_plural'].lower()} | EnsureCollege",
+        meta_description=f"All {len(rows)} {kind['label_plural'].lower()} in the EnsureCollege catalog, with awards, deadlines, and official sources.",
+        kind=kind,
+        rows=rows,
+    )

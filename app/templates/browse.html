@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+  <nav class="detail-breadcrumb" aria-label="Breadcrumb">
+    <a href="/browse">Browse</a> <span aria-hidden="true">›</span> <span>{{ kind.label_plural }}</span>
+  </nav>
+  <section class="results-header">
+    <p class="eyebrow">Full catalog</p>
+    <h2>{{ kind.label_plural }}</h2>
+    <p class="results-summary">{{ rows | length }} {{ kind.label_plural | lower }}. Every listing links its official source.</p>
+  </section>
+  <ul class="browse-list panel">
+    {% for row in rows %}
+    <li class="browse-row">
+      <a href="{{ row.href }}">{{ row.name }}</a>
+      <span class="browse-row-meta">{{ row.meta }}</span>
+    </li>
+    {% endfor %}
+  </ul>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+  <section class="results-header">
+    <p class="eyebrow">Full catalog</p>
+    <h2>Browse all opportunities</h2>
+    <p class="results-summary">{{ total }} opportunities, each with its own detail page and official source.</p>
+  </section>
+  <section class="browse-kind-list">
+    {% for kind in kinds %}
+    <a class="browse-kind-card panel" href="/browse/{{ kind.plural }}">
+      <h3>{{ kind.label_plural }}</h3>
+      <p><strong>{{ kind.count }}</strong> listed</p>
+    </a>
+    {% endfor %}
+  </section>
+{% endblock %}

@@ -121,3 +121,30 @@ class TestProgramAndCompetitionDetailPages:
             for entry in entries:
                 response = client.get(f"/{kind}/{entry.id}")
                 assert response.status_code == 200, f"/{kind}/{entry.id} -> {response.status_code}"
+
+
+class TestBrowsePages:
+    def test_browse_hub_links_all_three_directories(self, client):
+        response = client.get("/browse")
+        assert response.status_code == 200
+        for kind in ("scholarships", "programs", "competitions"):
+            assert f'href="/browse/{kind}"' in response.text
+
+    def test_directories_list_every_entry(self, client):
+        state = client.app.state
+        for kind, entries in (
+            ("scholarships", state.scholarships),
+            ("programs", state.programs),
+            ("competitions", state.competitions),
+        ):
+            response = client.get(f"/browse/{kind}")
+            assert response.status_code == 200
+            for entry in entries:
+                assert f'href="/{kind}/{entry.id}"' in response.text, f"{kind} directory missing {entry.id}"
+
+    def test_unknown_directory_404s(self, client):
+        assert client.get("/browse/nonsense").status_code == 404
+
+    def test_homepage_footer_links_browse(self, client):
+        response = client.get("/")
+        assert 'href="/browse"' in response.text
