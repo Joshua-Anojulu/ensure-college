@@ -33,6 +33,30 @@ let catalogNoEssay = false;
 let catalogVerifiedOnly = false;
 let searchInDescriptions = false;
 
+const CATALOG_BATCH_SIZE = 30;
+const catalogVisibleCounts = { scholarships: CATALOG_BATCH_SIZE, programs: CATALOG_BATCH_SIZE, competitions: CATALOG_BATCH_SIZE };
+
+function resetCatalogWindow() {
+  catalogVisibleCounts.scholarships = CATALOG_BATCH_SIZE;
+  catalogVisibleCounts.programs = CATALOG_BATCH_SIZE;
+  catalogVisibleCounts.competitions = CATALOG_BATCH_SIZE;
+}
+
+function buildShowMoreButton(kind, remaining) {
+  const wrap = document.createElement("div");
+  wrap.className = "catalog-show-more-wrap";
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "btn-secondary catalog-show-more";
+  button.textContent = `Show ${Math.min(CATALOG_BATCH_SIZE, remaining)} more (${remaining} remaining)`;
+  button.addEventListener("click", () => {
+    catalogVisibleCounts[kind] += CATALOG_BATCH_SIZE;
+    renderCatalog();
+  });
+  wrap.appendChild(button);
+  return wrap;
+}
+
 let currentUser = null;
 const savedIds = new Set();
 const savedProgramIds = new Set();
@@ -280,6 +304,7 @@ function wireCatalogKindTabs() {
         other.classList.toggle("is-active", selected);
         other.setAttribute("aria-selected", selected ? "true" : "false");
       }
+      resetCatalogWindow();
       renderCatalog();
     });
   }
@@ -461,6 +486,7 @@ function wireSearchControls() {
   });
   catalogSearch?.addEventListener("input", () => {
     catalogSearchQuery = catalogSearch.value.trim();
+    resetCatalogWindow();
     rerenderCatalog();
   });
 
@@ -3738,18 +3764,22 @@ async function showCatalogView() {
 function wireCatalogFilters() {
   catalogField?.addEventListener("change", () => {
     catalogFieldFilter = catalogField.value;
+    resetCatalogWindow();
     renderCatalog();
   });
   catalogSortSelect?.addEventListener("change", () => {
     catalogSort = catalogSortSelect.value;
+    resetCatalogWindow();
     renderCatalog();
   });
   catalogNoEssayCheck?.addEventListener("change", () => {
     catalogNoEssay = catalogNoEssayCheck.checked;
+    resetCatalogWindow();
     renderCatalog();
   });
   catalogVerifiedOnlyCheck?.addEventListener("change", () => {
     catalogVerifiedOnly = catalogVerifiedOnlyCheck.checked;
+    resetCatalogWindow();
     renderCatalog();
   });
   catalogClear?.addEventListener("click", resetCatalogFilters);
@@ -3766,6 +3796,7 @@ function resetCatalogFilters() {
   if (catalogNoEssayCheck) catalogNoEssayCheck.checked = false;
   if (catalogVerifiedOnlyCheck) catalogVerifiedOnlyCheck.checked = false;
   if (catalogSearch) catalogSearch.value = "";
+  resetCatalogWindow();
   renderCatalog();
 }
 
@@ -3892,22 +3923,50 @@ function renderCatalog() {
 
   catalogEmpty.hidden = true;
   if (scholarships.length > 0) {
-    catalogContainer.appendChild(buildCatalogScholarshipSection(scholarships));
+    catalogContainer.appendChild(
+      buildCatalogScholarshipSection(
+        scholarships.slice(0, catalogVisibleCounts.scholarships),
+        scholarships.length
+      )
+    );
+    if (scholarships.length > catalogVisibleCounts.scholarships) {
+      catalogContainer.appendChild(
+        buildShowMoreButton("scholarships", scholarships.length - catalogVisibleCounts.scholarships)
+      );
+    }
   }
   if (programs.length > 0) {
-    catalogContainer.appendChild(buildCatalogProgramSection(programs));
+    catalogContainer.appendChild(
+      buildCatalogProgramSection(programs.slice(0, catalogVisibleCounts.programs), programs.length)
+    );
+    if (programs.length > catalogVisibleCounts.programs) {
+      catalogContainer.appendChild(
+        buildShowMoreButton("programs", programs.length - catalogVisibleCounts.programs)
+      );
+    }
   }
   if (competitions.length > 0) {
-    catalogContainer.appendChild(buildCatalogCompetitionSection(competitions));
+    catalogContainer.appendChild(
+      buildCatalogCompetitionSection(
+        competitions.slice(0, catalogVisibleCounts.competitions),
+        competitions.length
+      )
+    );
+    if (competitions.length > catalogVisibleCounts.competitions) {
+      catalogContainer.appendChild(
+        buildShowMoreButton("competitions", competitions.length - catalogVisibleCounts.competitions)
+      );
+    }
   }
 }
 
-function buildCatalogScholarshipSection(scholarships) {
+function buildCatalogScholarshipSection(scholarships, totalCount) {
+  const count = totalCount ?? scholarships.length;
   const section = document.createElement("div");
   section.className = "tier-section";
   const heading = document.createElement("h3");
   heading.className = "tier-heading";
-  heading.innerHTML = `All scholarships <span class="tier-count">${scholarships.length}</span>`;
+  heading.innerHTML = `All scholarships <span class="tier-count">${count}</span>`;
   section.appendChild(heading);
   for (const [index, scholarship] of scholarships.entries()) {
     const card = scholarshipToCard(scholarship);
@@ -3920,12 +3979,13 @@ function buildCatalogScholarshipSection(scholarships) {
   return section;
 }
 
-function buildCatalogProgramSection(programs) {
+function buildCatalogProgramSection(programs, totalCount) {
+  const count = totalCount ?? programs.length;
   const section = document.createElement("div");
   section.className = "tier-section";
   const heading = document.createElement("h3");
   heading.className = "tier-heading";
-  heading.innerHTML = `All summer programs <span class="tier-count">${programs.length}</span>`;
+  heading.innerHTML = `All summer programs <span class="tier-count">${count}</span>`;
   section.appendChild(heading);
   for (const [index, program] of programs.entries()) {
     const element = buildProgramCard(program, { catalogContext: true });
@@ -3936,12 +3996,13 @@ function buildCatalogProgramSection(programs) {
   return section;
 }
 
-function buildCatalogCompetitionSection(competitions) {
+function buildCatalogCompetitionSection(competitions, totalCount) {
+  const count = totalCount ?? competitions.length;
   const section = document.createElement("div");
   section.className = "tier-section";
   const heading = document.createElement("h3");
   heading.className = "tier-heading";
-  heading.innerHTML = `All competitions <span class="tier-count">${competitions.length}</span>`;
+  heading.innerHTML = `All competitions <span class="tier-count">${count}</span>`;
   section.appendChild(heading);
   for (const [index, competition] of competitions.entries()) {
     const element = buildCompetitionCard(competition, { catalogContext: true });
