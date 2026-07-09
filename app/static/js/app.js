@@ -57,6 +57,51 @@ function buildShowMoreButton(kind, remaining) {
   return wrap;
 }
 
+// Same batching pattern as the catalog window above, applied per match lane
+// (scholarships/programs/competitions) so a fresh match with a long result
+// list renders in pages instead of dumping every card at once.
+const LANE_BATCH_SIZE = CATALOG_BATCH_SIZE;
+const laneVisibleCounts = {
+  scholarships: LANE_BATCH_SIZE,
+  programs: LANE_BATCH_SIZE,
+  competitions: LANE_BATCH_SIZE,
+};
+
+function resetLaneWindow(kind) {
+  laneVisibleCounts[kind] = LANE_BATCH_SIZE;
+}
+
+function resetAllLaneWindows() {
+  resetLaneWindow("scholarships");
+  resetLaneWindow("programs");
+  resetLaneWindow("competitions");
+}
+
+function rerenderLane(kind) {
+  if (kind === "scholarships" && lastResults) {
+    renderResults(lastResults);
+  } else if (kind === "programs" && lastPrograms) {
+    renderPrograms(lastPrograms);
+  } else if (kind === "competitions" && lastCompetitions) {
+    renderCompetitions(lastCompetitions);
+  }
+}
+
+function buildLaneShowMoreButton(kind, remaining) {
+  const wrap = document.createElement("div");
+  wrap.className = "catalog-show-more-wrap";
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "btn-secondary catalog-show-more";
+  button.textContent = `Show ${Math.min(LANE_BATCH_SIZE, remaining)} more (${remaining} remaining)`;
+  button.addEventListener("click", () => {
+    laneVisibleCounts[kind] += LANE_BATCH_SIZE;
+    rerenderLane(kind);
+  });
+  wrap.appendChild(button);
+  return wrap;
+}
+
 let currentUser = null;
 const savedIds = new Set();
 const savedProgramIds = new Set();
@@ -544,14 +589,17 @@ function wireSearchControls() {
 
   scholarshipSearch?.addEventListener("input", () => {
     scholarshipSearchQuery = scholarshipSearch.value.trim();
+    resetLaneWindow("scholarships");
     rerenderScholarships();
   });
   programSearch?.addEventListener("input", () => {
     programSearchQuery = programSearch.value.trim();
+    resetLaneWindow("programs");
     rerenderPrograms();
   });
   competitionSearch?.addEventListener("input", () => {
     competitionSearchQuery = competitionSearch.value.trim();
+    resetLaneWindow("competitions");
     rerenderCompetitions();
   });
   catalogSearch?.addEventListener("input", () => {
@@ -569,6 +617,7 @@ function wireSearchControls() {
       descriptionToggles.forEach((other) => {
         other.checked = searchInDescriptions;
       });
+      resetAllLaneWindows();
       rerenderResults();
       if (lastPrograms) {
         renderPrograms(lastPrograms);
@@ -611,6 +660,7 @@ function resetFilters() {
 }
 
 function rerenderResults() {
+  resetLaneWindow("scholarships");
   if (lastResults) {
     renderResults(lastResults);
   }
@@ -634,6 +684,7 @@ function resetProgramFilters() {
 }
 
 function rerenderProgramResults() {
+  resetLaneWindow("programs");
   if (lastPrograms) {
     renderPrograms(lastPrograms);
   }
@@ -657,6 +708,7 @@ function resetCompetitionFilters() {
 }
 
 function rerenderCompetitionResults() {
+  resetLaneWindow("competitions");
   if (lastCompetitions) {
     renderCompetitions(lastCompetitions);
   }
@@ -3597,6 +3649,7 @@ function setLoading(isLoading) {
     competitionsEmpty.hidden = true;
     competitionsSearchPanel.hidden = true;
     lastCompetitions = null;
+    resetAllLaneWindows();
     updateOpportunityTabCounts();
   }
 }
@@ -3685,15 +3738,18 @@ function renderResults(results) {
   }
 
   resultsEmpty.hidden = true;
-  const regular = filtered.filter((r) => !r.requires_special_check);
-  const special = filtered.filter((r) => r.requires_special_check);
+  const visible = filtered.slice(0, laneVisibleCounts.scholarships);
+  const regular = visible.filter((r) => !r.requires_special_check);
+  const special = visible.filter((r) => r.requires_special_check);
   const strong = regular.filter((r) => r.match_tier === "strong");
   const possible = regular.filter((r) => r.match_tier === "possible");
 
-  const shownAll = filtered.length === results.length;
+  const shownAll = filtered.length === results.length && visible.length === filtered.length;
   resultsSummary.textContent = shownAll
     ? `${results.length} scholarship${results.length === 1 ? "" : "s"} matched your profile.`
-    : `Showing ${filtered.length} of ${results.length} matched scholarships.`;
+    : visible.length === filtered.length
+    ? `Showing ${filtered.length} of ${results.length} matched scholarships.`
+    : `Showing ${visible.length} of ${filtered.length} matched scholarships.`;
 
   if (strong.length > 0) {
     resultsContainer.appendChild(buildTierSection("Strong matches", strong, "strong"));
@@ -3711,6 +3767,11 @@ function renderResults(results) {
         "special",
         "These may be worthwhile, but they require a niche condition like a nomination, membership, finalist status, or affiliation that this profile cannot verify yet."
       )
+    );
+  }
+  if (filtered.length > laneVisibleCounts.scholarships) {
+    resultsContainer.appendChild(
+      buildLaneShowMoreButton("scholarships", filtered.length - laneVisibleCounts.scholarships)
     );
   }
 }
@@ -3802,14 +3863,17 @@ function renderPrograms(programs) {
     return;
   }
 
-  const regular = filtered.filter((p) => !p.requires_special_check);
-  const special = filtered.filter((p) => p.requires_special_check);
+  const visible = filtered.slice(0, laneVisibleCounts.programs);
+  const regular = visible.filter((p) => !p.requires_special_check);
+  const special = visible.filter((p) => p.requires_special_check);
   const strong = regular.filter((p) => p.match_tier === "strong");
   const possible = regular.filter((p) => p.match_tier === "possible");
-  const shownAll = filtered.length === programs.length;
+  const shownAll = filtered.length === programs.length && visible.length === filtered.length;
   programsSummary.textContent = shownAll
     ? `${programs.length} program${programs.length === 1 ? "" : "s"} matched your profile.`
-    : `Showing ${filtered.length} of ${programs.length} matched programs.`;
+    : visible.length === filtered.length
+    ? `Showing ${filtered.length} of ${programs.length} matched programs.`
+    : `Showing ${visible.length} of ${filtered.length} matched programs.`;
 
   if (strong.length > 0) {
     programsContainer.appendChild(buildProgramTierSection("Strong fits", strong, "strong"));
@@ -3827,6 +3891,11 @@ function renderPrograms(programs) {
         "special",
         "These programs may fit, but they require a condition like school nomination, a special application channel, or another gate this profile cannot verify yet."
       )
+    );
+  }
+  if (filtered.length > laneVisibleCounts.programs) {
+    programsContainer.appendChild(
+      buildLaneShowMoreButton("programs", filtered.length - laneVisibleCounts.programs)
     );
   }
 }
@@ -3888,14 +3957,17 @@ function renderCompetitions(competitions) {
     return;
   }
 
-  const regular = filtered.filter((c) => !c.requires_special_check);
-  const special = filtered.filter((c) => c.requires_special_check);
+  const visible = filtered.slice(0, laneVisibleCounts.competitions);
+  const regular = visible.filter((c) => !c.requires_special_check);
+  const special = visible.filter((c) => c.requires_special_check);
   const strong = regular.filter((c) => c.match_tier === "strong");
   const possible = regular.filter((c) => c.match_tier === "possible");
-  const shownAll = filtered.length === competitions.length;
+  const shownAll = filtered.length === competitions.length && visible.length === filtered.length;
   competitionsSummary.textContent = shownAll
     ? `${competitions.length} competition${competitions.length === 1 ? "" : "s"} matched your profile.`
-    : `Showing ${filtered.length} of ${competitions.length} matched competitions.`;
+    : visible.length === filtered.length
+    ? `Showing ${filtered.length} of ${competitions.length} matched competitions.`
+    : `Showing ${visible.length} of ${filtered.length} matched competitions.`;
 
   if (strong.length > 0) {
     competitionsContainer.appendChild(
@@ -3915,6 +3987,11 @@ function renderCompetitions(competitions) {
         "special",
         "These competitions may fit, but they require a condition like school nomination, membership, or another gate this profile cannot verify yet."
       )
+    );
+  }
+  if (filtered.length > laneVisibleCounts.competitions) {
+    competitionsContainer.appendChild(
+      buildLaneShowMoreButton("competitions", filtered.length - laneVisibleCounts.competitions)
     );
   }
 }
