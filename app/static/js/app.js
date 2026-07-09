@@ -506,6 +506,7 @@ function wireSearchControls() {
       if (lastCompetitions) {
         renderCompetitions(lastCompetitions);
       }
+      resetCatalogWindow();
       renderCatalog();
     });
   });

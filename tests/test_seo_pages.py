@@ -4,6 +4,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from app.main import app
+from app.seo_pages import _humanize
 
 
 @pytest.fixture
@@ -169,3 +170,27 @@ class TestSitemap:
     def test_robots_txt_points_to_sitemap(self, client):
         response = client.get("/robots.txt")
         assert "Sitemap:" in response.text and "/sitemap.xml" in response.text
+
+
+class TestHumanize:
+    def test_us_citizen(self):
+        assert _humanize("us_citizen") == "U.S. citizen"
+
+    def test_us_citizen_permanent_resident_or_daca(self):
+        assert (
+            _humanize("us_citizen_permanent_resident_or_daca")
+            == "U.S. citizen permanent resident or DACA"
+        )
+
+    def test_us_or_esa_member_state_mixed_case(self):
+        assert _humanize("US_or_ESA_member_state") == "U.S. or ESA member state"
+
+    def test_freeform_sentence_with_period_returned_unchanged(self):
+        text = (
+            "U.S. citizen or legal permanent resident (green card) required "
+            "to take the National Exam..."
+        )
+        assert _humanize(text) == text
+
+    def test_high_school_senior(self):
+        assert _humanize("high_school_senior") == "High school senior"

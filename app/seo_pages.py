@@ -99,15 +99,36 @@ def _deadline_parts(entry) -> tuple[str, str]:
     return "See sponsor site", "Not yet published; confirm on sponsor site"
 
 
+_HUMANIZE_WORD_MAP = {
+    "us": "U.S.",
+    "daca": "DACA",
+    "esa": "ESA",
+}
+
+
 def _humanize(token: str) -> str:
-    special = {
-        "us_citizen": "U.S. citizen",
-        "us_citizen_or_permanent_resident": "U.S. citizen or permanent resident",
-        "any": "Any",
-    }
-    if token in special:
-        return special[token]
-    return token.replace("_", " ").capitalize()
+    """Turn a snake_case token into human-readable text.
+
+    Freeform prose values (containing a space or a period) are already
+    human-written and are returned unchanged. Snake_case tokens are split on
+    "_"; recognized acronym/abbreviation words are mapped case-insensitively
+    (e.g. "us" -> "U.S."), and only the first word that isn't specially
+    mapped gets capitalized so results like "us_citizen" -> "U.S. citizen"
+    read naturally instead of "U.S. Citizen".
+    """
+    if " " in token or "." in token:
+        return token
+    words = token.split("_")
+    result = []
+    for i, word in enumerate(words):
+        lower = word.lower()
+        if lower in _HUMANIZE_WORD_MAP:
+            result.append(_HUMANIZE_WORD_MAP[lower])
+        elif i == 0:
+            result.append(word.capitalize())
+        else:
+            result.append(lower)
+    return " ".join(result)
 
 
 def _eligibility_rows(entry) -> list[tuple[str, str]]:
