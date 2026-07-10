@@ -7,6 +7,8 @@ from fastapi.testclient import TestClient
 from app.data.loader import load_summer_programs
 from app.main import app
 from app.matching.program_matcher import match_programs
+from app.models.program import SummerProgram
+from app.models.scholarship import Eligibility
 from app.models.student import StudentProfile
 
 REF_DATE = date(2026, 6, 26)
@@ -26,6 +28,20 @@ def _profile(**overrides) -> StudentProfile:
     }
     base.update(overrides)
     return StudentProfile(**base)
+
+
+def _program(**overrides) -> SummerProgram:
+    base = dict(
+        id="p1",
+        name="Test Program",
+        host="Test Host",
+        subject="STEM research",
+        url="https://example.org/",
+        eligibility=Eligibility(fields_of_study=["engineering"]),
+        description="A test program.",
+    )
+    base.update(overrides)
+    return SummerProgram(**base)
 
 
 def test_programs_dataset_loads_and_is_verified():
@@ -102,6 +118,19 @@ def test_citizenship_gates_out_international_for_us_only_program():
     ids = {r.program_id for r in match_programs(intl, programs, today=REF_DATE)}
     assert "mites-summer" not in ids  # requires US citizen / permanent resident
     assert "promys" in ids  # PROMYS is open regardless of citizenship
+
+
+def test_related_subject_scores_partial_credit():
+    program = _program(eligibility=Eligibility(fields_of_study=["engineering"]))
+    student = _profile(intended_majors=["computer_science"])
+    results = match_programs(student, [program], today=REF_DATE)
+
+    assert len(results) == 1
+    result = results[0]
+    assert result.score_breakdown.subject == 20.0
+    assert any(
+        reason.startswith("Related field: engineering") for reason in result.match_reasons
+    )
 
 
 def test_api_programs_endpoints():

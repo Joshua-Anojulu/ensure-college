@@ -14,11 +14,14 @@ from __future__ import annotations
 from datetime import date
 
 from app.matching.common import (
+    FIELD_ADJACENCY,
     citizenship_satisfies,
     grade_level_matches,
     matching_demographics,
     matching_fields,
+    normalize_tag,
     parse_iso_deadline,
+    related_fields,
 )
 from app.models.competition import (
     Competition,
@@ -29,6 +32,7 @@ from app.models.student import StudentProfile
 
 WEIGHT_CATEGORY = 40.0
 WEIGHT_CATEGORY_OPEN = 10.0
+WEIGHT_SUBJECT_RELATED = 20.0
 WEIGHT_DEMOGRAPHICS = 25.0
 WEIGHT_FINANCIAL_ACCESS = 10.0
 STRONG_MATCH_THRESHOLD = 35.0
@@ -83,13 +87,23 @@ def _evaluate_competition(
     # Category overlap is the primary fit signal.
     required_fields = elig.fields_of_study
     matched_fields = matching_fields(student.intended_majors, required_fields)
-    field_mismatch = bool(required_fields) and not matched_fields
+    related = related_fields(student.intended_majors, required_fields)
+    field_mismatch = bool(required_fields) and not matched_fields and not related
     if not required_fields:
         breakdown.category = WEIGHT_CATEGORY_OPEN
         reasons.append("Open to all subject areas")
     elif matched_fields:
         breakdown.category = WEIGHT_CATEGORY
         reasons.append("Category overlap: " + ", ".join(matched_fields))
+    elif related:
+        breakdown.category = WEIGHT_SUBJECT_RELATED
+        for field in related:
+            student_field = next(
+                major
+                for major in student.intended_majors
+                if normalize_tag(major) in FIELD_ADJACENCY.get(normalize_tag(field), set())
+            )
+            reasons.append(f"Related field: {field} (your {student_field} is adjacent)")
     else:
         reasons.append("May focus on a different subject area, check eligibility")
 

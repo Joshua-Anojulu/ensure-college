@@ -69,6 +69,19 @@ def test_strong_category_match_scores_high():
     assert result.match_tier == "strong"
 
 
+def test_related_category_scores_partial_credit():
+    comp = _competition(eligibility=Eligibility(fields_of_study=["engineering"]))
+    student = _profile(intended_majors=["computer_science"])
+    results = match_competitions(student, [comp], today=REF_DATE)
+
+    assert len(results) == 1
+    result = results[0]
+    assert result.score_breakdown.category == 20.0
+    assert any(
+        reason.startswith("Related field: engineering") for reason in result.match_reasons
+    )
+
+
 def test_passed_real_deadline_excludes():
     comp = _competition(deadline="2026-01-01")
     results = match_competitions(_profile(), [comp], today=REF_DATE)

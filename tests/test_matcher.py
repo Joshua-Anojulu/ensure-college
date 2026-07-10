@@ -167,9 +167,13 @@ class TestFieldScoring:
         result = match_one(student, scholarship)
 
         assert result is not None
-        assert result.score_breakdown.field_of_study == pytest.approx(0.0)
+        # "science" is not a recognized child of the "computer_science" requirement,
+        # so it never earns an exact/broad-parent match -- but the two fields are
+        # adjacent in FIELD_ADJACENCY, so this now earns related-field partial credit
+        # instead of the zero it would score without that adjacency.
+        assert result.score_breakdown.field_of_study == pytest.approx(20.0)
         assert "Field of study overlap: computer_science" not in result.match_reasons
-        assert "No field of study overlap" in result.match_reasons
+        assert "Related field: computer_science (your science is adjacent)" in result.match_reasons
 
     def test_broad_scholarship_field_can_match_specific_student_field(self):
         student = make_student(intended_majors=["computer_science"])
@@ -182,6 +186,67 @@ class TestFieldScoring:
         assert result is not None
         assert result.score_breakdown.field_of_study == pytest.approx(40.0)
         assert "Field of study overlap: science" in result.match_reasons
+
+    def test_related_field_scores_partial_credit(self):
+        student = make_student(intended_majors=["computer_science"])
+        scholarship = make_scholarship(
+            id="related-field",
+            eligibility={"fields_of_study": ["engineering"], "demographics": []},
+        )
+        result = match_one(student, scholarship)
+
+        assert result is not None
+        assert result.score_breakdown.field_of_study == 20.0
+        assert any(
+            reason.startswith("Related field: engineering") for reason in result.match_reasons
+        )
+
+    def test_related_field_does_not_set_field_mismatch_caveat(self):
+        student = make_student(
+            intended_majors=["computer_science"],
+            demographic_tags=["african_american"],
+        )
+        scholarship = make_scholarship(
+            id="related-field-strong",
+            eligibility={
+                "fields_of_study": ["engineering"],
+                "demographics": ["african_american"],
+            },
+        )
+        result = match_one(student, scholarship)
+
+        assert result is not None
+        assert (
+            "May not match this scholarship's field of study, check eligibility"
+            not in result.match_reasons
+        )
+        assert result.match_tier == "strong"
+
+    def test_exact_match_still_beats_related(self):
+        student = make_student(intended_majors=["engineering"])
+        scholarship = make_scholarship(
+            id="exact-field",
+            eligibility={"fields_of_study": ["engineering"], "demographics": []},
+        )
+        result = match_one(student, scholarship)
+
+        assert result is not None
+        assert result.score_breakdown.field_of_study == 40.0
+
+    def test_no_overlap_still_zero(self):
+        student = make_student(intended_majors=["music"])
+        scholarship = make_scholarship(
+            id="no-overlap",
+            eligibility={"fields_of_study": ["law"], "demographics": []},
+        )
+        result = match_one(student, scholarship)
+
+        assert result is not None
+        assert result.score_breakdown.field_of_study == 0.0
+        assert (
+            "May not match this scholarship's field of study, check eligibility"
+            in result.match_reasons
+        )
 
 
 class TestGradeLevelMatching:

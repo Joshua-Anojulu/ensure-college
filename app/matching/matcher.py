@@ -5,18 +5,21 @@ from __future__ import annotations
 import re
 from datetime import date
 
+from app.matching.common import FIELD_ADJACENCY
 from app.matching.common import citizenship_satisfies as _citizenship_satisfies
 from app.matching.common import grade_level_matches as _grade_level_matches
 from app.matching.common import matching_demographics as _matching_demographics
 from app.matching.common import matching_fields as _matching_fields
 from app.matching.common import normalize_tag as _normalize_tag
 from app.matching.common import parse_iso_deadline as _parse_iso_deadline
+from app.matching.common import related_fields as _related_fields
 from app.models.match import MatchResult, ScoreBreakdown
 from app.models.scholarship import EligibleSchool, Scholarship
 from app.models.student import StudentProfile
 
 WEIGHT_FIELD_OF_STUDY = 40.0
 WEIGHT_FIELD_OF_STUDY_OPEN = 10.0
+WEIGHT_FIELD_OF_STUDY_RELATED = 20.0
 WEIGHT_DEMOGRAPHICS = 25.0
 WEIGHT_TARGET_SCHOOL = 15.0
 WEIGHT_ACTIVITY_MATCH = 5.0
@@ -203,7 +206,8 @@ def _evaluate_scholarship(
 
     required_fields = scholarship.eligibility.fields_of_study
     matched_fields = _matching_fields(student.intended_majors, required_fields)
-    field_mismatch = bool(required_fields) and not matched_fields
+    related = _related_fields(student.intended_majors, required_fields)
+    field_mismatch = bool(required_fields) and not matched_fields and not related
     if not required_fields:
         breakdown.field_of_study = WEIGHT_FIELD_OF_STUDY_OPEN
         reasons.append("Open to all fields of study (weaker fit signal, partial score)")
@@ -211,6 +215,15 @@ def _evaluate_scholarship(
         breakdown.field_of_study = WEIGHT_FIELD_OF_STUDY
         for field in matched_fields:
             reasons.append(f"Field of study overlap: {field}")
+    elif related:
+        breakdown.field_of_study = WEIGHT_FIELD_OF_STUDY_RELATED
+        for field in related:
+            student_field = next(
+                major
+                for major in student.intended_majors
+                if _normalize_tag(major) in FIELD_ADJACENCY.get(_normalize_tag(field), set())
+            )
+            reasons.append(f"Related field: {field} (your {student_field} is adjacent)")
     else:
         reasons.append("No field of study overlap")
         reasons.append("May not match this scholarship's field of study, check eligibility")
