@@ -643,6 +643,19 @@ class TestActivitiesScoring:
         assert result is not None
         assert result.score_breakdown.activities == pytest.approx(5.0)
 
+    def test_synonym_group_counts_once(self):
+        # "robotics" and "robot" in the same description are one conceptual
+        # activity: the synonym group must collapse to a single match.
+        student = make_student(activities=["robotics"])
+        scholarship = make_scholarship(
+            description="Our robotics program lets you build a robot.",
+            eligibility={"fields_of_study": [], "demographics": []},
+        )
+        result = match_one(student, scholarship)
+
+        assert result is not None
+        assert result.score_breakdown.activities == pytest.approx(5.0)
+
     def test_cap_still_enforced(self):
         # 5 matching activities should cap at 10.0
         student = make_student(

@@ -31,7 +31,6 @@ CLOSING_SOON_DAYS = 30
 
 # Activity keywords are matched against the scholarship description as a small,
 # capped bonus. Structural words carry no signal, so we drop them before matching.
-_WORD_RE = re.compile(r"[a-z]+")
 _ACTIVITY_STOPWORDS = frozenset(
     {
         "the", "and", "for", "with", "club", "team", "society", "group", "member",
@@ -106,20 +105,32 @@ def _activity_keywords(activities: list[str]) -> set[str]:
     return keywords
 
 
+def _canonical_activity(token: str) -> str:
+    """Map a token to its synonym-group canonical form (or itself if ungrouped)."""
+    for canonical, variants in _ACTIVITY_SYNONYMS.items():
+        if token == canonical or token in variants:
+            return canonical
+    return token
+
+
 def _matching_activities(activities: list[str], description: str) -> list[str]:
-    """Return activity keywords that also appear as whole words in the description."""
+    """Return activity keywords that also appear as whole words in the description.
+
+    Matches are deduplicated per synonym group so a description mentioning both
+    "robotics" and "robot" counts as one conceptual activity, not two.
+    """
     if not activities:
         return []
     keywords = _activity_keywords(activities)
     if not keywords:
         return []
     text = description.lower()
-    matched = [
-        keyword
-        for keyword in sorted(keywords)
+    matched_canonicals: set[str] = {
+        _canonical_activity(keyword)
+        for keyword in keywords
         if re.search(rf"\b{re.escape(keyword)}\b", text)
-    ]
-    return matched
+    }
+    return sorted(matched_canonicals)
 
 
 def _is_need_based(description: str) -> bool:
