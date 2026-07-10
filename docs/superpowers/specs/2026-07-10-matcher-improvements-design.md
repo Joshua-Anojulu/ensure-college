@@ -105,7 +105,9 @@ On every match card (all three kinds), in the reasons area:
     up to {WEIGHT_FIELD_OF_STUDY} points`
   - school weighted but none matched: analogous with 15.
   Components that scored partially (e.g. related-field 20) do not generate a
-  hint. Backend computes these lines (they live with the weights); frontend
+  hint. Need-type components (scholarship financial_need, program/competition
+  financial_access) NEVER generate hints: a "you would score more with
+  financial need" line would nudge students toward misreporting need. Backend computes these lines (they live with the weights); frontend
   renders them as ordinary reasons.
 
 ## 4. Activity matching cleanup
