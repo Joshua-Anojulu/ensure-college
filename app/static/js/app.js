@@ -1963,9 +1963,9 @@ function quickApplyItemName(kind, item) {
 }
 
 // Qualifies when the item does not require an essay and has 3 or fewer required
-// application steps. Scholarship match results never carry application_requirements
-// (the /match endpoint does not return that field), so they qualify on essay
-// alone and are labeled "requirements not yet verified" rather than given a count.
+// application steps. When a match result has no application_requirements data
+// (not yet verified for that scholarship), it qualifies on essay alone and is
+// labeled "requirements not yet verified" rather than given a count.
 function quickApplyCandidate(kind, item) {
   if (item.essay_required) {
     return null;
@@ -5056,6 +5056,7 @@ function matchToCard(match) {
     requires_special_check: Boolean(match.requires_special_check),
     special_requirements: match.special_requirements || [],
     match_reasons: match.match_reasons || [],
+    application_requirements: match.application_requirements || [],
   };
 }
 
@@ -5076,6 +5077,7 @@ function scholarshipToCard(scholarship) {
     eligible_schools: (scholarship.eligibility?.eligible_schools || []).map((s) => s.name),
     requires_special_check: Boolean(scholarship.eligibility?.special_requirements?.length),
     special_requirements: scholarship.eligibility?.special_requirements || [],
+    application_requirements: scholarship.application_requirements || [],
     score: null,
     match_reasons: [],
   };

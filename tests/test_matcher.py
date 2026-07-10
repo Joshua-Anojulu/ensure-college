@@ -78,6 +78,42 @@ class TestPerfectMatch:
         assert result.closing_soon is False
 
 
+class TestApplicationRequirements:
+    def test_scholarship_with_requirements_passes_them_through(self):
+        student = make_student()
+        scholarship = make_scholarship(
+            eligibility={"fields_of_study": ["engineering"]},
+            application_requirements=[
+                {
+                    "id": "transcript",
+                    "label": "Submit an official transcript",
+                    "required": True,
+                    "source_url": TEST_URL,
+                },
+                {
+                    "id": "essay",
+                    "label": "Write a 500-word essay",
+                    "required": True,
+                    "source_url": TEST_URL,
+                },
+            ],
+        )
+        result = match_one(student, scholarship)
+
+        assert result is not None
+        assert [req.id for req in result.application_requirements] == ["transcript", "essay"]
+
+    def test_scholarship_without_requirements_returns_empty_list(self):
+        student = make_student()
+        scholarship = make_scholarship(
+            eligibility={"fields_of_study": ["engineering"]},
+        )
+        result = match_one(student, scholarship)
+
+        assert result is not None
+        assert result.application_requirements == []
+
+
 class TestFieldScoring:
     def test_specific_field_match_scores_above_open_to_all(self):
         student = make_student(intended_majors=["engineering"])

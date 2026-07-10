@@ -312,6 +312,7 @@ def _evaluate_scholarship(
         eligible_schools=[school.name for school in scholarship.eligibility.eligible_schools],
         requires_special_check=bool(special_requirements),
         special_requirements=special_requirements,
+        application_requirements=scholarship.application_requirements,
     )
 
 

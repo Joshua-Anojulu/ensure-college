@@ -3,7 +3,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
-from app.models.scholarship import SpecialRequirement
+from app.models.scholarship import ApplicationRequirement, SpecialRequirement
 
 
 class ScoreBreakdown(BaseModel):
@@ -56,6 +56,7 @@ class MatchResult(BaseModel):
         description="True when niche eligibility requirements need manual confirmation.",
     )
     special_requirements: list[SpecialRequirement] = Field(default_factory=list)
+    application_requirements: list[ApplicationRequirement] = Field(default_factory=list)
 
 
 class PreviewMatchResponse(BaseModel):
