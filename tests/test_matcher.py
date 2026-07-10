@@ -607,6 +607,56 @@ class TestActivitiesScoring:
         assert result is not None
         assert result.score_breakdown.activities == pytest.approx(0.0)
 
+    def test_short_tokens_do_not_match_substrings(self):
+        # "art" is only 3 chars, should not match substring in "participants"
+        student = make_student(activities=["art"])
+        scholarship = make_scholarship(
+            description="Participants in this scholarship may create art.",
+            eligibility={"fields_of_study": [], "demographics": []},
+        )
+        result = match_one(student, scholarship)
+
+        assert result is not None
+        assert result.score_breakdown.activities == pytest.approx(0.0)
+
+    def test_word_boundary_matching(self):
+        # "debate" matches "debate" in "debate championship", not as substring
+        student = make_student(activities=["debate team"])
+        scholarship = make_scholarship(
+            description="Award for winners of the national debate championship.",
+            eligibility={"fields_of_study": [], "demographics": []},
+        )
+        result = match_one(student, scholarship)
+
+        assert result is not None
+        assert result.score_breakdown.activities == pytest.approx(5.0)
+
+    def test_synonym_fold(self):
+        # "robot" should match to "robotics" via synonym folding
+        student = make_student(activities=["robotics club"])
+        scholarship = make_scholarship(
+            description="Award for students passionate about building a robot.",
+            eligibility={"fields_of_study": [], "demographics": []},
+        )
+        result = match_one(student, scholarship)
+
+        assert result is not None
+        assert result.score_breakdown.activities == pytest.approx(5.0)
+
+    def test_cap_still_enforced(self):
+        # 5 matching activities should cap at 10.0
+        student = make_student(
+            activities=["robotics", "debate", "chess", "music", "writing"]
+        )
+        scholarship = make_scholarship(
+            description="Recognize excellence in robotics, debate, chess, musician skills, and writer talents.",
+            eligibility={"fields_of_study": [], "demographics": []},
+        )
+        result = match_one(student, scholarship)
+
+        assert result is not None
+        assert result.score_breakdown.activities == pytest.approx(10.0)
+
 
 class TestFinancialNeedScoring:
     def test_need_based_description_rewards_high_need(self):

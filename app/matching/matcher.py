@@ -76,13 +76,33 @@ def _matching_schools(
     return matches
 
 
+_ACTIVITY_SYNONYMS: dict[str, set[str]] = {
+    "robotics": {"robot", "robots"},
+    "volunteering": {"volunteer", "volunteers"},
+    "debating": {"debate", "debates"},
+    "athletics": {"athletic", "athlete", "athletes"},
+    "music": {"musician", "musicians"},
+    "writing": {"writer", "writers"},
+}
+
+
 def _activity_keywords(activities: list[str]) -> set[str]:
-    """Pull meaningful, deduplicated keywords out of free-text activity strings."""
+    """Pull meaningful, deduplicated keywords out of free-text activity strings.
+
+    Tokens must be at least 4 characters long and not in the stopwords list.
+    Synonym folding expands keywords to include canonical forms and their variants.
+    """
     keywords: set[str] = set()
     for activity in activities:
-        for token in _WORD_RE.findall(activity.lower()):
-            if len(token) >= 3 and token not in _ACTIVITY_STOPWORDS:
-                keywords.add(token)
+        for token in re.split(r"[^a-z0-9]+", activity.lower()):
+            if len(token) < 4 or token in _ACTIVITY_STOPWORDS:
+                continue
+            keywords.add(token)
+            # Synonym folding: if token matches a variant, add canonical + all variants
+            for canonical, variants in _ACTIVITY_SYNONYMS.items():
+                if token == canonical or token in variants:
+                    keywords.add(canonical)
+                    keywords.update(variants)
     return keywords
 
 
@@ -90,10 +110,16 @@ def _matching_activities(activities: list[str], description: str) -> list[str]:
     """Return activity keywords that also appear as whole words in the description."""
     if not activities:
         return []
-    description_words = set(_WORD_RE.findall(description.lower()))
-    return sorted(
-        keyword for keyword in _activity_keywords(activities) if keyword in description_words
-    )
+    keywords = _activity_keywords(activities)
+    if not keywords:
+        return []
+    text = description.lower()
+    matched = [
+        keyword
+        for keyword in sorted(keywords)
+        if re.search(rf"\b{re.escape(keyword)}\b", text)
+    ]
+    return matched
 
 
 def _is_need_based(description: str) -> bool:
