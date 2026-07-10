@@ -41,6 +41,25 @@ def _match_tier(score: float) -> str:
     return "strong" if score >= STRONG_MATCH_THRESHOLD else "possible"
 
 
+def _explanation_lines(
+    breakdown: ProgramScoreBreakdown, *, weighted_zero: list[tuple[str, float]]
+) -> list[str]:
+    """Mirrors matcher._explanation_lines for the program breakdown shape."""
+    lines: list[str] = []
+    components = [
+        ("subject", breakdown.subject),
+        ("demographics", breakdown.demographics),
+        ("financial access", breakdown.financial_access),
+    ]
+    nonzero = [(name, pts) for name, pts in components if pts]
+    if breakdown.total:
+        joined = ", ".join(f"{name} {pts:g}" for name, pts in nonzero)
+        lines.append(f"Fit score {breakdown.total:g}: {joined}")
+    hints = sorted(weighted_zero, key=lambda pair: -pair[1])[:2]
+    lines.extend(line for line, _pts in hints)
+    return lines
+
+
 def _evaluate_program(
     student: StudentProfile,
     program: SummerProgram,
@@ -139,6 +158,20 @@ def _evaluate_program(
         )
         if match_tier == "strong":
             match_tier = "possible"
+
+    weighted_zero: list[tuple[str, float]] = []
+    if required_fields and breakdown.subject == 0:
+        weighted_zero.append(
+            (f"No subject overlap; subject fit adds up to {int(WEIGHT_SUBJECT)} points", WEIGHT_SUBJECT)
+        )
+    if elig.demographics and breakdown.demographics == 0:
+        weighted_zero.append(
+            (
+                f"No demographic overlap; this program adds up to {int(WEIGHT_DEMOGRAPHICS)} points for it",
+                WEIGHT_DEMOGRAPHICS,
+            )
+        )
+    reasons.extend(_explanation_lines(breakdown, weighted_zero=weighted_zero))
 
     return ProgramMatchResult(
         program_id=program.id,

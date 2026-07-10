@@ -110,6 +110,26 @@ def test_open_category_competition_appears_as_possible():
     assert any("Open to all" in reason for reason in result.match_reasons)
 
 
+def test_fit_context_line_lists_nonzero_components():
+    comp = _competition(
+        eligibility=Eligibility(fields_of_study=["engineering"]),
+        cost_category="free",
+    )
+    student = _profile(intended_majors=["engineering"], financial_need_level="high")
+    result = match_competitions(student, [comp], today=REF_DATE)[0]
+
+    assert "Fit score 50: category 40, financial access 10" in result.match_reasons
+
+
+def test_missing_category_hint_when_field_mismatch():
+    comp = _competition(eligibility=Eligibility(fields_of_study=["engineering"]))
+    student = _profile(intended_majors=["literature"], financial_need_level="low")
+    result = match_competitions(student, [comp], today=REF_DATE)[0]
+
+    assert result.score_breakdown.category == 0.0
+    assert "No category overlap; category fit adds up to 40 points" in result.match_reasons
+
+
 def test_competitions_dataset_loads_and_has_provenance():
     from app.data.loader import load_competitions
 

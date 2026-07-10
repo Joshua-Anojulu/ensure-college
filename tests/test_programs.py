@@ -133,6 +133,26 @@ def test_related_subject_scores_partial_credit():
     )
 
 
+def test_fit_context_line_lists_nonzero_components():
+    program = _program(
+        eligibility=Eligibility(fields_of_study=["engineering"]),
+        cost_category="free",
+    )
+    student = _profile(intended_majors=["engineering"], financial_need_level="high")
+    result = match_programs(student, [program], today=REF_DATE)[0]
+
+    assert "Fit score 50: subject 40, financial access 10" in result.match_reasons
+
+
+def test_missing_subject_hint_when_field_mismatch():
+    program = _program(eligibility=Eligibility(fields_of_study=["engineering"]))
+    student = _profile(intended_majors=["literature"], financial_need_level="low")
+    result = match_programs(student, [program], today=REF_DATE)[0]
+
+    assert result.score_breakdown.subject == 0.0
+    assert "No subject overlap; subject fit adds up to 40 points" in result.match_reasons
+
+
 def test_api_programs_endpoints():
     # Context manager triggers the lifespan so app.state.programs is loaded.
     with TestClient(app) as client:

@@ -129,6 +129,26 @@ def _sort_key(result: MatchResult, today: date) -> tuple:
     return (-result.score, deadline_priority, result.scholarship_name.lower())
 
 
+def _explanation_lines(breakdown: ScoreBreakdown, *, weighted_zero: list[tuple[str, float]]) -> list[str]:
+    """weighted_zero: (hint_line, potential_points) for components the item
+    weights that scored 0, any order; returns fit-context + top-2 hints."""
+    lines: list[str] = []
+    components = [
+        ("field of study", breakdown.field_of_study),
+        ("demographics", breakdown.demographics),
+        ("target school", breakdown.target_school),
+        ("activities", breakdown.activities),
+        ("financial need", breakdown.financial_need),
+    ]
+    nonzero = [(name, pts) for name, pts in components if pts]
+    if breakdown.total:
+        joined = ", ".join(f"{name} {pts:g}" for name, pts in nonzero)
+        lines.append(f"Fit score {breakdown.total:g}: {joined}")
+    hints = sorted(weighted_zero, key=lambda pair: -pair[1])[:2]
+    lines.extend(line for line, _pts in hints)
+    return lines
+
+
 def _evaluate_scholarship(
     student: StudentProfile,
     scholarship: Scholarship,
@@ -296,6 +316,24 @@ def _evaluate_scholarship(
         )
         if match_tier == "strong":
             match_tier = "possible"
+
+    weighted_zero: list[tuple[str, float]] = []
+    if required_fields and breakdown.field_of_study == 0:
+        weighted_zero.append(
+            (f"No field overlap; field fit adds up to {int(WEIGHT_FIELD_OF_STUDY)} points", WEIGHT_FIELD_OF_STUDY)
+        )
+    if required_demographics and breakdown.demographics == 0:
+        weighted_zero.append(
+            (
+                f"No demographic overlap; this award adds up to {int(WEIGHT_DEMOGRAPHICS)} points for it",
+                WEIGHT_DEMOGRAPHICS,
+            )
+        )
+    if eligible_schools and student.target_schools and breakdown.target_school == 0:
+        weighted_zero.append(
+            (f"No target school match; a school match adds {int(WEIGHT_TARGET_SCHOOL)} points", WEIGHT_TARGET_SCHOOL)
+        )
+    reasons.extend(_explanation_lines(breakdown, weighted_zero=weighted_zero))
 
     return MatchResult(
         scholarship_id=scholarship.id,

@@ -754,6 +754,80 @@ class TestEstimatedDeadline:
         assert result.closing_soon is False
 
 
+class TestExplanationLines:
+    def test_fit_context_line_lists_nonzero_components(self):
+        student = make_student(
+            intended_majors=["engineering"],
+            demographic_tags=[],
+            financial_need_level="medium",
+            target_schools=[],
+        )
+        scholarship = make_scholarship(
+            eligibility={"fields_of_study": ["engineering"], "demographics": []},
+            description="A need based award for low-income students.",
+        )
+        result = match_one(student, scholarship)
+
+        assert result is not None
+        assert "Fit score 45: field of study 40, financial need 5" in result.match_reasons
+
+    def test_missing_hints_capped_at_two_and_ordered(self):
+        student = make_student(
+            intended_majors=["literature"],
+            demographic_tags=[],
+            target_schools=[],
+        )
+        scholarship = make_scholarship(
+            eligibility={
+                "fields_of_study": ["engineering"],
+                "demographics": ["african_american"],
+                "eligible_schools": [
+                    {
+                        "name": "The University of Texas at Austin",
+                        "aliases": ["UT Austin"],
+                    }
+                ],
+            },
+        )
+        result = match_one(student, scholarship)
+
+        assert result is not None
+        reasons = result.match_reasons
+        assert "No field overlap; field fit adds up to 40 points" in reasons
+        assert "No demographic overlap; this award adds up to 25 points for it" in reasons
+        assert not any(reason.startswith("No target school match") for reason in reasons)
+
+    def test_partial_component_generates_no_hint(self):
+        student = make_student(intended_majors=["computer_science"])
+        scholarship = make_scholarship(
+            eligibility={"fields_of_study": ["engineering"], "demographics": []},
+        )
+        result = match_one(student, scholarship)
+
+        assert result is not None
+        assert result.score_breakdown.field_of_study == 20.0
+        assert not any(
+            reason.startswith("No field overlap") for reason in result.match_reasons
+        )
+
+    def test_zero_total_omits_fit_context(self):
+        student = make_student(
+            intended_majors=["music"],
+            demographic_tags=[],
+            financial_need_level="low",
+            activities=[],
+            target_schools=[],
+        )
+        scholarship = make_scholarship(
+            eligibility={"fields_of_study": ["law"], "demographics": []},
+        )
+        result = match_one(student, scholarship)
+
+        assert result is not None
+        assert result.score_breakdown.total == 0.0
+        assert not any(reason.startswith("Fit score") for reason in result.match_reasons)
+
+
 class TestDataLoader:
     def test_loader_parses_scholarships_array(self):
         from app.data.loader import load_scholarships
