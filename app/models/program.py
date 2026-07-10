@@ -105,3 +105,25 @@ class ProgramMatchResult(BaseModel):
         description="True when niche eligibility requirements need manual confirmation.",
     )
     special_requirements: list[SpecialRequirement] = Field(default_factory=list)
+
+
+class ProgramNearMiss(BaseModel):
+    """A program excluded by exactly one qualifying-type gate (GPA gap within
+    0.3, or a future grade level); informational, never a ranked match."""
+
+    program_id: str
+    name: str
+    host: str
+    cost: str
+    deadline: str
+    estimated_deadline: str | None = None
+    url: str
+    verified: bool
+    near_miss_reason: str
+
+
+class ProgramMatchResponse(BaseModel):
+    """Ranked program matches plus near-miss programs worth flagging to the student."""
+
+    matches: list[ProgramMatchResult]
+    near_misses: list[ProgramNearMiss]

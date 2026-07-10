@@ -1,5 +1,5 @@
 from datetime import date
-from typing import Literal
+from typing import Literal, Union
 
 from pydantic import BaseModel, Field
 
@@ -57,6 +57,28 @@ class MatchResult(BaseModel):
     )
     special_requirements: list[SpecialRequirement] = Field(default_factory=list)
     application_requirements: list[ApplicationRequirement] = Field(default_factory=list)
+
+
+class ScholarshipNearMiss(BaseModel):
+    """A scholarship excluded by exactly one qualifying-type gate (GPA gap
+    within 0.3, or a future grade level); informational, never a ranked match."""
+
+    scholarship_id: str
+    scholarship_name: str
+    sponsor: str
+    award_amount: Union[float, str]
+    deadline: str
+    estimated_deadline: str | None = None
+    url: str
+    verified: bool
+    near_miss_reason: str
+
+
+class MatchResponse(BaseModel):
+    """Ranked matches plus near-miss scholarships worth flagging to the student."""
+
+    matches: list[MatchResult]
+    near_misses: list[ScholarshipNearMiss]
 
 
 class PreviewMatchResponse(BaseModel):

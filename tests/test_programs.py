@@ -6,7 +6,11 @@ from fastapi.testclient import TestClient
 
 from app.data.loader import load_summer_programs
 from app.main import app
-from app.matching.program_matcher import match_programs
+from app.matching.program_matcher import (
+    match_programs,
+    match_programs_response,
+    near_miss_programs,
+)
 from app.models.program import SummerProgram
 from app.models.scholarship import Eligibility
 from app.models.student import StudentProfile
@@ -172,7 +176,161 @@ def test_api_programs_endpoints():
             },
         )
         assert matched.status_code == 200
-        body = matched.json()
+        payload = matched.json()
+        assert isinstance(payload["near_misses"], list)
+        body = payload["matches"]
         assert isinstance(body, list) and len(body) >= 1
         first = body[0]
         assert {"program_id", "score", "match_tier", "match_reasons"} <= first.keys()
+
+
+class TestProgramNearMiss:
+    def test_gpa_near_miss_within_window(self):
+        student = _profile(gpa=3.6)
+        program = _program(eligibility=Eligibility(min_gpa=3.8))
+
+        nm = near_miss_programs(student, [program], REF_DATE)
+
+        assert len(nm) == 1
+        assert nm[0].near_miss_reason == "Needs GPA 3.8; your profile says 3.6"
+        assert nm[0].program_id == "p1"
+
+    def test_gpa_gap_above_window_excluded(self):
+        student = _profile(gpa=3.49)
+        program = _program(eligibility=Eligibility(min_gpa=3.8))
+
+        assert near_miss_programs(student, [program], REF_DATE) == []
+
+    def test_future_grade_near_miss(self):
+        student = _profile(grade_level="high_school_junior")
+        program = _program(
+            eligibility=Eligibility(
+                fields_of_study=["engineering"], grade_levels=["high_school_senior"]
+            )
+        )
+
+        nm = near_miss_programs(student, [program], REF_DATE)
+
+        assert len(nm) == 1
+        assert nm[0].near_miss_reason == "Eligible when you are a high school senior"
+
+    def test_two_failed_gates_excluded(self):
+        # GPA gap 0.2 (qualifying alone) AND unmet citizenship -> not a near miss.
+        student = _profile(gpa=3.8, citizenship="international")
+        program = _program(
+            eligibility=Eligibility(
+                fields_of_study=["engineering"],
+                min_gpa=4.0,
+                citizenship_requirement="us_citizen",
+            )
+        )
+
+        assert near_miss_programs(student, [program], REF_DATE) == []
+
+    def test_past_deadline_excluded_even_with_gap(self):
+        student = _profile(gpa=3.8)
+        program = _program(
+            eligibility=Eligibility(fields_of_study=["engineering"], min_gpa=4.0),
+            deadline="2020-01-01",
+        )
+
+        assert near_miss_programs(student, [program], REF_DATE) == []
+
+    def test_near_miss_absent_from_matches(self):
+        student = _profile(gpa=3.8)
+        program = _program(eligibility=Eligibility(fields_of_study=["engineering"], min_gpa=4.0))
+
+        nm = near_miss_programs(student, [program], REF_DATE)
+        matches = match_programs(student, [program], today=REF_DATE)
+
+        assert len(nm) == 1
+        assert matches == []
+
+    def test_response_wrapper_shape(self):
+        student = _profile(gpa=3.8)
+        passing = _program(id="passing-program")
+        gap = _program(
+            id="near-miss-program",
+            eligibility=Eligibility(fields_of_study=["engineering"], min_gpa=4.0),
+        )
+
+        resp = match_programs_response(student, [passing, gap], today=REF_DATE)
+
+        assert resp.matches
+        assert isinstance(resp.near_misses, list)
+        assert len(resp.near_misses) == 1
+        assert resp.near_misses[0].program_id == "near-miss-program"
+
+    def test_cap_and_ordering(self):
+        student = _profile(gpa=3.8)
+        programs: list[SummerProgram] = []
+
+        real_dates = [
+            "2026-08-01",
+            "2026-07-01",
+            "2026-09-01",
+            "2026-06-30",
+            "2026-10-01",
+            "2026-06-27",
+        ]
+        for i, deadline in enumerate(real_dates):
+            programs.append(
+                _program(
+                    id=f"real-{i}",
+                    name=f"Real {i}",
+                    deadline=deadline,
+                    eligibility=Eligibility(fields_of_study=["engineering"], min_gpa=4.0),
+                )
+            )
+
+        estimated_dates = [
+            "2026-05-01",
+            "2026-04-01",
+            "2026-06-01",
+            "2026-03-01",
+            "2026-02-01",
+        ]
+        for i, estimate in enumerate(estimated_dates):
+            programs.append(
+                _program(
+                    id=f"estimated-{i}",
+                    name=f"Estimated {i}",
+                    deadline="VERIFY",
+                    estimated_deadline=estimate,
+                    eligibility=Eligibility(fields_of_study=["engineering"], min_gpa=4.0),
+                )
+            )
+
+        for name in ("AAA", "BBB", "CCC", "DDD", "EEE", "FFF"):
+            programs.append(
+                _program(
+                    id=f"none-{name}",
+                    name=name,
+                    deadline="VERIFY",
+                    eligibility=Eligibility(fields_of_study=["engineering"], min_gpa=4.0),
+                )
+            )
+
+        assert len(programs) == 17
+
+        nm = near_miss_programs(student, programs, REF_DATE)
+
+        assert len(nm) == 15
+        expected_order = [
+            "real-5",  # 2026-06-27
+            "real-3",  # 2026-06-30
+            "real-1",  # 2026-07-01
+            "real-0",  # 2026-08-01
+            "real-2",  # 2026-09-01
+            "real-4",  # 2026-10-01
+            "estimated-4",  # 2026-02-01
+            "estimated-3",  # 2026-03-01
+            "estimated-1",  # 2026-04-01
+            "estimated-0",  # 2026-05-01
+            "estimated-2",  # 2026-06-01
+            "none-AAA",
+            "none-BBB",
+            "none-CCC",
+            "none-DDD",
+        ]
+        assert [entry.program_id for entry in nm] == expected_order

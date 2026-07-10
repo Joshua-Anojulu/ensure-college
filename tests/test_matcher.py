@@ -2,7 +2,11 @@ from datetime import date
 
 import pytest
 
-from app.matching.matcher import match_scholarships
+from app.matching.matcher import (
+    match_scholarships,
+    match_scholarships_response,
+    near_miss_scholarships,
+)
 from app.models.scholarship import Eligibility, Scholarship
 from app.models.student import StudentProfile
 
@@ -943,7 +947,7 @@ class TestPreviewMatching:
                     "state": "WY",
                 },
             ).json()
-            assert preview["total_matches"] >= len(full)
+            assert preview["total_matches"] >= len(full["matches"])
 
     def test_preview_flags_residency_requirements_in_reasons(self):
         from fastapi.testclient import TestClient
@@ -968,3 +972,159 @@ class TestPreviewMatching:
                 json=self._preview_payload(grade_level="third_grade"),
             )
             assert bad.status_code == 422
+
+    def test_preview_shape_is_unchanged(self):
+        """Preview keeps its {total_matches, results} shape; no near_misses,
+        no {matches, near_misses} wrapper -- the near-miss feature is /match only."""
+        from fastapi.testclient import TestClient
+
+        from app.main import app
+
+        with TestClient(app) as client:
+            body = client.post("/match/preview", json=self._preview_payload()).json()
+            assert set(body.keys()) == {"total_matches", "results"}
+            assert "near_misses" not in body
+            assert "matches" not in body
+
+
+class TestNearMiss:
+    def test_gpa_near_miss_within_window(self):
+        student = make_student(gpa=3.6)
+        scholarship = make_scholarship(eligibility={"min_gpa": 3.8})
+
+        nm = near_miss_scholarships(student, [scholarship], FIXED_TODAY)
+
+        assert len(nm) == 1
+        assert nm[0].near_miss_reason == "Needs GPA 3.8; your profile says 3.6"
+        assert nm[0].scholarship_id == "test-scholarship"
+
+    def test_gpa_gap_above_window_excluded(self):
+        student = make_student(gpa=3.49)
+        scholarship = make_scholarship(eligibility={"min_gpa": 3.8})
+
+        nm = near_miss_scholarships(student, [scholarship], FIXED_TODAY)
+
+        assert nm == []
+
+    def test_future_grade_near_miss(self):
+        student = make_student(grade_level="high_school_junior")
+        scholarship = make_scholarship(eligibility={"grade_levels": ["high_school_senior"]})
+
+        nm = near_miss_scholarships(student, [scholarship], FIXED_TODAY)
+
+        assert len(nm) == 1
+        assert nm[0].near_miss_reason == "Eligible when you are a high school senior"
+
+    def test_two_failed_gates_excluded(self):
+        # GPA gap 0.2 (qualifying on its own) AND wrong state -> not a near miss.
+        student = make_student(gpa=3.8, state="CA")
+        scholarship = make_scholarship(eligibility={"min_gpa": 4.0, "states": ["NY"]})
+
+        nm = near_miss_scholarships(student, [scholarship], FIXED_TODAY)
+
+        assert nm == []
+
+    def test_past_deadline_excluded_even_with_gap(self):
+        student = make_student(gpa=3.8)
+        scholarship = make_scholarship(eligibility={"min_gpa": 4.0}, deadline="2020-01-01")
+
+        nm = near_miss_scholarships(student, [scholarship], FIXED_TODAY)
+
+        assert nm == []
+
+    def test_near_miss_absent_from_matches(self):
+        student = make_student(gpa=3.8)
+        scholarship = make_scholarship(eligibility={"min_gpa": 4.0})
+
+        nm = near_miss_scholarships(student, [scholarship], FIXED_TODAY)
+        matches = match_scholarships(student, [scholarship], today=FIXED_TODAY)
+
+        assert len(nm) == 1
+        assert matches == []
+
+    def test_response_wrapper_shape(self):
+        student = make_student(gpa=3.8)
+        passing = make_scholarship(id="passing-scholarship")
+        near_miss = make_scholarship(id="near-miss-scholarship", eligibility={"min_gpa": 4.0})
+
+        resp = match_scholarships_response(student, [passing, near_miss], today=FIXED_TODAY)
+
+        assert resp.matches
+        assert isinstance(resp.near_misses, list)
+        assert len(resp.near_misses) == 1
+        assert resp.near_misses[0].scholarship_id == "near-miss-scholarship"
+        assert all(match.scholarship_id != "near-miss-scholarship" for match in resp.matches)
+
+    def test_cap_and_ordering(self):
+        student = make_student(gpa=3.8)
+        scholarships: list[Scholarship] = []
+
+        real_dates = [
+            "2026-08-01",
+            "2026-07-01",
+            "2026-09-01",
+            "2026-06-20",
+            "2026-10-01",
+            "2026-06-15",
+        ]
+        for i, deadline in enumerate(real_dates):
+            scholarships.append(
+                make_scholarship(
+                    id=f"real-{i}",
+                    name=f"Real {i}",
+                    deadline=deadline,
+                    eligibility={"min_gpa": 4.0},
+                )
+            )
+
+        estimated_dates = [
+            "2026-05-01",
+            "2026-04-01",
+            "2026-06-01",
+            "2026-03-01",
+            "2026-02-01",
+        ]
+        for i, estimate in enumerate(estimated_dates):
+            scholarships.append(
+                make_scholarship(
+                    id=f"estimated-{i}",
+                    name=f"Estimated {i}",
+                    deadline="VERIFY",
+                    estimated_deadline=estimate,
+                    eligibility={"min_gpa": 4.0},
+                )
+            )
+
+        for name in ("AAA", "BBB", "CCC", "DDD", "EEE", "FFF"):
+            scholarships.append(
+                make_scholarship(
+                    id=f"none-{name}",
+                    name=name,
+                    deadline="VERIFY",
+                    eligibility={"min_gpa": 4.0},
+                )
+            )
+
+        assert len(scholarships) == 17
+
+        nm = near_miss_scholarships(student, scholarships, FIXED_TODAY)
+
+        assert len(nm) == 15
+        expected_order = [
+            "real-5",  # 2026-06-15
+            "real-3",  # 2026-06-20
+            "real-1",  # 2026-07-01
+            "real-0",  # 2026-08-01
+            "real-2",  # 2026-09-01
+            "real-4",  # 2026-10-01
+            "estimated-4",  # 2026-02-01
+            "estimated-3",  # 2026-03-01
+            "estimated-1",  # 2026-04-01
+            "estimated-0",  # 2026-05-01
+            "estimated-2",  # 2026-06-01
+            "none-AAA",
+            "none-BBB",
+            "none-CCC",
+            "none-DDD",
+        ]
+        assert [entry.scholarship_id for entry in nm] == expected_order

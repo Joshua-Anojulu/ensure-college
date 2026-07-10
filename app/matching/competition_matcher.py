@@ -15,7 +15,9 @@ from datetime import date
 
 from app.matching.common import (
     FIELD_ADJACENCY,
+    GRADE_LABELS,
     citizenship_satisfies,
+    earliest_future_qualifying_grade,
     grade_level_matches,
     matching_demographics,
     matching_fields,
@@ -25,7 +27,9 @@ from app.matching.common import (
 )
 from app.models.competition import (
     Competition,
+    CompetitionMatchResponse,
     CompetitionMatchResult,
+    CompetitionNearMiss,
     CompetitionScoreBreakdown,
 )
 from app.models.student import StudentProfile
@@ -225,3 +229,88 @@ def match_competitions(
             results.append(match)
     results.sort(key=lambda result: (-result.score, result.name.lower()))
     return results
+
+
+def _near_miss_reason_for(
+    student: StudentProfile, competition: Competition, today: date
+) -> str | None:
+    """Reason string when the competition fails EXACTLY one gate and that gate
+    is a qualifying near-miss type; otherwise None. Gates checked: GPA, grade
+    level, deadline, citizenship (the same gates _evaluate_competition applies;
+    competitions have no state gate)."""
+    failures: list[str] = []
+    qualifying_reason: str | None = None
+    elig = competition.eligibility
+
+    min_gpa = elig.min_gpa
+    if isinstance(min_gpa, (int, float)) and student.gpa < float(min_gpa):
+        gap = float(min_gpa) - student.gpa
+        failures.append("gpa")
+        if 0 < gap <= 0.3:
+            qualifying_reason = f"Needs GPA {min_gpa:g}; your profile says {student.gpa:g}"
+
+    grade_levels = elig.grade_levels
+    if grade_levels and not grade_level_matches(student.grade_level, grade_levels):
+        failures.append("grade")
+        future = earliest_future_qualifying_grade(student.grade_level, grade_levels)
+        if future is not None:
+            qualifying_reason = f"Eligible when you are {GRADE_LABELS[future]}"
+
+    parsed_deadline = parse_iso_deadline(competition.deadline)
+    if parsed_deadline is not None and parsed_deadline < today:
+        failures.append("deadline")
+
+    if citizenship_satisfies(student.citizenship, elig.citizenship_requirement) is False:
+        failures.append("citizenship")
+
+    if len(failures) != 1 or qualifying_reason is None:
+        return None
+    return qualifying_reason
+
+
+def near_miss_competitions(
+    student: StudentProfile, competitions: list[Competition], today: date
+) -> list[CompetitionNearMiss]:
+    entries: list[CompetitionNearMiss] = []
+    for competition in competitions:
+        reason = _near_miss_reason_for(student, competition, today)
+        if reason is None:
+            continue
+        entries.append(
+            CompetitionNearMiss(
+                competition_id=competition.id,
+                name=competition.name,
+                host=competition.host,
+                recognition=competition.recognition,
+                deadline=competition.deadline,
+                estimated_deadline=competition.estimated_deadline,
+                url=str(competition.url),
+                verified=competition.verified,
+                near_miss_reason=reason,
+            )
+        )
+    entries.sort(key=_near_miss_sort_key)
+    return entries[:15]
+
+
+def _near_miss_sort_key(entry: CompetitionNearMiss) -> tuple:
+    real = parse_iso_deadline(entry.deadline)
+    if real is not None:
+        return (0, real.toordinal(), entry.name.lower())
+    est = parse_iso_deadline(entry.estimated_deadline or "")
+    if est is not None:
+        return (1, est.toordinal(), entry.name.lower())
+    return (2, 0, entry.name.lower())
+
+
+def match_competitions_response(
+    student: StudentProfile,
+    competitions: list[Competition],
+    *,
+    today: date | None = None,
+) -> CompetitionMatchResponse:
+    reference_date = today or date.today()
+    return CompetitionMatchResponse(
+        matches=match_competitions(student, competitions, today=reference_date),
+        near_misses=near_miss_competitions(student, competitions, reference_date),
+    )

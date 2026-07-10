@@ -5,15 +5,16 @@ from __future__ import annotations
 import re
 from datetime import date
 
-from app.matching.common import FIELD_ADJACENCY
+from app.matching.common import FIELD_ADJACENCY, GRADE_LABELS
 from app.matching.common import citizenship_satisfies as _citizenship_satisfies
+from app.matching.common import earliest_future_qualifying_grade as _earliest_future_qualifying_grade
 from app.matching.common import grade_level_matches as _grade_level_matches
 from app.matching.common import matching_demographics as _matching_demographics
 from app.matching.common import matching_fields as _matching_fields
 from app.matching.common import normalize_tag as _normalize_tag
 from app.matching.common import parse_iso_deadline as _parse_iso_deadline
 from app.matching.common import related_fields as _related_fields
-from app.models.match import MatchResult, ScoreBreakdown
+from app.models.match import MatchResponse, MatchResult, ScholarshipNearMiss, ScoreBreakdown
 from app.models.scholarship import EligibleSchool, Scholarship
 from app.models.student import StudentProfile
 
@@ -422,3 +423,90 @@ def match_scholarships(
             results.append(match)
     results.sort(key=lambda result: _sort_key(result, reference_date))
     return results
+
+
+def _near_miss_reason_for(
+    student: StudentProfile, scholarship: Scholarship, today: date
+) -> str | None:
+    """Reason string when the item fails EXACTLY one gate and that gate is a
+    qualifying near-miss type; otherwise None."""
+    failures: list[str] = []
+    qualifying_reason: str | None = None
+
+    min_gpa = scholarship.eligibility.min_gpa
+    if isinstance(min_gpa, (int, float)) and student.gpa < float(min_gpa):
+        gap = float(min_gpa) - student.gpa
+        failures.append("gpa")
+        if 0 < gap <= 0.3:
+            qualifying_reason = f"Needs GPA {min_gpa:g}; your profile says {student.gpa:g}"
+
+    grade_levels = scholarship.eligibility.grade_levels
+    if grade_levels and not _grade_level_matches(student.grade_level, grade_levels):
+        failures.append("grade")
+        future = _earliest_future_qualifying_grade(student.grade_level, grade_levels)
+        if future is not None:
+            qualifying_reason = f"Eligible when you are {GRADE_LABELS[future]}"
+
+    parsed_deadline = _parse_iso_deadline(scholarship.deadline)
+    if parsed_deadline is not None and parsed_deadline < today:
+        failures.append("deadline")
+
+    if _citizenship_satisfies(
+        student.citizenship, scholarship.eligibility.citizenship_requirement
+    ) is False:
+        failures.append("citizenship")
+
+    if not _state_matches(student.state, scholarship.eligibility.states):
+        failures.append("state")
+
+    if len(failures) != 1 or qualifying_reason is None:
+        return None
+    return qualifying_reason
+
+
+def near_miss_scholarships(
+    student: StudentProfile, scholarships: list[Scholarship], today: date
+) -> list[ScholarshipNearMiss]:
+    entries: list[ScholarshipNearMiss] = []
+    for scholarship in scholarships:
+        reason = _near_miss_reason_for(student, scholarship, today)
+        if reason is None:
+            continue
+        entries.append(
+            ScholarshipNearMiss(
+                scholarship_id=scholarship.id,
+                scholarship_name=scholarship.name,
+                sponsor=scholarship.sponsor,
+                award_amount=scholarship.award_amount,
+                deadline=scholarship.deadline,
+                estimated_deadline=scholarship.estimated_deadline,
+                url=str(scholarship.url),
+                verified=scholarship.verified,
+                near_miss_reason=reason,
+            )
+        )
+    entries.sort(key=_near_miss_sort_key)
+    return entries[:15]
+
+
+def _near_miss_sort_key(entry: ScholarshipNearMiss) -> tuple:
+    real = _parse_iso_deadline(entry.deadline)
+    if real is not None:
+        return (0, real.toordinal(), entry.scholarship_name.lower())
+    est = _parse_iso_deadline(entry.estimated_deadline or "")
+    if est is not None:
+        return (1, est.toordinal(), entry.scholarship_name.lower())
+    return (2, 0, entry.scholarship_name.lower())
+
+
+def match_scholarships_response(
+    student: StudentProfile,
+    scholarships: list[Scholarship],
+    *,
+    today: date | None = None,
+) -> MatchResponse:
+    reference_date = today or date.today()
+    return MatchResponse(
+        matches=match_scholarships(student, scholarships, today=reference_date),
+        near_misses=near_miss_scholarships(student, scholarships, reference_date),
+    )

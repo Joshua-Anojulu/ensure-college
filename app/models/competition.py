@@ -94,3 +94,25 @@ class CompetitionMatchResult(BaseModel):
     application_requirements: list[ApplicationRequirement] = Field(default_factory=list)
     requires_special_check: bool = False
     special_requirements: list[SpecialRequirement] = Field(default_factory=list)
+
+
+class CompetitionNearMiss(BaseModel):
+    """A competition excluded by exactly one qualifying-type gate (GPA gap
+    within 0.3, or a future grade level); informational, never a ranked match."""
+
+    competition_id: str
+    name: str
+    host: str
+    recognition: str
+    deadline: str
+    estimated_deadline: str | None = None
+    url: str
+    verified: bool
+    near_miss_reason: str
+
+
+class CompetitionMatchResponse(BaseModel):
+    """Ranked competition matches plus near-miss competitions worth flagging."""
+
+    matches: list[CompetitionMatchResult]
+    near_misses: list[CompetitionNearMiss]

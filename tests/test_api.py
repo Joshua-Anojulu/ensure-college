@@ -112,7 +112,9 @@ class TestMatchEndpoint:
     def test_match_with_valid_profile_returns_ranked_results(self, client):
         response = client.post("/match", json=VALID_STUDENT)
         assert response.status_code == 200
-        results = response.json()
+        payload = response.json()
+        assert isinstance(payload["near_misses"], list)
+        results = payload["matches"]
         assert isinstance(results, list)
         assert len(results) > 0
         for result in results:
@@ -127,7 +129,7 @@ class TestMatchEndpoint:
     ):
         response = client.post("/match", json=REALISTIC_STUDENT)
         assert response.status_code == 200
-        results = response.json()
+        results = response.json()["matches"]
         assert len(results) > 0
 
         by_id = {r["scholarship_id"]: r for r in results}
@@ -173,8 +175,15 @@ class TestMatchEndpoint:
     def test_match_results_sorted_by_score_descending(self, client):
         response = client.post("/match", json=VALID_STUDENT)
         assert response.status_code == 200
-        scores = [result["score"] for result in response.json()]
+        scores = [result["score"] for result in response.json()["matches"]]
         assert scores == sorted(scores, reverse=True)
+
+    def test_match_near_misses_present(self, client):
+        response = client.post("/match", json=VALID_STUDENT)
+        assert response.status_code == 200
+        payload = response.json()
+        assert "matches" in payload
+        assert isinstance(payload["near_misses"], list)
 
     def test_match_with_invalid_gpa_returns_422(self, client):
         invalid_student = {**VALID_STUDENT, "gpa": 5.0}

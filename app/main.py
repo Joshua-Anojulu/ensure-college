@@ -24,10 +24,10 @@ from app.essay.advice import (
     generate_program_advice,
 )
 from app.llm import AIFeatureError
-from app.matching.competition_matcher import match_competitions
-from app.matching.matcher import match_scholarships
-from app.matching.program_matcher import match_programs
-from app.models.competition import Competition, CompetitionMatchResult
+from app.matching.competition_matcher import match_competitions_response
+from app.matching.matcher import match_scholarships, match_scholarships_response
+from app.matching.program_matcher import match_programs_response
+from app.models.competition import Competition, CompetitionMatchResponse
 from app.models.essay import (
     EssayAdviceRequest,
     EssayAdviceResponse,
@@ -36,8 +36,8 @@ from app.models.essay import (
     ProgramAdviceRequest,
     ProgramAdviceResponse,
 )
-from app.models.match import MatchResult, PreviewMatchResponse
-from app.models.program import ProgramMatchResult, SummerProgram
+from app.models.match import MatchResponse, PreviewMatchResponse
+from app.models.program import ProgramMatchResponse, SummerProgram
 from app.models.resume import ResumeExtractionResponse
 from app.models.scholarship import Scholarship
 from app.models.student import PreviewMatchRequest, StudentProfile
@@ -313,9 +313,9 @@ def get_scholarships(request: Request) -> list[Scholarship]:
 
 
 @app.post("/match")
-def match_student(request: Request, student: StudentProfile) -> list[MatchResult]:
+def match_student(request: Request, student: StudentProfile) -> MatchResponse:
     scholarships: list[Scholarship] = request.app.state.scholarships
-    return match_scholarships(student, scholarships)
+    return match_scholarships_response(student, scholarships)
 
 
 @app.post("/match/preview")
@@ -344,9 +344,9 @@ def get_programs(request: Request) -> list[SummerProgram]:
 
 
 @app.post("/programs/match")
-def match_summer_programs(request: Request, student: StudentProfile) -> list[ProgramMatchResult]:
+def match_summer_programs(request: Request, student: StudentProfile) -> ProgramMatchResponse:
     programs: list[SummerProgram] = request.app.state.programs
-    return match_programs(student, programs)
+    return match_programs_response(student, programs)
 
 
 @app.get("/competitions")
@@ -357,9 +357,9 @@ def get_competitions(request: Request) -> list[Competition]:
 @app.post("/competitions/match")
 def match_competition_list(
     request: Request, student: StudentProfile
-) -> list[CompetitionMatchResult]:
+) -> CompetitionMatchResponse:
     competitions: list[Competition] = request.app.state.competitions
-    return match_competitions(student, competitions)
+    return match_competitions_response(student, competitions)
 
 
 @app.post(

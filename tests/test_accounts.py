@@ -382,7 +382,7 @@ class TestStudentJourney:
 
         matches = client.post("/match", json=VALID_PROFILE)
         assert matches.status_code == 200
-        results = matches.json()
+        results = matches.json()["matches"]
         assert results
 
         scholarship_id = results[0]["scholarship_id"]

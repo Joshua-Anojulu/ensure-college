@@ -40,7 +40,7 @@ def main() -> int:
         "activities": ["robotics club"],
     }
     r = client.post("/match", json=profile)
-    results = r.json() if r.status_code == 200 else []
+    results = r.json().get("matches", []) if r.status_code == 200 else []
     check(
         "POST /match",
         r.status_code == 200 and isinstance(results, list) and len(results) > 0,
