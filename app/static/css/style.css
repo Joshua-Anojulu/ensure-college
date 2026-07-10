@@ -1764,3 +1764,26 @@ input:user-invalid, select:user-invalid, textarea:user-invalid { border-color: v
 .quick-apply-left { display: flex; flex-direction: column; gap: 0.12rem; min-width: 0; }
 .quick-apply-name { margin: 0; font-weight: 600; }
 .quick-apply-link { flex: 0 0 auto; }
+/* .browse-row a paints anchors ink; this link is an ink-filled button, so its
+   text must stay light in every state or it disappears into its own background. */
+.browse-row .quick-apply-link,
+.browse-row .quick-apply-link:hover,
+.browse-row .quick-apply-link:focus-visible { color: var(--brand-ink); text-decoration: none; }
+
+/* Per-field copy chips: applications have one box per fact, so each fact
+   copies on its own click. */
+.quick-applies-fields { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0.75rem 0 0.15rem; }
+.quick-apply-field-chip {
+  padding: 0.3rem 0.6rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-xs);
+  color: var(--ink-soft);
+  background: var(--surface-inset);
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.03em;
+  transition: border-color var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease);
+}
+.quick-apply-field-chip:hover, .quick-apply-field-chip:focus-visible { border-color: var(--line-strong); background: var(--surface); }
+.quick-apply-field-chip strong { color: var(--ink); font-weight: 700; }

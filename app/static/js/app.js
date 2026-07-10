@@ -2040,6 +2040,7 @@ function renderQuickApplies() {
     return;
   }
   quickAppliesPanel.hidden = false;
+  renderQuickApplyFieldChips();
   const candidates = collectQuickApplyCandidates();
   quickAppliesList.innerHTML = "";
   quickAppliesEmpty.hidden = candidates.length > 0;
@@ -2127,39 +2128,80 @@ function vocabLabel(field, value) {
   return match ? match.label : value;
 }
 
-// Plain-text profile summary for fast form-filling on a sponsor's own site.
-// Built from the profile that produced the current matches (lastSubmittedProfile),
-// not from live (possibly since-edited) form fields. Omits any empty field.
-function buildProfileSummaryText(profile) {
+// Profile facts for fast form-filling on a sponsor's own site, built from the
+// profile that produced the current matches (lastSubmittedProfile), not from
+// live (possibly since-edited) form fields. Omits any empty field. Each fact
+// is a {label, value} pair so it can copy on its own (application forms take
+// one fact per box) or join into the full plain-text summary.
+function buildProfileSummaryFields(profile) {
   if (!profile) {
-    return "";
+    return [];
   }
-  const lines = [];
+  const fields = [];
   if (typeof profile.gpa === "number" && !Number.isNaN(profile.gpa)) {
-    lines.push(`GPA: ${profile.gpa}`);
+    fields.push({ label: "GPA", value: String(profile.gpa) });
   }
   const gradeLabel = vocabLabel("grade_level", profile.grade_level);
   if (gradeLabel) {
-    lines.push(`Grade: ${gradeLabel}`);
+    fields.push({ label: "Grade", value: gradeLabel });
   }
   const citizenshipLabel = vocabLabel("citizenship", profile.citizenship);
   if (citizenshipLabel) {
-    lines.push(`Citizenship: ${citizenshipLabel}`);
+    fields.push({ label: "Citizenship", value: citizenshipLabel });
   }
   const stateLabel = vocabLabel("state", profile.state);
   if (stateLabel) {
-    lines.push(`State: ${stateLabel}`);
+    fields.push({ label: "State", value: stateLabel });
   }
-  const fields = (profile.intended_majors || [])
+  const studyFields = (profile.intended_majors || [])
     .map((value) => vocabLabel("fields_of_study", value))
     .filter(Boolean);
-  if (fields.length > 0) {
-    lines.push(`Fields of study: ${fields.join(", ")}`);
+  if (studyFields.length > 0) {
+    fields.push({ label: "Fields of study", value: studyFields.join(", ") });
   }
   if (profile.activities && profile.activities.length > 0) {
-    lines.push(`Activities: ${profile.activities.join(", ")}`);
+    fields.push({ label: "Activities", value: profile.activities.join(", ") });
   }
-  return lines.join("\n");
+  return fields;
+}
+
+function buildProfileSummaryText(profile) {
+  return buildProfileSummaryFields(profile)
+    .map((field) => `${field.label}: ${field.value}`)
+    .join("\n");
+}
+
+// One chip per profile fact; clicking copies just that fact's value, since
+// sponsor forms want facts one box at a time.
+function renderQuickApplyFieldChips() {
+  const container = document.getElementById("quick-applies-fields");
+  if (!container) {
+    return;
+  }
+  const fields = buildProfileSummaryFields(lastSubmittedProfile);
+  container.innerHTML = "";
+  container.hidden = fields.length === 0;
+  for (const field of fields) {
+    const chip = document.createElement("button");
+    chip.type = "button";
+    chip.className = "quick-apply-field-chip";
+    chip.setAttribute("aria-label", `Copy ${field.label.toLowerCase()}`);
+    chip.title = `Copy ${field.label.toLowerCase()}`;
+    const label = document.createElement("strong");
+    label.textContent = field.label;
+    chip.append(label, document.createTextNode(` ${field.value}`));
+    chip.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(field.value);
+        chip.textContent = "Copied";
+      } catch (err) {
+        console.error(err);
+        chip.textContent = "Could not copy";
+      }
+      window.setTimeout(renderQuickApplyFieldChips, 1400);
+    });
+    container.appendChild(chip);
+  }
 }
 
 function wireQuickApplies() {
