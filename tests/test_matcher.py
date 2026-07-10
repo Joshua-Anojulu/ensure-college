@@ -635,6 +635,21 @@ class TestActivitiesScoring:
         assert result is not None
         assert result.score_breakdown.activities == pytest.approx(5.0)
 
+    def test_digit_tokens_do_not_earn_activity_credit(self):
+        # "2026" is a pure-digit token >=4 chars; it must not survive the
+        # tokenizer's length filter and score on an incidental year overlap.
+        # "treasurer" is alpha and >=4 chars but absent from the description,
+        # so it legitimately scores nothing here too.
+        student = make_student(activities=["Class of 2026 treasurer"])
+        scholarship = make_scholarship(
+            description="Open to students entering college in 2026.",
+            eligibility={"fields_of_study": [], "demographics": []},
+        )
+        result = match_one(student, scholarship)
+
+        assert result is not None
+        assert result.score_breakdown.activities == pytest.approx(0.0)
+
     def test_synonym_fold(self):
         # "robot" should match to "robotics" via synonym folding
         student = make_student(activities=["robotics club"])
@@ -997,6 +1012,17 @@ class TestNearMiss:
         assert len(nm) == 1
         assert nm[0].near_miss_reason == "Needs GPA 3.8; your profile says 3.6"
         assert nm[0].scholarship_id == "test-scholarship"
+
+    def test_gpa_near_miss_at_float_imprecise_boundary(self):
+        # 3.7 - 3.4 == 0.30000000000000027 in binary float arithmetic; the
+        # spec says a gap of exactly 0.3 qualifies, so this must round-trip.
+        student = make_student(gpa=3.4)
+        scholarship = make_scholarship(eligibility={"min_gpa": 3.7})
+
+        nm = near_miss_scholarships(student, [scholarship], FIXED_TODAY)
+
+        assert len(nm) == 1
+        assert nm[0].near_miss_reason == "Needs GPA 3.7; your profile says 3.4"
 
     def test_gpa_gap_above_window_excluded(self):
         student = make_student(gpa=3.49)

@@ -95,7 +95,7 @@ def _activity_keywords(activities: list[str]) -> set[str]:
     keywords: set[str] = set()
     for activity in activities:
         for token in re.split(r"[^a-z0-9]+", activity.lower()):
-            if len(token) < 4 or token in _ACTIVITY_STOPWORDS:
+            if len(token) < 4 or not token.isalpha() or token in _ACTIVITY_STOPWORDS:
                 continue
             keywords.add(token)
             # Synonym folding: if token matches a variant, add canonical + all variants
@@ -437,7 +437,7 @@ def _near_miss_reason_for(
     if isinstance(min_gpa, (int, float)) and student.gpa < float(min_gpa):
         gap = float(min_gpa) - student.gpa
         failures.append("gpa")
-        if 0 < gap <= 0.3:
+        if 0 < round(gap, 2) <= 0.3:
             qualifying_reason = f"Needs GPA {min_gpa:g}; your profile says {student.gpa:g}"
 
     grade_levels = scholarship.eligibility.grade_levels

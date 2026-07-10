@@ -245,7 +245,7 @@ def _near_miss_reason_for(
     if isinstance(min_gpa, (int, float)) and student.gpa < float(min_gpa):
         gap = float(min_gpa) - student.gpa
         failures.append("gpa")
-        if 0 < gap <= 0.3:
+        if 0 < round(gap, 2) <= 0.3:
             qualifying_reason = f"Needs GPA {min_gpa:g}; your profile says {student.gpa:g}"
 
     grade_levels = elig.grade_levels

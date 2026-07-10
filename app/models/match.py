@@ -1,5 +1,5 @@
 from datetime import date
-from typing import Literal, Union
+from typing import Literal
 
 from pydantic import BaseModel, Field
 
@@ -66,7 +66,7 @@ class ScholarshipNearMiss(BaseModel):
     scholarship_id: str
     scholarship_name: str
     sponsor: str
-    award_amount: Union[float, str]
+    award_amount: str | float
     deadline: str
     estimated_deadline: str | None = None
     url: str
