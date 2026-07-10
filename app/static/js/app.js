@@ -77,6 +77,15 @@ function resetAllLaneWindows() {
   resetLaneWindow("competitions");
 }
 
+// Same batching pattern, applied to the Quick applies panel (Application Plan
+// tab), which is capped at 10 rows with a Show more button beyond that.
+const QUICK_APPLIES_BATCH = 10;
+let quickAppliesVisibleCount = QUICK_APPLIES_BATCH;
+
+function resetQuickAppliesWindow() {
+  quickAppliesVisibleCount = QUICK_APPLIES_BATCH;
+}
+
 function rerenderLane(kind) {
   if (kind === "scholarships" && lastResults) {
     renderResults(lastResults);
@@ -185,6 +194,11 @@ const recLettersPanel = document.getElementById("rec-letters-panel");
 const recLettersList = document.getElementById("rec-letters-list");
 const recLettersEmpty = document.getElementById("rec-letters-empty");
 const recLettersCount = document.getElementById("rec-letters-count");
+const quickAppliesPanel = document.getElementById("quick-applies-panel");
+const quickAppliesList = document.getElementById("quick-applies-list");
+const quickAppliesEmpty = document.getElementById("quick-applies-empty");
+const quickAppliesCount = document.getElementById("quick-applies-count");
+const quickAppliesCopyBtn = document.getElementById("quick-applies-copy");
 
 const resultsFilters = document.getElementById("results-filters");
 const filterQuality = document.getElementById("filter-quality");
@@ -289,6 +303,7 @@ async function init() {
   wireResumeImport();
   wireSettings();
   wireAgeGate();
+  wireQuickApplies();
   await loadSession();
 }
 
@@ -1919,6 +1934,254 @@ function refreshTrackerSummary() {
     }
   }
   renderRecLettersRollup(trackerItems);
+  renderQuickApplies();
+}
+
+/* ---------- Quick applies ---------- */
+// Derived live from the current match state (lastResults/lastPrograms/lastCompetitions),
+// not from saved items, so the panel renders whether or not the student is logged in,
+// as soon as any lane has matches.
+
+const QUICK_APPLY_KIND_META = {
+  scholarship: { label: "Scholarship", path: "scholarships" },
+  program: { label: "Summer program", path: "programs" },
+  competition: { label: "Competition", path: "competitions" },
+};
+
+function matchResultsExist() {
+  return lastResults !== null || lastPrograms !== null || lastCompetitions !== null;
+}
+
+function quickApplyItemId(kind, item) {
+  if (kind === "program") return item.program_id;
+  if (kind === "competition") return item.competition_id;
+  return item.scholarship_id;
+}
+
+function quickApplyItemName(kind, item) {
+  return kind === "scholarship" ? item.scholarship_name : item.name;
+}
+
+// Qualifies when the item does not require an essay and has 3 or fewer required
+// application steps. Scholarship match results never carry application_requirements
+// (the /match endpoint does not return that field), so they qualify on essay
+// alone and are labeled "requirements not yet verified" rather than given a count.
+function quickApplyCandidate(kind, item) {
+  if (item.essay_required) {
+    return null;
+  }
+  const id = quickApplyItemId(kind, item);
+  const name = quickApplyItemName(kind, item);
+  if (!id || !name) {
+    return null;
+  }
+  const base = {
+    kind,
+    id,
+    name,
+    url: item.url,
+    deadline: item.deadline,
+    estimated_deadline: item.estimated_deadline,
+  };
+  const requirements = item.application_requirements;
+  if (requirements === undefined) {
+    return { ...base, requiredCount: 0, unverified: true };
+  }
+  const requiredCount = requirements.filter((requirement) => requirement.required).length;
+  if (requiredCount > 3) {
+    return null;
+  }
+  return { ...base, requiredCount, unverified: false };
+}
+
+// Three strict tiers, exactly as the spec calls for: every real deadline sorts
+// ahead of every estimated-only one, which sorts ahead of every item with
+// neither (unlike deadlineSortValue, which the lane lists use for a flat
+// chronological sort and would let an early *estimated* date outrank a later
+// *real* one).
+const QUICK_APPLY_TIER_ESTIMATED = 1e13;
+
+function quickApplySortValue(candidate) {
+  const real = parseRealDeadline(candidate.deadline);
+  if (real) {
+    return real.getTime();
+  }
+  const estimated = candidate.estimated_deadline ? new Date(candidate.estimated_deadline) : null;
+  if (estimated && !Number.isNaN(estimated.getTime())) {
+    return QUICK_APPLY_TIER_ESTIMATED + estimated.getTime();
+  }
+  return Infinity;
+}
+
+function collectQuickApplyCandidates() {
+  const candidates = [];
+  for (const item of lastResults || []) {
+    const candidate = quickApplyCandidate("scholarship", item);
+    if (candidate) candidates.push(candidate);
+  }
+  for (const item of lastPrograms || []) {
+    const candidate = quickApplyCandidate("program", item);
+    if (candidate) candidates.push(candidate);
+  }
+  for (const item of lastCompetitions || []) {
+    const candidate = quickApplyCandidate("competition", item);
+    if (candidate) candidates.push(candidate);
+  }
+  candidates.sort((a, b) => quickApplySortValue(a) - quickApplySortValue(b));
+  return candidates;
+}
+
+function renderQuickApplies() {
+  if (!quickAppliesPanel) {
+    return;
+  }
+  if (!matchResultsExist()) {
+    quickAppliesPanel.hidden = true;
+    return;
+  }
+  quickAppliesPanel.hidden = false;
+  const candidates = collectQuickApplyCandidates();
+  quickAppliesList.innerHTML = "";
+  quickAppliesEmpty.hidden = candidates.length > 0;
+  if (quickAppliesCount) {
+    quickAppliesCount.textContent = candidates.length
+      ? `${candidates.length} match${candidates.length === 1 ? "" : "es"} need no essay and 3 or fewer requirements.`
+      : "";
+  }
+  const visible = candidates.slice(0, quickAppliesVisibleCount);
+  for (const candidate of visible) {
+    quickAppliesList.appendChild(buildQuickApplyRow(candidate));
+  }
+  if (candidates.length > quickAppliesVisibleCount) {
+    quickAppliesList.appendChild(
+      buildQuickAppliesShowMoreButton(candidates.length - quickAppliesVisibleCount)
+    );
+  }
+}
+
+function buildQuickApplyRow(candidate) {
+  const meta = QUICK_APPLY_KIND_META[candidate.kind];
+  const row = document.createElement("div");
+  row.className = "browse-row quick-apply-row";
+
+  const left = document.createElement("div");
+  left.className = "quick-apply-left";
+
+  const nameLine = document.createElement("p");
+  nameLine.className = "quick-apply-name";
+  const link = document.createElement("a");
+  link.className = "card-title-link";
+  link.href = `/${meta.path}/${encodeURIComponent(candidate.id)}`;
+  link.target = "_blank";
+  link.rel = "noopener noreferrer";
+  link.textContent = candidate.name;
+  nameLine.appendChild(link);
+  left.appendChild(nameLine);
+
+  const dl = deadlineParts(candidate.deadline, candidate.estimated_deadline);
+  const requirementText = candidate.unverified
+    ? "requirements not yet verified"
+    : `${candidate.requiredCount} requirement${candidate.requiredCount === 1 ? "" : "s"}`;
+  const metaLine = document.createElement("p");
+  metaLine.className = "browse-row-meta quick-apply-meta";
+  metaLine.textContent = `${meta.label} · ${dl.value}${dl.note ? ` (${dl.note})` : ""} · ${requirementText}`;
+  left.appendChild(metaLine);
+
+  row.appendChild(left);
+
+  const apply = document.createElement("a");
+  apply.className = "card-link quick-apply-link";
+  apply.href = candidate.url;
+  apply.target = "_blank";
+  apply.rel = "noopener noreferrer";
+  apply.textContent = "View and apply";
+  row.appendChild(apply);
+
+  return row;
+}
+
+function buildQuickAppliesShowMoreButton(remaining) {
+  const wrap = document.createElement("div");
+  wrap.className = "catalog-show-more-wrap";
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "btn-secondary catalog-show-more";
+  button.textContent = `Show ${Math.min(QUICK_APPLIES_BATCH, remaining)} more (${remaining} remaining)`;
+  button.addEventListener("click", () => {
+    quickAppliesVisibleCount += QUICK_APPLIES_BATCH;
+    renderQuickApplies();
+  });
+  wrap.appendChild(button);
+  return wrap;
+}
+
+// Looks up the human-readable label for a vocabulary-backed profile value
+// (e.g. citizenship "us_citizen" -> "U.S. citizen"), falling back to the raw
+// value if the vocabulary has not loaded or the value is not found.
+function vocabLabel(field, value) {
+  if (!value) {
+    return "";
+  }
+  const options = vocabulary?.[field] || [];
+  const match = options.find((option) => option.value === value);
+  return match ? match.label : value;
+}
+
+// Plain-text profile summary for fast form-filling on a sponsor's own site.
+// Built from the profile that produced the current matches (lastSubmittedProfile),
+// not from live (possibly since-edited) form fields. Omits any empty field.
+function buildProfileSummaryText(profile) {
+  if (!profile) {
+    return "";
+  }
+  const lines = [];
+  if (typeof profile.gpa === "number" && !Number.isNaN(profile.gpa)) {
+    lines.push(`GPA: ${profile.gpa}`);
+  }
+  const gradeLabel = vocabLabel("grade_level", profile.grade_level);
+  if (gradeLabel) {
+    lines.push(`Grade: ${gradeLabel}`);
+  }
+  const citizenshipLabel = vocabLabel("citizenship", profile.citizenship);
+  if (citizenshipLabel) {
+    lines.push(`Citizenship: ${citizenshipLabel}`);
+  }
+  const stateLabel = vocabLabel("state", profile.state);
+  if (stateLabel) {
+    lines.push(`State: ${stateLabel}`);
+  }
+  const fields = (profile.intended_majors || [])
+    .map((value) => vocabLabel("fields_of_study", value))
+    .filter(Boolean);
+  if (fields.length > 0) {
+    lines.push(`Fields of study: ${fields.join(", ")}`);
+  }
+  if (profile.activities && profile.activities.length > 0) {
+    lines.push(`Activities: ${profile.activities.join(", ")}`);
+  }
+  return lines.join("\n");
+}
+
+function wireQuickApplies() {
+  if (!quickAppliesCopyBtn) {
+    return;
+  }
+  const defaultLabel = quickAppliesCopyBtn.textContent;
+  let resetTimer = null;
+  quickAppliesCopyBtn.addEventListener("click", async () => {
+    const text = buildProfileSummaryText(lastSubmittedProfile);
+    window.clearTimeout(resetTimer);
+    try {
+      await navigator.clipboard.writeText(text);
+      quickAppliesCopyBtn.textContent = "Copied";
+    } catch (err) {
+      console.error(err);
+      quickAppliesCopyBtn.textContent = "Could not copy";
+    }
+    resetTimer = window.setTimeout(() => {
+      quickAppliesCopyBtn.textContent = defaultLabel;
+    }, 2000);
+  });
 }
 
 /* ---------- Recommendation-letters rollup ---------- */
@@ -2073,6 +2336,7 @@ function renderSaved(scholarshipItems, programItems = [], competitionItems = [])
   trackerItems = items;
   savedContainer.innerHTML = "";
   renderRecLettersRollup(items);
+  renderQuickApplies();
   if (items.length === 0) {
     savedSummary.textContent = "";
     savedEmpty.hidden = false;
@@ -3632,6 +3896,7 @@ function setLoading(isLoading) {
     competitionsSearchPanel.hidden = true;
     lastCompetitions = null;
     resetAllLaneWindows();
+    resetQuickAppliesWindow();
     updateOpportunityTabCounts();
   }
 }
@@ -3692,6 +3957,7 @@ async function handleSubmit(event) {
 
 function renderResults(results) {
   resultsContainer.innerHTML = "";
+  renderQuickApplies();
 
   if (results.length === 0) {
     resultsSummary.textContent = "";
@@ -3818,6 +4084,7 @@ function renderPrograms(programs) {
   programsContainer.innerHTML = "";
   lastPrograms = programs;
   updateOpportunityTabCounts();
+  renderQuickApplies();
 
   if (programs.length === 0) {
     programsSummary.textContent = "";
@@ -3912,6 +4179,7 @@ function renderCompetitions(competitions) {
   competitionsContainer.innerHTML = "";
   lastCompetitions = competitions;
   updateOpportunityTabCounts();
+  renderQuickApplies();
 
   if (competitions.length === 0) {
     competitionsSummary.textContent = "";

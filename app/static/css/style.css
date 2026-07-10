@@ -1752,3 +1752,15 @@ input:user-invalid, select:user-invalid, textarea:user-invalid { border-color: v
    checkbox/label layout, just boxed like a standalone list item. */
 .rec-letter-need { margin-top: 0; padding: 0.75rem 0.95rem; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
 .rec-letter-need .tracker-task-details a { color: var(--brand); font-weight: 600; }
+
+/* Quick applies (Application Plan tab; derived live from match state, not saved
+   items, so it renders whether or not the student is logged in). */
+.quick-applies { margin-bottom: 1rem; padding: clamp(1.2rem, 3vw, 1.8rem); }
+.quick-applies-head { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 1rem; }
+.quick-applies-head h3 { margin: 0.1rem 0 0.2rem; font-size: clamp(1.3rem, 3vw, 1.7rem); }
+.quick-applies-intro { max-width: 62ch; margin: 0; color: var(--muted); font-size: 0.9rem; line-height: 1.55; }
+.quick-applies-list { display: flex; flex-direction: column; gap: 0.15rem; margin-top: 0.9rem; }
+.quick-applies-empty { margin: 0.6rem 0 0; color: var(--muted); font-size: 0.88rem; }
+.quick-apply-left { display: flex; flex-direction: column; gap: 0.12rem; min-width: 0; }
+.quick-apply-name { margin: 0; font-weight: 600; }
+.quick-apply-link { flex: 0 0 auto; }
