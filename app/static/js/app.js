@@ -14,6 +14,7 @@ let lastSubmittedProfile = null;
 let lastResults = null;
 let lastPrograms = null;
 let lastCompetitions = null;
+const lastNearMisses = { scholarships: [], programs: [], competitions: [] };
 let catalogScholarships = null;
 let catalogPrograms = null;
 let catalogCompetitions = null;
@@ -109,6 +110,46 @@ function buildLaneShowMoreButton(kind, remaining) {
   });
   wrap.appendChild(button);
   return wrap;
+}
+
+const NEAR_MISS_KIND_META = {
+  scholarships: { path: "scholarships", idField: "scholarship_id", nameField: "scholarship_name" },
+  programs: { path: "programs", idField: "program_id", nameField: "name" },
+  competitions: { path: "competitions", idField: "competition_id", nameField: "name" },
+};
+
+function buildNearMissGroup(kind, entries) {
+  const meta = NEAR_MISS_KIND_META[kind];
+  const details = document.createElement("details");
+  details.className = "near-miss-group";
+  const summary = document.createElement("summary");
+  summary.textContent = `Not yet eligible (${entries.length})`;
+  details.appendChild(summary);
+  const list = document.createElement("div");
+  list.className = "near-miss-list";
+  for (const entry of entries) {
+    const row = document.createElement("div");
+    row.className = "browse-row near-miss-row";
+    const left = document.createElement("div");
+    left.className = "quick-apply-left";
+    const nameLine = document.createElement("p");
+    nameLine.className = "quick-apply-name";
+    const link = document.createElement("a");
+    link.className = "card-title-link";
+    link.href = `/${meta.path}/${encodeURIComponent(entry[meta.idField])}`;
+    link.textContent = entry[meta.nameField];
+    nameLine.appendChild(link);
+    left.appendChild(nameLine);
+    const dl = deadlineParts(entry.deadline, entry.estimated_deadline);
+    const metaLine = document.createElement("p");
+    metaLine.className = "browse-row-meta";
+    metaLine.textContent = `${entry.near_miss_reason} · ${dl.value}${dl.note ? ` (${dl.note})` : ""}`;
+    left.appendChild(metaLine);
+    row.appendChild(left);
+    list.appendChild(row);
+  }
+  details.appendChild(list);
+  return details;
 }
 
 let currentUser = null;
@@ -3967,6 +4008,9 @@ function setLoading(isLoading) {
     competitionsEmpty.hidden = true;
     competitionsSearchPanel.hidden = true;
     lastCompetitions = null;
+    lastNearMisses.scholarships = [];
+    lastNearMisses.programs = [];
+    lastNearMisses.competitions = [];
     resetAllLaneWindows();
     resetQuickAppliesWindow();
     updateOpportunityTabCounts();
@@ -4008,10 +4052,11 @@ async function handleSubmit(event) {
       throw new Error(`Match request failed (${response.status})`);
     }
 
-    const results = await response.json();
+    const payload = await response.json();
     lastSubmittedProfile = built.profile;
-    lastResults = results;
-    renderResults(results);
+    lastResults = payload.matches;
+    lastNearMisses.scholarships = payload.near_misses || [];
+    renderResults(lastResults);
     updateOpportunityTabCounts();
     await activateOpportunityView("scholarships");
     saveProfileSilently(built.profile);
@@ -4035,6 +4080,11 @@ function renderResults(results) {
     resultsSummary.textContent = "";
     resultsFilters.hidden = true;
     resultsEmpty.hidden = false;
+    if (lastNearMisses.scholarships.length > 0) {
+      resultsContainer.appendChild(
+        buildNearMissGroup("scholarships", lastNearMisses.scholarships)
+      );
+    }
     return;
   }
 
@@ -4053,6 +4103,11 @@ function renderResults(results) {
       note.innerHTML =
         "<h3>No matches with these filters</h3><p>Loosen a filter or use <strong>Clear filters</strong> to see all matches again.</p>";
       resultsContainer.appendChild(note);
+    }
+    if (lastNearMisses.scholarships.length > 0) {
+      resultsContainer.appendChild(
+        buildNearMissGroup("scholarships", lastNearMisses.scholarships)
+      );
     }
     return;
   }
@@ -4092,6 +4147,11 @@ function renderResults(results) {
   if (filtered.length > laneVisibleCounts.scholarships) {
     resultsContainer.appendChild(
       buildLaneShowMoreButton("scholarships", filtered.length - laneVisibleCounts.scholarships)
+    );
+  }
+  if (lastNearMisses.scholarships.length > 0) {
+    resultsContainer.appendChild(
+      buildNearMissGroup("scholarships", lastNearMisses.scholarships)
     );
   }
 }
@@ -4135,11 +4195,14 @@ async function loadPrograms(profile) {
     });
     if (!response.ok) {
       lastPrograms = [];
+      lastNearMisses.programs = [];
       updateOpportunityTabCounts();
       return;
     }
-    const programs = await response.json();
+    const payload = await response.json();
+    const programs = payload.matches;
     lastPrograms = programs;
+    lastNearMisses.programs = payload.near_misses || [];
     updateOpportunityTabCounts();
     renderPrograms(programs);
     if (activeOpportunityView === "programs") {
@@ -4147,6 +4210,7 @@ async function loadPrograms(profile) {
     }
   } catch (err) {
     lastPrograms = [];
+    lastNearMisses.programs = [];
     updateOpportunityTabCounts();
     console.error(err);
   }
@@ -4162,6 +4226,9 @@ function renderPrograms(programs) {
     programsSummary.textContent = "";
     programsSearchPanel.hidden = true;
     programsEmpty.hidden = false;
+    if (lastNearMisses.programs.length > 0) {
+      programsContainer.appendChild(buildNearMissGroup("programs", lastNearMisses.programs));
+    }
     return;
   }
 
@@ -4180,6 +4247,9 @@ function renderPrograms(programs) {
       note.innerHTML =
         "<h3>No matches with these filters</h3><p>Loosen a filter or use <strong>Clear filters</strong> to see all matches again.</p>";
       programsContainer.appendChild(note);
+    }
+    if (lastNearMisses.programs.length > 0) {
+      programsContainer.appendChild(buildNearMissGroup("programs", lastNearMisses.programs));
     }
     return;
   }
@@ -4219,6 +4289,9 @@ function renderPrograms(programs) {
       buildLaneShowMoreButton("programs", filtered.length - laneVisibleCounts.programs)
     );
   }
+  if (lastNearMisses.programs.length > 0) {
+    programsContainer.appendChild(buildNearMissGroup("programs", lastNearMisses.programs));
+  }
 }
 
 async function loadCompetitions(profile) {
@@ -4230,11 +4303,14 @@ async function loadCompetitions(profile) {
     });
     if (!response.ok) {
       lastCompetitions = [];
+      lastNearMisses.competitions = [];
       updateOpportunityTabCounts();
       return;
     }
-    const competitions = await response.json();
+    const payload = await response.json();
+    const competitions = payload.matches;
     lastCompetitions = competitions;
+    lastNearMisses.competitions = payload.near_misses || [];
     updateOpportunityTabCounts();
     renderCompetitions(competitions);
     if (activeOpportunityView === "competitions") {
@@ -4242,6 +4318,7 @@ async function loadCompetitions(profile) {
     }
   } catch (err) {
     lastCompetitions = [];
+    lastNearMisses.competitions = [];
     updateOpportunityTabCounts();
     console.error(err);
   }
@@ -4257,6 +4334,11 @@ function renderCompetitions(competitions) {
     competitionsSummary.textContent = "";
     competitionsSearchPanel.hidden = true;
     competitionsEmpty.hidden = false;
+    if (lastNearMisses.competitions.length > 0) {
+      competitionsContainer.appendChild(
+        buildNearMissGroup("competitions", lastNearMisses.competitions)
+      );
+    }
     return;
   }
 
@@ -4275,6 +4357,11 @@ function renderCompetitions(competitions) {
       note.innerHTML =
         "<h3>No matches with these filters</h3><p>Loosen a filter or use <strong>Clear filters</strong> to see all matches again.</p>";
       competitionsContainer.appendChild(note);
+    }
+    if (lastNearMisses.competitions.length > 0) {
+      competitionsContainer.appendChild(
+        buildNearMissGroup("competitions", lastNearMisses.competitions)
+      );
     }
     return;
   }
@@ -4314,6 +4401,11 @@ function renderCompetitions(competitions) {
   if (filtered.length > laneVisibleCounts.competitions) {
     competitionsContainer.appendChild(
       buildLaneShowMoreButton("competitions", filtered.length - laneVisibleCounts.competitions)
+    );
+  }
+  if (lastNearMisses.competitions.length > 0) {
+    competitionsContainer.appendChild(
+      buildNearMissGroup("competitions", lastNearMisses.competitions)
     );
   }
 }
