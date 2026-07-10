@@ -75,6 +75,66 @@ GRADE_REQUIREMENT_CHILDREN: dict[str, set[str]] = {
     },
 }
 
+# Related-field adjacency: partial fit credit only, never eligibility.
+# Symmetric by construction; a test enforces it. Values are fields_of_study
+# vocabulary entries.
+FIELD_ADJACENCY: dict[str, set[str]] = {
+    "computer_science": {"technology", "engineering", "mathematics", "science"},
+    "technology": {"computer_science", "engineering"},
+    "engineering": {"computer_science", "technology", "mathematics", "science", "architecture"},
+    "mathematics": {"computer_science", "engineering", "science", "research", "business"},
+    "science": {
+        "natural_sciences",
+        "environmental_science",
+        "health_medicine",
+        "research",
+        "mathematics",
+        "engineering",
+        "computer_science",
+    },
+    "natural_sciences": {"science", "environmental_science", "agriculture", "research"},
+    "environmental_science": {"science", "natural_sciences", "agriculture"},
+    "agriculture": {"environmental_science", "natural_sciences"},
+    "health_medicine": {"nursing", "science"},
+    "nursing": {"health_medicine"},
+    "arts": {"music", "literature", "architecture", "communications"},
+    "music": {"arts"},
+    "literature": {"humanities", "arts", "communications"},
+    "humanities": {"literature", "philosophy", "social_sciences", "law"},
+    "philosophy": {"humanities"},
+    "social_sciences": {"humanities", "law", "education", "communications"},
+    "law": {"social_sciences", "humanities", "business"},
+    "business": {"communications", "law", "mathematics"},
+    "communications": {"arts", "literature", "social_sciences", "business"},
+    "education": {"social_sciences"},
+    "research": {"science", "mathematics", "natural_sciences"},
+    "architecture": {"engineering", "arts"},
+}
+
+GRADE_PROGRESSION: list[str] = [
+    "middle_school",
+    "high_school_freshman",
+    "high_school_sophomore",
+    "high_school_junior",
+    "high_school_senior",
+    "college_freshman",
+    "college_sophomore",
+    "college_junior",
+    "college_senior",
+]
+
+GRADE_LABELS: dict[str, str] = {
+    "middle_school": "in middle school",
+    "high_school_freshman": "a high school freshman",
+    "high_school_sophomore": "a high school sophomore",
+    "high_school_junior": "a high school junior",
+    "high_school_senior": "a high school senior",
+    "college_freshman": "a college freshman",
+    "college_sophomore": "a college sophomore",
+    "college_junior": "a college junior",
+    "college_senior": "a college senior",
+}
+
 
 def normalize_tag(value: str) -> str:
     return value.strip().lower().replace(" ", "_").replace("-", "_")
@@ -132,3 +192,37 @@ def matching_demographics(student_tags: list[str], required_tags: list[str]) -> 
         return []
     student_set = {normalize_tag(tag) for tag in student_tags}
     return [tag for tag in required_tags if normalize_tag(tag) in student_set]
+
+
+def related_fields(student_majors: list[str], required_fields: list[str]) -> list[str]:
+    """Required fields with no exact/child overlap but an adjacent student major.
+
+    Exact and child matches are handled by matching_fields; this only reports
+    requirements that would otherwise score zero.
+    """
+    if not required_fields:
+        return []
+    exact = set(matching_fields(student_majors, required_fields))
+    norm_majors = {normalize_tag(major) for major in student_majors}
+    related: list[str] = []
+    for field in required_fields:
+        if field in exact:
+            continue
+        adjacent = FIELD_ADJACENCY.get(normalize_tag(field), set())
+        if norm_majors.intersection(adjacent):
+            related.append(field)
+    return related
+
+
+def earliest_future_qualifying_grade(
+    student_grade: str, required_grades: list[str]
+) -> str | None:
+    """Earliest grade strictly after the student's current one that qualifies."""
+    norm = normalize_tag(student_grade)
+    if norm not in GRADE_PROGRESSION:
+        return None
+    start = GRADE_PROGRESSION.index(norm) + 1
+    for grade in GRADE_PROGRESSION[start:]:
+        if grade_level_matches(grade, required_grades):
+            return grade
+    return None
