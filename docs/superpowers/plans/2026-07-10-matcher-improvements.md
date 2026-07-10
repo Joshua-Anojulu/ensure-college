@@ -123,7 +123,7 @@ FIELD_ADJACENCY: dict[str, set[str]] = {
     "computer_science": {"technology", "engineering", "mathematics", "science"},
     "technology": {"computer_science", "engineering"},
     "engineering": {"computer_science", "technology", "mathematics", "science", "architecture"},
-    "mathematics": {"computer_science", "engineering", "science", "research"},
+    "mathematics": {"computer_science", "engineering", "science", "research", "business"},
     "science": {
         "natural_sciences",
         "environmental_science",

@@ -19,7 +19,7 @@ partial *fit* credit (never eligibility) or honestly-labeled future eligibility.
   | computer_science | technology, engineering, mathematics, science |
   | technology | computer_science, engineering |
   | engineering | computer_science, technology, mathematics, science, architecture |
-  | mathematics | computer_science, engineering, science, research |
+  | mathematics | computer_science, engineering, science, research, business |
   | science | natural_sciences, environmental_science, health_medicine, research, mathematics, engineering, computer_science |
   | natural_sciences | science, environmental_science, agriculture, research |
   | environmental_science | science, natural_sciences, agriculture |
