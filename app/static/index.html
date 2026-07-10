@@ -40,6 +40,12 @@
         </div>
       </div>
 
+      <nav class="site-nav" aria-label="Sections">
+        <button type="button" class="btn-ghost" id="nav-matches-btn">Matches</button>
+        <button type="button" class="btn-ghost" id="nav-plan-btn">Plan</button>
+        <button type="button" class="btn-ghost" id="nav-browse-btn">Browse</button>
+      </nav>
+
       <nav class="account-nav" aria-label="Account">
         <div id="auth-logged-out" class="auth-actions" hidden>
           <button type="button" class="btn-ghost" id="open-login">Log in</button>
@@ -240,6 +246,18 @@
             <p id="preview-total" class="preview-total"></p>
             <button type="button" class="btn-primary" id="preview-complete-btn">Finish my full profile <span aria-hidden="true">↓</span></button>
             <p class="preview-note">The full profile applies citizenship and state checks and adds summer programs and competitions.</p>
+          </div>
+          <div id="preview-account-pitch" class="preview-account-pitch" hidden>
+            <p class="preview-account-pitch-eyebrow">Free account</p>
+            <h3>Keep these matches working for you.</h3>
+            <ul class="preview-account-pitch-list">
+              <li>Weekly deadline reminders: an email when a saved item closes within 14 days.</li>
+              <li>New-match alerts when a fresh opportunity fits your profile.</li>
+              <li>Your profile saved and prefilled next visit.</li>
+              <li>An application plan: checklists, statuses, and recommendation letters in one place.</li>
+            </ul>
+            <p class="preview-account-pitch-note">Free. Passwords are stored hashed; Google sign-in available.</p>
+            <button type="button" class="btn-primary" id="preview-account-pitch-btn">Create a free account</button>
           </div>
         </div>
       </div>

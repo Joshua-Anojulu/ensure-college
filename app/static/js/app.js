@@ -304,6 +304,7 @@ async function init() {
   wireSettings();
   wireAgeGate();
   wireQuickApplies();
+  wireSiteNav();
   await loadSession();
 }
 
@@ -367,6 +368,22 @@ function wireOpportunityTabs() {
     activateOpportunityView("catalog", { scroll: true });
   });
   updateOpportunityTabCounts();
+}
+
+function wireSiteNav() {
+  document.getElementById("nav-matches-btn")?.addEventListener("click", () => {
+    if (lastResults || lastPrograms || lastCompetitions) {
+      activateOpportunityView("scholarships", { scroll: true });
+    } else {
+      document.getElementById("profile-form")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  });
+  document.getElementById("nav-plan-btn")?.addEventListener("click", () => {
+    activateOpportunityView("saved", { scroll: true });
+  });
+  document.getElementById("nav-browse-btn")?.addEventListener("click", () => {
+    activateOpportunityView("catalog", { scroll: true });
+  });
 }
 
 function wireCatalogKindTabs() {
@@ -1723,6 +1740,7 @@ function renderAuthState() {
   }
   updateSavedCount();
   updateOpportunityTabCounts();
+  updatePreviewAccountPitch();
 }
 
 /* ---------- Profile persistence ---------- */
@@ -3456,6 +3474,16 @@ function wirePreviewForm() {
   }
   form.addEventListener("submit", handlePreviewSubmit);
   document.getElementById("preview-complete-btn")?.addEventListener("click", prefillFromPreview);
+  document.getElementById("preview-account-pitch-btn")?.addEventListener("click", () => openAuthModal("signup"));
+}
+
+function updatePreviewAccountPitch() {
+  const pitch = document.getElementById("preview-account-pitch");
+  if (!pitch) {
+    return;
+  }
+  const resultsVisible = !document.getElementById("preview-results")?.hidden;
+  pitch.hidden = !resultsVisible || currentUser !== null;
 }
 
 function showPreviewError(message) {
@@ -3513,6 +3541,7 @@ function renderPreviewResults(data) {
       "No preview matches for those three answers. Try another interest, or build the full profile for the complete search."
     );
     wrap.hidden = true;
+    updatePreviewAccountPitch();
     return;
   }
 
@@ -3525,6 +3554,7 @@ function renderPreviewResults(data) {
       ? `${data.total_matches} scholarships match those three answers. Finish your profile to see the other ${remaining} with citizenship and state checks applied.`
       : "Finish your profile to confirm eligibility and add summer programs and competitions.";
   wrap.hidden = false;
+  updatePreviewAccountPitch();
   wrap.scrollIntoView({ behavior: "smooth", block: "nearest" });
 }
 
