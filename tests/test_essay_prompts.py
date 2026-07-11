@@ -83,3 +83,17 @@ class TestDetailPagePrompts:
             assert "Prompts revealed after registration" in response.text
         finally:
             entry.application_requirements[0].essay_prompts = None
+
+
+from pathlib import Path
+
+APP_JS = Path(__file__).resolve().parent.parent / "app" / "static" / "js" / "app.js"
+
+
+class TestFrontendPromptWiring:
+    def test_app_js_defines_prompt_block_and_start_by(self):
+        source = APP_JS.read_text(encoding="utf-8")
+        assert "function buildPromptBlock" in source
+        assert "function essayStartByLabel" in source
+        assert "Prompts revealed after registration" in source
+        assert "Start drafting by" in source

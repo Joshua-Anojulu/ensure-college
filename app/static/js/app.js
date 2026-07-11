@@ -2790,6 +2790,14 @@ function buildDeadlineTimeline(items) {
     copy.appendChild(title);
     copy.appendChild(detail);
 
+    const startBy = essayStartByLabel(item);
+    if (startBy) {
+      const startLine = document.createElement("p");
+      startLine.className = "timeline-start-by";
+      startLine.textContent = startBy;
+      copy.appendChild(startLine);
+    }
+
     row.appendChild(date);
     row.appendChild(copy);
     list.appendChild(row);
@@ -2867,6 +2875,62 @@ function collectWritingClusters(items) {
     .sort((a, b) => b.needs.length - a.needs.length);
 }
 
+function buildPromptBlock(requirement) {
+  const prompts = requirement.essay_prompts;
+  if (!prompts) return null;
+  if (prompts.status === "gated") {
+    const note = document.createElement("p");
+    note.className = "prompt-gated";
+    note.textContent = "Prompts revealed after registration on the sponsor site.";
+    return note;
+  }
+  if (prompts.status !== "public" || !prompts.items?.length) return null;
+  const details = document.createElement("details");
+  details.className = "prompt-details";
+  const summary = document.createElement("summary");
+  summary.textContent = prompts.items.length > 1 ? "Essay prompts" : "Essay prompt";
+  details.appendChild(summary);
+  const list = document.createElement("ul");
+  list.className = "prompt-list";
+  for (const item of prompts.items) {
+    const li = document.createElement("li");
+    li.textContent = item.prompt;
+    if (item.length) {
+      const chip = document.createElement("span");
+      chip.className = "prompt-length";
+      chip.textContent = item.length;
+      li.appendChild(document.createTextNode(" "));
+      li.appendChild(chip);
+    }
+    list.appendChild(li);
+  }
+  details.appendChild(list);
+  return details;
+}
+
+const ESSAY_START_LEAD_DAYS = 21;
+
+function essayStartByDate(item) {
+  const hasWriting = incompleteRequirements(item).some((requirement) =>
+    isWritingRequirement(requirement)
+  );
+  if (!hasWriting) return null;
+  const deadline = savedOpportunityDeadline(item) || savedOpportunityEstimatedDeadline(item);
+  if (!deadline) return null;
+  const parsed = new Date(`${deadline}T00:00:00`);
+  if (Number.isNaN(parsed.getTime())) return null;
+  parsed.setDate(parsed.getDate() - ESSAY_START_LEAD_DAYS);
+  return parsed;
+}
+
+function essayStartByLabel(item) {
+  const start = essayStartByDate(item);
+  if (!start) return null;
+  if (start <= new Date()) return "Essays: start now";
+  const text = start.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+  return `Start drafting by ${text}`;
+}
+
 function buildEssayReuseMap(items) {
   const section = document.createElement("section");
   section.className = "plan-essay-map";
@@ -2899,10 +2963,16 @@ function buildEssayReuseMap(items) {
     const count = cluster.needs.length;
     meta.textContent = `${count} unfinished writing step${count === 1 ? "" : "s"} could share a base draft.`;
 
+    const startDates = cluster.needs
+      .map((need) => essayStartByDate(need.item))
+      .filter(Boolean);
+
     const list = document.createElement("ul");
     for (const need of cluster.needs.slice(0, 4)) {
       const li = document.createElement("li");
       li.textContent = `${savedOpportunityName(need.item)}: ${need.requirement.label}`;
+      const promptBlock = buildPromptBlock(need.requirement);
+      if (promptBlock) li.appendChild(promptBlock);
       list.appendChild(li);
     }
     if (cluster.needs.length > 4) {
@@ -2913,6 +2983,16 @@ function buildEssayReuseMap(items) {
 
     card.appendChild(title);
     card.appendChild(meta);
+    if (startDates.length) {
+      const earliest = new Date(Math.min(...startDates.map((d) => d.getTime())));
+      const startLine = document.createElement("p");
+      startLine.className = "essay-cluster-start";
+      startLine.textContent =
+        earliest <= new Date()
+          ? "Earliest start: now"
+          : `Earliest start: ${earliest.toLocaleDateString("en-US", { month: "short", day: "numeric" })}`;
+      card.appendChild(startLine);
+    }
     card.appendChild(list);
     wrap.appendChild(card);
   }
@@ -3310,6 +3390,11 @@ function buildApplicationChecklist(item, kind = "scholarship") {
     }
     task.appendChild(checkbox);
     task.appendChild(copy);
+    const promptBlock = buildPromptBlock(requirement);
+    if (promptBlock) {
+      promptBlock.addEventListener("click", (event) => event.stopPropagation());
+      task.appendChild(promptBlock);
+    }
     checkbox.addEventListener("change", async () => {
       const before = new Set(completed);
       if (checkbox.checked) {
