@@ -1,4 +1,7 @@
 {% extends "base.html" %}
+{% block head_extra %}
+<script type="application/ld+json">{{ jsonld | safe }}</script>
+{% endblock %}
 {% block content %}
   <section class="results-header">
     <p class="eyebrow">Essay guides</p>

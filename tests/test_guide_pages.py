@@ -33,6 +33,26 @@ class TestGuidePages:
     def test_unknown_theme_404s(self, client):
         assert client.get("/guides/essays/nonexistent").status_code == 404
 
+    def test_index_has_jsonld(self, client):
+        response = client.get("/guides/essays")
+        assert 'application/ld+json' in response.text
+        script = response.text.split('application/ld+json">', 1)[1].split("</script>", 1)[0]
+        data = json.loads(script)
+        assert data["@type"] == "WebPage"
+        assert data["url"].endswith("/guides/essays")
+        assert data["name"]
+        assert data["description"]
+
+    def test_theme_page_has_jsonld(self, client):
+        response = client.get("/guides/essays/identity")
+        assert 'application/ld+json' in response.text
+        script = response.text.split('application/ld+json">', 1)[1].split("</script>", 1)[0]
+        data = json.loads(script)
+        assert data["@type"] == "WebPage"
+        assert data["url"].endswith("/guides/essays/identity")
+        assert data["name"]
+        assert data["description"]
+
     def test_sitemap_includes_guides(self, client):
         text = client.get("/sitemap.xml").text
         assert "<loc>http://testserver/guides/essays</loc>" in text

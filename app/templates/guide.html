@@ -1,4 +1,7 @@
 {% extends "base.html" %}
+{% block head_extra %}
+<script type="application/ld+json">{{ jsonld | safe }}</script>
+{% endblock %}
 {% block content %}
   <nav class="detail-breadcrumb" aria-label="Breadcrumb">
     <a href="/guides/essays">Essay guides</a> <span aria-hidden="true">›</span> <span>{{ theme.title }}</span>

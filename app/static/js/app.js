@@ -2917,12 +2917,31 @@ function essayStartByDate(item) {
     isWritingRequirement(requirement)
   );
   if (!hasWriting) return null;
-  const deadline = savedOpportunityDeadline(item) || savedOpportunityEstimatedDeadline(item);
-  if (!deadline) return null;
-  const parsed = new Date(`${deadline}T00:00:00`);
-  if (Number.isNaN(parsed.getTime())) return null;
-  parsed.setDate(parsed.getDate() - ESSAY_START_LEAD_DAYS);
-  return parsed;
+
+  // parseRealDeadline() treats "rolling"/"VERIFY"/empty as "no real deadline"
+  // (returns null), which is exactly the signal we need to fall back to the
+  // estimated deadline instead of misreading those sentinel strings as dates.
+  const rawDeadline = savedOpportunityDeadline(item);
+  const realDeadline = parseRealDeadline(rawDeadline);
+  let target;
+  if (realDeadline) {
+    // A real deadline that already passed gets no start-by line; the
+    // timeline row already reads "Deadline passed" for it.
+    if (isPastDate(rawDeadline)) return null;
+    target = realDeadline;
+  } else {
+    // No usable real deadline: fall back to the estimated one, but skip a
+    // stale last-cycle estimate (mirrors deadlineParts()'s "Not yet
+    // announced" handling) instead of rendering "Essays: start now" for an
+    // unannounced next cycle.
+    const estimated = savedOpportunityEstimatedDeadline(item);
+    if (!estimated || isPastDate(estimated)) return null;
+    target = parseRealDeadline(estimated);
+    if (!target) return null;
+  }
+
+  target.setDate(target.getDate() - ESSAY_START_LEAD_DAYS);
+  return target;
 }
 
 function essayStartByLabel(item) {
