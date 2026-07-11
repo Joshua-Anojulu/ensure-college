@@ -209,8 +209,10 @@ app.include_router(auth_router)
 app.include_router(account_router)
 
 from app.seo_pages import seo_router  # noqa: E402  (import near use, matches file's route grouping)
+from app.guide_pages import GUIDE_THEME_KEYS, guides_router  # noqa: E402
 
 app.include_router(seo_router)
+app.include_router(guides_router)
 
 
 def _find_scholarship(scholarships: list[Scholarship], scholarship_id: str) -> Scholarship | None:
@@ -256,6 +258,8 @@ def robots_txt(request: Request) -> PlainTextResponse:
 def sitemap_xml(request: Request) -> Response:
     base = _public_base_url(request)
     paths: list[str] = list(_SITEMAP_PATHS) + ["/browse"]
+    paths.append("/guides/essays")
+    paths.extend(f"/guides/essays/{key}" for key in GUIDE_THEME_KEYS)
     for kind_key, attr in (
         ("scholarships", "scholarships"),
         ("programs", "programs"),

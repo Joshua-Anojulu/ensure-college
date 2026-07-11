@@ -1,0 +1,89 @@
+{
+  "themes": [
+    {
+      "key": "identity",
+      "title": "Identity, community, and lived experience essays",
+      "intro": "These prompts ask who you are and what shaped you. The strongest answers zoom in on one specific story instead of summarizing a whole life.",
+      "steps": [
+        "Pick one moment or place, not a montage: a shift at your job, one conversation, one room in your house.",
+        "Show the before and after: what did you believe or do differently because of it?",
+        "Connect it forward: one sentence on how this shapes what you want to do next is enough.",
+        "Read it aloud. If a sentence could appear in anyone else's essay, cut or sharpen it."
+      ],
+      "dos": ["Use concrete detail (names, sounds, objects)", "Keep the timeline tight", "Let discomfort stay in the story"],
+      "donts": ["Open with a dictionary definition", "List every activity you do", "Claim a lesson the story does not show"],
+      "links": [
+        {"title": "Essays That Worked", "url": "https://apply.jhu.edu/application-process/essays-that-worked/", "source": "Johns Hopkins Admissions"},
+        {"title": "College essay examples with analysis", "url": "https://www.collegeessayguy.com/blog/college-essay-examples", "source": "College Essay Guy"}
+      ]
+    },
+    {
+      "key": "why-fit",
+      "title": "\"Why this program or scholarship\" essays",
+      "intro": "Sponsors ask this to filter out copy-paste applicants. Specificity is the entire game: name the parts of the program only a real reader of their site would know.",
+      "steps": [
+        "Spend 15 minutes on the sponsor's site and write down three specifics: a course, a value in their mission statement, a past winner's project.",
+        "Tie each specific to something you have already done, not just something you want.",
+        "Answer the mirror question too: what do you bring them?",
+        "Swap test: if you could replace the program name with a rival's and the essay still works, it is not specific enough."
+      ],
+      "dos": ["Name specific courses, mentors, or program features", "Show you know what the sponsor values", "Keep one paragraph about them, one about you, one about the fit"],
+      "donts": ["Praise prestige or rankings", "Reuse this essay without re-tailoring the specifics", "Write more about your general goals than about the fit"],
+      "links": [
+        {"title": "Why us essay guide with examples", "url": "https://www.collegeessayguy.com/blog/why-this-college-essay", "source": "College Essay Guy"},
+        {"title": "Applying to college: essays", "url": "https://www.khanacademy.org/college-careers-more/college-admissions/applying-to-college", "source": "Khan Academy"}
+      ]
+    },
+    {
+      "key": "leadership-service",
+      "title": "Leadership, service, and impact essays",
+      "intro": "The prompt says leadership; the reader wants evidence of initiative and effect on other people. Titles are optional, outcomes are not.",
+      "steps": [
+        "Choose the story where something changed because you acted, even if you held no title.",
+        "Quantify what you honestly can (people, hours, dollars) and describe what you cannot.",
+        "Give the setback one sentence: what went wrong and what you adjusted reads as maturity.",
+        "End on the people affected, not on yourself."
+      ],
+      "dos": ["Show initiative you took without being asked", "Credit the team while owning your part", "Use one number that makes scale real"],
+      "donts": ["Equate a position with impact", "Inflate numbers", "Make the conclusion about your own growth only"],
+      "links": [
+        {"title": "Essays That Worked", "url": "https://apply.jhu.edu/application-process/essays-that-worked/", "source": "Johns Hopkins Admissions"},
+        {"title": "Extracurricular activity essay examples", "url": "https://www.collegeessayguy.com/blog/extracurricular-activity-essay-examples", "source": "College Essay Guy"}
+      ]
+    },
+    {
+      "key": "academic-research",
+      "title": "Academic interest, research, and problem-solving essays",
+      "intro": "These prompts test whether your interest survives contact with detail. Write about the question that hooked you, not the field's importance in general.",
+      "steps": [
+        "Start from a specific question or problem you could not let go of, stated plainly.",
+        "Trace what you actually did about it: a project, a course you sought out, something you built or measured.",
+        "Include one moment of being wrong or stuck; real inquiry has friction.",
+        "Point at the edge: what do you not know yet that this program or award would let you pursue?"
+      ],
+      "dos": ["Define one technical idea simply enough for any reader", "Show self-directed work", "Name what you want to learn next"],
+      "donts": ["Recite the syllabus of your interest", "Hide behind jargon", "Claim certainty about a career at 17"],
+      "links": [
+        {"title": "Applying to college: essays", "url": "https://www.khanacademy.org/college-careers-more/college-admissions/applying-to-college", "source": "Khan Academy"},
+        {"title": "College essay examples with analysis", "url": "https://www.collegeessayguy.com/blog/college-essay-examples", "source": "College Essay Guy"}
+      ]
+    },
+    {
+      "key": "general-writing",
+      "title": "General essays and short answers",
+      "intro": "Catch-all prompts and short answers reward the same base draft, carefully tailored. Draft once at full length, then cut to each word limit without losing the one idea that is yours.",
+      "steps": [
+        "Write the 650-word version of your core story first, even if every target is shorter.",
+        "Cut by removing whole ideas, not adjectives: a 250-word answer holds one idea well.",
+        "Answer the literal prompt in the first two sentences; readers skim.",
+        "Track versions per sponsor so you never send the wrong tailoring."
+      ],
+      "dos": ["Keep one master draft per theme", "Re-read the exact prompt before every submission", "Respect word limits exactly"],
+      "donts": ["Pad short answers to hit the limit", "Send an essay that answers a different sponsor's prompt", "Recycle without re-reading"],
+      "links": [
+        {"title": "Common App essay prompts", "url": "https://www.commonapp.org/apply/essay-prompts", "source": "Common App"},
+        {"title": "College essay examples with analysis", "url": "https://www.collegeessayguy.com/blog/college-essay-examples", "source": "College Essay Guy"}
+      ]
+    }
+  ]
+}

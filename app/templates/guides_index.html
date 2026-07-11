@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+  <section class="results-header">
+    <p class="eyebrow">Essay guides</p>
+    <h2>Write once, tailor carefully</h2>
+    <p class="results-summary">Five short guides for the kinds of writing scholarships, summer programs, and competitions actually ask for.</p>
+  </section>
+  <ul class="browse-list panel">
+    {% for theme in themes %}
+    <li class="browse-row">
+      <a href="/guides/essays/{{ theme.key }}">{{ theme.title }}</a>
+      <span class="browse-row-meta">{{ theme.intro }}</span>
+    </li>
+    {% endfor %}
+  </ul>
+{% endblock %}

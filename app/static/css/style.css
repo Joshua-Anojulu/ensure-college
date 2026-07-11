@@ -1823,3 +1823,12 @@ input:user-invalid, select:user-invalid, textarea:user-invalid { border-color: v
 .prompt-gated { margin-top: 0.35rem; font-size: 0.74rem; color: var(--muted); }
 .timeline-start-by { margin-top: 0.2rem; font-size: 0.74rem; font-weight: 600; color: var(--amber-strong); }
 .essay-cluster-start { font-size: 0.74rem; font-weight: 600; color: var(--amber-strong); }
+
+/* Essay guide pages */
+.guide-body { display: grid; gap: 1rem; }
+.guide-steps { margin-left: 1.1rem; display: grid; gap: 0.5rem; color: var(--ink-soft); }
+.guide-dos-donts { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
+.guide-dos-donts ul { margin-left: 1.1rem; display: grid; gap: 0.3rem; color: var(--ink-soft); }
+.guide-links { display: grid; gap: 0.45rem; }
+.guide-links-note { color: var(--muted); font-size: 0.85rem; }
+.essay-guide-link { display: inline-block; margin-top: 0.5rem; font-size: 0.78rem; font-weight: 600; }

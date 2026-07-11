@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+  <nav class="detail-breadcrumb" aria-label="Breadcrumb">
+    <a href="/guides/essays">Essay guides</a> <span aria-hidden="true">›</span> <span>{{ theme.title }}</span>
+  </nav>
+  <section class="results-header">
+    <p class="eyebrow">Essay guide</p>
+    <h2>{{ theme.title }}</h2>
+    <p class="results-summary">{{ theme.intro }}</p>
+  </section>
+  <section class="detail-section panel guide-body">
+    <h3>How to approach it</h3>
+    <ol class="guide-steps">
+      {% for step in theme.steps %}<li>{{ step }}</li>{% endfor %}
+    </ol>
+    <div class="guide-dos-donts">
+      <div><h4>Do</h4><ul>{% for item in theme.dos %}<li>{{ item }}</li>{% endfor %}</ul></div>
+      <div><h4>Avoid</h4><ul>{% for item in theme.donts %}<li>{{ item }}</li>{% endfor %}</ul></div>
+    </div>
+    <h3>Example essays</h3>
+    <p class="guide-links-note">Real published collections, not our own writing. Read a few before drafting; notice how specific they get.</p>
+    <ul class="guide-links">
+      {% for link in theme.links %}
+      <li><a href="{{ link.url }}" target="_blank" rel="noopener noreferrer">{{ link.title }}</a> <span class="browse-row-meta">{{ link.source }}</span></li>
+      {% endfor %}
+    </ul>
+    <p class="guide-back"><a href="/browse">Browse opportunities</a> · <a href="/#profile-form">Find your matches</a></p>
+  </section>
+{% endblock %}

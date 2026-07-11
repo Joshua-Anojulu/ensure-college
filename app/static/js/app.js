@@ -2994,6 +2994,11 @@ function buildEssayReuseMap(items) {
       card.appendChild(startLine);
     }
     card.appendChild(list);
+    const guideLink = document.createElement("a");
+    guideLink.className = "essay-guide-link";
+    guideLink.href = `/guides/essays/${cluster.group.key}`;
+    guideLink.textContent = "How to write this kind of essay";
+    card.appendChild(guideLink);
     wrap.appendChild(card);
   }
 

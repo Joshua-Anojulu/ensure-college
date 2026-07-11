@@ -161,6 +161,8 @@ class TestSitemap:
             3  # /, /privacy, /terms
             + 1  # /browse
             + 3  # directories
+            + 1  # /guides/essays
+            + 5  # /guides/essays/{theme}
             + len(state.scholarships) + len(state.programs) + len(state.competitions)
         )
         assert body.count("<loc>") == expected_urls
