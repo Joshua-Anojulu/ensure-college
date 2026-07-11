@@ -49,7 +49,11 @@
           "label": "Complete the six short-answer responses",
           "details": "Most short responses have a maximum of 300 words; one MITES-fit prompt is listed as 400 words max.",
           "required": true,
-          "source_url": "https://mites.mit.edu/discover-mites/apply-to-mites/prepare-your-application-mites-summer-and-mites-semester/"
+          "source_url": "https://mites.mit.edu/discover-mites/apply-to-mites/prepare-your-application-mites-summer-and-mites-semester/",
+          "essay_prompts": {
+            "status": "gated",
+            "items": []
+          }
         },
         {
           "id": "extracurricular_activities",
@@ -194,7 +198,11 @@
           "label": "Upload problem-set solutions as one PDF",
           "details": "PROMYS asks applicants to submit solutions to a challenging problem set; handwritten solutions must be scanned legibly and converted to PDF.",
           "required": true,
-          "source_url": "https://promys.org/programs/promys/for-students/application/"
+          "source_url": "https://promys.org/programs/promys/for-students/application/",
+          "essay_prompts": {
+            "status": "gated",
+            "items": []
+          }
         },
         {
           "id": "transcript",
@@ -208,7 +216,11 @@
           "label": "Complete the online application form and short answers",
           "details": "The form asks for personal short answers and summaries of problem-set solutions in text boxes.",
           "required": true,
-          "source_url": "https://promys.org/programs/promys/for-students/application/"
+          "source_url": "https://promys.org/programs/promys/for-students/application/",
+          "essay_prompts": {
+            "status": "gated",
+            "items": []
+          }
         },
         {
           "id": "teacher_recommendation",
@@ -334,7 +346,28 @@
           "label": "Complete the required short essays",
           "details": "Texas Tech says short essays are required and publishes prompts/limits for applicants to prepare in advance.",
           "required": true,
-          "source_url": "https://www.depts.ttu.edu/clarkscholars/ApplicationDetails.php"
+          "source_url": "https://www.depts.ttu.edu/clarkscholars/ApplicationDetails.php",
+          "essay_prompts": {
+            "status": "public",
+            "items": [
+              {
+                "prompt": "Describe your primary research interests and potential project ideas, being very specific",
+                "length": "2,000 characters including spaces"
+              },
+              {
+                "prompt": "Describe your secondary research interest, being very specific",
+                "length": "2,000 characters including spaces"
+              },
+              {
+                "prompt": "Tell the Selection Committee about yourself and your reasons for applying to the Clark Scholarship Program. Please include your future goals and how becoming a Clark Scholar would contribute to achieving those goals",
+                "length": "2,000 characters including spaces"
+              },
+              {
+                "prompt": "Tell us about your most fulfilling service experience. This can be through an organization within or outside school",
+                "length": "1,500 characters including spaces"
+              }
+            ]
+          }
         },
         {
           "id": "transcript_scores",
@@ -435,7 +468,11 @@
           "label": "Submit the optional video essay if useful",
           "details": "The video essay is optional; Stanford strongly encourages it for students whose school language of instruction is not English.",
           "required": false,
-          "source_url": "https://sumac.spcs.stanford.edu/sumac-admissions"
+          "source_url": "https://sumac.spcs.stanford.edu/sumac-admissions",
+          "essay_prompts": {
+            "status": "gated",
+            "items": []
+          }
         }
       ],
       "verified": true,
@@ -581,7 +618,11 @@
           "label": "Answer brief application questions",
           "details": "Simons lists brief responses of 300 words or less and prohibits AI-generated or AI-rewritten application content.",
           "required": true,
-          "source_url": "https://www.stonybrook.edu/commcms/simons/applying_to/how-to-apply.php"
+          "source_url": "https://www.stonybrook.edu/commcms/simons/applying_to/how-to-apply.php",
+          "essay_prompts": {
+            "status": "gated",
+            "items": []
+          }
         },
         {
           "id": "recommendations",
@@ -647,7 +688,11 @@
           "label": "Submit the online COSMOS application",
           "details": "The application includes one personal statement and campus/cluster choices.",
           "required": true,
-          "source_url": "https://cosmos-ucop.ucdavis.edu/app/main/page/application-and-payment-basics"
+          "source_url": "https://cosmos-ucop.ucdavis.edu/app/main/page/application-and-payment-basics",
+          "essay_prompts": {
+            "status": "gated",
+            "items": []
+          }
         },
         {
           "id": "teacher_recommendation",
@@ -738,7 +783,28 @@
           "label": "Complete RISE essays",
           "details": "RISE requires three essays; Internship applicants also list three faculty of interest and explain research alignment.",
           "required": true,
-          "source_url": "https://www.bu.edu/summer/high-school-programs/rise-internship-practicum/how-to-apply/"
+          "source_url": "https://www.bu.edu/summer/high-school-programs/rise-internship-practicum/how-to-apply/",
+          "essay_prompts": {
+            "status": "public",
+            "items": [
+              {
+                "prompt": "Why you selected your subject of interest",
+                "length": "max 300 words"
+              },
+              {
+                "prompt": "Your academic achievements",
+                "length": "max 250 words"
+              },
+              {
+                "prompt": "Why you want to attend the RISE program",
+                "length": "max 200 words"
+              },
+              {
+                "prompt": "You must list three faculty members you are interested in working with this summer and explain how their research interests align with yours",
+                "length": "max 250 words"
+              }
+            ]
+          }
         },
         {
           "id": "recommendation",
@@ -836,7 +902,24 @@
           "label": "Complete the SAMS essay prompts",
           "details": "Applicants complete one general CMU Pre-College essay and one SAMS-specific essay prompt.",
           "required": true,
-          "source_url": "https://www.cmu.edu/pre-college/academic-programs/sams.html"
+          "source_url": "https://www.cmu.edu/pre-college/academic-programs/sams.html",
+          "essay_prompts": {
+            "status": "public",
+            "items": [
+              {
+                "prompt": "What do you hope to gain from participating in Carnegie Mellon's Pre-College Programs?",
+                "length": "300-500 words"
+              },
+              {
+                "prompt": "Describe a time when you faced a significant challenge in a math or science class. How did you address it and what did you learn about your own persistence and problem solving skills?",
+                "length": "no more than 1000 words"
+              },
+              {
+                "prompt": "As a STEM scholar, think about a problem in a community you care about. How can you use STEM-based solutions to address or improve the situation?",
+                "length": "no more than 1000 words"
+              }
+            ]
+          }
         },
         {
           "id": "financial_documentation",
@@ -984,7 +1067,11 @@
           "label": "Complete essay and short-response questions",
           "details": "YYGS requires one 400-word essay, one 200-word response, and two 280-character fast-take responses.",
           "required": true,
-          "source_url": "https://globalscholars.yale.edu/required-components"
+          "source_url": "https://globalscholars.yale.edu/required-components",
+          "essay_prompts": {
+            "status": "gated",
+            "items": []
+          }
         },
         {
           "id": "transcript",
@@ -1312,7 +1399,11 @@
           "label": "Submit personal statement",
           "details": "Describe research interests, experiences, and career goals.",
           "required": true,
-          "source_url": "https://www.training.nih.gov/research-training/pb/sip/"
+          "source_url": "https://www.training.nih.gov/research-training/pb/sip/",
+          "essay_prompts": {
+            "status": "gated",
+            "items": []
+          }
         },
         {
           "id": "two-references",
@@ -1373,7 +1464,11 @@
           "label": "Complete all required application materials",
           "details": "See the admission page checklist for personal, academic, and essay materials required for review.",
           "required": true,
-          "source_url": "https://www.jax.org/education-and-learning/high-school-students-and-undergraduates/learn-earn-and-explore/admission"
+          "source_url": "https://www.jax.org/education-and-learning/high-school-students-and-undergraduates/learn-earn-and-explore/admission",
+          "essay_prompts": {
+            "status": "gated",
+            "items": []
+          }
         }
       ],
       "verified": true,
@@ -1474,7 +1569,44 @@
           "label": "Apply at spacegrant.net/apps/sees",
           "details": "Submit application, essay questions, introduction video, and request recommendation forms by the published deadline.",
           "required": true,
-          "source_url": "https://csr.utexas.edu/education-outreach/high-school-internships/sees/how-to-apply/"
+          "source_url": "https://csr.utexas.edu/education-outreach/high-school-internships/sees/how-to-apply/",
+          "essay_prompts": {
+            "status": "public",
+            "items": [
+              {
+                "prompt": "What subjects interest you most?",
+                "length": "maximum 250 words per response"
+              },
+              {
+                "prompt": "What is your current academic path?",
+                "length": "maximum 250 words per response"
+              },
+              {
+                "prompt": "What are your career plans, and how might SEES affect them?",
+                "length": "maximum 250 words per response"
+              },
+              {
+                "prompt": "Describe important academic STEM experiences (courses, science fairs, school competitions, etc.).",
+                "length": "maximum 250 words per response"
+              },
+              {
+                "prompt": "Describe important life STEM experiences outside of school (e.g., cooking with the scientific process, caring for animals, exploring nature, video game or code development, hobby astronomy, math clubs, robotics, tinkering, or crafting).",
+                "length": "maximum 250 words per response"
+              },
+              {
+                "prompt": "What skills have you gained from extracurricular activities that will help you as a research team member?",
+                "length": "maximum 250 words per response"
+              },
+              {
+                "prompt": "How did you hear about the SEES Internship Program?",
+                "length": "maximum 250 words per response"
+              },
+              {
+                "prompt": "Have you participated in similar STEM programs, or is there a lack of STEM opportunities in your area?",
+                "length": "maximum 250 words per response"
+              }
+            ]
+          }
         },
         {
           "id": "recommendation-form",
@@ -1903,7 +2035,16 @@
           "label": "Upload genre-specific writing sample and statement of purpose",
           "details": "Separate Submittable forms for fiction/poetry/creative writing, TV writing, or playwriting.",
           "required": true,
-          "source_url": "https://iyws.program.uiowa.edu/how-to-apply/summer-residential-program"
+          "source_url": "https://iyws.program.uiowa.edu/how-to-apply/summer-residential-program",
+          "essay_prompts": {
+            "status": "public",
+            "items": [
+              {
+                "prompt": "In 1-2 pages, tell us why you want to participate in the Studio and what you hope to accomplish here. You may want to discuss your writing sample or talk about writers or works that you admire. This is a chance for us to get to know you a little bit from your own words.",
+                "length": "1-2 pages"
+              }
+            ]
+          }
         },
         {
           "id": "recommendation-letter",
@@ -3070,7 +3211,24 @@
           "label": "Answer two short-response essay prompts (150-250 words each); one response may be submitted as a video instead of writing.",
           "details": "New applicants answer 'Why do you want to participate in camp this summer? How will you use your new coding superpower?' plus a choice between two follow-up prompts. Returning scholars receive different prompts.",
           "required": true,
-          "source_url": "https://www.kodewithklossy.com/application-tips"
+          "source_url": "https://www.kodewithklossy.com/application-tips",
+          "essay_prompts": {
+            "status": "public",
+            "items": [
+              {
+                "prompt": "Why do you want to participate in camp this summer? How will you use your new coding superpower?",
+                "length": "150-250 words (sweet spot); 100-250 words accepted"
+              },
+              {
+                "prompt": "Think of anything in your life that you would change (an object, website, organization, sky's the limit!). What is it, how would you redesign it, and why?",
+                "length": "150-250 words (sweet spot); 100-250 words accepted"
+              },
+              {
+                "prompt": "Tell us about a group or community you belong to. What makes this group or community special to who you are? This could include personal interests, cultural connections, social circles- and beyond.",
+                "length": "150-250 words (sweet spot); 100-250 words accepted"
+              }
+            ]
+          }
         },
         {
           "id": "technology-and-additional-info",
@@ -3142,7 +3300,11 @@
           "label": "Complete the Entrepreneurial Mindset section: short-answer/essay prompts on your problem-solving approach and entrepreneurial type.",
           "details": "Example prompts include 'What is your main driver for wanting to be an entrepreneur?' and 'What is your entrepreneurial type?'",
           "required": true,
-          "source_url": "https://www.launchx.com/admissions/how-to-apply"
+          "source_url": "https://www.launchx.com/admissions/how-to-apply",
+          "essay_prompts": {
+            "status": "gated",
+            "items": []
+          }
         },
         {
           "id": "submit-and-decision",
@@ -3242,7 +3404,24 @@
           "label": "Submit a personal statement (roughly 1,000-1,500 words, max 2,000) on your academic area of interest",
           "details": "Sourced from Cornell's official Application Statements page content; word-count details could not be independently re-confirmed via direct page fetch this session.",
           "required": true,
-          "source_url": "https://sce.cornell.edu/precollege/admission/statements"
+          "source_url": "https://sce.cornell.edu/precollege/admission/statements",
+          "essay_prompts": {
+            "status": "public",
+            "items": [
+              {
+                "prompt": "Tell us about the academic area that you are interested in pursuing during the Precollege Studies program. Explain what you are expecting to gain from this course. Describe why you are confident in succeeding in the program.",
+                "length": "1,000 to 1,500 words with a maximum length of 2,000 words"
+              },
+              {
+                "prompt": "What experience or background are you bringing to the study of your chosen topic?",
+                "length": "1,000 to 1,500 words with a maximum length of 2,000 words"
+              },
+              {
+                "prompt": "What do you think sets you apart from other applicants to this program?",
+                "length": "1,000 to 1,500 words with a maximum length of 2,000 words"
+              }
+            ]
+          }
         },
         {
           "id": "english-proficiency",
@@ -3313,7 +3492,20 @@
           "label": "Write two essays (750 words maximum each)",
           "details": null,
           "required": true,
-          "source_url": "https://belinblank.education.uiowa.edu/students/sstp/"
+          "source_url": "https://belinblank.education.uiowa.edu/students/sstp/",
+          "essay_prompts": {
+            "status": "public",
+            "items": [
+              {
+                "prompt": "Briefly describe each of your research areas of interest. This is used to help determine which faculty mentors will be sent your application materials. If you have particular interests, technical skills, or experience with a research method this is the appropriate place to highlight those talents.",
+                "length": "750 words maximum"
+              },
+              {
+                "prompt": "Why are you applying to the Secondary Student Training Program? Describe your career aspirations and explain what you hope to gain from the SSTP experience.",
+                "length": "750 words maximum"
+              }
+            ]
+          }
         },
         {
           "id": "transcript",
@@ -3620,7 +3812,11 @@
           "label": "Answer three personal insight questions",
           "details": "Short essay-style responses to three personal insight questions.",
           "required": true,
-          "source_url": "https://fte.org/students/frequently-asked-questions/"
+          "source_url": "https://fte.org/students/frequently-asked-questions/",
+          "essay_prompts": {
+            "status": "gated",
+            "items": []
+          }
         },
         {
           "id": "letter-of-recommendation",
