@@ -8242,7 +8242,11 @@
           "label": "Submit a personal statement describing movement involvement and financial need",
           "details": "The fund states no application will be seriously considered without evidence of active engagement in social justice/progressive movement work; aspiring to be involved is not sufficient.",
           "required": true,
-          "source_url": "https://davisputter.org/apply"
+          "source_url": "https://davisputter.org/apply",
+          "essay_prompts": {
+            "status": "gated",
+            "items": []
+          }
         },
         {
           "id": "letters-of-recommendation",
@@ -8319,7 +8323,11 @@
           "label": "Submit written response(s)/essay as part of the application",
           "details": "Selection criteria explicitly include a 'written response' component alongside academic promise and financial need.",
           "required": true,
-          "source_url": "https://syf.org/simon-youth-foundation-names-community-scholarship-program-in-memory-of-shari-simon-greenberg/"
+          "source_url": "https://syf.org/simon-youth-foundation-names-community-scholarship-program-in-memory-of-shari-simon-greenberg/",
+          "essay_prompts": {
+            "status": "gated",
+            "items": []
+          }
         },
         {
           "id": "demonstrate-financial-need",
@@ -8380,7 +8388,11 @@
           "label": "Write and submit a personal statement",
           "details": "Winners are chosen by committee based primarily on the submitted personal statement.",
           "required": true,
-          "source_url": "https://www.genkellyscholarship.com/scholarship-details"
+          "source_url": "https://www.genkellyscholarship.com/scholarship-details",
+          "essay_prompts": {
+            "status": "gated",
+            "items": []
+          }
         },
         {
           "id": "confirm-us-residency",
@@ -8453,7 +8465,11 @@
           "label": "Submit a Personal Statement essay (background, welding/work experience, career goals)",
           "details": null,
           "required": true,
-          "source_url": "https://www.aws.org/career-resources/students/scholarships/"
+          "source_url": "https://www.aws.org/career-resources/students/scholarships/",
+          "essay_prompts": {
+            "status": "gated",
+            "items": []
+          }
         },
         {
           "id": "provide-transcript-recommendations",
@@ -8730,7 +8746,60 @@
           "label": "Write an essay addressing all 16 required prompts about vegan/vegetarian advocacy and future goals",
           "details": null,
           "required": true,
-          "source_url": "https://www.vrg.org/student/scholar.htm"
+          "source_url": "https://www.vrg.org/student/scholar.htm",
+          "essay_prompts": {
+            "status": "public",
+            "items": [
+              {
+                "prompt": "How you promoted veganism in your high school and/or community"
+              },
+              {
+                "prompt": "Your successes"
+              },
+              {
+                "prompt": "Your challenges"
+              },
+              {
+                "prompt": "What you learned/what you would do different"
+              },
+              {
+                "prompt": "How you expect to promote veganism in college and beyond"
+              },
+              {
+                "prompt": "Your future goals"
+              },
+              {
+                "prompt": "Your strengths"
+              },
+              {
+                "prompt": "Your weaknesses"
+              },
+              {
+                "prompt": "Your \"perfect\" life in five years"
+              },
+              {
+                "prompt": "Why you should receive this scholarship"
+              },
+              {
+                "prompt": "How you became vegetarian or vegan and why you are vegetarian or vegan"
+              },
+              {
+                "prompt": "How you define vegetarian and vegan"
+              },
+              {
+                "prompt": "Why vegetarianism and veganism is important to you"
+              },
+              {
+                "prompt": "What else is important to you"
+              },
+              {
+                "prompt": "What vegetarian foods you would recommend to a non-vegetarian"
+              },
+              {
+                "prompt": "What restaurants you would recommend to a non-vegetarian"
+              }
+            ]
+          }
         },
         {
           "id": "submit-transcripts",
@@ -8900,7 +8969,11 @@
           "label": "Submit required essay",
           "details": "Essay is one of the evaluation criteria alongside financial need, scholastic achievement, recommendations, and community service/extracurricular activities.",
           "required": true,
-          "source_url": "https://www.kasf.org/scholarships/"
+          "source_url": "https://www.kasf.org/scholarships/",
+          "essay_prompts": {
+            "status": "gated",
+            "items": []
+          }
         },
         {
           "id": "submit-recommendation-letters",
@@ -8973,7 +9046,15 @@
           "label": "Write the required essay",
           "details": "Essay must address why the applicant is applying and their connection to Sons of Norway.",
           "required": true,
-          "source_url": "https://www.sofn.com/foundation/scholarships/"
+          "source_url": "https://www.sofn.com/foundation/scholarships/",
+          "essay_prompts": {
+            "status": "public",
+            "items": [
+              {
+                "prompt": "why you are applying and your connection to Sons of Norway"
+              }
+            ]
+          }
         },
         {
           "id": "provide-recommendation-letters",
@@ -9062,7 +9143,11 @@
           "label": "Submit required essay(s)",
           "details": "Essays are a mandatory evaluation component; Italian-language majors may submit one essay in Italian. AI-generated content results in disqualification.",
           "required": true,
-          "source_url": "https://scholarships.osdia.org/"
+          "source_url": "https://scholarships.osdia.org/",
+          "essay_prompts": {
+            "status": "gated",
+            "items": []
+          }
         },
         {
           "id": "submit-test-scores",
@@ -9123,7 +9208,21 @@
           "label": "Answer short-answer questions on educational/career objectives",
           "details": "Includes explaining educational and career objectives related to manufacturing, motivation, and how the scholarship will help.",
           "required": true,
-          "source_url": "https://www.smeef.org/sme-education-foundation-scholarships/scholarship-application-tips/"
+          "source_url": "https://www.smeef.org/sme-education-foundation-scholarships/scholarship-application-tips/",
+          "essay_prompts": {
+            "status": "public",
+            "items": [
+              {
+                "prompt": "Please explain your educational and career objectives as it relates to manufacturing?"
+              },
+              {
+                "prompt": "What is your motivation in pursuing a career in manufacturing?"
+              },
+              {
+                "prompt": "If awarded how will an SME Education Foundation Scholarship enable you to pursue a career in manufacturing?"
+              }
+            ]
+          }
         },
         {
           "id": "submit-transcripts",
@@ -9201,7 +9300,16 @@
           "label": "Submit essay (max 2 pages)",
           "details": "Essay must cite professional goals and explain interest in a steel-industry career.",
           "required": true,
-          "source_url": "https://www.aist.org/students-faculty/scholarships/steel-intern-scholarships"
+          "source_url": "https://www.aist.org/students-faculty/scholarships/steel-intern-scholarships",
+          "essay_prompts": {
+            "status": "public",
+            "items": [
+              {
+                "prompt": "Citing professional goals, explaining why the student is interested in a career in the steel industry, and discussing how your skills could be applied to enhance the industry.",
+                "length": "not to exceed two pages in length"
+              }
+            ]
+          }
         },
         {
           "id": "obtain-recommendation-letters",
@@ -9281,7 +9389,16 @@
           "label": "Submit a 500-word essay",
           "details": "Essay must address what inspired the applicant's aviation/aerospace career interest, community involvement, and how the scholarship helps achieve goals.",
           "required": true,
-          "source_url": "https://www.wai.org/how-to-apply"
+          "source_url": "https://www.wai.org/how-to-apply",
+          "essay_prompts": {
+            "status": "public",
+            "items": [
+              {
+                "prompt": "Focused on what inspired you to join the aviation or aerospace industry, what keeps you motivated in this field, your contributions to the community, and how this scholarship will change your life.",
+                "length": "500-word essay"
+              }
+            ]
+          }
         },
         {
           "id": "submit-resume",
@@ -9351,7 +9468,11 @@
           "label": "Complete essay/short-answer responses",
           "details": "All essays and responses must be the applicant's own original work; AI-generated content exceeding 25% will disqualify the application.",
           "required": true,
-          "source_url": "https://apply.mykaleidoscope.com/program/EAAScholarship2026"
+          "source_url": "https://apply.mykaleidoscope.com/program/EAAScholarship2026",
+          "essay_prompts": {
+            "status": "gated",
+            "items": []
+          }
         },
         {
           "id": "provide-reference",
@@ -9420,7 +9541,16 @@
           "label": "Write a 1,000-1,500 word essay on the assigned foreign policy topic",
           "details": "Word count excludes the source list. Essay must argue one of two specified positions on the current year's topic.",
           "required": true,
-          "source_url": "https://afsa.org/essay-contest"
+          "source_url": "https://afsa.org/essay-contest",
+          "essay_prompts": {
+            "status": "public",
+            "items": [
+              {
+                "prompt": "The Fragile Front Line: U.S. Diplomacy and the Future of Soft Power. In 2025, those tools took a significant hit. The U.S. Agency for International Development was dismantled; the U.S. Agency for Global Media (home to Voice of America) was effectively closed; most exchange programs, including Fulbright, were suspended; and the Foreign Service itself was cut by about 25 percent. How can the United States build and sustain relationships without these efforts? In 1,000 to 1,500 words, make a case for one of two positions: either explain how the United States can maintain global leadership without these tools, or argue that it cannot—and why. In either direction, focus on the role of the U.S. Foreign Service with fewer people and fewer tools. If you believe leadership can be sustained, lay out clear, realistic steps diplomats could take to achieve their goals. If you believe it cannot, show where capacity would fall short, which risks would rise, and what costs would follow.",
+                "length": "1,000 to 1,500 words"
+              }
+            ]
+          }
         },
         {
           "id": "cite-primary-sources",
