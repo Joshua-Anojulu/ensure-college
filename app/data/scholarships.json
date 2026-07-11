@@ -4447,7 +4447,20 @@
           "label": "Complete essays and required application sections",
           "details": "Boren guidance recommends drafting essays early and sharing them with recommenders before the national deadline.",
           "required": true,
-          "source_url": "https://www.borenawards.org/"
+          "source_url": "https://www.borenawards.org/",
+          "essay_prompts": {
+            "status": "public",
+            "items": [
+              {
+                "prompt": "Please discuss the following points in one integrated essay, giving equal attention to each point. Explain the significance of your overseas destination, region, and language to U.S. national security. You should make a specific, detailed, and focused argument relevant to your academic interests, as well as your professional goals for national security employment within the U.S. government. Priority organizations (Tier One) are the Departments of War, State, and Homeland Security, as well as the intelligence Community.",
+                "length": "maximum length of 800 words"
+              },
+              {
+                "prompt": "Please discuss the following points in one integrated essay, giving equal attention to each point. You can discuss the points in any order. Think about a previous experience that has led to growth or a personal quality. Reflect upon it and describe how it will assist you in preparing for and spending significant time overseas studying a critical foreign language and culture and, if applicable, conducting your proposed research. Explain how the destination and language you selected will help you achieve your career goals, including your plans to fulfill the federal service requirement. Be specific. If appropriate, you may also include past academic, extracurricular, volunteer, internship, and professional experiences relevant to your federal career goals. As you will be committing to working for the federal government for at least one year, describe what makes you interested in federal service and what you will bring as a leader in the federal workforce.",
+                "length": "maximum length of 800 words"
+              }
+            ]
+          }
         }
       ],
       "verification": {
@@ -4597,7 +4610,15 @@
           "label": "Submit required video response",
           "details": "Video must address the community-values prompt in the official rules.",
           "required": true,
-          "source_url": "https://www.salliemae.com/content/dam/slm/writtencontent/Research/2026-2027_BTD_HS_Contest_Official_Rules.pdf"
+          "source_url": "https://www.salliemae.com/content/dam/slm/writtencontent/Research/2026-2027_BTD_HS_Contest_Official_Rules.pdf",
+          "essay_prompts": {
+            "status": "public",
+            "items": [
+              {
+                "prompt": "What core principles or values do you believe are most essential to creating positive change in your community and future career field? How do you plan to embody them in both your educational pursuits and interactions with others?"
+              }
+            ]
+          }
         }
       ],
       "verification": {
@@ -4859,7 +4880,11 @@
           "label": "Complete the online STAR application within 30 days",
           "details": "After chapter recommendation, the Executive Office emails a link; submit profile, 700-word essay, two recommendations, and transcript within 30 days.",
           "required": true,
-          "source_url": "https://www.peointernational.org/resource/star-student-application-instructions/"
+          "source_url": "https://www.peointernational.org/resource/star-student-application-instructions/",
+          "essay_prompts": {
+            "status": "gated",
+            "items": []
+          }
         }
       ],
       "verification": {
@@ -4997,7 +5022,11 @@
           "label": "Submit personal statement and coursework list",
           "details": "Application requires coursework history and a personal statement describing research interests and goals.",
           "required": true,
-          "source_url": "https://www.training.nih.gov/research-training/pb/ugsp/"
+          "source_url": "https://www.training.nih.gov/research-training/pb/ugsp/",
+          "essay_prompts": {
+            "status": "gated",
+            "items": []
+          }
         },
         {
           "id": "financial-need-certification",
@@ -5319,7 +5348,16 @@
           "label": "Submit the 550-word goal essay in plain text",
           "details": "Essay must be original, in English, and must not include identifying information in the essay body.",
           "required": true,
-          "source_url": "https://www.mensafoundation.org/scholarships/"
+          "source_url": "https://www.mensafoundation.org/scholarships/",
+          "essay_prompts": {
+            "status": "public",
+            "items": [
+              {
+                "prompt": "Clearly detail your goals and how your experiences support them.",
+                "length": "550 words or fewer"
+              }
+            ]
+          }
         }
       ],
       "verified": true,
@@ -5693,7 +5731,11 @@
           "label": "Apply through scholarships.skillsusa.org",
           "details": "Each scholarship has its own deadline and required materials such as essay, resume, and recommendation.",
           "required": true,
-          "source_url": "https://www.skillsusa.org/recognition/scholarships-and-grants/"
+          "source_url": "https://www.skillsusa.org/recognition/scholarships-and-grants/",
+          "essay_prompts": {
+            "status": "gated",
+            "items": []
+          }
         },
         {
           "id": "paid-membership",
@@ -5795,7 +5837,16 @@
           "label": "Submit an original 700-800 word essay",
           "details": "2025-2026 topic: How My Acts of Service Help Me Understand What My Community Means to Me.",
           "required": true,
-          "source_url": "https://optimist.org/Documents/2026/programs/25-26_Essay_Club_Planning_Guide.pdf"
+          "source_url": "https://optimist.org/Documents/2026/programs/25-26_Essay_Club_Planning_Guide.pdf",
+          "essay_prompts": {
+            "status": "public",
+            "items": [
+              {
+                "prompt": "How My Acts of Service Help Me Understand What My Community Means to Me",
+                "length": "Essays must contain at least 700 words but no more than 800 words."
+              }
+            ]
+          }
         }
       ],
       "verified": true,
@@ -5898,7 +5949,16 @@
           "label": "Submit transcript and at least two STEM recommendation letters",
           "details": "Includes statement of intent (150 words or less) on STEM study/career plans.",
           "required": true,
-          "source_url": "https://www.spaceclub.org/scholarship/selection.html"
+          "source_url": "https://www.spaceclub.org/scholarship/selection.html",
+          "essay_prompts": {
+            "status": "public",
+            "items": [
+              {
+                "prompt": "Statement of Intent: A brief statement of 150 words or less on your study/career plans with an emphasis on STEM.",
+                "length": "150 words or less"
+              }
+            ]
+          }
         }
       ],
       "verified": true,
@@ -5936,7 +5996,11 @@
           "label": "Apply at kfcfoundation.org/scholarships when open",
           "details": "Optional Janet L. Kuhn essay can double one recipient's award.",
           "required": true,
-          "source_url": "https://kfcfoundation.org/scholarships/"
+          "source_url": "https://kfcfoundation.org/scholarships/",
+          "essay_prompts": {
+            "status": "gated",
+            "items": []
+          }
         }
       ],
       "verified": true,
@@ -7880,7 +7944,11 @@
           "label": "If selected as a top-100 semifinalist, submit Phase 2 materials",
           "details": "Includes one sponsor recommendation, one to three candidate evaluations, two student essays, and work history (if applicable), due by the semifinalist materials deadline.",
           "required": false,
-          "source_url": "https://support.betaclub.org/support/solutions/articles/153000198528-scholarship-frequently-asked-questions"
+          "source_url": "https://support.betaclub.org/support/solutions/articles/153000198528-scholarship-frequently-asked-questions",
+          "essay_prompts": {
+            "status": "gated",
+            "items": []
+          }
         }
       ],
       "verification": {
@@ -8088,7 +8156,16 @@
           "label": "Write a 500-800 word prompt response",
           "details": "Prompt: how you are making a positive impact on society and how your college plans will help you continue that impact.",
           "required": true,
-          "source_url": "https://www.nshss.org/scholarships/s/nshss-nobel-academic-excellence-scholarship-2025/"
+          "source_url": "https://www.nshss.org/scholarships/s/nshss-nobel-academic-excellence-scholarship-2025/",
+          "essay_prompts": {
+            "status": "public",
+            "items": [
+              {
+                "prompt": "How are you already making a positive impact on society, and how do you hope to expand that impact in the future? Share your vision for creating change and how your college plans will help you achieve your goals.",
+                "length": "500-800 words"
+              }
+            ]
+          }
         },
         {
           "id": "leadership-media",
