@@ -97,3 +97,9 @@ class TestFrontendPromptWiring:
         assert "function essayStartByLabel" in source
         assert "Prompts revealed after registration" in source
         assert "Start drafting by" in source
+
+    def test_app_js_wires_auto_match(self):
+        source = APP_JS.read_text(encoding="utf-8")
+        assert "function runMatchFlow" in source
+        assert "function autoMatchFromSavedProfile" in source
+        assert source.count("autoMatchFromSavedProfile()") >= 2  # loadSession + login

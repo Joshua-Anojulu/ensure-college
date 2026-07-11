@@ -1719,6 +1719,7 @@ async function handleAuthSubmit(event) {
     closeAuthModal();
     renderAuthState();
     await Promise.all([loadProfileIntoForm(), loadSaved()]);
+    await autoMatchFromSavedProfile();
     if (lastResults) {
       renderResults(lastResults);
     }
@@ -1756,6 +1757,7 @@ async function loadSession() {
       currentUser = await response.json();
       renderAuthState();
       await Promise.all([loadProfileIntoForm(), loadSaved()]);
+      await autoMatchFromSavedProfile();
     } else {
       currentUser = null;
       savedIds.clear();
@@ -4107,6 +4109,32 @@ function setLoading(isLoading) {
   }
 }
 
+async function runMatchFlow(profile) {
+  const response = await fetch("/match", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(profile),
+  });
+  if (response.status === 422) {
+    const data = await response.json();
+    const err = new Error("validation");
+    err.validationDetail = data.detail;
+    throw err;
+  }
+  if (!response.ok) {
+    throw new Error(`Match request failed (${response.status})`);
+  }
+  const payload = await response.json();
+  lastSubmittedProfile = profile;
+  lastResults = payload.matches;
+  lastNearMisses.scholarships = payload.near_misses || [];
+  renderResults(lastResults);
+  updateOpportunityTabCounts();
+  await activateOpportunityView("scholarships");
+  loadPrograms(profile);
+  loadCompetitions(profile);
+}
+
 async function handleSubmit(event) {
   event.preventDefault();
   hideFormError();
@@ -4125,38 +4153,41 @@ async function handleSubmit(event) {
   setLoading(true);
 
   try {
-    const response = await fetch("/match", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(built.profile),
-    });
-
-    if (response.status === 422) {
-      const data = await response.json();
-      showFormError(formatValidationErrors(data.detail));
-      setLoading(false);
-      return;
-    }
-
-    if (!response.ok) {
-      throw new Error(`Match request failed (${response.status})`);
-    }
-
-    const payload = await response.json();
-    lastSubmittedProfile = built.profile;
-    lastResults = payload.matches;
-    lastNearMisses.scholarships = payload.near_misses || [];
-    renderResults(lastResults);
-    updateOpportunityTabCounts();
-    await activateOpportunityView("scholarships");
+    await runMatchFlow(built.profile);
     saveProfileSilently(built.profile);
-    loadPrograms(built.profile);
-    loadCompetitions(built.profile);
   } catch (err) {
-    showFormError(
-      "The match request did not go through. Check your connection and try again."
-    );
+    if (err.validationDetail) {
+      showFormError(formatValidationErrors(err.validationDetail));
+    } else {
+      showFormError(
+        "The match request did not go through. Check your connection and try again."
+      );
+      console.error(err);
+    }
+  } finally {
+    setLoading(false);
+  }
+}
+
+async function autoMatchFromSavedProfile() {
+  if (!currentUser || lastResults) {
+    return;
+  }
+  const built = buildProfile();
+  if (built.error) {
+    return; // incomplete saved profile: keep today's behavior silently
+  }
+  resultsSection.hidden = false;
+  programsSection.hidden = true;
+  competitionsSection.hidden = true;
+  savedSection.hidden = true;
+  setOpportunityTabsVisible(false);
+  setLoading(true);
+  try {
+    await runMatchFlow(built.profile);
+  } catch (err) {
     console.error(err);
+    resultsSection.hidden = true; // degrade to pre-match state, no toast
   } finally {
     setLoading(false);
   }
