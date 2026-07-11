@@ -748,16 +748,7 @@
           "label": "Complete online APIA Scholarship application",
           "details": "One application covers all APIA scholarships. Initial application includes one 500-word essay and does not require recommendation letters or supporting documents.",
           "required": true,
-          "source_url": "https://apiascholars.org/scholarships/application-support/application-guide-tips/",
-          "essay_prompts": {
-            "status": "public",
-            "items": [
-              {
-                "prompt": "How have your experiences, identity, or community shaped the way you interact with the world? How would the APIA Scholarship support your continued growth as you pursue your future goals? This is a two-part question. Please ensure that you answer every part of the question. Be specific and provide examples.",
-                "length": "Limit of 500 words"
-              }
-            ]
-          }
+          "source_url": "https://apiascholars.org/scholarships/application-support/application-guide-tips/"
         },
         {
           "id": "essay-response",
