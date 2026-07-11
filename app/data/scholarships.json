@@ -46,7 +46,11 @@
           "label": "Submit Phase 2 materials if named Semifinalist",
           "details": "About 1% of applicants are named Semifinalists by end of October and invited to complete Phase 2 in November, including essays, transcript, and one recommendation.",
           "required": false,
-          "source_url": "https://www.coca-colascholarsfoundation.org/apply/"
+          "source_url": "https://www.coca-colascholarsfoundation.org/apply/",
+          "essay_prompts": {
+            "status": "gated",
+            "items": []
+          }
         },
         {
           "id": "regional-finalist-interview",
@@ -166,7 +170,11 @@
           "label": "JKCF essays and financial information",
           "details": "Complete JKCF-specific questions including short essays and financial information demonstrating unmet need.",
           "required": true,
-          "source_url": "https://www.jkcf.org/our-scholarships/college-scholarship-program/faqs/"
+          "source_url": "https://www.jkcf.org/our-scholarships/college-scholarship-program/faqs/",
+          "essay_prompts": {
+            "status": "gated",
+            "items": []
+          }
         }
       ]
     },
@@ -377,7 +385,11 @@
           "label": "Short essays",
           "details": "Short essay section required as part of holistic application review.",
           "required": true,
-          "source_url": "https://www.societyforscience.org/regeneron-sts/application-requirements/"
+          "source_url": "https://www.societyforscience.org/regeneron-sts/application-requirements/",
+          "essay_prompts": {
+            "status": "gated",
+            "items": []
+          }
         }
       ]
     },
@@ -590,7 +602,11 @@
           "label": "Complete National College Match application",
           "details": "Provide academics, activities, household/financial background, writing section, two core-subject teacher recommendations, transcript(s), counselor School Report, and test scores if taken.",
           "required": true,
-          "source_url": "https://www.questbridge.org/high-school-students/national-college-match/how-to-apply"
+          "source_url": "https://www.questbridge.org/high-school-students/national-college-match/how-to-apply",
+          "essay_prompts": {
+            "status": "gated",
+            "items": []
+          }
         },
         {
           "id": "gather-financial-documents",
@@ -732,14 +748,32 @@
           "label": "Complete online APIA Scholarship application",
           "details": "One application covers all APIA scholarships. Initial application includes one 500-word essay and does not require recommendation letters or supporting documents.",
           "required": true,
-          "source_url": "https://apiascholars.org/scholarships/application-support/application-guide-tips/"
+          "source_url": "https://apiascholars.org/scholarships/application-support/application-guide-tips/",
+          "essay_prompts": {
+            "status": "public",
+            "items": [
+              {
+                "prompt": "How have your experiences, identity, or community shaped the way you interact with the world? How would the APIA Scholarship support your continued growth as you pursue your future goals? This is a two-part question. Please ensure that you answer every part of the question. Be specific and provide examples.",
+                "length": "Limit of 500 words"
+              }
+            ]
+          }
         },
         {
           "id": "essay-response",
           "label": "Required essay",
           "details": "Answer the published two-part essay prompt about experiences, identity, community, and future goals. Maximum 500 words.",
           "required": true,
-          "source_url": "https://apiascholars.org/scholarships/application-support/application-guide-tips/"
+          "source_url": "https://apiascholars.org/scholarships/application-support/application-guide-tips/",
+          "essay_prompts": {
+            "status": "public",
+            "items": [
+              {
+                "prompt": "How have your experiences, identity, or community shaped the way you interact with the world? How would the APIA Scholarship support your continued growth as you pursue your future goals? This is a two-part question. Please ensure that you answer every part of the question. Be specific and provide examples.",
+                "length": "Limit of 500 words"
+              }
+            ]
+          }
         },
         {
           "id": "fafsa-dependency-info",
@@ -3263,7 +3297,24 @@
           "label": "Three application essays",
           "details": "Application includes three essays. Essays 2 and 3 require reading The Autobiography of Calvin Coolidge.",
           "required": true,
-          "source_url": "https://coolidgescholars.org/2025-26-coolidge-scholarship-essay-resources/"
+          "source_url": "https://coolidgescholars.org/2025-26-coolidge-scholarship-essay-resources/",
+          "essay_prompts": {
+            "status": "public",
+            "items": [
+              {
+                "prompt": "What are the next intellectual frontiers you hope to explore in your college years? How do you envision you might use the knowledge you gain?",
+                "length": "400 words max"
+              },
+              {
+                "prompt": "Write an essay explaining and evaluating the rationale behind Coolidge's response to the 1927 floods. How did Coolidge imagine the problems presented by the floods would be solved absent a strong federal government response?",
+                "length": "600 words max"
+              },
+              {
+                "prompt": "Describe and evaluate the tax reforms under Harding and Coolidge, which they called 'Scientific Taxation.' What was the logic behind the 1920s tax reforms? What does evidence from the Harding and Coolidge years tell us about the impact of the 1920s tax reforms?",
+                "length": "600 words max"
+              }
+            ]
+          }
         },
         {
           "id": "two-letters-of-reference",
@@ -3370,7 +3421,11 @@
           "label": "Complete online application with essays",
           "details": "Answer essay and informational questions in the online application when the cycle is open. Check the official page for current open dates.",
           "required": true,
-          "source_url": "https://www.amazonfutureengineer.com/scholarships"
+          "source_url": "https://www.amazonfutureengineer.com/scholarships",
+          "essay_prompts": {
+            "status": "gated",
+            "items": []
+          }
         },
         {
           "id": "cs-course-or-assessment",
@@ -3467,7 +3522,15 @@
           "label": "Prepare recorded audio essay on theme",
           "details": "Create an audio essay on the published theme. 2026-27 theme: \"What a Veteran Taught Me About America.\"",
           "required": true,
-          "source_url": "https://www.vfw.org/community/youth-and-education/youth-scholarships"
+          "source_url": "https://www.vfw.org/community/youth-and-education/youth-scholarships",
+          "essay_prompts": {
+            "status": "public",
+            "items": [
+              {
+                "prompt": "What a Veteran Taught Me About America."
+              }
+            ]
+          }
         },
         {
           "id": "completed-entry-form",
@@ -3809,7 +3872,28 @@
           "label": "Four Gates Cambridge funding questions",
           "details": "Four short statements mapped to selection criteria: academic excellence; why this Cambridge course; commitment to improving others' lives; leadership capacity.",
           "required": true,
-          "source_url": "https://www.gatescambridge.org/apply/how-to-apply/"
+          "source_url": "https://www.gatescambridge.org/apply/how-to-apply/",
+          "essay_prompts": {
+            "status": "public",
+            "items": [
+              {
+                "prompt": "Please describe how, through your education and past experiences, you have displayed academic excellence.",
+                "length": "approx. 200 words, up to 1,400 characters"
+              },
+              {
+                "prompt": "Please explain why you want to study this specific course at the University of Cambridge, and how it will facilitate your future plans.",
+                "length": "approx. 200 words, up to 1,400 characters"
+              },
+              {
+                "prompt": "Please provide an example, or examples, of how you have demonstrated a commitment to improving the lives of others. Please explain why this is important to you and how it is relevant to your future plans.",
+                "length": "approx. 300 words, up to 2,100 characters"
+              },
+              {
+                "prompt": "Please provide an example, or examples, of how you have demonstrated a capacity for leadership. This could be by initiating a change or bringing others together to achieve a goal. How will this help you make an impact in the future?",
+                "length": "approx. 300 words, up to 2,100 characters"
+              }
+            ]
+          }
         },
         {
           "id": "academic-references",
@@ -4105,7 +4189,16 @@
           "label": "Write a strong essay and fully document your activities in that application",
           "details": "Because no extra materials are accepted, the personal essay and activities sections of your Georgia Tech admission application are the basis for Gold Scholars selection.",
           "required": false,
-          "source_url": "https://goldscholars.em.gatech.edu/apply/application-review"
+          "source_url": "https://goldscholars.em.gatech.edu/apply/application-review",
+          "essay_prompts": {
+            "status": "public",
+            "items": [
+              {
+                "prompt": "Why do you want to study your chosen major, and why do you want to study that major at Georgia Tech?",
+                "length": "max 300 words"
+              }
+            ]
+          }
         }
       ],
       "verified": true,
