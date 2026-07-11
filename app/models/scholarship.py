@@ -1,7 +1,7 @@
 from datetime import date
 from typing import Literal, Union
 
-from pydantic import BaseModel, Field, HttpUrl
+from pydantic import BaseModel, Field, HttpUrl, model_validator
 
 
 class EligibleSchool(BaseModel):
@@ -30,6 +30,38 @@ class VerificationMetadata(BaseModel):
     notes: str | None = Field(default=None, max_length=500)
 
 
+class EssayPromptItem(BaseModel):
+    """One official essay/short-answer prompt, recorded verbatim."""
+
+    prompt: str = Field(min_length=1, max_length=1000)
+    length: str | None = Field(
+        default=None,
+        max_length=80,
+        description="Sponsor's own length wording, e.g. '650 words max'.",
+    )
+
+    @model_validator(mode="after")
+    def _prompt_not_blank(self) -> "EssayPromptItem":
+        if not self.prompt.strip():
+            raise ValueError("prompt must not be blank")
+        return self
+
+
+class EssayPrompts(BaseModel):
+    """Verified prompt data for one requirement step."""
+
+    status: Literal["public", "gated"]
+    items: list[EssayPromptItem] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def _status_shape(self) -> "EssayPrompts":
+        if self.status == "public" and not self.items:
+            raise ValueError("public prompts require at least one item")
+        if self.status == "gated" and self.items:
+            raise ValueError("gated prompts must have no items")
+        return self
+
+
 class ApplicationRequirement(BaseModel):
     """A source-backed task a student can complete for a scholarship application."""
 
@@ -43,6 +75,7 @@ class ApplicationRequirement(BaseModel):
     details: str | None = Field(default=None, max_length=500)
     required: bool = True
     source_url: HttpUrl | None = None
+    essay_prompts: EssayPrompts | None = None
 
 
 class SpecialRequirement(BaseModel):

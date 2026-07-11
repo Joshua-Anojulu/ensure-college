@@ -48,7 +48,21 @@
       <h2>Application requirements</h2>
       <ul class="detail-requirements">
         {% for req in requirements %}
-        <li><strong>{{ req.label }}</strong>{% if req.details %}: {{ req.details }}{% endif %}</li>
+        <li>
+          <strong>{{ req.label }}</strong>{% if req.details %}: {{ req.details }}{% endif %}
+          {% if req.essay_prompts and req.essay_prompts.status == "public" %}
+          <details class="prompt-details">
+            <summary>Essay prompt{{ "s" if req.essay_prompts.items | length > 1 else "" }}</summary>
+            <ul class="prompt-list">
+              {% for item in req.essay_prompts.items %}
+              <li>{{ item.prompt }}{% if item.length %} <span class="prompt-length">{{ item.length }}</span>{% endif %}</li>
+              {% endfor %}
+            </ul>
+          </details>
+          {% elif req.essay_prompts and req.essay_prompts.status == "gated" %}
+          <p class="prompt-gated">Prompts revealed after registration on the sponsor site.</p>
+          {% endif %}
+        </li>
         {% endfor %}
       </ul>
     </section>
