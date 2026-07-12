@@ -1447,13 +1447,12 @@ async function handleDeleteAccount() {
     currentUser = null;
     savedIds.clear();
     savedProgramIds.clear();
+    savedCompetitionIds.clear();
     savedSection.hidden = true;
     closeSettingsModal();
     renderAuthState();
     updateSavedCount();
-    if (lastResults) {
-      renderResults(lastResults);
-    }
+    refreshLanesAfterAuthChange();
   } catch (err) {
     showSettingsError("Could not reach the server. Check your connection and try again.");
     console.error(err);
@@ -1720,9 +1719,7 @@ async function handleAuthSubmit(event) {
     renderAuthState();
     await Promise.all([loadProfileIntoForm(), loadSaved()]);
     await autoMatchFromSavedProfile();
-    if (lastResults) {
-      renderResults(lastResults);
-    }
+    refreshLanesAfterAuthChange();
   } catch (err) {
     showAuthError("Could not reach the server. Check your connection and try again.");
     console.error(err);
@@ -1745,9 +1742,7 @@ async function handleLogout() {
   if (recLettersPanel) recLettersPanel.hidden = true;
   renderAuthState();
   updateSavedCount();
-  if (lastResults) {
-    renderResults(lastResults);
-  }
+  refreshLanesAfterAuthChange();
 }
 
 async function loadSession() {
@@ -1762,14 +1757,35 @@ async function loadSession() {
       currentUser = null;
       savedIds.clear();
       savedProgramIds.clear();
+      savedCompetitionIds.clear();
       renderAuthState();
     }
   } catch (err) {
     currentUser = null;
     savedIds.clear();
     savedProgramIds.clear();
+    savedCompetitionIds.clear();
     renderAuthState();
     console.error(err);
+  }
+}
+
+// Save buttons read saved-ID state at render time, so a login/logout must
+// re-render every lane that has data — not just scholarships — or the lane the
+// user is looking at keeps the previous account's Saved labels (and a stale
+// "Saved" button would un-invert and save on click).
+function refreshLanesAfterAuthChange() {
+  if (lastResults) {
+    renderResults(lastResults);
+  }
+  if (lastPrograms) {
+    renderPrograms(lastPrograms);
+  }
+  if (lastCompetitions) {
+    renderCompetitions(lastCompetitions);
+  }
+  if (!catalogSection.hidden) {
+    renderCatalog();
   }
 }
 
@@ -2025,7 +2041,8 @@ function quickApplyItemName(kind, item) {
 
 // Qualifies when the item does not require an essay and has 3 or fewer required
 // application steps. When a match result has no application_requirements data
-// (not yet verified for that scholarship), it qualifies on essay alone and is
+// (not yet verified for that scholarship — the backend serializes that as an
+// empty list, never as a missing key), it qualifies on essay alone and is
 // labeled "requirements not yet verified" rather than given a count.
 function quickApplyCandidate(kind, item) {
   if (item.essay_required) {
@@ -2045,7 +2062,7 @@ function quickApplyCandidate(kind, item) {
     estimated_deadline: item.estimated_deadline,
   };
   const requirements = item.application_requirements;
-  if (requirements === undefined) {
+  if (!requirements || requirements.length === 0) {
     return { ...base, requiredCount: 0, unverified: true };
   }
   const requiredCount = requirements.filter((requirement) => requirement.required).length;
@@ -2922,6 +2939,11 @@ function essayStartByDate(item) {
   // (returns null), which is exactly the signal we need to fall back to the
   // estimated deadline instead of misreading those sentinel strings as dates.
   const rawDeadline = savedOpportunityDeadline(item);
+  // Rolling deadlines accept applications anytime; falling through to the
+  // estimated-deadline branch would print a start-by date right beside a
+  // status line reading "Applications accepted anytime" (mirrors
+  // deadlineParts(), which also ignores estimates for rolling items).
+  if (rawDeadline === "rolling") return null;
   const realDeadline = parseRealDeadline(rawDeadline);
   let target;
   if (realDeadline) {
@@ -3418,7 +3440,16 @@ function buildApplicationChecklist(item, kind = "scholarship") {
     task.appendChild(copy);
     const promptBlock = buildPromptBlock(requirement);
     if (promptBlock) {
-      promptBlock.addEventListener("click", (event) => event.stopPropagation());
+      promptBlock.addEventListener("click", (event) => {
+        event.stopPropagation();
+        // The row is a <label>: clicking a plain element inside it forwards
+        // the click to the checkbox as a default action, which only
+        // preventDefault can cancel. The public-prompt <details> block is
+        // exempt (interactive content) and must keep its toggle default.
+        if (!(event.currentTarget instanceof HTMLDetailsElement)) {
+          event.preventDefault();
+        }
+      });
       task.appendChild(promptBlock);
     }
     checkbox.addEventListener("change", async () => {
@@ -3786,6 +3817,19 @@ function wireFormSteps() {
     goToFormStep(currentFormStep + 1);
   });
   back.addEventListener("click", () => goToFormStep(currentFormStep - 1));
+  // The submit button is hidden on steps 1-2 but stays the form's default
+  // button, so Enter in a field would implicitly submit and bypass the
+  // per-step validation. Route it through the same "Next" path instead.
+  form.addEventListener("keydown", (event) => {
+    if (event.key !== "Enter" || currentFormStep >= FORM_STEP_COUNT) {
+      return;
+    }
+    if (event.target instanceof HTMLTextAreaElement) {
+      return;
+    }
+    event.preventDefault();
+    next.click();
+  });
   for (const tab of document.querySelectorAll(".form-step-tab")) {
     tab.addEventListener("click", () => {
       const target = Number(tab.dataset.step);
@@ -4196,17 +4240,34 @@ async function autoMatchFromSavedProfile() {
   if (built.error) {
     return; // incomplete saved profile: keep today's behavior silently
   }
+  // "Pre-match state" differs when login happens from an open view (catalog,
+  // saved list): snapshot what was visible so a failed match can put it back
+  // instead of stranding the user with no tab bar.
+  const prior = {
+    results: resultsSection.hidden,
+    programs: programsSection.hidden,
+    competitions: competitionsSection.hidden,
+    saved: savedSection.hidden,
+    catalog: catalogSection.hidden,
+    tabs: opportunityTabs ? opportunityTabs.hidden : true,
+  };
   resultsSection.hidden = false;
   programsSection.hidden = true;
   competitionsSection.hidden = true;
   savedSection.hidden = true;
+  catalogSection.hidden = true;
   setOpportunityTabsVisible(false);
   setLoading(true);
   try {
     await runMatchFlow(built.profile);
   } catch (err) {
     console.error(err);
-    resultsSection.hidden = true; // degrade to pre-match state, no toast
+    resultsSection.hidden = prior.results; // degrade to pre-match state, no toast
+    programsSection.hidden = prior.programs;
+    competitionsSection.hidden = prior.competitions;
+    savedSection.hidden = prior.saved;
+    catalogSection.hidden = prior.catalog;
+    setOpportunityTabsVisible(!prior.tabs);
   } finally {
     setLoading(false);
   }
@@ -4771,13 +4832,31 @@ function renderCatalog() {
     programs: "summer programs",
     competitions: "competitions",
   }[catalogKindFilter];
-  catalogSummary.textContent = catalogFiltersActive()
+  // Mirror the lane summaries: the second number is what passed the filters,
+  // the first is what the 30-per-kind batching windows actually render.
+  const visibleShown =
+    Math.min(scholarships.length, catalogVisibleCounts.scholarships) +
+    Math.min(programs.length, catalogVisibleCounts.programs) +
+    Math.min(competitions.length, catalogVisibleCounts.competitions);
+  catalogSummary.textContent = !catalogFiltersActive()
+    ? `${kindTotal} ${kindLabel} available to browse.`
+    : visibleShown === shown
     ? `Showing ${shown} of ${kindTotal} ${kindLabel}.`
-    : `${kindTotal} ${kindLabel} available to browse.`;
+    : `Showing ${visibleShown} of ${shown} filtered ${kindLabel}.`;
 
   if (shown === 0) {
     catalogEmpty.hidden = true;
-    catalogContainer.appendChild(noResultsMessage(catalogSearchQuery, "catalog"));
+    if (catalogSearchQuery) {
+      catalogContainer.appendChild(noResultsMessage(catalogSearchQuery, "catalog"));
+    } else {
+      // Emptiness came from the filter panel, not the search box — the
+      // "no results for your search" copy would render a bare `for ""`.
+      const note = document.createElement("div");
+      note.className = "results-empty panel";
+      note.innerHTML =
+        "<h3>No catalog results with these filters</h3><p>Loosen a filter or use <strong>Clear filters</strong> to browse the full catalog again.</p>";
+      catalogContainer.appendChild(note);
+    }
     return;
   }
 
@@ -5388,11 +5467,12 @@ function scholarshipToCard(scholarship) {
 }
 
 function computeClosingSoon(deadline) {
-  if (!deadline || deadline === "rolling" || String(deadline).startsWith("VERIFY")) {
-    return false;
-  }
-  const target = new Date(deadline);
-  if (Number.isNaN(target.getTime())) {
+  // parseRealDeadline handles the rolling/VERIFY/invalid sentinels and parses
+  // to local midnight — the bare Date(string) constructor parsed to UTC
+  // midnight, letting this badge disagree with the plan timeline's "Due in N
+  // days" by a day at the window edges in any non-UTC timezone.
+  const target = parseRealDeadline(deadline);
+  if (!target) {
     return false;
   }
   const diffDays = (target - new Date()) / (1000 * 60 * 60 * 24);
@@ -5967,7 +6047,7 @@ async function handleEssayAdvice(scholarshipId, button, panel, loading, errorEl)
       }),
     });
 
-    const data = await response.json();
+    const data = await response.json().catch(() => ({}));
 
     if (!response.ok) {
       const message =
@@ -6037,7 +6117,7 @@ async function handleEssayReview(scholarshipId, input, button, panel, loading, e
       }),
     });
 
-    const data = await response.json();
+    const data = await response.json().catch(() => ({}));
 
     if (!response.ok) {
       const message =
@@ -6098,7 +6178,7 @@ async function handleProgramAdvice(programId, button, panel, loading, errorEl) {
       }),
     });
 
-    const data = await response.json();
+    const data = await response.json().catch(() => ({}));
 
     if (!response.ok) {
       const message =

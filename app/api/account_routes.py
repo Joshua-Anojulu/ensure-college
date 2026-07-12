@@ -54,8 +54,14 @@ def get_profile(
     record = db.get(UserProfile, user.id)
     if record is None:
         return ProfileResponse(profile=None, updated_at=None)
+    try:
+        profile = StudentProfile.model_validate(record.data)
+    except Exception:
+        # A stored profile can predate vocabulary changes; treat it as absent
+        # rather than 500 on every profile load (same stance as alerts.py).
+        return ProfileResponse(profile=None, updated_at=None)
     return ProfileResponse(
-        profile=StudentProfile.model_validate(record.data),
+        profile=profile,
         updated_at=record.updated_at,
     )
 

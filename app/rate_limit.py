@@ -89,12 +89,16 @@ def _client_ip(request: Request) -> str:
     return request.client.host if request.client else "unknown"
 
 
+_fallback_warned = False
+
+
 def rate_limiter(max_requests: int, window_seconds: float, scope: str):
     """Build a dependency that enforces a per-client-IP limit for one scope."""
 
     limiter = RateLimiter(max_requests, window_seconds)
 
     def dependency(request: Request) -> None:
+        global _fallback_warned
         if not _enabled():
             return
         key = f"{scope}:{_client_ip(request)}"
@@ -104,6 +108,12 @@ def rate_limiter(max_requests: int, window_seconds: float, scope: str):
             except (OSError, ValueError, KeyError):
                 allowed = True  # fail open: never lock users out on a Redis blip
         else:
+            # On serverless the in-memory store is per-instance and resets on
+            # cold start, so limits are effectively void — say so once rather
+            # than degrade silently when the Upstash env vars go missing.
+            if not _fallback_warned and os.getenv("DATABASE_URL", "").startswith("postgres"):
+                print("[rate-limit] Upstash not configured; falling back to per-instance in-memory limiter", flush=True)
+                _fallback_warned = True
             allowed = limiter.allow(key)
         if not allowed:
             raise HTTPException(

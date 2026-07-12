@@ -1,3 +1,4 @@
+import hmac
 import os
 from contextlib import asynccontextmanager
 from pathlib import Path
@@ -107,7 +108,12 @@ def _resolve_session_secret() -> str:
 
 
 SESSION_SECRET = _resolve_session_secret()
-SESSION_COOKIE_SECURE = os.getenv("SESSION_COOKIE_SECURE", "").lower() in {"1", "true", "yes"}
+# The Secure flag must never depend on remembering an env var in production:
+# default it on for real deployments, allow the env var to force it on locally.
+SESSION_COOKIE_SECURE = (
+    os.getenv("SESSION_COOKIE_SECURE", "").lower() in {"1", "true", "yes"}
+    or is_production_deploy()
+)
 _DOCS_ENABLED = not is_production_deploy()
 
 # Old domain hosts that should be permanently redirected to the new domain.
@@ -554,7 +560,7 @@ def reminders_run(
     repeated invocations safe."""
     secret = os.getenv("CRON_SECRET", "").strip()
     presented = (authorization or "").removeprefix("Bearer ").strip()
-    if not secret or presented != secret:
+    if not secret or not hmac.compare_digest(presented, secret):
         raise HTTPException(status_code=404, detail={"error": "Not found."})
     scholarships = request.app.state.scholarships
     programs = request.app.state.programs
