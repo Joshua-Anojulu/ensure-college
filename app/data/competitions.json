@@ -1966,11 +1966,11 @@
             "status": "public",
             "items": [
               {
-                "prompt": "Project description",
+                "prompt": "Describe your project.",
                 "length": "100 words or less"
               },
               {
-                "prompt": "Senior & Junior Divisions Ethics Statement: An explanation of how the team considered ethics when developing your app",
+                "prompt": "Senior & Junior Divisions Ethics Statement: Explain how your team considered ethics when developing your app.",
                 "length": "150 words or less"
               },
               {

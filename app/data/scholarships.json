@@ -9042,7 +9042,7 @@
             "status": "public",
             "items": [
               {
-                "prompt": "why you are applying and your connection to Sons of Norway"
+                "prompt": "Explain why you are applying and describe your connection to Sons of Norway."
               }
             ]
           }
@@ -9296,7 +9296,7 @@
             "status": "public",
             "items": [
               {
-                "prompt": "Citing professional goals, explaining why the student is interested in a career in the steel industry, and discussing how your skills could be applied to enhance the industry.",
+                "prompt": "Describe your professional goals, explain why you are interested in a career in the steel industry, and discuss how your skills could be applied to enhance the industry.",
                 "length": "not to exceed two pages in length"
               }
             ]
@@ -9385,7 +9385,7 @@
             "status": "public",
             "items": [
               {
-                "prompt": "Focused on what inspired you to join the aviation or aerospace industry, what keeps you motivated in this field, your contributions to the community, and how this scholarship will change your life.",
+                "prompt": "Describe what inspired you to join the aviation or aerospace industry, what keeps you motivated in this field, your contributions to the community, and how this scholarship will change your life.",
                 "length": "500-word essay"
               }
             ]
