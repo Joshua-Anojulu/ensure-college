@@ -1,3 +1,4 @@
+import functools
 import hmac
 import os
 from contextlib import asynccontextmanager
@@ -235,11 +236,22 @@ def _find_program(programs: list[SummerProgram], program_id: str) -> SummerProgr
     return None
 
 
+@functools.lru_cache(maxsize=1)
+def _inline_css() -> str:
+    # The landing page inlines the whole stylesheet: it removes the
+    # render-blocking CSS request from the mobile LCP critical path. Other
+    # pages keep the cached external file (the landing still preloads it so
+    # the cache is warm for them). Cached per process; a deploy replaces the
+    # process, and locally a server restart picks up edits.
+    return (STATIC_DIR / "css" / "style.css").read_text(encoding="utf-8")
+
+
 @app.get("/")
 def serve_index(request: Request) -> HTMLResponse:
     # Always revalidate the HTML so the ?v cache-busting on CSS/JS stays reliable;
     # a stale cached page would keep requesting old asset versions.
     html = (STATIC_DIR / "index.html").read_text(encoding="utf-8")
+    html = html.replace("/*__INLINE_CSS__*/", _inline_css())
     html = _absolute_og_image_urls(html, _public_base_url(request))
     html = html.replace(
         "__AI_FEATURES_ENABLED__", "true" if _ai_features_enabled() else "false"

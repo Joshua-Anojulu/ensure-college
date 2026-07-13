@@ -20,7 +20,6 @@
     "auth-submit",
     "auth-switch-btn",
     "auth-switch-text",
-    "browse-catalog-btn",
     "catalog-clear",
     "catalog-container",
     "catalog-empty",
@@ -197,7 +196,6 @@
   ],
   "element_types": {
     "#auth-form": { "tag": "form" },
-    "#browse-catalog-btn": { "tag": "button", "type": "button" },
     "#change-password-form": { "tag": "form" },
     "#password-reset-confirm-form": { "tag": "form" },
     "#password-reset-request-form": { "tag": "form" },

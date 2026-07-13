@@ -7,7 +7,7 @@ from fastapi.testclient import TestClient
 from app.main import app
 
 
-ASSET_VERSION = "20260713-3"
+ASSET_VERSION = "20260713-4"
 FONT_ASSETS = [
     "/static/fonts/CabinetGrotesk-Bold.woff2",
     "/static/fonts/CabinetGrotesk-Extrabold.woff2",

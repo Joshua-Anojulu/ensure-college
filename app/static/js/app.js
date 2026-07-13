@@ -179,7 +179,6 @@ const competitionsContainer = document.getElementById("competitions-container");
 const competitionsSummary = document.getElementById("competitions-summary");
 const competitionsEmpty = document.getElementById("competitions-empty");
 const submitBtn = document.getElementById("submit-btn");
-const browseCatalogBtn = document.getElementById("browse-catalog-btn");
 const opportunityTabs = document.getElementById("opportunity-tabs");
 const opportunityTabButtons = Array.from(document.querySelectorAll(".opportunity-tab"));
 const scholarshipsTabCount = document.getElementById("scholarships-tab-count");
@@ -417,9 +416,6 @@ function wireOpportunityTabs() {
       activateOpportunityView(view, { scroll: true });
     });
   }
-  browseCatalogBtn?.addEventListener("click", () => {
-    activateOpportunityView("catalog", { scroll: true });
-  });
   updateOpportunityTabCounts();
 }
 

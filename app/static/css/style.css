@@ -596,7 +596,7 @@ a { color: var(--brand); }
   line-height: 1.65;
 }
 .difference-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.85rem; }
-/* Informational cards: no hover theater — type and spacing carry them. */
+/* Informational cards: no hover theater, type and spacing carry them. */
 .difference-card {
   position: relative;
   padding: 1.2rem;
@@ -989,7 +989,7 @@ input:focus, select:focus, textarea:focus {
 /* =========================================================================
    Match cards
    ========================================================================= */
-/* Tier and status are stated in text (headings, ring label, badges) — no
+/* Tier and status are stated in text (headings, ring label, badges), no
    colored side-tab. */
 .match-card {
   position: relative;
@@ -1428,7 +1428,7 @@ html.motion-ready .saved-count.count-pop { animation: count-pop 360ms var(--ease
 }
 
 /* =========================================================================
-   Photography — one editorial art-direction so real stock reads as intentional
+   Photography: one editorial art-direction so real stock reads as intentional
    (warm desaturation + a bottom ink gradient + fine grain), not glossy/AI.
    ========================================================================= */
 .photo {
@@ -1481,7 +1481,7 @@ html.motion-ready .saved-count.count-pop { animation: count-pop 360ms var(--ease
   text-transform: uppercase;
 }
 
-/* Proof band — a real campus scene stands in for empty claims. */
+/* Proof band: a real campus scene stands in for empty claims. */
 .proof-band {
   position: relative;
   display: grid;
