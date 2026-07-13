@@ -50,3 +50,14 @@ to be faster on this metric.
 Follow-up item (backlog, not a revert trigger): mobile LCP optimization. Candidates:
 inline critical above-the-fold CSS (the 90KB stylesheet is render-blocking),
 subset the display font, `font-display: optional` consideration for non-hero weights.
+
+## Addendum: LCP follow-up closed (same day, commit 1d7e15a)
+Fixes: landing page inlines the full stylesheet server-side (render-blocking CSS
+request removed from the critical path; other pages keep the cached external
+file, landing preloads it to warm their cache) and all six fonts subset to
+Latin + used symbols (204KB -> 78KB; the two preloaded weights are under 10KB
+each). Hero secondary CTA became "How it works" -> /journey in the same commit
+(duplicate-intent fix; #browse-catalog-btn removed from app.js and the DOM
+contract manifest).
+Re-measured (Lighthouse mobile, production): performance 0.87,
+FCP 2.15s, LCP 2.46s (PASSES the 2.5s gate), CLS 0, TBT 199ms.
