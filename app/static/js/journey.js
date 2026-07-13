@@ -26,8 +26,10 @@
 
   // ---- Palette (style.css tokens, hex-locked) ----
   const CANVAS = 0xf1f2ee;
-  const ISLAND = 0xdfe8e2;
-  const ISLAND_DARK = 0xb9c6bb;
+  const ISLAND = 0x94c082;      // grass
+  const ISLAND_DARK = 0x9c7f63; // soil under the grass
+  const GRASS_TONES = [0x86b877, 0xa4cf90, 0x76a06d, 0x9fca7e];
+  const STONE = 0xb3a48f;
   const FOREST = 0x1e4034;
   const FOREST_DEEP = 0x132d24;
   const BONE = 0xfbfcfa;
@@ -166,6 +168,36 @@
     base.position.y = -2.6 - radius * 0.31;
     g.add(base);
 
+    // Mottled meadow: irregular patches of neighbouring greens
+    for (let i = 0; i < 6; i += 1) {
+      const pr = jitter(radius * 0.16, radius * 0.12);
+      const pa = rnd() * Math.PI * 2;
+      const pd = rnd() * radius * 0.62;
+      const patch = new T.Mesh(
+        new T.CircleGeometry(pr, 10),
+        mat(GRASS_TONES[i % GRASS_TONES.length])
+      );
+      patch.rotation.x = -Math.PI / 2;
+      patch.rotation.z = rnd() * 3;
+      patch.scale.x = jitter(1.25, 0.4);
+      patch.position.set(Math.cos(pa) * pd, 0.012 + i * 0.002, Math.sin(pa) * pd);
+      patch.receiveShadow = true;
+      g.add(patch);
+    }
+    // Grass tufts
+    const tufts = Math.round(radius * 1.6);
+    for (let i = 0; i < tufts; i += 1) {
+      const ta = rnd() * Math.PI * 2;
+      const td = radius * (0.3 + rnd() * 0.6);
+      const tuft = new T.Mesh(
+        new T.ConeGeometry(jitter(0.09, 0.04), jitter(0.3, 0.14), 5),
+        mat(GRASS_TONES[Math.floor(rnd() * GRASS_TONES.length)])
+      );
+      tuft.position.set(Math.cos(ta) * td, 0.12, Math.sin(ta) * td);
+      tuft.rotation.z = (rnd() - 0.5) * 0.25;
+      g.add(tuft);
+    }
+
     g.position.z = z;
     scene.add(g);
     bobbers.push({ obj: g, amp: 0.22, speed: jitter(0.4, 0.15), phase: phase * 2 });
@@ -263,7 +295,7 @@
 
   function rock(parent, x, z, s) {
     const k = (s || 1) * jitter(1, 0.4);
-    blob(parent, 0.32 * k, ISLAND_DARK, x, 0.2 * k, z, 1.2, 0.7, 1);
+    blob(parent, 0.32 * k, STONE, x, 0.2 * k, z, 1.2, 0.7, 1);
   }
 
   function lantern(parent, x, z) {
@@ -418,7 +450,7 @@
     plaza.position.set(0, 0.03, 3);
     plaza.receiveShadow = true;
     g.add(plaza);
-    cyl(g, 0.55, 0.75, 0.5, ISLAND_DARK, 0, 0.25, 3, 12);
+    cyl(g, 0.55, 0.75, 0.5, STONE, 0, 0.25, 3, 12);
     cyl(g, 0.32, 0.4, 0.7, BONE, 0, 0.75, 3, 10);
     blob(g, 0.28, TEAL_LIGHT, 0, 1.2, 3, 1, 1, 1);
     flowerBed(g, 1.9, 4.6, 0.9);
