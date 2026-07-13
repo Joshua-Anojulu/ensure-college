@@ -384,11 +384,23 @@ function updateProfileProgress() {
 }
 
 function wirePageMotion() {
-  const updateHeader = () => {
-    document.body.classList.toggle("has-scrolled", window.scrollY > 8);
+  const sentinel = document.createElement("div");
+  sentinel.className = "scroll-sentinel";
+  sentinel.setAttribute("aria-hidden", "true");
+  document.body.prepend(sentinel);
+
+  const setHeaderScrolled = (isScrolled) => {
+    document.body.classList.toggle("has-scrolled", isScrolled);
   };
-  updateHeader();
-  window.addEventListener("scroll", updateHeader, { passive: true });
+  setHeaderScrolled(false);
+
+  if ("IntersectionObserver" in window) {
+    const observer = new IntersectionObserver(
+      ([entry]) => setHeaderScrolled(!entry.isIntersecting),
+      { threshold: 0 }
+    );
+    observer.observe(sentinel);
+  }
 
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
     return;
@@ -514,7 +526,7 @@ async function activateOpportunityView(view, options = {}) {
     button.setAttribute("aria-selected", selected ? "true" : "false");
   }
 
-  // Everything that changes layout — renders, visibility, and the scroll —
+  // Everything that changes layout, renders, visibility, and the scroll,
   // runs together, so the scroll target's position is measured against the
   // settled layout, never against an outgoing section that is about to
   // collapse (which used to strand the viewport at the bottom of the page).
@@ -1771,7 +1783,7 @@ async function loadSession() {
 }
 
 // Save buttons read saved-ID state at render time, so a login/logout must
-// re-render every lane that has data — not just scholarships — or the lane the
+// re-render every lane that has data, not just scholarships, or the lane the
 // user is looking at keeps the previous account's Saved labels (and a stale
 // "Saved" button would un-invert and save on click).
 function refreshLanesAfterAuthChange() {
@@ -2041,7 +2053,7 @@ function quickApplyItemName(kind, item) {
 
 // Qualifies when the item does not require an essay and has 3 or fewer required
 // application steps. When a match result has no application_requirements data
-// (not yet verified for that scholarship — the backend serializes that as an
+// (not yet verified for that scholarship, the backend serializes that as an
 // empty list, never as a missing key), it qualifies on essay alone and is
 // labeled "requirements not yet verified" rather than given a count.
 function quickApplyCandidate(kind, item) {
@@ -4855,7 +4867,7 @@ function renderCatalog() {
     if (catalogSearchQuery) {
       catalogContainer.appendChild(noResultsMessage(catalogSearchQuery, "catalog"));
     } else {
-      // Emptiness came from the filter panel, not the search box — the
+      // Emptiness came from the filter panel, not the search box. The
       // "no results for your search" copy would render a bare `for ""`.
       const note = document.createElement("div");
       note.className = "results-empty panel";
@@ -5474,7 +5486,7 @@ function scholarshipToCard(scholarship) {
 
 function computeClosingSoon(deadline) {
   // parseRealDeadline handles the rolling/VERIFY/invalid sentinels and parses
-  // to local midnight — the bare Date(string) constructor parsed to UTC
+  // to local midnight. The bare Date(string) constructor parsed to UTC
   // midnight, letting this badge disagree with the plan timeline's "Due in N
   // days" by a day at the window edges in any non-UTC timezone.
   const target = parseRealDeadline(deadline);
@@ -6015,8 +6027,8 @@ function ensureAiConsent() {
     return true;
   }
   const ok = window.confirm(
-    "This feature sends your inputs — including your profile details and any résumé or " +
-      "essay text you provide — to Anthropic's API to generate AI guidance. Your data is " +
+    "This feature sends your inputs, including your profile details and any résumé or " +
+      "essay text you provide, to Anthropic's API to generate AI guidance. Your data is " +
       "processed there to produce the result and is not stored by this app. Continue?"
   );
   if (ok) {

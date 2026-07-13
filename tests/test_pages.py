@@ -1,9 +1,25 @@
 import re
+from pathlib import Path
 
 import pytest
 from fastapi.testclient import TestClient
 
 from app.main import app
+
+
+ASSET_VERSION = "20260713-3"
+FONT_ASSETS = [
+    "/static/fonts/CabinetGrotesk-Bold.woff2",
+    "/static/fonts/CabinetGrotesk-Extrabold.woff2",
+    "/static/fonts/Satoshi-Regular.woff2",
+    "/static/fonts/Satoshi-Medium.woff2",
+    "/static/fonts/Satoshi-Bold.woff2",
+    "/static/fonts/JetBrainsMono-Regular.woff2",
+]
+VENDOR_ASSETS = [
+    "/static/js/vendor/gsap.min.js",
+    "/static/js/vendor/ScrollTrigger.min.js",
+]
 
 
 @pytest.fixture
@@ -34,6 +50,14 @@ class TestProductionHygiene:
         assert response.headers.get("X-Frame-Options") == "DENY"
         assert response.headers.get("Referrer-Policy") == "strict-origin-when-cross-origin"
         assert "Content-Security-Policy" in response.headers
+
+    def test_csp_uses_self_hosted_styles_and_fonts(self, client):
+        response = client.get("/")
+        csp = response.headers["Content-Security-Policy"]
+        assert "fonts.googleapis.com" not in csp
+        assert "fonts.gstatic.com" not in csp
+        assert "style-src 'self' 'unsafe-inline'" in csp
+        assert "font-src 'self'" in csp
 
     def test_robots_txt_lists_sitemap(self, client):
         response = client.get("/robots.txt")
@@ -84,11 +108,44 @@ class TestProductionHygiene:
         assert response.status_code == 200
         assert 'id="google-login-link"' in response.text
         assert 'href="/auth/google/login"' in response.text
-        assert "/static/css/style.css?v=20260712-2" in response.text
-        assert "/static/js/app.js?v=20260712-2" in response.text
+        assert f"/static/css/style.css?v={ASSET_VERSION}" in response.text
+        assert f"/static/js/app.js?v={ASSET_VERSION}" in response.text
+        assert f"/static/js/landing-motion.js?v={ASSET_VERSION}" in response.text
+
+    def test_index_uses_self_hosted_fonts(self, client):
+        response = client.get("/")
+        assert response.status_code == 200
+        assert "fonts.googleapis.com" not in response.text
+        assert "fonts.gstatic.com" not in response.text
+        assert 'href="/static/fonts/CabinetGrotesk-Extrabold.woff2"' in response.text
+        assert 'href="/static/fonts/Satoshi-Regular.woff2"' in response.text
+
+    @pytest.mark.parametrize("asset", FONT_ASSETS + VENDOR_ASSETS)
+    def test_self_hosted_font_and_vendor_assets_return_200(self, client, asset):
+        response = client.get(asset)
+        assert response.status_code == 200, asset
 
     def test_index_substitutes_live_catalog_counts(self, client):
         response = client.get("/")
         assert response.status_code == 200
         assert "__COUNT_" not in response.text
-        assert re.search(r"<strong>\d+</strong> <span>scholarships</span>", response.text)
+        assert re.search(r"<strong>\d+</strong>\s*<span>scholarships</span>", response.text)
+
+    def test_swept_copy_has_no_em_or_en_dashes(self, client):
+        response = client.get("/")
+        assert response.status_code == 200
+        swept_files = [
+            Path("app/static/index.html"),
+            Path("app/static/js/app.js"),
+            *Path("app/templates").glob("*.html"),
+        ]
+        for path in swept_files:
+            text = path.read_text(encoding="utf-8")
+            assert "—" not in text, path
+            assert "–" not in text, path
+            assert "&mdash;" not in text, path
+            assert "&ndash;" not in text, path
+        assert "—" not in response.text
+        assert "–" not in response.text
+        assert "&mdash;" not in response.text
+        assert "&ndash;" not in response.text
