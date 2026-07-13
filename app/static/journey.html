@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How EnsureCollege works | A flight through your college plan</title>
+  <meta name="description" content="Scroll through the journey: one profile, three lanes of real opportunities, a tracked plan, and the gate at the end. See how EnsureCollege works.">
+  <link rel="canonical" href="https://ensurecollege.com/journey">
+  <meta property="og:title" content="How EnsureCollege works | A flight through your college plan">
+  <meta property="og:description" content="One profile, three lanes of real opportunities, a tracked plan, and the gate at the end.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://ensurecollege.com/journey">
+  <meta property="og:image" content="/static/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/static/favicon.svg?v=20260713-3" type="image/svg+xml">
+  <meta name="theme-color" content="#f1f2ee">
+  <link rel="preload" href="/static/fonts/CabinetGrotesk-Extrabold.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/static/fonts/Satoshi-Regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/static/css/style.css?v=20260713-3">
+  <style>
+    .journey-page { overflow-x: hidden; }
+
+    .journey-track { position: relative; }
+
+    #journey-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100dvh;
+      display: block;
+      z-index: 0;
+    }
+
+    .journey-copy-layer {
+      position: relative;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .journey-card {
+      position: fixed;
+      left: clamp(1.2rem, 6vw, 6rem);
+      bottom: clamp(1.6rem, 8vh, 5rem);
+      max-width: 30rem;
+      padding: clamp(1.1rem, 2vw, 1.6rem) clamp(1.2rem, 2.2vw, 1.8rem);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: color-mix(in srgb, var(--surface) 88%, transparent);
+      backdrop-filter: blur(6px);
+      box-shadow: var(--shadow-lg);
+      opacity: 0;
+      transform: translateY(18px);
+      pointer-events: none;
+    }
+
+    .journey-card.is-active { pointer-events: auto; }
+
+    .journey-card h1,
+    .journey-card h2 {
+      margin: 0 0 0.5rem;
+      font-family: var(--font-display);
+      font-size: clamp(1.7rem, 3.4vw, 2.6rem);
+      font-weight: 800;
+      line-height: 0.98;
+      letter-spacing: -0.015em;
+    }
+
+    .journey-card p {
+      margin: 0;
+      max-width: 44ch;
+      color: var(--ink-soft);
+      font-size: clamp(0.95rem, 1.2vw, 1.05rem);
+      line-height: 1.55;
+    }
+
+    .journey-card .btn-primary {
+      display: inline-block;
+      margin-top: 0.9rem;
+      padding: 0.65rem 1.2rem;
+      border-radius: var(--radius-sm);
+      color: var(--brand-ink);
+      background: var(--brand);
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    .journey-rail {
+      position: fixed;
+      right: clamp(0.9rem, 2.5vw, 2rem);
+      top: 50%;
+      transform: translateY(-50%);
+      display: grid;
+      gap: 0.75rem;
+      z-index: 3;
+    }
+
+    .journey-rail span {
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+      background: var(--line-strong);
+      transition: background 200ms var(--ease), transform 200ms var(--ease);
+    }
+
+    .journey-rail span.is-active {
+      background: var(--brand);
+      transform: scale(1.35) rotate(45deg);
+    }
+
+    .journey-head {
+      position: relative;
+      z-index: 2;
+      padding: clamp(2rem, 6vh, 4rem) 0 0;
+      text-align: left;
+    }
+
+    .journey-head p {
+      max-width: 40ch;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    /* Static fallback: no JS, no WebGL, or prefers-reduced-motion. Cards
+       stack as a plain readable page; the canvas never shows. */
+    .journey-static #journey-canvas,
+    .journey-static .journey-rail { display: none; }
+
+    .journey-static .journey-card {
+      position: static;
+      opacity: 1;
+      transform: none;
+      pointer-events: auto;
+      margin: 0 auto 1.4rem;
+      max-width: 36rem;
+      background: var(--surface);
+    }
+
+    .journey-static .journey-track { min-height: auto !important; }
+
+    @media (max-width: 760px) {
+      .journey-card {
+        left: 1rem;
+        right: 1rem;
+        max-width: none;
+        bottom: 1.2rem;
+      }
+    }
+  </style>
+</head>
+<body class="page-static journey-page">
+  <a class="skip-link" href="#journey-main">Skip to content</a>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand brand-link" href="/">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <div>
+          <p class="brand-name">EnsureCollege</p>
+          <p class="brand-tag">Your whole college plan</p>
+        </div>
+      </a>
+      <nav class="account-nav" aria-label="Site">
+        <a class="btn-ghost" href="/journey" aria-current="page">How it works</a>
+        <a class="btn-ghost" href="/browse">Browse all</a>
+        <a class="btn-ghost btn-ghost-solid" href="/#profile-form">Find my matches</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="journey-main" class="main">
+    <div class="journey-head">
+      <p>Scroll to fly through the plan. Four stops, one continuous flight.</p>
+    </div>
+
+    <div class="journey-track" id="journey-track">
+      <canvas id="journey-canvas" aria-hidden="true"></canvas>
+
+      <div class="journey-copy-layer">
+        <article class="journey-card" data-band="0,0.16">
+          <h1>One profile. That's the work.</h1>
+          <p>Tell us your GPA, grade, interests, and goals once. Everything else on this flight builds from it.</p>
+        </article>
+
+        <article class="journey-card" data-band="0.28,0.48">
+          <h2>Three lanes, one search.</h2>
+          <p>Scholarships, summer programs, and competitions matched together. Every match explains itself, and nothing is guessed.</p>
+        </article>
+
+        <article class="journey-card" data-band="0.56,0.76">
+          <h2>A plan, not a pile of tabs.</h2>
+          <p>Deadlines, checklists, and recommendation letters tracked in one place, each step tied to an official source.</p>
+        </article>
+
+        <article class="journey-card" data-band="0.84,0.985">
+          <h2>The gate is closer than it looks.</h2>
+          <p>Preview three real matches in about a minute. Free, no account needed to look.</p>
+          <a class="btn-primary" href="/#profile-form">Build my profile</a>
+        </article>
+      </div>
+
+      <nav class="journey-rail" aria-hidden="true">
+        <span></span><span></span><span></span><span></span>
+      </nav>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <span class="footer-mark" aria-hidden="true">EnsureCollege</span>
+    <p>EnsureCollege helps you plan your path to college. Confirm every deadline and requirement on the official sponsor page before you apply.</p>
+    <p class="footer-links">
+      <a href="/browse">Browse all opportunities</a>
+      <a href="/guides/essays">Essay guides</a>
+      <a href="/privacy">Privacy</a>
+      <a href="/terms">Terms</a>
+    </p>
+  </footer>
+
+  <script src="/static/js/vendor/three.min.js?v=20260713-3"></script>
+  <script src="/static/js/journey.js?v=20260713-3"></script>
+</body>
+</html>

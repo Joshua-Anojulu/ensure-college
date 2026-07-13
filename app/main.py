@@ -66,7 +66,7 @@ STATIC_DIR = Path(__file__).parent / "static"
 DEV_SESSION_SECRET = "dev-only-insecure-session-secret-change-me"
 
 _OG_IMAGE_PATH = "/static/og-image.png"
-_SITEMAP_PATHS = ("/", "/privacy", "/terms")
+_SITEMAP_PATHS = ("/", "/journey", "/privacy", "/terms")
 _SECURITY_HEADERS = {
     "X-Content-Type-Options": "nosniff",
     "X-Frame-Options": "DENY",
@@ -289,6 +289,11 @@ def sitemap_xml(request: Request) -> Response:
         media_type="application/xml",
         headers={"Cache-Control": "public, s-maxage=86400, stale-while-revalidate=604800"},
     )
+
+
+@app.get("/journey")
+def serve_journey() -> FileResponse:
+    return FileResponse(STATIC_DIR / "journey.html", headers={"Cache-Control": "no-cache"})
 
 
 @app.get("/privacy")

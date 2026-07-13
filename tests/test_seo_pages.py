@@ -184,7 +184,7 @@ class TestSitemap:
         assert response.status_code == 200
         body = response.text
         expected_urls = (
-            3  # /, /privacy, /terms
+            4  # /, /journey, /privacy, /terms
             + 1  # /browse
             + 3  # directories
             + 1  # /guides/essays

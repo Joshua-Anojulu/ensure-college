@@ -136,6 +136,7 @@ class TestProductionHygiene:
         assert response.status_code == 200
         swept_files = [
             Path("app/static/index.html"),
+            Path("app/static/journey.html"),
             Path("app/static/js/app.js"),
             *Path("app/templates").glob("*.html"),
         ]
@@ -149,3 +150,29 @@ class TestProductionHygiene:
         assert "–" not in response.text
         assert "&mdash;" not in response.text
         assert "&ndash;" not in response.text
+
+
+class TestJourneyPage:
+    def test_journey_is_served_with_seo_copy(self, client):
+        response = client.get("/journey")
+        assert response.status_code == 200
+        assert "text/html" in response.headers["content-type"]
+        assert 'rel="canonical" href="https://ensurecollege.com/journey"' in response.text
+        assert "One profile." in response.text
+        assert 'href="/#profile-form"' in response.text
+
+    def test_journey_in_sitemap(self, client):
+        response = client.get("/sitemap.xml")
+        assert "<loc>http://testserver/journey</loc>" in response.text
+
+    def test_nav_links_to_journey(self, client):
+        response = client.get("/")
+        assert 'href="/journey"' in response.text
+
+    @pytest.mark.parametrize(
+        "asset",
+        ["/static/js/vendor/three.min.js", "/static/js/journey.js"],
+    )
+    def test_journey_assets_return_200(self, client, asset):
+        response = client.get(asset)
+        assert response.status_code == 200, asset
