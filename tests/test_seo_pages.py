@@ -100,6 +100,25 @@ class TestScholarshipDetailPage:
         assert "ISEF finalist only" in response.text
         assert "No separate application" in response.text
 
+    def test_detail_page_preserves_seo_and_verification_contract(self, client):
+        response = client.get("/scholarships/ieee-presidents-scholarship")
+        assert response.status_code == 200
+        assert (
+            "<title>IEEE Presidents&#39; Scholarship: $10,000 scholarship | EnsureCollege</title>"
+            in response.text
+        )
+        assert '<meta name="description" content="$10,000' in response.text
+        assert (
+            'rel="canonical" href="http://testserver/scholarships/ieee-presidents-scholarship"'
+            in response.text
+        )
+        assert '<script type="application/ld+json">' in response.text
+        assert '"@context": "https://schema.org"' in response.text
+        assert '"name": "IEEE Presidents' in response.text
+        assert "verification-source detail-verification" in response.text
+        assert "Verified Jun 25, 2026" in response.text
+        assert "View official source" in response.text
+
 
 class TestProgramAndCompetitionDetailPages:
     def test_program_detail_renders(self, client):

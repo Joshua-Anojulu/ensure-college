@@ -13,19 +13,18 @@
   <meta property="og:image:type" content="image/png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="EnsureCollege — Your whole college plan, in one place">
+  <meta property="og:image:alt" content="EnsureCollege. Your whole college plan, in one place">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="/static/og-image.png">
   <meta name="twitter:title" content="EnsureCollege | Your whole college plan: scholarships, programs, and competitions">
   <meta name="twitter:description" content="One profile finds the scholarships, summer programs, and competitions that fit you; a built-in plan tracks deadlines, requirements, essays, and recommendation letters.">
   <link rel="canonical" href="https://ensurecollege.com/">
-  <link rel="icon" href="/static/favicon.svg?v=20260707-1" type="image/svg+xml">
-  <meta name="theme-color" content="#eae8e1">
+  <link rel="icon" href="/static/favicon.svg?v=20260713-1" type="image/svg+xml">
+  <meta name="theme-color" content="#f1f2ee">
   <meta name="ai-features-enabled" content="__AI_FEATURES_ENABLED__">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Hanken+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/static/css/style.css?v=20260712-2">
+  <link rel="preload" href="/static/fonts/CabinetGrotesk-Extrabold.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/static/fonts/Satoshi-Regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/static/css/style.css?v=20260713-1">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -197,29 +196,19 @@
   </dialog>
 
   <main id="main" class="main">
-    <section class="intro hero">
+    <section class="intro hero" data-motion-section>
       <div class="hero-copy">
-        <p class="eyebrow">For US high-school students</p>
-        <h1>Find scholarships, programs, and competitions that <span class="mark mark-strong">fit you.</span></h1>
+        <h1>Find opportunities that <span class="mark mark-strong">fit you.</span></h1>
         <p class="intro-copy">
-          Build one profile, compare real opportunities, and turn your best matches into an application plan
-          with tracked deadlines, checklists, and recommendation letters.
+          Build one profile to find matches and organize deadlines, requirements, essays, and recommendations in one plan.
         </p>
         <div class="hero-actions">
-          <a class="btn-primary hero-cta" href="#profile-form">Build my profile <span aria-hidden="true">↓</span></a>
+          <a class="btn-primary hero-cta" href="#profile-form">Build my profile <span aria-hidden="true">&#8595;</span></a>
           <button type="button" class="btn-secondary hero-secondary" id="browse-catalog-btn">Browse full catalog</button>
-          <p class="hero-note">Free to use. No account needed to preview matches.</p>
         </div>
-        <p class="hero-stats" aria-label="What is in the catalog">
-          <span class="hero-stat"><strong>__COUNT_SCHOLARSHIPS__</strong> <span>scholarships</span></span>
-          <span class="hero-stat"><strong>__COUNT_PROGRAMS__</strong> <span>summer programs</span></span>
-          <span class="hero-stat"><strong>__COUNT_COMPETITIONS__</strong> <span>competitions</span></span>
-        </p>
       </div>
       <div class="hero-demo panel" aria-labelledby="preview-title">
-        <p class="eyebrow">60-second preview</p>
-        <h2 id="preview-title">See three real matches first.</h2>
-        <p class="hero-demo-note">Three questions, no account.</p>
+        <h2 id="preview-title">Preview three matches.</h2>
         <form id="preview-form" class="preview-form" novalidate>
           <div class="field">
             <label for="preview-gpa">GPA</label>
@@ -263,14 +252,28 @@
       </div>
     </section>
 
-    <section class="proof-band" aria-label="How EnsureCollege works">
+    <section class="catalog-numbers" aria-label="What is in the catalog" data-motion-section>
+      <div class="catalog-number">
+        <strong>__COUNT_SCHOLARSHIPS__</strong>
+        <span>scholarships</span>
+      </div>
+      <div class="catalog-number">
+        <strong>__COUNT_PROGRAMS__</strong>
+        <span>summer programs</span>
+      </div>
+      <div class="catalog-number">
+        <strong>__COUNT_COMPETITIONS__</strong>
+        <span>competitions</span>
+      </div>
+    </section>
+
+    <section class="proof-band" aria-label="How EnsureCollege works" data-motion-section>
       <div class="proof-photo photo">
-        <img src="/static/img/campus-quad.jpg" alt="Students walking across a college campus between classes" loading="lazy" decoding="async" width="1200" height="800">
-        <p class="photo-caption">Real opportunities, real deadlines</p>
+        <img src="/static/img/campus-quad.jpg" alt="Students walking across a college campus between classes" loading="lazy" decoding="async" width="1200" height="800" sizes="(max-width: 760px) 100vw, 48vw">
       </div>
       <div class="proof-copy">
         <h2>Every match traces back to an official source.</h2>
-        <p>No guessed deadlines, no invented requirements. EnsureCollege shows you why each scholarship, program, or competition fits — and links the proof.</p>
+        <p>No guessed deadlines, no invented requirements. EnsureCollege shows you why each scholarship, program, or competition fits, then links the proof.</p>
         <div class="proof-points">
           <span class="proof-point">Transparent fit reasons</span>
           <span class="proof-point">Source-linked steps</span>
@@ -279,13 +282,7 @@
       </div>
     </section>
 
-    <section class="trust-strip" aria-label="How EnsureCollege works">
-      <div class="trust-item"><span>Scholarships, programs, and competitions in one profile</span></div>
-      <div class="trust-item"><span>A plan for every save: deadlines, checklists, rec letters</span></div>
-      <div class="trust-item"><span>Every step tied to official sources</span></div>
-    </section>
-
-    <section class="difference-panel panel" aria-labelledby="difference-title">
+    <section class="difference-panel" aria-labelledby="difference-title" data-motion-section>
       <div class="difference-copy">
         <h2 id="difference-title">Every match explains itself.</h2>
         <p>
@@ -294,9 +291,14 @@
         </p>
       </div>
       <div class="difference-grid">
-        <article class="difference-card">
+        <article class="difference-card difference-card-large">
           <h3>Transparent fit logic</h3>
           <p>See whether a match comes from field, grade, school, financial need, special eligibility, or verified program fit.</p>
+          <ul class="difference-list">
+            <li>Scholarships, programs, and competitions in one profile</li>
+            <li>A plan for every save: deadlines, checklists, recommendation letters</li>
+            <li>Every step tied to official sources</li>
+          </ul>
         </article>
         <article class="difference-card">
           <h3>Source-linked next steps</h3>
@@ -337,7 +339,7 @@
     <form id="profile-form" class="profile-form panel" novalidate>
       <div class="form-heading">
         <div>
-          <p class="eyebrow">01 / Your profile</p>
+          <p class="eyebrow">Your profile</p>
           <h2>Tell us where you’re headed.</h2>
         </div>
         <div class="form-heading-side">
@@ -442,7 +444,7 @@
 
     <section id="opportunity-tabs" class="opportunity-tabs panel" hidden aria-label="Opportunity views">
       <div class="opportunity-tabs-copy">
-        <p class="eyebrow">02 / Explore matches</p>
+        <p class="eyebrow">Explore matches</p>
         <h2>Switch between opportunity lanes.</h2>
         <p>Search personalized matches, browse the full catalog, or organize saved opportunities.</p>
       </div>
@@ -497,7 +499,7 @@
           <label for="filter-sort">Sort by</label>
           <select id="filter-sort">
             <option value="fit">Best fit</option>
-            <option value="name">Name (A&ndash;Z)</option>
+            <option value="name">Name (A-Z)</option>
             <option value="award">Award (high&rarr;low)</option>
             <option value="deadline">Deadline (soonest)</option>
           </select>
@@ -589,7 +591,7 @@
           <label for="program-filter-sort">Sort by</label>
           <select id="program-filter-sort">
             <option value="fit">Best fit</option>
-            <option value="name">Name (A&ndash;Z)</option>
+            <option value="name">Name (A-Z)</option>
             <option value="deadline">Deadline (soonest)</option>
           </select>
         </div>
@@ -656,7 +658,7 @@
           <label for="competition-filter-sort">Sort by</label>
           <select id="competition-filter-sort">
             <option value="fit">Best fit</option>
-            <option value="name">Name (A&ndash;Z)</option>
+            <option value="name">Name (A-Z)</option>
             <option value="deadline">Deadline (soonest)</option>
           </select>
         </div>
@@ -734,7 +736,7 @@
         <div class="filter-group">
           <label for="catalog-sort">Sort by</label>
           <select id="catalog-sort">
-            <option value="name">Name (A&ndash;Z)</option>
+            <option value="name">Name (A-Z)</option>
             <option value="award">Award (high&rarr;low)</option>
             <option value="deadline">Deadline (soonest)</option>
           </select>
@@ -854,6 +856,9 @@
     </div>
   </div>
 
-  <script src="/static/js/app.js?v=20260712-2"></script>
+  <script defer src="/static/js/vendor/gsap.min.js?v=20260713-1"></script>
+  <script defer src="/static/js/vendor/ScrollTrigger.min.js?v=20260713-1"></script>
+  <script defer src="/static/js/landing-motion.js?v=20260713-1"></script>
+  <script src="/static/js/app.js?v=20260713-1"></script>
 </body>
 </html>
