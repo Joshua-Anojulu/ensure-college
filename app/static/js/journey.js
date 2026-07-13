@@ -62,6 +62,42 @@
 
   const camera = new T.PerspectiveCamera(42, 1, 0.1, 400);
 
+  // ---- Sky dome: gradient that rides with the camera and warms toward
+  // dawn as the flight nears the gate. Fog color tracks the horizon so the
+  // distance fade never mismatches the sky. ----
+  const SKY_DAY_TOP = new T.Color(0x9ccadf);
+  const SKY_DAY_HORIZON = new T.Color(CANVAS);
+  const SKY_DAWN_TOP = new T.Color(0xdba98a);
+  const SKY_DAWN_HORIZON = new T.Color(0xf6d9b8);
+  const skyMat = new T.ShaderMaterial({
+    side: T.BackSide,
+    depthWrite: false,
+    fog: false,
+    uniforms: {
+      topColor: { value: SKY_DAY_TOP.clone() },
+      horizonColor: { value: SKY_DAY_HORIZON.clone() },
+    },
+    vertexShader:
+      "varying float vH;\n" +
+      "void main() {\n" +
+      "  vH = clamp(position.y / 300.0, 0.0, 1.0);\n" +
+      "  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);\n" +
+      "}",
+    fragmentShader:
+      "uniform vec3 topColor;\n" +
+      "uniform vec3 horizonColor;\n" +
+      "varying float vH;\n" +
+      "void main() {\n" +
+      "  float k = pow(smoothstep(0.0, 1.0, vH), 0.62);\n" +
+      "  gl_FragColor = vec4(mix(horizonColor, topColor, k), 1.0);\n" +
+      "}",
+  });
+  const sky = new T.Mesh(new T.SphereGeometry(300, 24, 16), skyMat);
+  sky.renderOrder = -1;
+  scene.add(sky);
+  const skyTop = new T.Color();
+  const skyHorizon = new T.Color();
+
   scene.add(new T.HemisphereLight(0xfffdf6, 0xd7e2d8, 0.85));
   const key = new T.DirectionalLight(0xffe9c4, 1.35);
   key.castShadow = true;
@@ -82,6 +118,7 @@
   const drifters = [];   // {obj, speed, minX, maxX}
   const orbiters = [];   // {obj, center, radius, speed, phase, height}
   const flappers = [];   // wing pairs {left, right, speed, phase}
+  const dawnFaders = []; // {mesh, base}: sun discs fade in with the dawn
 
   let seedState = 7;
   const rnd = () => {
@@ -712,6 +749,9 @@
     );
     sunHalo.position.set(0, 7.5, -23.8);
     g.add(sunHalo);
+    dawnFaders.push({ mesh: sunCore, base: 0.95 });
+    dawnFaders.push({ mesh: sunMid, base: 0.55 });
+    dawnFaders.push({ mesh: sunHalo, base: 0.32 });
     // Petals scattered along the approach
     for (let i = 0; i < 16; i += 1) {
       const tone = [BERRY, GOLD, ROSE, CREAM][i % 4];
@@ -830,6 +870,18 @@
     // concentrated on whichever island is on screen.
     key.position.set(camPos.x + 24, camPos.y + 38, camPos.z + 16);
     key.target.position.set(lookPos.x, 0, lookPos.z);
+
+    // The sky rides along and eases from day blue into dawn peach over the
+    // last stretch of the flight; the fog horizon follows it.
+    sky.position.set(camPos.x, 0, camPos.z);
+    const dawnK = Math.min(1, Math.max(0, (t - 0.72) / 0.23));
+    skyTop.lerpColors(SKY_DAY_TOP, SKY_DAWN_TOP, dawnK);
+    skyHorizon.lerpColors(SKY_DAY_HORIZON, SKY_DAWN_HORIZON, dawnK);
+    skyMat.uniforms.topColor.value.copy(skyTop);
+    skyMat.uniforms.horizonColor.value.copy(skyHorizon);
+    scene.fog.color.copy(skyHorizon);
+    const sunK = Math.min(1, Math.max(0, (t - 0.55) / 0.3));
+    for (const f of dawnFaders) f.mesh.material.opacity = f.base * sunK;
 
     // Idle life
     for (const b of bobbers) b.obj.position.y = Math.sin(now * b.speed + b.phase) * b.amp;
