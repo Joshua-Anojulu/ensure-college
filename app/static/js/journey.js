@@ -37,6 +37,17 @@
   const AMBER_DEEP = 0x8a5e14;
   const SAGE = 0x8fb98a;
   const SAGE_LIGHT = 0xb5d0af;
+  // Extended illustration palette (scene content only; UI chrome stays amber)
+  const TEAL = 0x2f6d62;
+  const TEAL_LIGHT = 0x5d998c;
+  const BERRY = 0xa84d5e;
+  const ROSE = 0xd08a97;
+  const TERRACOTTA = 0xb96a45;
+  const GOLD = 0xd9a441;
+  const CREAM = 0xf3e8cf;
+  const PEACH = 0xf2c49a;
+  const MOSS = 0x76a06d;
+  const AUTUMN = 0xcf8a3d;
 
   const renderer = new T.WebGLRenderer({ canvas, antialias: true });
   renderer.setClearColor(CANVAS, 1);
@@ -161,19 +172,87 @@
     return g;
   }
 
-  function tree(parent, x, z, s) {
+  function tree(parent, x, z, s, kind) {
     const k = (s || 1) * jitter(1, 0.25);
     const lean = (rnd() - 0.5) * 0.12;
     const grp = new T.Group();
     cyl(grp, 0.12 * k, 0.17 * k, 0.8 * k, AMBER_DEEP, 0, 0.4 * k, 0, 6);
-    cone(grp, 0.8 * k, 1.4 * k, FOREST, 0, 1.35 * k, 0, 7);
-    cone(grp, 0.62 * k, 1.15 * k, jitter(0.5, 1) > 0.5 ? SAGE : FOREST, 0, 2.05 * k, 0, 7);
-    cone(grp, 0.4 * k, 0.85 * k, SAGE_LIGHT, 0, 2.7 * k, 0, 7);
+    let tiers;
+    if (kind === "autumn") {
+      tiers = [AUTUMN, jitter(0.5, 1) > 0.5 ? TERRACOTTA : AUTUMN, GOLD];
+    } else if (kind === "moss") {
+      tiers = [MOSS, SAGE, SAGE_LIGHT];
+    } else {
+      tiers = [FOREST, jitter(0.5, 1) > 0.5 ? SAGE : MOSS, SAGE_LIGHT];
+    }
+    cone(grp, 0.8 * k, 1.4 * k, tiers[0], 0, 1.35 * k, 0, 7);
+    cone(grp, 0.62 * k, 1.15 * k, tiers[1], 0, 2.05 * k, 0, 7);
+    cone(grp, 0.4 * k, 0.85 * k, tiers[2], 0, 2.7 * k, 0, 7);
     grp.position.set(x, 0, z);
     grp.rotation.z = lean;
     parent.add(grp);
     shadowDisc(parent, 0.9 * k, x, z);
     return grp;
+  }
+
+  const FLOWER_TONES = [0xd9788a, GOLD, CREAM, TEAL_LIGHT, ROSE];
+
+  function flowerBed(parent, x, z, r) {
+    const k = r || 1;
+    const bed = new T.Mesh(new T.CircleGeometry(0.85 * k, 14), mat(MOSS));
+    bed.rotation.x = -Math.PI / 2;
+    bed.position.set(x, 0.025, z);
+    bed.receiveShadow = true;
+    parent.add(bed);
+    const count = 5 + Math.floor(rnd() * 4);
+    for (let i = 0; i < count; i += 1) {
+      const a = rnd() * Math.PI * 2;
+      const rr = rnd() * 0.6 * k;
+      const tone = FLOWER_TONES[Math.floor(rnd() * FLOWER_TONES.length)];
+      cyl(parent, 0.018, 0.018, 0.22, FOREST, x + Math.cos(a) * rr, 0.11, z + Math.sin(a) * rr, 5);
+      blob(parent, 0.075, tone, x + Math.cos(a) * rr, 0.26, z + Math.sin(a) * rr, 1, 0.8, 1);
+    }
+  }
+
+  function fence(parent, x, z, len, ry) {
+    const grp = new T.Group();
+    const posts = Math.max(2, Math.round(len / 0.7));
+    for (let i = 0; i < posts; i += 1) {
+      box(grp, 0.09, 0.55, 0.09, CREAM, -len / 2 + (i / (posts - 1)) * len, 0.28, 0);
+    }
+    box(grp, len, 0.07, 0.06, CREAM, 0, 0.42, 0);
+    box(grp, len, 0.07, 0.06, CREAM, 0, 0.2, 0);
+    grp.position.set(x, 0, z);
+    grp.rotation.y = ry || 0;
+    parent.add(grp);
+    return grp;
+  }
+
+  function bench(parent, x, z, ry, tone) {
+    const grp = new T.Group();
+    box(grp, 1.4, 0.09, 0.45, tone || TEAL, 0, 0.42, 0);
+    box(grp, 1.4, 0.4, 0.08, tone || TEAL, 0, 0.7, -0.2);
+    box(grp, 0.09, 0.4, 0.4, INK, -0.6, 0.2, 0);
+    box(grp, 0.09, 0.4, 0.4, INK, 0.6, 0.2, 0);
+    grp.position.set(x, 0, z);
+    grp.rotation.y = ry || 0;
+    parent.add(grp);
+    shadowDisc(parent, 0.8, x, z);
+    return grp;
+  }
+
+  function butterfly(cx, cy, cz, radius, speed, tone) {
+    const g = new T.Group();
+    const wingMat = mat(tone);
+    const left = new T.Mesh(new T.BoxGeometry(0.26, 0.02, 0.18), wingMat);
+    const right = new T.Mesh(new T.BoxGeometry(0.26, 0.02, 0.18), wingMat);
+    left.position.x = -0.13;
+    right.position.x = 0.13;
+    g.add(left);
+    g.add(right);
+    scene.add(g);
+    orbiters.push({ obj: g, center: new T.Vector3(cx, cy, cz), radius, speed, phase: rnd() * 6.28 });
+    flappers.push({ left, right, speed: jitter(14, 4), phase: rnd() * 6.28 });
   }
 
   function bush(parent, x, z, s) {
@@ -234,12 +313,17 @@
   // =======================================================================
   {
     const g = island(0, 12, 1.7);
-    // Rug
-    const rug = new T.Mesh(new T.CircleGeometry(3.6, 28), mat(0xd3ddd2));
+    // Two-tone rug
+    const rug = new T.Mesh(new T.CircleGeometry(3.6, 28), mat(TEAL_LIGHT));
     rug.rotation.x = -Math.PI / 2;
     rug.position.y = 0.02;
     rug.receiveShadow = true;
     g.add(rug);
+    const rugInner = new T.Mesh(new T.CircleGeometry(2.7, 28), mat(CREAM));
+    rugInner.rotation.x = -Math.PI / 2;
+    rugInner.position.y = 0.03;
+    rugInner.receiveShadow = true;
+    g.add(rugInner);
     // Desk
     box(g, 5.2, 0.35, 2.6, AMBER_DEEP, 0, 1.5, 0);
     box(g, 5.0, 0.08, 2.4, 0x9c6b1f, 0, 1.71, 0);
@@ -280,10 +364,10 @@
     g.add(motes);
     wavers.push({ obj: motes, axis: "y", amp: 0.18, speed: 0.6, phase: 0 });
     // Books, mug, chair
-    box(g, 0.9, 0.2, 0.62, FOREST, 1.55, 1.86, -0.62, 0.3);
-    box(g, 0.8, 0.18, 0.56, AMBER, 1.48, 2.05, -0.6, 0.12);
-    box(g, 0.72, 0.16, 0.5, SAGE, 1.52, 2.22, -0.58, 0.45);
-    cyl(g, 0.14, 0.12, 0.24, PAPER, -1.15, 1.87, 0.85, 10);
+    box(g, 0.9, 0.2, 0.62, TEAL, 1.55, 1.86, -0.62, 0.3);
+    box(g, 0.8, 0.18, 0.56, BERRY, 1.48, 2.05, -0.6, 0.12);
+    box(g, 0.72, 0.16, 0.5, GOLD, 1.52, 2.22, -0.58, 0.45);
+    cyl(g, 0.14, 0.12, 0.24, BERRY, -1.15, 1.87, 0.85, 10);
     const seat = new T.Group();
     box(seat, 1.15, 0.16, 1.15, FOREST, 0, 0.95, 0);
     box(seat, 1.15, 1.25, 0.16, FOREST, 0, 1.62, 0.55);
@@ -294,17 +378,33 @@
     seat.rotation.y = 0.2;
     g.add(seat);
     shadowDisc(g, 3.4, 0, 0, 0.08);
+    // The mailbox where applications leave
+    const mailbox = new T.Group();
+    cyl(mailbox, 0.06, 0.08, 1.1, INK, 0, 0.55, 0, 6);
+    box(mailbox, 0.55, 0.4, 0.35, BERRY, 0, 1.28, 0);
+    const mtop = cyl(mailbox, 0.175, 0.175, 0.55, BERRY, 0, 1.48, 0, 10);
+    mtop.rotation.z = Math.PI / 2;
+    const mflag = box(mailbox, 0.05, 0.3, 0.08, GOLD, 0.3, 1.55, 0);
+    mflag.rotation.z = -0.3;
+    mailbox.position.set(-3.6, 0, 2.6);
+    mailbox.rotation.y = 0.6;
+    g.add(mailbox);
+    shadowDisc(g, 0.5, -3.6, 2.6);
     // Grounds
     tree(g, -6.8, 3.2, 1.25);
-    tree(g, -5.4, -4.6, 0.9);
+    tree(g, -5.4, -4.6, 0.9, "moss");
     tree(g, 6.9, -3.6, 1.0);
-    tree(g, 7.6, 2.6, 0.7);
+    tree(g, 7.6, 2.6, 0.7, "autumn");
     bush(g, -4.2, 5.6, 1);
     bush(g, 5.2, 4.8, 1.2);
     bush(g, -7.9, -1.2, 0.8);
     rock(g, 3.9, -5.8, 1.3);
     rock(g, -2.5, -6.9, 1);
     lantern(g, 3.2, 3.4);
+    flowerBed(g, 4.8, 1.2, 1);
+    flowerBed(g, -6.2, 0.9, 0.8);
+    bench(g, 5.9, -1.4, -0.8, TEAL);
+    butterfly(-2, 2.6, 1.5, 2.2, 0.9, ROSE);
   }
 
   // =======================================================================
@@ -320,7 +420,11 @@
     g.add(plaza);
     cyl(g, 0.55, 0.75, 0.5, ISLAND_DARK, 0, 0.25, 3, 12);
     cyl(g, 0.32, 0.4, 0.7, BONE, 0, 0.75, 3, 10);
-    blob(g, 0.28, SAGE_LIGHT, 0, 1.2, 3, 1, 1, 1);
+    blob(g, 0.28, TEAL_LIGHT, 0, 1.2, 3, 1, 1, 1);
+    flowerBed(g, 1.9, 4.6, 0.9);
+    flowerBed(g, -2.1, 4.4, 0.9);
+    bench(g, 3.4, 3.2, -2.2, BERRY);
+    bench(g, -3.5, 3.0, 2.2, GOLD);
     const path = (x, z, len, ry) => {
       const p = new T.Mesh(new T.BoxGeometry(1.7, 0.07, len), mat(PAPER));
       p.position.set(x, 0.05, z);
@@ -331,56 +435,77 @@
     path(-4.6, -0.4, 10, 0.65);
     path(0, -2.5, 9, 0);
     path(4.8, -0.2, 10, -0.7);
-    // Scholarship hall (left) with steps and pediment
+    // Scholarship hall (left): the GOLD lane
     const hall = new T.Group();
     box(hall, 6.6, 2.7, 4.6, BONE, 0, 1.65, 0);
-    box(hall, 7.2, 0.5, 5.2, FOREST, 0, 3.25, 0);
-    cone(hall, 3.9, 1.9, FOREST_DEEP, 0, 4.4, 0, 4);
+    box(hall, 7.2, 0.5, 5.2, TEAL, 0, 3.25, 0);
+    cone(hall, 3.9, 1.9, TEAL, 0, 4.4, 0, 4);
+    const dome = new T.Mesh(new T.SphereGeometry(0.85, 12, 8), mat(GOLD));
+    dome.position.set(0, 5.4, 0);
+    hall.add(dome);
+    cyl(hall, 0.05, 0.05, 0.7, GOLD, 0, 6.35, 0, 6);
     for (let i = -2; i <= 2; i += 1) {
       cyl(hall, 0.17, 0.17, 2.4, BONE, i * 1.3, 1.5, 2.55, 8);
     }
     box(hall, 7.0, 0.3, 5.4, PAPER, 0, 0.15, 0.4);
     box(hall, 6.2, 0.3, 1.2, PAPER, 0, 0.45, 2.9);
     box(hall, 1.1, 1.5, 0.12, FOREST_DEEP, 0, 1.05, 2.32);
-    box(hall, 1.5, 0.35, 0.1, AMBER, 0, 2.6, 2.36);
+    box(hall, 1.5, 0.35, 0.1, GOLD, 0, 2.6, 2.36);
+    // Hanging gold banners between the columns
+    const hb1 = box(hall, 0.55, 1.3, 0.05, GOLD, -1.95, 1.9, 2.6);
+    const hb2 = box(hall, 0.55, 1.3, 0.05, AMBER, 1.95, 1.9, 2.6);
+    wavers.push({ obj: hb1, axis: "x", amp: 0.08, speed: 1.8, phase: 0.4 });
+    wavers.push({ obj: hb2, axis: "x", amp: 0.08, speed: 2.1, phase: 1.7 });
     hall.position.set(-9.0, 0, -4.0);
     hall.rotation.y = 0.55;
     g.add(hall);
     shadowDisc(g, 4.6, -9.0, -4.0, 0.08);
-    // Summer campus (right): cabins with chimneys
+    // Summer campus (right): the TEAL lane, terracotta roofs
     const camp = new T.Group();
     const cabin = (x, z, ry, s) => {
       const k = s || 1;
-      box(camp, 1.8 * k, 1.15 * k, 1.5 * k, AMBER_DEEP, x, 0.58 * k, z, ry);
-      cone(camp, 1.35 * k, 0.95 * k, FOREST, x, 1.62 * k, z, 4);
+      box(camp, 1.8 * k, 1.15 * k, 1.5 * k, CREAM, x, 0.58 * k, z, ry);
+      cone(camp, 1.35 * k, 0.95 * k, TERRACOTTA, x, 1.62 * k, z, 4);
       box(camp, 0.22 * k, 0.6 * k, 0.22 * k, BONE, x + 0.5 * k, 1.75 * k, z);
-      box(camp, 0.4 * k, 0.55 * k, 0.06 * k, 0x5e4312, x, 0.5 * k, z + 0.76 * k, ry);
+      box(camp, 0.4 * k, 0.55 * k, 0.06 * k, TEAL, x, 0.5 * k, z + 0.76 * k, ry);
+      box(camp, 0.32 * k, 0.32 * k, 0.05 * k, TEAL_LIGHT, x - 0.5 * k, 0.75 * k, z + 0.76 * k, ry);
+      box(camp, 0.4 * k, 0.08 * k, 0.12 * k, MOSS, x - 0.5 * k, 0.55 * k, z + 0.8 * k, ry);
     };
     cabin(0, 0, 0.2, 1.1);
     cabin(2.6, 1.7, -0.4, 0.9);
     cabin(-2.0, 2.0, 0.7, 0.85);
+    // Teal campus flag
+    cyl(camp, 0.05, 0.05, 2.4, INK, 0.9, 1.2, 1.1, 6);
+    const campFlag = box(camp, 0.8, 0.45, 0.04, TEAL, 1.32, 2.2, 1.1);
+    wavers.push({ obj: campFlag, axis: "z", amp: 0.16, speed: 2.2, phase: 0.9 });
     tree(camp, 1.3, -2.0, 1.05);
-    tree(camp, -2.8, -0.7, 0.85);
+    tree(camp, -2.8, -0.7, 0.85, "autumn");
     tree(camp, 3.8, -0.5, 0.95);
     bush(camp, 0.6, 3.2, 1);
+    flowerBed(camp, -0.9, 3.4, 0.7);
     camp.position.set(9.4, 0, -3.4);
     g.add(camp);
-    // Competition arena (back): tiered ring, pennants
+    // Competition arena (back): the BERRY lane, tiered ring, pennants
     const arena = new T.Group();
     cyl(arena, 3.9, 4.2, 0.9, BONE, 0, 0.45, 0, 22);
-    cyl(arena, 3.3, 3.6, 0.9, PAPER, 0, 0.9, 0, 22);
-    cyl(arena, 2.5, 2.5, 1.0, SAGE, 0, 1.15, 0, 22);
+    cyl(arena, 3.3, 3.6, 0.9, CREAM, 0, 0.9, 0, 22);
+    cyl(arena, 2.5, 2.5, 1.0, BERRY, 0, 1.15, 0, 22);
+    cyl(arena, 1.7, 1.7, 1.06, MOSS, 0, 1.2, 0, 22);
     cyl(arena, 0.12, 0.12, 2.6, BONE, 0, 2.4, 0, 8);
-    const flag = new T.Mesh(new T.BoxGeometry(1.0, 0.55, 0.04), mat(AMBER));
+    const flag = new T.Mesh(new T.BoxGeometry(1.0, 0.55, 0.04), mat(BERRY));
     flag.position.set(0.55, 3.4, 0);
     arena.add(flag);
     wavers.push({ obj: flag, axis: "z", amp: 0.18, speed: 2.4, phase: 0 });
+    const PENNANT_TONES = [BERRY, CREAM, GOLD, ROSE];
     for (let i = 0; i < 7; i += 1) {
       const a = (i / 7) * Math.PI * 2;
       const fx = Math.cos(a) * 3.8;
       const fz = Math.sin(a) * 3.8;
       cyl(arena, 0.05, 0.05, 1.7, INK, fx, 2.1, fz, 6);
-      const pennant = new T.Mesh(new T.ConeGeometry(0.16, 0.55, 4), mat(i % 2 ? AMBER : SAGE));
+      const pennant = new T.Mesh(
+        new T.ConeGeometry(0.16, 0.55, 4),
+        mat(PENNANT_TONES[i % PENNANT_TONES.length])
+      );
       pennant.rotation.z = Math.PI / 2;
       pennant.position.set(fx + 0.3, 2.78, fz);
       arena.add(pennant);
@@ -391,16 +516,22 @@
     shadowDisc(g, 4.6, 0, -10.2, 0.08);
     // Grounds
     tree(g, -14, 4.4, 1.15);
-    tree(g, 14.2, 3.6, 1.35);
-    tree(g, -4.4, 9.2, 0.95);
+    tree(g, 14.2, 3.6, 1.35, "autumn");
+    tree(g, -4.4, 9.2, 0.95, "moss");
     tree(g, 5.8, 8.6, 0.8);
     bush(g, -11.5, -0.5, 1.1);
     bush(g, 12.6, -1.4, 0.9);
     rock(g, -6.8, 6.8, 1.2);
     lantern(g, -2.4, 4.6);
     lantern(g, 2.6, 4.8);
+    fence(g, -6.2, 7.6, 3.4, 0.55);
+    fence(g, 7.0, 7.2, 3.4, -0.6);
+    flowerBed(g, -9.2, 6.0, 1.1);
+    flowerBed(g, 10.4, 5.4, 1);
     bird(0, 9.5, -70, 9, 0.35);
     bird(0, 11, -70, 12, -0.28);
+    butterfly(0, 3, -66, 3.4, 0.7, GOLD);
+    butterfly(8, 2.6, -73, 2.6, -0.8, TEAL_LIGHT);
   }
 
   // =======================================================================
@@ -408,39 +539,47 @@
   // =======================================================================
   {
     const g = island(-140, 13, 8.9);
-    const rug = new T.Mesh(new T.CircleGeometry(4.4, 28), mat(0xd3ddd2));
+    const rug = new T.Mesh(new T.CircleGeometry(4.4, 28), mat(TEAL));
     rug.rotation.x = -Math.PI / 2;
     rug.position.set(0, 0.02, 0.4);
     rug.receiveShadow = true;
     g.add(rug);
+    const rugIn = new T.Mesh(new T.CircleGeometry(3.4, 28), mat(CREAM));
+    rugIn.rotation.x = -Math.PI / 2;
+    rugIn.position.set(0, 0.03, 0.4);
+    rugIn.receiveShadow = true;
+    g.add(rugIn);
     // The board on legs
     box(g, 9.4, 5.4, 0.22, AMBER_DEEP, 0, 3.2, -3.45);
     box(g, 8.8, 4.8, 0.3, FOREST, 0, 3.2, -3.28);
     cyl(g, 0.09, 0.11, 1.2, INK, -4.2, 0.6, -3.4, 6);
     cyl(g, 0.09, 0.11, 1.2, INK, 4.2, 0.6, -3.4, 6);
+    // Cards carry status colors, like the plan itself: gold = drafting,
+    // teal = submitted, berry = deadline soon.
     const pins = [];
-    const card = (x, y, tone, tag) => {
+    const card = (x, y, tone, tag, pinTone) => {
       box(g, 1.4, 0.95, 0.07, tone, x, y, -3.1);
       if (tag) box(g, 0.5, 0.16, 0.09, tag, x - 0.3, y + 0.28, -3.06);
-      const pin = new T.Mesh(new T.SphereGeometry(0.09, 8, 8), mat(AMBER));
+      const pin = new T.Mesh(new T.SphereGeometry(0.09, 8, 8), mat(pinTone || AMBER));
       pin.position.set(x, y + 0.4, -3.05);
       g.add(pin);
       pins.push(pin.position.clone());
     };
-    card(-3.2, 4.4, BONE, AMBER);
-    card(-1.0, 3.2, PAPER, SAGE);
-    card(1.5, 4.6, BONE, null);
-    card(3.1, 2.7, PAPER, AMBER);
-    card(-2.7, 2.0, BONE, SAGE);
-    card(0.7, 1.8, BONE, AMBER);
+    card(-3.2, 4.4, BONE, GOLD, GOLD);
+    card(-1.0, 3.2, CREAM, TEAL, TEAL_LIGHT);
+    card(1.5, 4.6, BONE, BERRY, BERRY);
+    card(3.1, 2.7, CREAM, GOLD, GOLD);
+    card(-2.7, 2.0, BONE, TEAL, TEAL_LIGHT);
+    card(0.7, 1.8, BONE, BERRY, BERRY);
     // sticky notes
-    box(g, 0.34, 0.34, 0.06, AMBER, 2.2, 3.6, -3.1, 0.1);
-    box(g, 0.34, 0.34, 0.06, SAGE_LIGHT, -0.1, 4.7, -3.1, -0.12);
-    box(g, 0.34, 0.34, 0.06, AMBER, -3.9, 3.3, -3.1, 0.2);
-    const threadMat = new T.LineBasicMaterial({ color: AMBER });
+    box(g, 0.34, 0.34, 0.06, GOLD, 2.2, 3.6, -3.1, 0.1);
+    box(g, 0.34, 0.34, 0.06, ROSE, -0.1, 4.7, -3.1, -0.12);
+    box(g, 0.34, 0.34, 0.06, TEAL_LIGHT, -3.9, 3.3, -3.1, 0.2);
+    box(g, 0.34, 0.34, 0.06, GOLD, 3.9, 4.2, -3.1, -0.18);
+    const threadTones = [AMBER, TEAL_LIGHT, BERRY];
     for (let i = 0; i < pins.length - 1; i += 1) {
       const geo = new T.BufferGeometry().setFromPoints([pins[i], pins[i + 1]]);
-      g.add(new T.Line(geo, threadMat));
+      g.add(new T.Line(geo, new T.LineBasicMaterial({ color: threadTones[i % 3] })));
     }
     // Work table with laptop, mug, papers
     box(g, 4.6, 0.3, 2.1, AMBER_DEEP, 0, 1.15, 1.7);
@@ -452,20 +591,27 @@
     lid.rotation.x = -0.35;
     box(g, 0.9, 0.03, 0.65, BONE, 0.9, 1.33, 1.55, 0.25);
     box(g, 0.85, 0.03, 0.6, PAPER, 1.05, 1.36, 1.75, -0.15);
-    cyl(g, 0.13, 0.11, 0.22, AMBER, 1.9, 1.42, 1.3, 10);
+    cyl(g, 0.13, 0.11, 0.22, TEAL, 1.9, 1.42, 1.3, 10);
+    // Book stack on the table corner
+    box(g, 0.6, 0.14, 0.44, BERRY, -1.7, 1.38, 2.1, 0.2);
+    box(g, 0.55, 0.13, 0.4, GOLD, -1.66, 1.51, 2.08, -0.1);
+    box(g, 0.5, 0.12, 0.36, TEAL, -1.72, 1.63, 2.12, 0.35);
     // Filing cabinet
-    box(g, 1.0, 1.6, 0.9, FOREST, 3.6, 0.8, 0.4);
-    box(g, 0.5, 0.06, 0.08, AMBER, 3.6, 1.15, 0.86);
-    box(g, 0.5, 0.06, 0.08, AMBER, 3.6, 0.65, 0.86);
+    box(g, 1.0, 1.6, 0.9, TEAL, 3.6, 0.8, 0.4);
+    box(g, 0.5, 0.06, 0.08, GOLD, 3.6, 1.15, 0.86);
+    box(g, 0.5, 0.06, 0.08, GOLD, 3.6, 0.65, 0.86);
     shadowDisc(g, 3.2, 0, 1.4, 0.08);
     // Grounds
-    tree(g, 7.8, 4.4, 1.05);
+    tree(g, 7.8, 4.4, 1.05, "autumn");
     tree(g, -8.2, 2.6, 1.2);
-    tree(g, -6.4, -5.2, 0.8);
+    tree(g, -6.4, -5.2, 0.8, "moss");
     bush(g, 6.2, -4.4, 1);
     bush(g, -3.8, 6.4, 0.9);
     rock(g, 8.6, 0.2, 1.1);
     lantern(g, -5.2, 4.6);
+    flowerBed(g, 6.4, 2.8, 0.9);
+    bench(g, -6.8, 5.6, 2.4, BERRY);
+    butterfly(2, 3.2, -137, 2.8, 0.85, ROSE);
   }
 
   // =======================================================================
@@ -489,10 +635,11 @@
     box(arch, 8.8, 1.2, 1.5, BONE, 0, 7.1, 0);
     box(arch, 9.2, 0.5, 1.7, FOREST, 0, 7.95, 0);
     box(arch, 1.7, 0.55, 0.2, AMBER, 0, 6.1, 0.78);
-    // ivy
-    for (let i = 0; i < 5; i += 1) {
-      blob(arch, jitter(0.4, 0.2), i % 2 ? SAGE : FOREST, jitter(-3.1, 0.9), jitter(2.4, 2.6), 0.65, 1.1, 0.9, 0.5);
-      blob(arch, jitter(0.4, 0.2), i % 2 ? SAGE_LIGHT : SAGE, jitter(3.1, 0.9), jitter(3.2, 2.8), 0.65, 1.1, 0.9, 0.5);
+    // ivy with autumn touches
+    const IVY = [SAGE, FOREST, AUTUMN, MOSS];
+    for (let i = 0; i < 6; i += 1) {
+      blob(arch, jitter(0.4, 0.2), IVY[i % 4], jitter(-3.1, 0.9), jitter(2.4, 2.6), 0.65, 1.1, 0.9, 0.5);
+      blob(arch, jitter(0.4, 0.2), IVY[(i + 2) % 4], jitter(3.1, 0.9), jitter(3.2, 2.8), 0.65, 1.1, 0.9, 0.5);
     }
     arch.position.z = -3;
     g.add(arch);
@@ -514,19 +661,32 @@
     env.rotation.z = -0.05;
     g.add(env);
     shadowDisc(g, 1.7, 2.1, -0.8, 0.07);
-    // Dawn: layered sun halo + warm light
+    // Dawn: triple-layered peach sun + warm light
     const sunCore = new T.Mesh(
-      new T.CircleGeometry(6.2, 40),
-      new T.MeshBasicMaterial({ color: 0xf3d9a4, transparent: true, opacity: 0.9 })
+      new T.CircleGeometry(5.6, 40),
+      new T.MeshBasicMaterial({ color: 0xf5cf94, transparent: true, opacity: 0.95 })
     );
     sunCore.position.set(0, 7.5, -23);
     g.add(sunCore);
-    const sunHalo = new T.Mesh(
-      new T.CircleGeometry(9.5, 40),
-      new T.MeshBasicMaterial({ color: 0xf3e3c0, transparent: true, opacity: 0.45 })
+    const sunMid = new T.Mesh(
+      new T.CircleGeometry(8.2, 40),
+      new T.MeshBasicMaterial({ color: PEACH, transparent: true, opacity: 0.55 })
     );
-    sunHalo.position.set(0, 7.5, -23.5);
+    sunMid.position.set(0, 7.5, -23.4);
+    g.add(sunMid);
+    const sunHalo = new T.Mesh(
+      new T.CircleGeometry(11.5, 40),
+      new T.MeshBasicMaterial({ color: 0xf6dcc4, transparent: true, opacity: 0.32 })
+    );
+    sunHalo.position.set(0, 7.5, -23.8);
     g.add(sunHalo);
+    // Petals scattered along the approach
+    for (let i = 0; i < 16; i += 1) {
+      const tone = [BERRY, GOLD, ROSE, CREAM][i % 4];
+      const petal = box(g, 0.14, 0.02, 0.1, tone, jitter(0, 3.4), 0.06, jitter(5, 8));
+      petal.rotation.y = rnd() * 3;
+      petal.castShadow = false;
+    }
     const dawn = new T.PointLight(0xffd98a, 26, 46);
     dawn.position.set(0, 6.5, -11);
     g.add(dawn);
@@ -534,18 +694,26 @@
     lantern(g, -1.9, 5.5);
     lantern(g, 1.9, 7.5);
     lantern(g, -1.9, 9.5);
-    // Grounds
-    tree(g, -8.6, 1.4, 1.25);
-    tree(g, 9.0, 2.8, 1.05);
+    // Grounds: autumn frames the gate
+    tree(g, -8.6, 1.4, 1.25, "autumn");
+    tree(g, 9.0, 2.8, 1.05, "autumn");
     tree(g, -6.0, -6.8, 0.95);
-    tree(g, 6.4, -7.2, 1.15);
-    tree(g, -10.2, -3.0, 0.8);
+    tree(g, 6.4, -7.2, 1.15, "moss");
+    tree(g, -10.2, -3.0, 0.8, "autumn");
+    tree(g, 10.6, -1.6, 0.75);
     bush(g, -4.6, 3.8, 1.1);
     bush(g, 5.0, 5.2, 0.9);
     bush(g, 8.2, -3.6, 1);
     rock(g, -3.2, 8.6, 1.2);
+    fence(g, -5.4, 6.8, 3.2, 0.5);
+    fence(g, 5.6, 7.4, 3.2, -0.45);
+    flowerBed(g, -6.8, 4.6, 1.1);
+    flowerBed(g, 7.2, 5.8, 1);
+    bench(g, -4.4, 9.4, 2.8, GOLD);
     bird(0, 10, -210, 10, 0.3);
     bird(0, 12, -212, 14, -0.22);
+    butterfly(0, 3.5, -204, 3, 0.75, ROSE);
+    butterfly(-4, 2.8, -208, 2.4, -0.9, GOLD);
   }
 
   // ---- Sky dressing between the islands ----
