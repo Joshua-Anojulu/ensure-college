@@ -90,6 +90,9 @@ class SpecialRequirement(BaseModel):
         "tribal_affiliation",
         "institution_channel",
         "no_direct_application",
+        "identity_or_status",
+        "program_content",
+        "activity_or_lifestyle",
     ]
     label: str = Field(min_length=1, max_length=120)
     details: str = Field(min_length=1, max_length=400)
@@ -131,7 +134,8 @@ class Eligibility(BaseModel):
         default_factory=list,
         description=(
             "Niche eligibility gates not captured by the profile form, such as "
-            "membership, nomination, finalist status, or military/tribal affiliation."
+            "membership, nomination, finalist status, military/tribal affiliation, "
+            "identity/status, program-content requirements, or activity/lifestyle."
         ),
     )
 

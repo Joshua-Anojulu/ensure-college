@@ -43,6 +43,19 @@
     </section>
     {% endif %}
 
+    {% if special_requirements %}
+    <section class="detail-section">
+      <div class="special-requirements">
+        <p class="special-requirements-heading">Special eligibility to verify</p>
+        <ul class="special-requirements-list">
+          {% for req in special_requirements %}
+          <li><strong>{{ req.label }}</strong>{% if req.details %}: {{ req.details }}{% endif %}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </section>
+    {% endif %}
+
     {% if requirements %}
     <section class="detail-section">
       <h2>Application requirements</h2>

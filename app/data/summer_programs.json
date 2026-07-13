@@ -3195,7 +3195,13 @@
         "states": "any",
         "essay_required": true,
         "citizenship_requirement": "any",
-        "special_requirements": []
+        "special_requirements": [
+          {
+            "kind": "identity_or_status",
+            "label": "Young women and gender-expansive teens only",
+            "details": "Kode With Klossy is for young women and gender-expansive teens ages 13-18."
+          }
+        ]
       },
       "description": "Kode With Klossy is a free nonprofit coding program for young women and gender-expansive teens ages 13-18, offering 2-week summer camps (virtual and in select US/UK cities) in AI/machine learning, data science, and web development. No prior coding experience is required.",
       "application_requirements": [
@@ -3563,7 +3569,13 @@
         ],
         "essay_required": false,
         "citizenship_requirement": "us_citizen",
-        "special_requirements": []
+        "special_requirements": [
+          {
+            "kind": "institution_channel",
+            "label": "Local NJ high school and age requirement",
+            "details": "The program is restricted to U.S. citizens enrolled in local NJ high schools who are at least 16 by June 15."
+          }
+        ]
       },
       "description": "The Laboratory Learning Program is a free, full-time summer research internship placing local New Jersey high school students into Princeton University science and engineering labs for 5-6 weeks under faculty and staff supervision. It is a commuter-only outreach program (no housing or transportation provided, no virtual option) restricted to U.S. citizens enrolled in local NJ high schools who are at least 16 by June 15.",
       "application_requirements": [

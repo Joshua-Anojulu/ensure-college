@@ -6,6 +6,11 @@
         "kind": "family_or_affiliation",
         "label": "Must be a first-generation college student",
         "details": "The ASA Norman Beery Memorial Scholarship is limited to first-generation college students. The profile form does not ask about first-generation status, so confirm this applies to you before planning an application."
+      },
+      {
+        "kind": "program_content",
+        "label": "Statistics-heavy program required",
+        "details": "Applicants must be enrolled in or planning to enroll in statistics, biostatistics, or a science program that substantially incorporates statistics."
       }
     ],
     "oca-ups-gold-mountain": [
@@ -316,6 +321,11 @@
         "kind": "institution_channel",
         "label": "Partner-college enrollment required",
         "details": "Students must attend or plan to attend a TheDream.US partner college."
+      },
+      {
+        "kind": "identity_or_status",
+        "label": "Undocumented first-generation immigrant students only",
+        "details": "Eligibility is for first-generation immigrant students who are undocumented, with or without DACA or TPS, and came to the U.S. before the listed date and age cutoff."
       }
     ],
     "pat-tillman-foundation-scholarship": [
@@ -777,6 +787,147 @@
         "kind": "membership",
         "label": "Key Club membership required",
         "details": "Kiwanis Children's Fund scholarships require active Key Club membership."
+      }
+    ],
+    "questbridge-match": [
+      {
+        "kind": "institution_channel",
+        "label": "Partner-college match process",
+        "details": "Full four-year scholarships are awarded through the QuestBridge National College Match at QuestBridge partner colleges."
+      }
+    ],
+    "foot-locker-scholar-athletes": [
+      {
+        "kind": "activity_or_lifestyle",
+        "label": "Student-athlete eligibility required",
+        "details": "The program honors student-athletes who demonstrate academic ability, leadership, and community involvement."
+      }
+    ],
+    "hagan-scholarship": [
+      {
+        "kind": "activity_or_lifestyle",
+        "label": "Work-hours and income-cap requirements",
+        "details": "Applicants must have household income below the program cap and complete 240 hours of work before enrolling at an eligible four-year nonprofit college."
+      }
+    ],
+    "sallie-mae-bridging-the-dream-graduate": [
+      {
+        "kind": "program_content",
+        "label": "Accredited U.S. graduate program required",
+        "details": "Applicants must be legal residents enrolled in accredited U.S. graduate programs."
+      }
+    ],
+    "society-of-women-engineers-scholarship": [
+      {
+        "kind": "identity_or_status",
+        "label": "Women applicants only",
+        "details": "The SWE Scholarship Program is open only to students who identify as women."
+      },
+      {
+        "kind": "program_content",
+        "label": "ABET-accredited degree path required",
+        "details": "Applicants must pursue ABET-accredited degrees in engineering, engineering technology, or computing."
+      }
+    ],
+    "rhodes-scholarship": [
+      {
+        "kind": "nomination",
+        "label": "Institutional endorsement required",
+        "details": "The U.S. Rhodes constituency requires institutional endorsement and has the age window stated in the entry description."
+      }
+    ],
+    "paul-daisy-soros-new-americans": [
+      {
+        "kind": "identity_or_status",
+        "label": "New American status and age limit",
+        "details": "Eligibility is for New Americans, including immigrants or children of immigrants, age 30 or younger."
+      }
+    ],
+    "lime-connect-pathways-scholarship": [
+      {
+        "kind": "identity_or_status",
+        "label": "Visible or invisible disability required",
+        "details": "Applicants must be current high school seniors with a visible or invisible disability."
+      },
+      {
+        "kind": "membership",
+        "label": "Lime Network membership required",
+        "details": "The scholarship requires joining the free Lime Network."
+      }
+    ],
+    "microsoft-disability-scholarship": [
+      {
+        "kind": "identity_or_status",
+        "label": "Disability eligibility required",
+        "details": "Applicants must be current high school seniors living with a disability."
+      }
+    ],
+    "anne-ford-scholarship": [
+      {
+        "kind": "identity_or_status",
+        "label": "Documented learning disability required",
+        "details": "Applicants must be graduating high school seniors with a documented learning disability."
+      }
+    ],
+    "ashrae-scholarship-program": [
+      {
+        "kind": "program_content",
+        "label": "HVAC&R accredited program path required",
+        "details": "ASHRAE scholarships support HVAC&R-related degree paths at eligible accredited engineering and engineering-technology programs."
+      }
+    ],
+    "asme-mechanical-engineering-scholarships": [
+      {
+        "kind": "program_content",
+        "label": "ABET or equivalent mechanical engineering program required",
+        "details": "Applicants must pursue mechanical engineering or mechanical engineering technology at ABET-accredited or substantially equivalent programs."
+      },
+      {
+        "kind": "membership",
+        "label": "ASME student membership required",
+        "details": "The universal ASME scholarship application requires ASME student membership."
+      }
+    ],
+    "wells-fargo-stacey-milbern-scholarship": [
+      {
+        "kind": "identity_or_status",
+        "label": "Documented disability required",
+        "details": "Applicants must be students with a documented disability pursuing an undergraduate degree."
+      }
+    ],
+    "wells-fargo-veterans-scholarship": [
+      {
+        "kind": "military_affiliation",
+        "label": "Veteran or disabled-veteran family affiliation required",
+        "details": "Eligibility is for U.S. veterans, spouses of disabled veterans, and widows or widowers of service members who died in service or from service-connected disabilities."
+      }
+    ],
+    "raytheon-patriot-scholarship": [
+      {
+        "kind": "military_affiliation",
+        "label": "U.S. Army veteran eligibility required",
+        "details": "The scholarship is for U.S. Army veterans pursuing undergraduate or graduate degrees."
+      }
+    ],
+    "mathematical-association-of-america-scholarships": [
+      {
+        "kind": "identity_or_status",
+        "label": "Unexpected financial hardship required",
+        "details": "The fund supports mathematics and quantitative-science undergraduates in their final four semesters who face unexpected financial hardship that could derail degree completion."
+      }
+    ],
+    "asee-wied-wasburn-early-engineering-educator-grant": [
+      {
+        "kind": "identity_or_status",
+        "label": "Women applicants only",
+        "details": "The grant is for women pursuing careers in engineering education."
+      }
+    ],
+    "vegetarian-resource-group-college-scholarship": [
+      {
+        "kind": "activity_or_lifestyle",
+        "label": "Vegan diet/lifestyle promotion required",
+        "details": "Applicants must show compassion, courage, and a strong commitment to promoting a vegan diet or lifestyle in their school or community."
       }
     ]
   }

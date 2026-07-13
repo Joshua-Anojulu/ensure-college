@@ -96,6 +96,7 @@ class TestFrontendPromptWiring:
         assert "function buildPromptBlock" in source
         assert "function essayStartByLabel" in source
         assert "Prompts revealed after registration" in source
+        assert "Essay prompts not yet verified" in source
         assert "Start drafting by" in source
 
     def test_app_js_wires_auto_match(self):

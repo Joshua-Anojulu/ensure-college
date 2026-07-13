@@ -211,6 +211,9 @@ def detail_context(kind_key: str, entry, request: Request) -> dict:
         "deadline_text": deadline_text,
         "deadline_note": deadline_note,
         "eligibility_rows": _eligibility_rows(entry),
+        "special_requirements": list(
+            getattr(getattr(entry, "eligibility", None), "special_requirements", []) or []
+        ),
         "requirements": list(getattr(entry, "application_requirements", []) or []),
         "verified_line": verified_line,
         "source_url": source_url,

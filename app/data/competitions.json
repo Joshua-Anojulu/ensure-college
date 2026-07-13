@@ -263,7 +263,14 @@
           "computer_science",
           "technology"
         ],
-        "essay_required": false
+        "essay_required": false,
+        "special_requirements": [
+          {
+            "kind": "institution_channel",
+            "label": "Congressional district submission channel",
+            "details": "Students create and submit an original app through the district-by-district Challenge to their Member of Congress."
+          }
+        ]
       },
       "description": "A district-by-district coding competition for U.S. middle and high school students, who create and submit an original app (any language, any platform) to their Member of Congress.",
       "verification": {

@@ -6,12 +6,71 @@ from datetime import timedelta
 from pathlib import Path
 
 from app.data.loader import DEFAULT_SPECIAL_REQUIREMENTS_PATH, load_scholarships
-from scripts.validate_dataset import audit_dataset
+from app.models.competition import Competition
+from app.models.program import SummerProgram
+from app.models.scholarship import Eligibility, Scholarship, SpecialRequirement
+from scripts.validate_dataset import audit_competitions, audit_dataset, audit_programs
 
 
 def test_dataset_loads_and_has_entries():
     scholarships = load_scholarships()
     assert len(scholarships) >= 100
+
+
+def _scholarship(**overrides):
+    base = {
+        "id": "synthetic-scholarship",
+        "name": "Synthetic Scholarship",
+        "sponsor": "Synthetic Sponsor",
+        "award_amount": 1000,
+        "deadline": "VERIFY",
+        "url": "https://example.org/scholarship",
+        "eligibility": Eligibility(),
+        "description": "Synthetic scholarship for dataset validator tests.",
+        "verified": True,
+    }
+    base.update(overrides)
+    return Scholarship(**base)
+
+
+def _program(**overrides):
+    base = {
+        "id": "synthetic-program",
+        "name": "Synthetic Program",
+        "host": "Synthetic Host",
+        "subject": "Synthetic subject",
+        "url": "https://example.org/program",
+        "eligibility": Eligibility(),
+        "description": "Synthetic program for dataset validator tests.",
+        "verified": True,
+    }
+    base.update(overrides)
+    return SummerProgram(**base)
+
+
+def _competition(**overrides):
+    base = {
+        "id": "synthetic-competition",
+        "name": "Synthetic Competition",
+        "host": "Synthetic Host",
+        "category": "Synthetic category",
+        "url": "https://example.org/competition",
+        "eligibility": Eligibility(),
+        "description": "Synthetic competition for dataset validator tests.",
+        "verified": True,
+    }
+    base.update(overrides)
+    return Competition(**base)
+
+
+def test_special_requirement_model_accepts_new_niche_kinds():
+    for kind in ("identity_or_status", "program_content", "activity_or_lifestyle"):
+        req = SpecialRequirement(
+            kind=kind,
+            label="Synthetic special check",
+            details="Synthetic details for the special-check lane.",
+        )
+        assert req.kind == kind
 
 
 def test_dataset_has_no_structural_errors():
@@ -23,6 +82,112 @@ def test_no_vocabulary_warnings():
     # The seed set should only use canonical field/grade/demographic/state tags.
     report = audit_dataset(load_scholarships())
     assert report["warnings"] == [], report["warnings"]
+
+
+def test_audit_warns_when_hard_identity_requirement_is_not_special_checked():
+    scholarship = _scholarship(
+        id="women-only",
+        description="Open only to women pursuing engineering degrees.",
+    )
+
+    report = audit_dataset([scholarship])
+
+    assert any(
+        "women-only" in warning and "identity/status" in warning
+        for warning in report["warnings"]
+    )
+
+
+def test_audit_accepts_encoded_hard_identity_requirement():
+    scholarship = _scholarship(
+        id="women-only-encoded",
+        description="Open only to women pursuing engineering degrees.",
+        eligibility=Eligibility(
+            special_requirements=[
+                SpecialRequirement(
+                    kind="identity_or_status",
+                    label="Women applicants only",
+                    details="Open only to women pursuing engineering degrees.",
+                )
+            ]
+        ),
+    )
+
+    report = audit_dataset([scholarship])
+
+    assert report["warnings"] == []
+
+
+def test_audit_warns_for_niche_requirements_across_all_lanes():
+    scholarship = _scholarship(
+        id="first-gen-only",
+        description="Applicants must be first-generation college students.",
+    )
+    program = _program(
+        id="disability-program",
+        description="Restricted to students with a documented disability.",
+    )
+    competition = _competition(
+        id="member-competition",
+        description="Students must be active members of a local coding league to enter.",
+    )
+
+    scholarship_report = audit_dataset([scholarship])
+    program_report = audit_programs([program])
+    competition_report = audit_competitions([competition])
+
+    assert any("first-gen-only" in warning for warning in scholarship_report["warnings"])
+    assert any("disability-program" in warning for warning in program_report["warnings"])
+    assert any("member-competition" in warning for warning in competition_report["warnings"])
+
+
+def test_audit_ignores_known_niche_requirement_trap_phrasings():
+    scholarships = [
+        _scholarship(
+            id="regardless-immigration",
+            description="Open regardless of immigration status, including DACA recipients.",
+        ),
+        _scholarship(
+            id="lgbtq-allies",
+            description="Scholarship supporting LGBTQ+ statisticians and allies pursuing data science.",
+        ),
+        _scholarship(
+            id="daca-alone",
+            description="Requires demonstrated financial need; DACA status alone does not qualify.",
+        ),
+        _scholarship(
+            id="women-and-or",
+            description="Targets women and/or members of racial or ethnic groups underrepresented in computing.",
+        ),
+    ]
+
+    report = audit_dataset(scholarships)
+
+    assert report["warnings"] == []
+
+
+def test_audit_flags_duplicate_special_requirements_after_merge():
+    scholarship = _scholarship(
+        id="duplicate-special",
+        eligibility=Eligibility(
+            special_requirements=[
+                SpecialRequirement(
+                    kind="membership",
+                    label="Local chapter membership required",
+                    details="Applicants must be members of the local chapter.",
+                ),
+                SpecialRequirement(
+                    kind="membership",
+                    label=" local   chapter membership required ",
+                    details="Applicants must be members of the local chapter.",
+                ),
+            ]
+        ),
+    )
+
+    report = audit_dataset([scholarship])
+
+    assert any("duplicate special requirement" in error for error in report["errors"])
 
 
 def test_school_pilot_entries_have_provenance():

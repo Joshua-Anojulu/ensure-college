@@ -40,21 +40,174 @@ def _deadline_ok(deadline: str) -> bool:
 
 STALE_AFTER_DAYS = 90
 
-# The profile form deliberately does not ask about first-generation status, so
-# a first-gen-only award can never be gated by the matcher. Its only honest
-# surface is the special-check lane; a description that names the requirement
-# without a matching special_requirements entry silently over-matches students.
-_FIRST_GEN_DESCRIPTION = re.compile(r"first[-\s]generation college student", re.IGNORECASE)
-_FIRST_GEN_ENCODED = re.compile(r"first[-\s]generation", re.IGNORECASE)
+# The profile form deliberately does not ask about several niche eligibility
+# conditions. Those can never be gated by the matcher, so the only honest
+# surface is the special-check lane; a description that names a hard niche
+# requirement without a matching special_requirements entry silently over-matches
+# students. These guards are intentionally high-precision and warning-level.
+_NICHE_REQUIREMENT_GUARDS = (
+    {
+        "label": "first-generation status",
+        "description": re.compile(r"\bfirst[-\s]generation college students?\b", re.IGNORECASE),
+        "encoded": re.compile(r"\bfirst[-\s]generation\b", re.IGNORECASE),
+    },
+    {
+        "label": "identity/status",
+        "description": re.compile(
+            r"(?:\bopen only to\b|\blimited to\b|\brestricted to\b|\bapplicants must be\b|"
+            r"\bstudents must be\b|\bmust identify as\b|\bwho identify as\b|\bliving with\b|"
+            r"\bwith (?:a |an )?(?:documented |visible or invisible )?)"
+            r".{0,120}\b(?:disabilit(?:y|ies)|disabled|learning disability|women|woman|"
+            r"undocumented|immigrants?|new americans?|refugees?|asylees?|DACA|foster)\b|"
+            r"\bfor\b.{0,80}\b(?:students|seniors|applicants)\b.{0,80}\b(?:with|living with)\b"
+            r".{0,80}\b(?:disabilit(?:y|ies)|learning disability)\b|"
+            r"\bopen only to women\b|\bfor women pursuing\b|\bfor New Americans\b",
+            re.IGNORECASE,
+        ),
+        "encoded": re.compile(
+            r"\b(?:disabilit(?:y|ies)|disabled|learning disability|women|woman|gender|"
+            r"LGBTQ\+?|immigrants?|immigration|new americans?|undocumented|DACA|"
+            r"refugees?|asylees?|foster|status)\b",
+            re.IGNORECASE,
+        ),
+    },
+    {
+        "label": "nomination/endorsement",
+        "description": re.compile(
+            r"\b(?:requires institutional endorsement|must be nominated|nomination required)\b",
+            re.IGNORECASE,
+        ),
+        "encoded": re.compile(
+            r"\b(?:nomination|required nominee|nominated|endorsement|endorsed)\b",
+            re.IGNORECASE,
+        ),
+    },
+    {
+        "label": "program-content",
+        "description": re.compile(
+            r"\b(?:ABET[-\s]accredited|substantially incorporates statistics|"
+            r"eligible accredited programs|accredited or substantially equivalent programs)\b",
+            re.IGNORECASE,
+        ),
+        "encoded": re.compile(
+            r"\b(?:ABET|accredited|statistics|program(?:s)? substantially incorporates|"
+            r"program-content|program content)\b",
+            re.IGNORECASE,
+        ),
+    },
+    {
+        "label": "activity/lifestyle",
+        "description": re.compile(
+            r"\b(?:student[-\s]athletes?|varsity athletes?|240 hours of work before enrolling|"
+            r"(?:volunteer|service) hours|unexpected financial hardship|"
+            r"commitment to promoting a vegan diet|vegetarian or vegan)\b",
+            re.IGNORECASE,
+        ),
+        "encoded": re.compile(
+            r"\b(?:student[-\s]athletes?|athletic|athlete|varsity|240 hours|work before|"
+            r"volunteer|service hours|hardship|vegan|vegetarian|lifestyle)\b",
+            re.IGNORECASE,
+        ),
+    },
+    {
+        "label": "membership",
+        "description": re.compile(
+            r"\b(?:membership required|student membership is required|requires joining|"
+            r"must (?:be|hold|join) (?:a |an |active |current )?.{0,80}members?|"
+            r"must be active members?)\b",
+            re.IGNORECASE,
+        ),
+        "encoded": re.compile(r"\b(?:member|membership|joining|network)\b", re.IGNORECASE),
+    },
+    {
+        "label": "military affiliation",
+        "description": re.compile(
+            r"\bfor\b.{0,120}\b(?:veterans?|active-duty service members?|military spouses?|"
+            r"disabled veterans?|service members who died)\b|"
+            r"\b(?:veterans?|military spouses?)\b.{0,80}\b(?:only|required|eligible)\b",
+            re.IGNORECASE,
+        ),
+        "encoded": re.compile(
+            r"\b(?:veterans?|military|service members?|active-duty|spouses?|dependents?)\b",
+            re.IGNORECASE,
+        ),
+    },
+    {
+        "label": "institution/channel",
+        "description": re.compile(
+            r"\b(?:partner colleges? through a national matching process|"
+            r"district-by-district .{0,80} Member of Congress|"
+            r"submit .{0,80} to their Member of Congress|"
+            r"enrolled in local .{0,40} high schools?)\b",
+            re.IGNORECASE,
+        ),
+        "encoded": re.compile(
+            r"\b(?:partner[-\s]college|partner school|matching process|Member of Congress|"
+            r"congressional district|local .{0,40} high school|institution|channel)\b",
+            re.IGNORECASE,
+        ),
+    },
+)
+
+_NICHE_TRAP_PHRASES = (
+    re.compile(r"\bregardless of immigration status\b", re.IGNORECASE),
+    re.compile(r"\bDACA status alone does not qualify\b", re.IGNORECASE),
+    re.compile(r"\bLGBTQ\+?.{0,80}\band allies\b", re.IGNORECASE),
+    re.compile(r"\bwomen and/or\b", re.IGNORECASE),
+    re.compile(r"\bmilitary bases?\b", re.IGNORECASE),
+    re.compile(r"\bor dependents of active-duty U\.?S\.? military\b", re.IGNORECASE),
+)
 
 
-def _first_gen_unencoded(s: Scholarship) -> bool:
-    if not _FIRST_GEN_DESCRIPTION.search(s.description):
-        return False
-    return not any(
-        _FIRST_GEN_ENCODED.search(f"{req.label} {req.details}")
-        for req in s.eligibility.special_requirements or []
+def _special_requirement_text(entry) -> str:
+    elig = getattr(entry, "eligibility", None)
+    if elig is None:
+        return ""
+    return " ".join(
+        f"{req.label} {req.details}"
+        for req in getattr(elig, "special_requirements", []) or []
     )
+
+
+def _niche_requirement_warnings(entry, prefix: str) -> list[str]:
+    description = getattr(entry, "description", "") or ""
+    special_text = _special_requirement_text(entry)
+    warnings: list[str] = []
+    for guard in _NICHE_REQUIREMENT_GUARDS:
+        if not guard["description"].search(description):
+            continue
+        if any(trap.search(description) for trap in _NICHE_TRAP_PHRASES):
+            continue
+        if guard["encoded"].search(special_text):
+            continue
+        warnings.append(
+            f"{prefix}: description appears to contain a hard {guard['label']} "
+            "requirement but no special_requirements entry encodes it "
+            "(matcher will over-match)"
+        )
+    return warnings
+
+
+def _normalized_special_label(label: str) -> str:
+    return re.sub(r"\s+", " ", label.strip().lower())
+
+
+def _duplicate_special_requirement_errors(entry, prefix: str) -> list[str]:
+    elig = getattr(entry, "eligibility", None)
+    if elig is None:
+        return []
+    seen: set[tuple[str, str]] = set()
+    errors: list[str] = []
+    for requirement in getattr(elig, "special_requirements", []) or []:
+        key = (requirement.kind, _normalized_special_label(requirement.label))
+        if key in seen:
+            errors.append(
+                f"{prefix}: duplicate special requirement {requirement.kind} "
+                f"{key[1]!r}"
+            )
+            continue
+        seen.add(key)
+    return errors
 
 
 def audit_dataset(scholarships: list[Scholarship], today: date | None = None) -> dict:
@@ -100,6 +253,7 @@ def audit_dataset(scholarships: list[Scholarship], today: date | None = None) ->
             aliases = [alias.strip().lower() for alias in school.aliases]
             if len(aliases) != len(set(aliases)):
                 warnings.append(f"{s.id}: duplicate aliases for school {school.name!r}")
+        errors.extend(_duplicate_special_requirement_errors(s, s.id))
 
         if s.verification is not None:
             if (
@@ -121,11 +275,7 @@ def audit_dataset(scholarships: list[Scholarship], today: date | None = None) ->
             if not s.verified:
                 warnings.append(f"{s.id}: has verification metadata but verified is false")
 
-        if _first_gen_unencoded(s):
-            warnings.append(
-                f"{s.id}: description requires first-generation status but no "
-                "special_requirements entry encodes it (matcher will over-match)"
-            )
+        warnings.extend(_niche_requirement_warnings(s, s.id))
 
         if elig.min_gpa == "VERIFY":
             verify_counts["min_gpa"] += 1
@@ -236,6 +386,7 @@ def audit_programs(programs: list[SummerProgram], today: date | None = None) -> 
             for state in elig.states:
                 if state.upper() not in STATE_CODE_VALUES:
                     warnings.append(f"program {program.id}: state not a valid code: {state!r}")
+        errors.extend(_duplicate_special_requirement_errors(program, f"program {program.id}"))
 
         requirement_ids = [requirement.id for requirement in program.application_requirements]
         for requirement_id, count in Counter(requirement_ids).items():
@@ -256,6 +407,8 @@ def audit_programs(programs: list[SummerProgram], today: date | None = None) -> 
                 )
             if not program.verified:
                 warnings.append(f"program {program.id}: has verification metadata but verified is false")
+
+        warnings.extend(_niche_requirement_warnings(program, f"program {program.id}"))
 
         if program.deadline.startswith("VERIFY"):
             verify_counts["deadline"] += 1
@@ -328,6 +481,12 @@ def audit_competitions(competitions: list[Competition], today: date | None = Non
                     warnings.append(
                         f"competition {competition.id}: state not a valid code: {state!r}"
                     )
+        errors.extend(
+            _duplicate_special_requirement_errors(
+                competition,
+                f"competition {competition.id}",
+            )
+        )
 
         requirement_ids = [requirement.id for requirement in competition.application_requirements]
         for requirement_id, count in Counter(requirement_ids).items():
@@ -350,6 +509,10 @@ def audit_competitions(competitions: list[Competition], today: date | None = Non
                 warnings.append(
                     f"competition {competition.id}: has verification metadata but verified is false"
                 )
+
+        warnings.extend(
+            _niche_requirement_warnings(competition, f"competition {competition.id}")
+        )
 
         if competition.deadline.startswith("VERIFY"):
             verify_counts["deadline"] += 1

@@ -2896,7 +2896,13 @@ function collectWritingClusters(items) {
 
 function buildPromptBlock(requirement) {
   const prompts = requirement.essay_prompts;
-  if (!prompts) return null;
+  if (!prompts) {
+    if (!isWritingRequirement(requirement)) return null;
+    const note = document.createElement("p");
+    note.className = "prompt-gated";
+    note.textContent = "Essay prompts not yet verified - check the sponsor page.";
+    return note;
+  }
   if (prompts.status === "gated") {
     const note = document.createElement("p");
     note.className = "prompt-gated";

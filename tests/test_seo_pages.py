@@ -93,6 +93,13 @@ class TestScholarshipDetailPage:
         finally:
             del state.scholarships_by_id[fake.id]
 
+    def test_detail_page_renders_special_requirements(self, client):
+        response = client.get("/scholarships/ieee-presidents-scholarship")
+        assert response.status_code == 200
+        assert "Special eligibility to verify" in response.text
+        assert "ISEF finalist only" in response.text
+        assert "No separate application" in response.text
+
 
 class TestProgramAndCompetitionDetailPages:
     def test_program_detail_renders(self, client):
