@@ -10,6 +10,7 @@ unverified data is an expected state for this curated seed set.
 
 from __future__ import annotations
 
+import re
 import sys
 from collections import Counter
 from datetime import date
@@ -38,6 +39,22 @@ def _deadline_ok(deadline: str) -> bool:
 
 
 STALE_AFTER_DAYS = 90
+
+# The profile form deliberately does not ask about first-generation status, so
+# a first-gen-only award can never be gated by the matcher. Its only honest
+# surface is the special-check lane; a description that names the requirement
+# without a matching special_requirements entry silently over-matches students.
+_FIRST_GEN_DESCRIPTION = re.compile(r"first[-\s]generation college student", re.IGNORECASE)
+_FIRST_GEN_ENCODED = re.compile(r"first[-\s]generation", re.IGNORECASE)
+
+
+def _first_gen_unencoded(s: Scholarship) -> bool:
+    if not _FIRST_GEN_DESCRIPTION.search(s.description):
+        return False
+    return not any(
+        _FIRST_GEN_ENCODED.search(f"{req.label} {req.details}")
+        for req in s.eligibility.special_requirements or []
+    )
 
 
 def audit_dataset(scholarships: list[Scholarship], today: date | None = None) -> dict:
@@ -103,6 +120,12 @@ def audit_dataset(scholarships: list[Scholarship], today: date | None = None) ->
                 )
             if not s.verified:
                 warnings.append(f"{s.id}: has verification metadata but verified is false")
+
+        if _first_gen_unencoded(s):
+            warnings.append(
+                f"{s.id}: description requires first-generation status but no "
+                "special_requirements entry encodes it (matcher will over-match)"
+            )
 
         if elig.min_gpa == "VERIFY":
             verify_counts["min_gpa"] += 1

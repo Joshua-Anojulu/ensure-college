@@ -1,6 +1,27 @@
 {
   "_dataset_notice": "Sidecar list of niche eligibility gates the current profile form cannot verify. These requirements keep opportunities visible while preventing them from appearing as ordinary Strong matches.",
   "requirements": {
+    "american-statistical-association-scholarships": [
+      {
+        "kind": "family_or_affiliation",
+        "label": "Must be a first-generation college student",
+        "details": "The ASA Norman Beery Memorial Scholarship is limited to first-generation college students. The profile form does not ask about first-generation status, so confirm this applies to you before planning an application."
+      }
+    ],
+    "oca-ups-gold-mountain": [
+      {
+        "kind": "family_or_affiliation",
+        "label": "Must be a first-generation college student",
+        "details": "Applicants must be first-generation college students whose parents did not complete a college degree. The profile form does not ask about first-generation status, so confirm this applies before applying."
+      }
+    ],
+    "awis-undergraduate-scholarships": [
+      {
+        "kind": "membership",
+        "label": "AWIS membership required",
+        "details": "Applicants must be AWIS members. Awards under this umbrella carry extra criteria - the First-Generation College Student Scholarship additionally requires first-generation status."
+      }
+    ],
     "national-merit": [
       {
         "kind": "competition_or_finalist",

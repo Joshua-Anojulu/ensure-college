@@ -7573,9 +7573,7 @@
         "min_gpa": 3.0,
         "fields_of_study": [
           "mathematics",
-          "science",
-          "computer_science",
-          "social_sciences"
+          "science"
         ],
         "grade_levels": [
           "high_school_senior",
