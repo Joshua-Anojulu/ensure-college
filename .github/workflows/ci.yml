@@ -6,6 +6,7 @@ on:
 
 jobs:
   test:
+    name: Request tests + dataset
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -15,6 +16,25 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements-dev.txt
       - name: Run tests
-        run: python -m pytest tests -q
+        # The browser suite runs in its own job (it needs a Chromium install).
+        run: python -m pytest tests -q --ignore=tests/e2e
       - name: Validate scholarship data
         run: python scripts/validate_dataset.py
+
+  e2e:
+    name: Browser tests (Playwright)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: pip install -r requirements-dev.txt
+      - name: Install Chromium
+        run: python -m playwright install --with-deps chromium
+      - name: Run browser tests
+        # Boots the app in-process on a throwaway SQLite DB and drives the real
+        # UI: catches dead listeners, stranded scrolls, unpainted WebGL, and
+        # layout overflow that request-level tests cannot see.
+        run: python -m pytest tests/e2e -q

@@ -8,11 +8,15 @@ EnsureCollege is a **college-planning web app** for U.S. high-school students. O
 
 ## Screenshots
 
-| Hero & profile flow | Match results | Result detail |
+| Hero & preview | Match results | Match card |
 | --- | --- | --- |
-| ![Homepage hero and profile form](docs/screenshots/hero.png) | ![Ranked scholarship matches](docs/screenshots/match-results.png) | ![Match card with scoring reasons](docs/screenshots/match-card.png) |
+| ![Homepage hero and three-question preview](docs/screenshots/hero.png) | ![Ranked scholarship matches](docs/screenshots/match-results.png) | ![Match card with scoring reasons](docs/screenshots/match-card.png) |
 
-Screenshots are captured with `scripts/capture_readme_screenshots.py` and may trail the live UI.
+[**`/journey`**](https://ensurecollege.com/journey) — scroll drives a camera through four low-poly dioramas, from one profile to the award letter. Rendered live in the browser (Three.js), not video.
+
+![The journey page: a miniature world of three opportunity lanes](docs/screenshots/journey.png)
+
+Screenshots are captured from the live site with `scripts/capture_readme_screenshots.py`.
 
 ## How it works
 
@@ -30,6 +34,8 @@ Every match shows human-readable reasons plus score-component chips, and each la
 
 **The planning layer.** With a free account (email/password or Google sign-in), saved opportunities become an application plan: per-item status (interested, drafting, submitted, awarded, rejected), notes, persistent source-linked application checklists, a deadline timeline, essay-reuse themes, requirement comparisons, and a recommendation-letters rollup auto-derived from each saved item's checklist. An opt-in weekly email digest covers saved items closing within 14 days, plus an alert when newly added opportunities are a strong match for the saved profile.
 
+**The journey page.** [`/journey`](https://ensurecollege.com/journey) explains the product as a continuous camera flight through four miniature scenes: the profile desk, the three lanes as three districts, the plan war-room, and the campus gate at dawn. Scroll position maps to a point on a single camera spline, so the flight is seamless by construction and scrubs identically in both directions. Every scene is built procedurally from primitives in the site's palette (no image or video assets), the copy ships as real markup for crawlers, and the page falls back to a static article under `prefers-reduced-motion` or without WebGL. A live miniature of the first island is docked on the landing page; Three.js loads only when that panel nears the viewport, so it stays off the critical path.
+
 **Accounts and privacy.** Accounts are optional; without one, nothing is retained between visits. Passwords are stored as bcrypt hashes; sessions use signed, httponly cookies; Google OAuth is supported. Account deletion removes the profile and every tracked opportunity.
 
 **AI features (dormant by default).** Earlier releases included Anthropic-powered essay advice, draft review, and resume auto-fill. That code remains but is gated behind `AI_FEATURES_ENABLED` (default `false`), so no student data is sent to any AI provider unless the flag is deliberately enabled.
@@ -37,7 +43,9 @@ Every match shows human-readable reasons plus score-component chips, and each la
 ## Tech stack
 
 - **Backend:** Python, FastAPI; Jinja2 for the server-rendered opportunity/browse pages
-- **Frontend:** Vanilla HTML, CSS, and JavaScript served by FastAPI; a light-only, token-driven design system; batched rendering and View Transitions on lane switches
+- **Frontend:** Vanilla HTML, CSS, and JavaScript served by FastAPI (no build step). "Forest Light" design system: light-only, fully token-driven, self-hosted Cabinet Grotesk / Satoshi / JetBrains Mono (subset, ~78KB total), with the landing page's stylesheet inlined server-side to keep it off the mobile critical path
+- **Motion:** self-hosted GSAP + ScrollTrigger on the landing (hero entrance, scroll-scrubbed proof band, CSS sticky-stack), IntersectionObserver reveals elsewhere, and a self-driven anchor scroller; everything collapses under `prefers-reduced-motion`
+- **3D:** self-hosted Three.js for `/journey` (a scroll-driven camera spline through four procedurally built dioramas) and the landing teaser, lazy-loaded on approach
 - **Curated data:** Pydantic models over local JSON files (scholarships, summer programs, competitions) loaded at startup
 - **Accounts and saved data:** SQLAlchemy ORM, SQLite locally and Neon Postgres (pooled) in production, bcrypt hashing, signed session cookies, Google OAuth via Authlib
 - **Schema migrations:** Alembic (build-time on Vercel; automatic at startup elsewhere)
@@ -58,7 +66,8 @@ Windows: `.venv\Scripts\activate` · macOS/Linux: `source .venv/bin/activate`
 
 ```bash
 pip install -r requirements.txt
-pip install -r requirements-dev.txt  # for tests
+pip install -r requirements-dev.txt  # tests, including Playwright
+playwright install chromium          # only needed for the browser suite
 alembic upgrade head                 # the app also does this at startup
 ```
 
@@ -94,6 +103,7 @@ Production runs on **Vercel** (`@vercel/python`, `api/index.py` + `vercel.json`)
 | Method | Path | Description |
 |--------|------|-------------|
 | `GET` | `/` | Web app |
+| `GET` | `/journey` | The 3D scroll-flight explainer ("How it works") |
 | `GET` | `/health`, `/robots.txt`, `/sitemap.xml` | Health check and crawler surfaces (sitemap covers every opportunity page) |
 | `GET` | `/scholarships/{slug}`, `/programs/{slug}`, `/competitions/{slug}` | Server-rendered opportunity pages |
 | `GET` | `/browse`, `/browse/{kind}` | Crawlable catalog directories |
@@ -114,10 +124,13 @@ Production runs on **Vercel** (`@vercel/python`, `api/index.py` + `vercel.json`)
 ## Tests
 
 ```bash
-python -m pytest tests/ -v
+python -m pytest tests/ --ignore=tests/e2e -v   # 369 request-level tests, ~1.5 min
+python -m pytest tests/e2e                      # 39 browser tests, ~2 min
 ```
 
-The suite (274 tests) mocks all external calls; no paid API usage. GitHub Actions runs tests and the dataset validator on every push.
+**Request-level (369).** Matchers, gates and scoring, accounts and sessions, the digest cron, SEO pages, dataset integrity, security headers, and a manifest-backed **DOM contract** (`tests/dom_contract.json`) that fails if markup drifts from the selectors and emitted class names `app.js` depends on. All external calls are mocked; no paid API usage. GitHub Actions runs these plus the dataset validator on every push.
+
+**Browser (39, Playwright).** Boots the app in-process on a throwaway SQLite database and drives the real UI in Chromium: public pages, the 3D journey world and landing teaser (including the reduced-motion fallback), the preview flow, the full three-step profile into matches, every lane and filter, the catalog, signup/login/logout/reset/settings, saving an opportunity into a tracked plan, plus hygiene checks for console errors and mobile horizontal overflow. First run needs `playwright install chromium`.
 
 Smoke-test the live deployment with `python scripts/smoke_test_live.py`.
 
@@ -140,9 +153,11 @@ ScholarMatch/
 ├── requirements.txt / requirements-dev.txt
 ├── api/index.py        (Vercel entry)
 ├── tests/
-├── docs/               (specs, plans, brand)
+│   ├── dom_contract.json   (frozen selectors + emitted classes app.js needs)
+│   └── e2e/                (Playwright: real browser, throwaway DB)
+├── docs/               (specs, plans, screenshots, brand)
 └── app/
-    ├── main.py         (routes, sitemap, security headers)
+    ├── main.py         (routes, sitemap, security headers, inlined landing CSS)
     ├── seo_pages.py    (server-rendered opportunity + browse pages)
     ├── templates/      (Jinja2: base, detail, browse, 404)
     ├── api/            (account, saved, reminder routes)
@@ -151,8 +166,18 @@ ScholarMatch/
     ├── matching/       (scholarship, program, competition matchers)
     ├── models/         (Pydantic domain models)
     ├── alerts.py / reminders.py
-    ├── static/         (index.html, css, js, images)
-    └── data/           (scholarships, summer_programs, competitions, special_requirements)
+    ├── data/           (scholarships, summer_programs, competitions, special_requirements)
+    └── static/
+        ├── index.html          (the app)
+        ├── journey.html        (the 3D flight)
+        ├── css/style.css       (Forest Light design system)
+        ├── fonts/              (self-hosted, subset woff2)
+        └── js/
+            ├── app.js              (the app: matcher UI, accounts, the plan)
+            ├── landing-motion.js   (GSAP/IO motion + anchor scrolling)
+            ├── journey.js          (the four-scene world + camera spline)
+            ├── journey-teaser.js   (the landing's live miniature island)
+            └── vendor/             (three.min.js, gsap, ScrollTrigger)
 ```
 
 ## Limitations
@@ -169,7 +194,8 @@ MIT — see [LICENSE](LICENSE).
 
 ## Future work
 
+- **Essay-prompt coverage:** only 57 of 322 opportunities carry verified essay prompts; expanding this (verbatim from sponsor pages, never inferred) is the biggest guidance win left
 - Matcher improvements (field-proximity scoring, richer explanations)
 - Decide the essay-tools fork (re-enable AI features or build non-AI essay support)
-- Continue dataset expansion and the seasonal re-verification pass (most sponsors post next-cycle deadlines August–October)
-- Accessibility (WCAG 2.2) audit and client bundle slimming
+- Continue dataset expansion and the seasonal re-verification pass (most sponsors post next-cycle deadlines August through October)
+- Accessibility (WCAG 2.2) audit; split the ~6,000-line `app.js`

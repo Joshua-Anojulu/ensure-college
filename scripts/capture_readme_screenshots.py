@@ -63,6 +63,20 @@ def main() -> None:
         results.screenshot(path=OUT_DIR / "match-results.png")
 
         page.locator(".match-card").first.screenshot(path=OUT_DIR / "match-card.png")
+
+        # The journey page renders WebGL; give it time to build the world and
+        # settle the camera at the first island before capturing.
+        journey = browser.new_page(viewport={"width": 1280, "height": 800})
+        journey.goto(f"{BASE_URL}/journey", wait_until="load", timeout=120_000)
+        journey.wait_for_timeout(4_000)
+        journey.evaluate(
+            "() => { const t = document.getElementById('journey-track');"
+            " const max = t.offsetHeight - window.innerHeight;"
+            " window.scrollTo({ top: t.offsetTop + max * 0.30, behavior: 'instant' }); }"
+        )
+        journey.wait_for_timeout(3_000)
+        journey.screenshot(path=OUT_DIR / "journey.png")
+
         browser.close()
 
     print(f"Saved screenshots to {OUT_DIR}")

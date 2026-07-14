@@ -91,3 +91,15 @@ _Avoid_: Disabled features, legacy AI, dead code
 **Opportunity page**:
 The server-rendered, indexable public page for a single catalog entry (e.g. `/scholarships/coca-cola-scholars`), carrying honest verification labeling and JSON-LD.
 _Avoid_: Detail page, landing page, SEO page
+
+**Journey**:
+The `/journey` page: one continuous scroll-driven camera flight through four rendered scenes (the profile, the three lanes, the plan, the gate). It explains the product; it is never where a student works. Reached from "How it works".
+_Avoid_: Demo, tour, animation, 3D page
+
+**Teaser**:
+The live miniature island docked on the landing page, linking to the Journey. A promotion for it, not a second Journey.
+_Avoid_: Widget, preview (that word means the three-question matcher demo)
+
+**Forest Light**:
+The design system shipped 2026-07-13: light-only, token-driven, deep forest brand on a cool paper canvas with a single amber accent. All color, type, and depth come from the tokens in `style.css`; nothing hardcodes a hex.
+_Avoid_: Theme, skin, palette (as a name for the whole system)
