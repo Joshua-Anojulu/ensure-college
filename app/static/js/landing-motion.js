@@ -1,3 +1,68 @@
+/* In-page anchor scrolling.
+   The native `scroll-behavior: smooth` animation for the hero CTA travels
+   ~3800px and gets ABORTED partway (any main-thread block or layout shift
+   during the trip kills it), stranding the visitor at the proof band instead
+   of the profile form. So the landing drives the scroll itself: the target is
+   re-measured every frame, so a shift mid-flight cannot leave us short, and
+   the tween cannot be silently cancelled. Runs before the motion gate below,
+   because it must work even under prefers-reduced-motion (as an instant jump). */
+(() => {
+  const OFFSET = 84; // sticky header + breathing room
+  const links = Array.from(document.querySelectorAll('a[href^="#"]:not([href="#"])'));
+  if (!links.length) return;
+
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const easeOut = (t) => 1 - Math.pow(1 - t, 3);
+
+  function scrollToTarget(el) {
+    const goal = () => Math.max(
+      0,
+      Math.min(
+        el.getBoundingClientRect().top + window.scrollY - OFFSET,
+        document.documentElement.scrollHeight - window.innerHeight
+      )
+    );
+    // Every scroll call is animated by `html { scroll-behavior: smooth }`, so
+    // each step must opt out explicitly or the browser re-smooths our own
+    // tween and the two fight (this is what stranded the CTA mid-page).
+    const jump = (y) => window.scrollTo({ top: y, behavior: "instant" });
+
+    if (reduced) {
+      jump(goal());
+      return;
+    }
+    const from = window.scrollY;
+    const duration = Math.min(1100, Math.max(450, Math.abs(goal() - from) * 0.28));
+    let startTime = null;
+    const step = (now) => {
+      if (startTime === null) startTime = now;
+      const p = Math.min(1, (now - startTime) / duration);
+      // Re-measure every frame: lazy images and the 3D teaser can change
+      // layout while we are in flight.
+      jump(from + (goal() - from) * easeOut(p));
+      if (p < 1) window.requestAnimationFrame(step);
+    };
+    window.requestAnimationFrame(step);
+    // Settle guarantee: if frames were starved (backgrounded tab, heavy work)
+    // the tween can end short. Timers still fire, so land it exactly.
+    window.setTimeout(() => {
+      if (Math.abs(window.scrollY - goal()) > 4) jump(goal());
+    }, duration + 80);
+  }
+
+  for (const link of links) {
+    link.addEventListener("click", (event) => {
+      if (event.defaultPrevented || event.metaKey || event.ctrlKey || event.shiftKey) return;
+      const id = link.getAttribute("href").slice(1);
+      const target = document.getElementById(id);
+      if (!target) return;
+      event.preventDefault();
+      scrollToTarget(target);
+      if (history.replaceState) history.replaceState(null, "", "#" + id);
+    });
+  }
+})();
+
 (() => {
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const root = document.documentElement;
