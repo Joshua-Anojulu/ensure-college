@@ -788,12 +788,17 @@ input:focus, select:focus, textarea:focus {
 }
 
 .profile-form .has-tooltip { position: relative; }
+/* Hidden tooltips must not be LAID OUT: an opacity-0 absolute box is still
+   measured, and a viewport-wide one pushed the document 46px wider on phones
+   (a horizontal scrollbar on every mobile visit). `content-visibility: hidden`
+   keeps the fade transition while removing the box from layout until shown. */
 .profile-form .has-tooltip::before, .profile-form .has-tooltip::after {
   position: absolute;
   z-index: 30;
   left: 0.85rem;
   pointer-events: none;
   opacity: 0;
+  content-visibility: hidden;
   transform: translateY(4px);
   transition: opacity var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease);
 }
@@ -825,6 +830,7 @@ input:focus, select:focus, textarea:focus {
 .profile-form .has-tooltip:hover::before, .profile-form .has-tooltip:hover::after,
 .profile-form .has-tooltip:focus-within::before, .profile-form .has-tooltip:focus-within::after {
   opacity: 1;
+  content-visibility: visible;
   transform: translateY(0);
 }
 .profile-form .has-tooltip:hover::before, .profile-form .has-tooltip:focus-within::before { transform: translateY(0) rotate(45deg); }
