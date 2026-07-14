@@ -11,6 +11,7 @@ import html
 import json
 import os
 import sys
+from collections.abc import Mapping
 from urllib.error import HTTPError, URLError
 from urllib.parse import quote
 from urllib.request import Request, urlopen
@@ -77,6 +78,13 @@ class EmailDeliveryError(RuntimeError):
     """Raised when a transactional email cannot be safely delivered."""
 
 
+def list_unsubscribe_headers(unsubscribe_url: str) -> dict[str, str]:
+    return {
+        "List-Unsubscribe": f"<{unsubscribe_url}>",
+        "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+    }
+
+
 def password_reset_email_is_configured() -> bool:
     """Return whether every setting needed to deliver reset links is present."""
     missing = [
@@ -97,7 +105,15 @@ def password_reset_url(token: str) -> str:
     return f"{app_url}/?reset_token={quote(token, safe='')}"
 
 
-def send_email(recipient: str, subject: str, text_body: str, html_body: str, *, log_tag: str) -> None:
+def send_email(
+    recipient: str,
+    subject: str,
+    text_body: str,
+    html_body: str,
+    *,
+    log_tag: str,
+    custom_headers: Mapping[str, str] | None = None,
+) -> None:
     """Send one transactional email through Resend. Raises EmailDeliveryError.
 
     The provider response is intentionally not surfaced to callers; only a
@@ -117,6 +133,8 @@ def send_email(recipient: str, subject: str, text_body: str, html_body: str, *, 
         "text": text_body,
         "html": html_body,
     }
+    if custom_headers:
+        payload["headers"] = dict(custom_headers)
     request = Request(
         RESEND_EMAILS_URL,
         data=json.dumps(payload).encode("utf-8"),

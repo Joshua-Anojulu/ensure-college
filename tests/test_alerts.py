@@ -59,7 +59,14 @@ def test_baseline_then_alert(monkeypatch):
             sent = {}
             monkeypatch.setattr(
                 alerts, "send_email",
-                lambda to, subject, text, html, log_tag: sent.update({"to": to, "subject": subject, "text": text}),
+                lambda to, subject, text, html, *, log_tag, custom_headers=None: sent.update(
+                    {
+                        "to": to,
+                        "subject": subject,
+                        "text": text,
+                        "headers": custom_headers,
+                    }
+                ),
             )
 
             # First run baselines the existing match silently.
@@ -74,6 +81,11 @@ def test_baseline_then_alert(monkeypatch):
             assert counts2["sent"] == 1
             assert sent["to"] == "alertme@example.com"
             assert "Delta" in sent["text"]
+            assert sent["headers"] == {
+                "List-Unsubscribe": "<https://ensurecollege.com/reminders/unsubscribe?token="
+                f"{user.reminder_unsubscribe_token}>",
+                "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+            }
 
             # No further alert when nothing is new.
             sent.clear()

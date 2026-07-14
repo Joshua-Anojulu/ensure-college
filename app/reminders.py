@@ -11,10 +11,11 @@ import html
 import os
 from dataclasses import dataclass
 from datetime import date
+from urllib.parse import quote
 
 from sqlalchemy.orm import Session
 
-from app.auth.email import EmailDeliveryError, send_email
+from app.auth.email import EmailDeliveryError, list_unsubscribe_headers, send_email
 from app.db.models import (
     SavedCompetition,
     SavedProgram,
@@ -38,7 +39,11 @@ class DueItem:
 
 
 def _public_base_url() -> str:
-    return os.getenv("PUBLIC_APP_URL", "https://ensurecollege.com").strip().rstrip("/")
+    return (os.getenv("PUBLIC_APP_URL", "").strip() or "https://ensurecollege.com").rstrip("/")
+
+
+def reminder_unsubscribe_url(unsubscribe_token: str) -> str:
+    return f"{_public_base_url()}/reminders/unsubscribe?token={quote(unsubscribe_token, safe='')}"
 
 
 def _within_window(deadline: str, today: date, window_days: int) -> tuple[date, int] | None:
@@ -99,7 +104,7 @@ def _fmt(d: date) -> str:
 def build_reminder_email(items: list[DueItem], unsubscribe_token: str) -> tuple[str, str, str]:
     """Return (subject, text_body, html_body) for a digest of due items."""
     base = _public_base_url()
-    unsubscribe = f"{base}/reminders/unsubscribe?token={unsubscribe_token}"
+    unsubscribe = reminder_unsubscribe_url(unsubscribe_token)
     n = len(items)
     subject = f"{n} saved {'opportunity' if n == 1 else 'opportunities'} closing soon"
 
@@ -192,7 +197,16 @@ def send_reminder_digests(
             continue
         subject, text_body, html_body = build_reminder_email(items, user.reminder_unsubscribe_token)
         try:
-            send_email(user.email, subject, text_body, html_body, log_tag="reminder-email")
+            send_email(
+                user.email,
+                subject,
+                text_body,
+                html_body,
+                log_tag="reminder-email",
+                custom_headers=list_unsubscribe_headers(
+                    reminder_unsubscribe_url(user.reminder_unsubscribe_token)
+                ),
+            )
         except EmailDeliveryError:
             failed += 1
             continue

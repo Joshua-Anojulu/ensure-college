@@ -16,6 +16,8 @@ from collections import Counter
 from datetime import date
 from pathlib import Path
 
+from pydantic import ValidationError
+
 # Allow running as a plain script: python scripts/validate_dataset.py
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
@@ -157,6 +159,14 @@ _NICHE_TRAP_PHRASES = (
     re.compile(r"\bmilitary bases?\b", re.IGNORECASE),
     re.compile(r"\bor dependents of active-duty U\.?S\.? military\b", re.IGNORECASE),
 )
+
+
+def _validation_error_messages(prefix: str, exc: ValidationError) -> list[str]:
+    messages: list[str] = []
+    for error in exc.errors():
+        loc = ".".join(str(part) for part in error.get("loc", ())) or "record"
+        messages.append(f"{prefix}: {loc}: {error.get('msg', str(error))}")
+    return messages
 
 
 def _special_requirement_text(entry) -> str:
@@ -578,9 +588,17 @@ def cross_lane_duplicate_errors(scholarships, programs, competitions) -> list[st
 
 
 def main() -> int:
-    scholarships = load_scholarships()
-    programs = load_summer_programs()
-    competitions = load_competitions()
+    try:
+        scholarships = load_scholarships()
+        programs = load_summer_programs()
+        competitions = load_competitions()
+    except ValidationError as exc:
+        errors = _validation_error_messages("dataset validation", exc)
+        print(f"ERRORS ({len(errors)}):")
+        for error in errors:
+            print(f"  - {error}")
+        return 1
+
     report = audit_dataset(scholarships)
     program_report = audit_programs(programs)
     competition_report = audit_competitions(competitions)

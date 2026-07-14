@@ -15,12 +15,13 @@ from datetime import date
 
 from sqlalchemy.orm import Session
 
-from app.auth.email import EmailDeliveryError, send_email
+from app.auth.email import EmailDeliveryError, list_unsubscribe_headers, send_email
 from app.db.models import User, UserProfile
 from app.matching.competition_matcher import match_competitions
 from app.matching.matcher import match_scholarships
 from app.matching.program_matcher import match_programs
 from app.models.student import StudentProfile
+from app.reminders import reminder_unsubscribe_url
 
 # Cap the number of new matches surfaced in one email so a big catalog jump
 # does not produce an overwhelming message; the rest surface on the next run.
@@ -36,7 +37,7 @@ class MatchRef:
 
 
 def _public_base_url() -> str:
-    return os.getenv("PUBLIC_APP_URL", "https://ensurecollege.com").strip().rstrip("/")
+    return (os.getenv("PUBLIC_APP_URL", "").strip() or "https://ensurecollege.com").rstrip("/")
 
 
 def strong_matches(
@@ -63,7 +64,7 @@ def strong_matches(
 
 def build_alert_email(new_refs: list[MatchRef], unsubscribe_token: str) -> tuple[str, str, str]:
     base = _public_base_url()
-    unsubscribe = f"{base}/reminders/unsubscribe?token={unsubscribe_token}"
+    unsubscribe = reminder_unsubscribe_url(unsubscribe_token)
     n = len(new_refs)
     subject = f"{n} new {'match' if n == 1 else 'matches'} for your profile"
 
@@ -168,7 +169,16 @@ def send_new_match_alerts(
         to_send = new_refs[:MAX_ALERTS_PER_EMAIL]
         subject, text_body, html_body = build_alert_email(to_send, user.reminder_unsubscribe_token)
         try:
-            send_email(user.email, subject, text_body, html_body, log_tag="match-alert-email")
+            send_email(
+                user.email,
+                subject,
+                text_body,
+                html_body,
+                log_tag="match-alert-email",
+                custom_headers=list_unsubscribe_headers(
+                    reminder_unsubscribe_url(user.reminder_unsubscribe_token)
+                ),
+            )
         except EmailDeliveryError:
             failed += 1
             continue

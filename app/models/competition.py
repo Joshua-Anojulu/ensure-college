@@ -10,13 +10,14 @@ from __future__ import annotations
 from datetime import date
 from typing import Literal, Union
 
-from pydantic import BaseModel, Field, HttpUrl
+from pydantic import BaseModel, Field, HttpUrl, field_validator
 
 from app.models.scholarship import (
     ApplicationRequirement,
     Eligibility,
     SpecialRequirement,
     VerificationMetadata,
+    validate_http_url_string,
 )
 
 CompetitionCostCategory = Literal["free", "stipend", "paid", "VERIFY"]
@@ -94,6 +95,11 @@ class CompetitionMatchResult(BaseModel):
     application_requirements: list[ApplicationRequirement] = Field(default_factory=list)
     requires_special_check: bool = False
     special_requirements: list[SpecialRequirement] = Field(default_factory=list)
+
+    @field_validator("verification_source_url")
+    @classmethod
+    def _verification_source_url_is_http(cls, value: str | None) -> str | None:
+        return validate_http_url_string(value)
 
 
 class CompetitionNearMiss(BaseModel):

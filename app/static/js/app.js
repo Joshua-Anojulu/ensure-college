@@ -5984,12 +5984,26 @@ function formatVerifiedDate(isoDate) {
   return `${months[Number(match[2]) - 1]} ${Number(match[3])}, ${match[1]}`;
 }
 
+function httpUrlHref(value) {
+  if (!value) {
+    return null;
+  }
+  try {
+    const parsed = new URL(String(value));
+    return parsed.protocol === "http:" || parsed.protocol === "https:" ? parsed.href : null;
+  } catch {
+    return null;
+  }
+}
+
 function buildVerificationSource(card) {
   if (!card.verification_source_url && !card.last_verified_at) {
     return null;
   }
   const wrap = document.createElement("div");
   wrap.className = "verification-source";
+  const sourceUrl = card.verification_source_url ? String(card.verification_source_url) : "";
+  const sourceHref = httpUrlHref(sourceUrl);
   let stale = false;
   if (card.last_verified_at) {
     const ageDays = verificationAgeDays(card.last_verified_at);
@@ -6004,14 +6018,14 @@ function buildVerificationSource(card) {
       flag.textContent = "Re-verify on source";
       wrap.appendChild(flag);
     }
-  } else if (card.verification_source_url) {
+  } else if (sourceUrl) {
     const source = document.createElement("span");
     source.textContent = "Official source on file";
     wrap.appendChild(source);
   }
-  if (card.verification_source_url) {
+  if (sourceHref) {
     const link = document.createElement("a");
-    link.href = card.verification_source_url;
+    link.href = sourceHref;
     link.target = "_blank";
     link.rel = "noopener noreferrer";
     link.textContent = stale
@@ -6020,6 +6034,10 @@ function buildVerificationSource(card) {
       ? "View verified source"
       : "View sponsor page";
     wrap.appendChild(link);
+  } else if (sourceUrl) {
+    const sourceText = document.createElement("span");
+    sourceText.textContent = sourceUrl;
+    wrap.appendChild(sourceText);
   }
   return wrap;
 }

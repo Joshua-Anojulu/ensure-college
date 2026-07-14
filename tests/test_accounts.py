@@ -1,3 +1,4 @@
+import time
 from datetime import timedelta
 
 import pytest
@@ -122,6 +123,47 @@ class TestLogin:
         )
         assert response.status_code == 401
 
+    def test_login_runs_exactly_one_password_verify_per_attempt(self, client, monkeypatch):
+        from app.api import auth_routes
+
+        signup(client)
+        client.post("/auth/logout")
+        with SessionLocal() as db:
+            db.add(User(email="google-only@example.com", google_sub="sub-google-only"))
+            db.commit()
+
+        calls: list[str] = []
+
+        def fake_verify(password: str, password_hash: str) -> bool:
+            calls.append(password_hash)
+            return password == "password123" and password_hash != auth_routes._LOGIN_DUMMY_PASSWORD_HASH
+
+        monkeypatch.setattr(auth_routes, "verify_password", fake_verify)
+
+        known = client.post(
+            "/auth/login",
+            json={"email": "student@example.com", "password": "password123"},
+        )
+        assert known.status_code == 200
+        assert len(calls) == 1
+        assert calls[0] != auth_routes._LOGIN_DUMMY_PASSWORD_HASH
+
+        calls.clear()
+        missing = client.post(
+            "/auth/login",
+            json={"email": "nobody@example.com", "password": "password123"},
+        )
+        assert missing.status_code == 401
+        assert calls == [auth_routes._LOGIN_DUMMY_PASSWORD_HASH]
+
+        calls.clear()
+        no_password = client.post(
+            "/auth/login",
+            json={"email": "google-only@example.com", "password": "password123"},
+        )
+        assert no_password.status_code == 401
+        assert calls == [auth_routes._LOGIN_DUMMY_PASSWORD_HASH]
+
 
 class TestSessionLifecycle:
     def test_me_without_session_returns_401(self, client):
@@ -132,6 +174,31 @@ class TestSessionLifecycle:
         assert client.get("/auth/me").status_code == 200
         assert client.post("/auth/logout").status_code == 200
         assert client.get("/auth/me").status_code == 401
+
+
+class TestCsrfOriginGuard:
+    def test_same_origin_origin_is_allowed(self, client):
+        signup(client)
+        response = client.post("/auth/logout", headers={"Origin": "http://testserver"})
+        assert response.status_code == 200
+
+    def test_allowed_production_origin_is_allowed(self, client):
+        signup(client)
+        response = client.post("/auth/logout", headers={"Origin": "https://ensurecollege.com"})
+        assert response.status_code == 200
+
+    def test_missing_origin_with_same_origin_referer_is_allowed(self, client):
+        signup(client)
+        response = client.post(
+            "/auth/logout",
+            headers={"Referer": "http://testserver/account"},
+        )
+        assert response.status_code == 200
+
+    def test_hostile_origin_with_session_cookie_is_rejected(self, client):
+        signup(client)
+        response = client.post("/auth/logout", headers={"Origin": "https://evil.example"})
+        assert response.status_code == 403
 
 
 class TestAuthRequired:
@@ -414,6 +481,29 @@ class TestPasswordReset:
             assert record.token_hash == hash_reset_token(raw_token)
             assert record.token_hash != raw_token
 
+    def test_request_response_floor_applies_to_known_and_unknown_accounts(
+        self, client, monkeypatch
+    ):
+        from app.api import auth_routes
+
+        delivered = capture_password_reset_email(monkeypatch)
+        monkeypatch.setattr(auth_routes, "PASSWORD_RESET_RESPONSE_FLOOR_SECONDS", 0.05)
+        signup(client)
+
+        start = time.perf_counter()
+        known = client.post("/auth/password-reset/request", json={"email": "student@example.com"})
+        known_elapsed = time.perf_counter() - start
+
+        start = time.perf_counter()
+        unknown = client.post("/auth/password-reset/request", json={"email": "nobody@example.com"})
+        unknown_elapsed = time.perf_counter() - start
+
+        assert known.status_code == unknown.status_code == 200
+        assert known.json() == unknown.json()
+        assert len(delivered) == 1
+        assert known_elapsed >= 0.045
+        assert unknown_elapsed >= 0.045
+
     def test_confirm_sets_new_password_starts_session_and_consumes_token(self, client, monkeypatch):
         delivered = capture_password_reset_email(monkeypatch)
         signup(client)
@@ -462,6 +552,9 @@ class TestPasswordReset:
         assert reset.status_code == 400
 
     def test_delivery_failure_does_not_leave_a_usable_token(self, client, monkeypatch):
+        from app.api import auth_routes
+
+        monkeypatch.setattr(auth_routes, "PASSWORD_RESET_RESPONSE_FLOOR_SECONDS", 0.05)
         monkeypatch.setattr("app.api.auth_routes.password_reset_email_is_configured", lambda: True)
 
         def fail_delivery(recipient: str, token: str) -> None:
@@ -469,8 +562,11 @@ class TestPasswordReset:
 
         monkeypatch.setattr("app.api.auth_routes.send_password_reset_email", fail_delivery)
         signup(client)
+        start = time.perf_counter()
         response = client.post("/auth/password-reset/request", json={"email": "student@example.com"})
+        elapsed = time.perf_counter() - start
         assert response.status_code == 503
+        assert elapsed >= 0.045
         with SessionLocal() as db:
             assert db.query(PasswordResetToken).count() == 0
 
@@ -824,13 +920,42 @@ class TestReminders:
         assert token
         page = client.get(f"/reminders/unsubscribe?token={token}")
         assert page.status_code == 200
+        assert "Turn off reminders?" in page.text
+        assert client.get("/auth/me").json()["reminders_enabled"] is True
+        posted = client.post(f"/reminders/unsubscribe?token={token}")
+        assert posted.status_code == 200
+        assert "Reminders turned off" in posted.text
+        assert client.get("/auth/me").json()["reminders_enabled"] is False
+
+    def test_unsubscribe_form_post_disables_reminders(self, client):
+        from app.db.database import SessionLocal
+        from app.db.models import User
+
+        signup(client, email="form-unsub@example.com")
+        db = SessionLocal()
+        try:
+            token = db.query(User).filter(User.email == "form-unsub@example.com").first().reminder_unsubscribe_token
+        finally:
+            db.close()
+        assert token
+        page = client.post("/reminders/unsubscribe", data={"token": token})
+        assert page.status_code == 200
         assert "Reminders turned off" in page.text
         assert client.get("/auth/me").json()["reminders_enabled"] is False
 
     def test_unsubscribe_bad_token_is_generic(self, client):
-        page = client.get("/reminders/unsubscribe?token=not-a-real-token")
+        signup(client, email="generic-unsub@example.com")
+        with SessionLocal() as db:
+            token = db.query(User).filter(User.email == "generic-unsub@example.com").first().reminder_unsubscribe_token
+        bad = client.post("/reminders/unsubscribe?token=not-a-real-token")
+        valid = client.post(f"/reminders/unsubscribe?token={token}")
+        assert bad.status_code == valid.status_code == 200
+        assert bad.text == valid.text
+
+    def test_unsubscribe_get_escapes_token_in_hidden_field(self, client):
+        page = client.get('/reminders/unsubscribe?token=x%22%20onfocus%3D%22bad%26%3C')
         assert page.status_code == 200
-        assert "Reminders turned off" in page.text
+        assert 'value=\'x&quot; onfocus=&quot;bad&amp;&lt;\'' in page.text
 
     def test_run_endpoint_requires_cron_secret(self, client, monkeypatch):
         monkeypatch.setenv("CRON_SECRET", "topsecret")
@@ -864,3 +989,61 @@ class TestReminderComputation:
         assert "in 3 days" in text
         assert "/reminders/unsubscribe?token=tok123" in text
         assert "/reminders/unsubscribe?token=tok123" in html
+
+    def test_digest_email_includes_one_click_unsubscribe_headers(self, monkeypatch):
+        from datetime import date, timedelta
+
+        import app.reminders as reminders
+        from app.db.models import SavedScholarship
+        from app.models.scholarship import Eligibility, Scholarship
+
+        today = date.today()
+        scholarship = Scholarship(
+            id="due-soon",
+            name="Due Soon Scholarship",
+            sponsor="Test Sponsor",
+            award_amount=1000,
+            deadline=(today + timedelta(days=3)).isoformat(),
+            url="https://example.org/due",
+            eligibility=Eligibility(),
+            description="A due scholarship.",
+        )
+
+        sent = {}
+
+        def capture_send_email(
+            recipient,
+            subject,
+            text_body,
+            html_body,
+            *,
+            log_tag,
+            custom_headers=None,
+        ):
+            sent["headers"] = custom_headers
+
+        monkeypatch.setattr(reminders, "send_email", capture_send_email)
+        with SessionLocal() as db:
+            user = User(
+                email="digest@example.com",
+                password_hash=hash_password("password123"),
+                reminder_unsubscribe_token="tok-digest",
+            )
+            db.add(user)
+            db.commit()
+            db.refresh(user)
+            db.add(SavedScholarship(user_id=user.id, scholarship_id="due-soon"))
+            db.commit()
+            counts = reminders.send_reminder_digests(
+                db,
+                {"due-soon": scholarship},
+                {},
+                {},
+                today=today,
+            )
+
+        assert counts["sent"] == 1
+        assert sent["headers"] == {
+            "List-Unsubscribe": "<https://ensurecollege.com/reminders/unsubscribe?token=tok-digest>",
+            "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+        }

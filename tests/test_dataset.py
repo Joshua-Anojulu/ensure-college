@@ -5,10 +5,22 @@ import json
 from datetime import timedelta
 from pathlib import Path
 
+import pytest
+from pydantic import ValidationError
+
 from app.data.loader import DEFAULT_SPECIAL_REQUIREMENTS_PATH, load_scholarships
 from app.models.competition import Competition
+from app.models.competition import CompetitionMatchResult, CompetitionScoreBreakdown
+from app.models.match import MatchResult, ScoreBreakdown
 from app.models.program import SummerProgram
-from app.models.scholarship import Eligibility, Scholarship, SpecialRequirement
+from app.models.program import ProgramMatchResult, ProgramScoreBreakdown
+from app.models.scholarship import (
+    ApplicationRequirement,
+    Eligibility,
+    Scholarship,
+    SpecialRequirement,
+    VerificationMetadata,
+)
 from scripts.validate_dataset import (
     audit_competitions,
     audit_dataset,
@@ -91,6 +103,90 @@ def test_special_requirement_model_accepts_new_niche_kinds():
             details="Synthetic details for the special-check lane.",
         )
         assert req.kind == kind
+
+
+def test_bad_source_url_schemes_are_validation_errors():
+    with pytest.raises(ValidationError):
+        VerificationMetadata(source_url="javascript:alert(1)")
+    with pytest.raises(ValidationError):
+        ApplicationRequirement(id="step", label="Step", source_url="ftp://example.org/step")
+    with pytest.raises(ValidationError):
+        MatchResult(
+            scholarship_id="s1",
+            scholarship_name="Synthetic Scholarship",
+            sponsor="Synthetic Sponsor",
+            award_amount=1000,
+            deadline="rolling",
+            url="https://example.org/scholarship",
+            verified=True,
+            verification_source_url="javascript:alert(1)",
+            score=0,
+            match_tier="possible",
+            match_reasons=[],
+            score_breakdown=ScoreBreakdown(),
+        )
+
+
+def test_validate_dataset_cli_reports_bad_scheme_as_error(monkeypatch, capsys):
+    from scripts import validate_dataset
+
+    def load_bad_scholarships():
+        return [_scholarship(url="javascript:alert(1)")]
+
+    monkeypatch.setattr(validate_dataset, "load_scholarships", load_bad_scholarships)
+
+    assert validate_dataset.main() == 1
+    out = capsys.readouterr().out
+    assert "ERRORS" in out
+    assert "URL scheme should be" in out or "URL must use http or https" in out
+    with pytest.raises(ValidationError):
+        ProgramMatchResult(
+            program_id="p1",
+            name="Synthetic Program",
+            host="Synthetic Host",
+            subject="STEM",
+            cost="VERIFY",
+            cost_category="VERIFY",
+            selectivity="VERIFY",
+            program_format="VERIFY",
+            location="VERIFY",
+            program_dates="VERIFY",
+            deadline="VERIFY",
+            estimated_deadline=None,
+            url="https://example.org/program",
+            verified=True,
+            verification_source_url="data:text/html,hi",
+            last_verified_at=None,
+            essay_required=False,
+            score=0,
+            match_tier="possible",
+            match_reasons=[],
+            score_breakdown=ProgramScoreBreakdown(),
+        )
+    with pytest.raises(ValidationError):
+        CompetitionMatchResult(
+            competition_id="c1",
+            name="Synthetic Competition",
+            host="Synthetic Host",
+            category="STEM",
+            cost="VERIFY",
+            cost_category="VERIFY",
+            recognition="VERIFY",
+            participation_format="VERIFY",
+            location="VERIFY",
+            competition_dates="VERIFY",
+            deadline="VERIFY",
+            estimated_deadline=None,
+            url="https://example.org/competition",
+            verified=True,
+            verification_source_url="file:///tmp/source",
+            last_verified_at=None,
+            essay_required=False,
+            score=0,
+            match_tier="possible",
+            match_reasons=[],
+            score_breakdown=CompetitionScoreBreakdown(),
+        )
 
 
 def test_dataset_has_no_structural_errors():

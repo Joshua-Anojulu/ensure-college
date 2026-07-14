@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import time
 from collections.abc import Mapping
 
 from fastapi import APIRouter, Depends, HTTPException, Request, status
@@ -58,6 +59,8 @@ PASSWORD_RESET_ACCEPTED = {
     "ok": True,
     "message": "If an account exists for that email, a reset link will arrive shortly.",
 }
+PASSWORD_RESET_RESPONSE_FLOOR_SECONDS = 0.25
+_LOGIN_DUMMY_PASSWORD_HASH = "$2b$12$rS1X/8jxGpazrNp2VkR8neAjUAfC8uORcKJGYK4FgbHjzaaZWblJe"
 GOOGLE_DISCOVERY_URL = "https://accounts.google.com/.well-known/openid-configuration"
 GOOGLE_SCOPE = "openid email profile"
 GOOGLE_NOT_CONFIGURED = "Google sign-in is not configured yet."
@@ -65,6 +68,12 @@ GOOGLE_NOT_CONFIGURED = "Google sign-in is not configured yet."
 
 def _normalize_email(email: str) -> str:
     return email.strip().lower()
+
+
+def _pad_password_reset_response(start: float) -> None:
+    remaining = PASSWORD_RESET_RESPONSE_FLOOR_SECONDS - (time.perf_counter() - start)
+    if remaining > 0:
+        time.sleep(remaining)
 
 
 def google_oauth_is_configured() -> bool:
@@ -239,8 +248,10 @@ def signup(request: Request, body: SignupRequest, db: Session = Depends(get_db))
 def login(request: Request, body: LoginRequest, db: Session = Depends(get_db)) -> User:
     email = _normalize_email(body.email)
     user = db.query(User).filter(User.email == email).first()
+    password_hash = user.password_hash if user is not None and user.password_hash else _LOGIN_DUMMY_PASSWORD_HASH
+    password_ok = verify_password(body.password, password_hash)
 
-    if user is None or not user.password_hash or not verify_password(body.password, user.password_hash):
+    if user is None or not user.password_hash or not password_ok:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail={"error": "Email or password is incorrect."},
@@ -294,47 +305,51 @@ def request_password_reset(
     db: Session = Depends(get_db),
 ) -> dict[str, bool | str]:
     """Send a one-time reset link without revealing whether an email is registered."""
-    if not password_reset_email_is_configured():
-        raise HTTPException(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail={"error": "Password reset is temporarily unavailable. Please try again later."},
-        )
-
-    user = db.query(User).filter(User.email == _normalize_email(body.email)).first()
-    if user is None:
-        return PASSWORD_RESET_ACCEPTED
-
-    raw_token = generate_reset_token()
-    reset_token = PasswordResetToken(
-        user_id=user.id,
-        token_hash=hash_reset_token(raw_token),
-        expires_at=reset_token_expires_at(),
-    )
-    db.add(reset_token)
-    db.commit()
-
+    start = time.perf_counter()
     try:
-        send_password_reset_email(user.email, raw_token)
-    except EmailDeliveryError:
-        # Do not leave a usable token behind when we know the mail handoff
-        # failed. Older links are still intact at this point, so a transient
-        # mail outage never strands the user with zero working links.
-        db.delete(reset_token)
+        if not password_reset_email_is_configured():
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail={"error": "Password reset is temporarily unavailable. Please try again later."},
+            )
+
+        user = db.query(User).filter(User.email == _normalize_email(body.email)).first()
+        if user is None:
+            return PASSWORD_RESET_ACCEPTED
+
+        raw_token = generate_reset_token()
+        reset_token = PasswordResetToken(
+            user_id=user.id,
+            token_hash=hash_reset_token(raw_token),
+            expires_at=reset_token_expires_at(),
+        )
+        db.add(reset_token)
         db.commit()
-        raise HTTPException(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail={"error": "Password reset is temporarily unavailable. Please try again later."},
-        ) from None
 
-    # The delivered link supersedes all older, unused links for this user.
-    db.query(PasswordResetToken).filter(
-        PasswordResetToken.user_id == user.id,
-        PasswordResetToken.used_at.is_(None),
-        PasswordResetToken.id != reset_token.id,
-    ).delete(synchronize_session=False)
-    db.commit()
+        try:
+            send_password_reset_email(user.email, raw_token)
+        except EmailDeliveryError:
+            # Do not leave a usable token behind when we know the mail handoff
+            # failed. Older links are still intact at this point, so a transient
+            # mail outage never strands the user with zero working links.
+            db.delete(reset_token)
+            db.commit()
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail={"error": "Password reset is temporarily unavailable. Please try again later."},
+            ) from None
 
-    return PASSWORD_RESET_ACCEPTED
+        # The delivered link supersedes all older, unused links for this user.
+        db.query(PasswordResetToken).filter(
+            PasswordResetToken.user_id == user.id,
+            PasswordResetToken.used_at.is_(None),
+            PasswordResetToken.id != reset_token.id,
+        ).delete(synchronize_session=False)
+        db.commit()
+
+        return PASSWORD_RESET_ACCEPTED
+    finally:
+        _pad_password_reset_response(start)
 
 
 @router.post(

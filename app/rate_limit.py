@@ -27,6 +27,29 @@ def _upstash_configured() -> bool:
     )
 
 
+def _is_production_deploy() -> bool:
+    return (
+        bool(os.getenv("RENDER"))
+        or os.getenv("DATABASE_URL", "").startswith("postgres")
+        or os.getenv("VERCEL_ENV", "").lower() == "production"
+    )
+
+
+_fallback_warned = False
+
+
+def warn_if_production_without_upstash() -> None:
+    global _fallback_warned
+    if _fallback_warned or not _enabled() or _upstash_configured() or not _is_production_deploy():
+        return
+    print(
+        "[rate-limit] production deploy has no Upstash configured; "
+        "falling back to per-instance in-memory limiter",
+        flush=True,
+    )
+    _fallback_warned = True
+
+
 def _upstash_incr(key: str, window_seconds: float) -> int:
     """Fixed-window counter in Upstash Redis over its REST API.
 
@@ -88,17 +111,12 @@ def _client_ip(request: Request) -> str:
             return first_hop
     return request.client.host if request.client else "unknown"
 
-
-_fallback_warned = False
-
-
 def rate_limiter(max_requests: int, window_seconds: float, scope: str):
     """Build a dependency that enforces a per-client-IP limit for one scope."""
 
     limiter = RateLimiter(max_requests, window_seconds)
 
     def dependency(request: Request) -> None:
-        global _fallback_warned
         if not _enabled():
             return
         key = f"{scope}:{_client_ip(request)}"
@@ -111,9 +129,7 @@ def rate_limiter(max_requests: int, window_seconds: float, scope: str):
             # On serverless the in-memory store is per-instance and resets on
             # cold start, so limits are effectively void — say so once rather
             # than degrade silently when the Upstash env vars go missing.
-            if not _fallback_warned and os.getenv("DATABASE_URL", "").startswith("postgres"):
-                print("[rate-limit] Upstash not configured; falling back to per-instance in-memory limiter", flush=True)
-                _fallback_warned = True
+            warn_if_production_without_upstash()
             allowed = limiter.allow(key)
         if not allowed:
             raise HTTPException(

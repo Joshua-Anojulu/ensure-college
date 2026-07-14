@@ -128,3 +128,21 @@ def test_client_ip_falls_back_to_peer_without_header():
             host = "9.9.9.9"
 
     assert rl._client_ip(Req()) == "9.9.9.9"
+
+
+def test_warns_once_when_production_has_no_upstash(monkeypatch, capsys):
+    import app.rate_limit as rl
+
+    monkeypatch.setenv("RATE_LIMIT_ENABLED", "true")
+    monkeypatch.setenv("VERCEL_ENV", "production")
+    monkeypatch.delenv("UPSTASH_REDIS_REST_URL", raising=False)
+    monkeypatch.delenv("UPSTASH_REDIS_REST_TOKEN", raising=False)
+    monkeypatch.setattr(rl, "_fallback_warned", False)
+
+    rl.warn_if_production_without_upstash()
+    first = capsys.readouterr()
+    rl.warn_if_production_without_upstash()
+    second = capsys.readouterr()
+
+    assert "production deploy has no Upstash configured" in first.out
+    assert second.out == ""

@@ -1,8 +1,10 @@
 import functools
 import hmac
+import html
 import os
 from contextlib import asynccontextmanager
 from pathlib import Path
+from urllib.parse import parse_qs, urlsplit
 
 from dotenv import load_dotenv
 from fastapi import Depends, FastAPI, File, Form, Header, HTTPException, Request, UploadFile
@@ -44,7 +46,7 @@ from app.models.resume import ResumeExtractionResponse
 from app.models.scholarship import Scholarship
 from app.models.student import PreviewMatchRequest, StudentProfile
 from app.alerts import send_new_match_alerts
-from app.rate_limit import rate_limiter
+from app.rate_limit import rate_limiter, warn_if_production_without_upstash
 from app.reminders import send_reminder_digests
 from app.resume.extractor import extract_profile_from_resume
 from app.vocabulary import VocabularyOption, get_vocabulary
@@ -90,6 +92,10 @@ _SECURITY_HEADERS = {
 def is_production_deploy() -> bool:
     """True when running on Render or against a Postgres DATABASE_URL."""
     return bool(os.getenv("RENDER")) or os.getenv("DATABASE_URL", "").startswith("postgres")
+
+
+def _is_production_runtime() -> bool:
+    return is_production_deploy() or os.getenv("VERCEL_ENV", "").lower() == "production"
 
 
 def _resolve_session_secret() -> str:
@@ -161,8 +167,76 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
         return response
 
 
+_UNSAFE_METHODS = {"POST", "PUT", "PATCH", "DELETE"}
+_SESSION_COOKIE_NAME = "session"
+_PRODUCTION_CSRF_ORIGINS = {"https://ensurecollege.com"}
+
+
+def _origin_from_url(value: str | None) -> str | None:
+    if not value:
+        return None
+    try:
+        parsed = urlsplit(value)
+        port = parsed.port
+    except ValueError:
+        return None
+    if not parsed.scheme or not parsed.hostname:
+        return None
+    scheme = parsed.scheme.lower()
+    host = parsed.hostname.lower()
+    netloc = host
+    if port is not None and not (
+        (scheme == "http" and port == 80)
+        or (scheme == "https" and port == 443)
+    ):
+        netloc = f"{host}:{port}"
+    return f"{scheme}://{netloc}"
+
+
+def _request_origin(request: StarletteRequest) -> str | None:
+    host = request.headers.get("host") or request.url.netloc
+    return _origin_from_url(f"{request.url.scheme}://{host}")
+
+
+def _allowed_csrf_origins(request: StarletteRequest) -> set[str]:
+    origins = set(_PRODUCTION_CSRF_ORIGINS)
+    request_origin = _request_origin(request)
+    configured_origin = _origin_from_url(os.getenv("PUBLIC_APP_URL", "").strip())
+    if request_origin:
+        origins.add(request_origin)
+    if configured_origin:
+        origins.add(configured_origin)
+    return origins
+
+
+def _csrf_origin_allowed(request: StarletteRequest) -> bool:
+    origin = request.headers.get("origin")
+    if origin:
+        return _origin_from_url(origin) in _allowed_csrf_origins(request)
+
+    referer = request.headers.get("referer")
+    if referer:
+        return _origin_from_url(referer) in _allowed_csrf_origins(request)
+
+    # Non-browser clients and TestClient usually omit both headers. The browser
+    # CSRF path this guards sends at least Origin on unsafe cross-site requests.
+    return True
+
+
+class CsrfOriginMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: StarletteRequest, call_next):
+        if (
+            request.method.upper() in _UNSAFE_METHODS
+            and _SESSION_COOKIE_NAME in request.cookies
+            and not _csrf_origin_allowed(request)
+        ):
+            return PlainTextResponse("Forbidden", status_code=403)
+        return await call_next(request)
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    warn_if_production_without_upstash()
     if os.getenv("RUN_MIGRATIONS_ON_STARTUP", "true").lower() not in {"0", "false", "no"}:
         init_db()
     app.state.scholarships = load_scholarships()
@@ -196,6 +270,7 @@ async def _redirect_old_domain(request: StarletteRequest, call_next):
 
 
 app.add_middleware(SecurityHeadersMiddleware)
+app.add_middleware(CsrfOriginMiddleware)
 
 app.add_middleware(
     SessionMiddleware,
@@ -204,13 +279,14 @@ app.add_middleware(
     https_only=SESSION_COOKIE_SECURE,
 )
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origin_regex=r"http://(localhost|127\.0\.0\.1)(:\d+)?",
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+if not _is_production_runtime():
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origin_regex=r"http://(localhost|127\.0\.0\.1)(:\d+)?",
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
 
 app.include_router(auth_router)
 app.include_router(account_router)
@@ -539,17 +615,28 @@ async def resume_extract(
         ) from None
 
 
-@app.get("/reminders/unsubscribe", response_class=HTMLResponse)
-def reminders_unsubscribe(token: str, db: Session = Depends(get_db)) -> HTMLResponse:
-    """One-click unsubscribe from deadline reminder emails (no login needed)."""
-    user = None
-    if token:
-        user = db.query(User).filter(User.reminder_unsubscribe_token == token).first()
-    if user is not None and user.reminders_enabled:
-        user.reminders_enabled = False
-        db.commit()
-    # Always show the same confirmation, so the token is not a membership oracle.
-    page = (
+def _unsubscribe_confirmation_page(token: str) -> str:
+    escaped_token = html.escape(token, quote=True)
+    return (
+        "<!DOCTYPE html><html lang='en'><head><meta charset='utf-8'>"
+        "<meta name='viewport' content='width=device-width, initial-scale=1'>"
+        "<title>Turn off reminders</title>"
+        "<style>body{font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:#eae8e1;"
+        "color:#17181c;display:grid;place-items:center;min-height:100vh;margin:0}"
+        ".c{max-width:30rem;padding:2rem;background:#fbfaf7;border:1px solid #ddd9cd;border-radius:14px;text-align:center}"
+        "button{border:0;border-radius:10px;background:#1b2430;color:#fbfaf7;padding:.8rem 1.1rem;font-weight:700;cursor:pointer}"
+        "a{color:#1b2430}</style></head><body><div class='c'>"
+        "<h1>Turn off reminders?</h1>"
+        "<p>Confirm that you want to stop deadline reminder and new-match emails.</p>"
+        "<form method='post' action='/reminders/unsubscribe'>"
+        f"<input type='hidden' name='token' value='{escaped_token}'>"
+        "<button type='submit'>Turn off reminders</button>"
+        "</form><p><a href='/'>Back to EnsureCollege</a></p></div></body></html>"
+    )
+
+
+def _unsubscribe_complete_page() -> str:
+    return (
         "<!DOCTYPE html><html lang='en'><head><meta charset='utf-8'>"
         "<meta name='viewport' content='width=device-width, initial-scale=1'>"
         "<title>Reminders off</title>"
@@ -558,11 +645,48 @@ def reminders_unsubscribe(token: str, db: Session = Depends(get_db)) -> HTMLResp
         ".c{max-width:30rem;padding:2rem;background:#fbfaf7;border:1px solid #ddd9cd;border-radius:14px;text-align:center}"
         "a{color:#1b2430}</style></head><body><div class='c'>"
         "<h1>Reminders turned off</h1>"
-        "<p>You won't get deadline reminder emails anymore. You can turn them back on "
+        "<p>You won't get deadline reminder or new-match emails anymore. You can turn them back on "
         "anytime under Account settings.</p>"
         "<p><a href='/'>Back to EnsureCollege</a></p></div></body></html>"
     )
-    return HTMLResponse(page)
+
+
+def _disable_reminders_for_token(token: str, db: Session) -> None:
+    user = None
+    if token:
+        user = db.query(User).filter(User.reminder_unsubscribe_token == token).first()
+    if user is not None and user.reminders_enabled:
+        user.reminders_enabled = False
+        db.commit()
+
+
+async def _unsubscribe_token_from_request(request: Request) -> str:
+    token = (request.query_params.get("token") or "").strip()
+    if token:
+        return token
+    content_type = request.headers.get("content-type", "").split(";", 1)[0].lower()
+    if content_type != "application/x-www-form-urlencoded":
+        return ""
+    body = (await request.body()).decode("utf-8", errors="replace")
+    return (parse_qs(body, keep_blank_values=True).get("token") or [""])[0].strip()
+
+
+@app.get("/reminders/unsubscribe", response_class=HTMLResponse)
+def reminders_unsubscribe(token: str = "") -> HTMLResponse:
+    """Render a confirmation page; scanners can follow GET without mutating."""
+    return HTMLResponse(_unsubscribe_confirmation_page(token))
+
+
+@app.post("/reminders/unsubscribe", response_class=HTMLResponse)
+async def reminders_unsubscribe_post(
+    request: Request,
+    db: Session = Depends(get_db),
+) -> HTMLResponse:
+    """Unsubscribe by RFC 8058 one-click POST or by the confirmation form."""
+    token = await _unsubscribe_token_from_request(request)
+    _disable_reminders_for_token(token, db)
+    # Always show the same completion page, so the token is not a membership oracle.
+    return HTMLResponse(_unsubscribe_complete_page())
 
 
 @app.get("/reminders/run")

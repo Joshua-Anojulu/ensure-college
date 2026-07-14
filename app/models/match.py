@@ -1,9 +1,13 @@
 from datetime import date
 from typing import Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
-from app.models.scholarship import ApplicationRequirement, SpecialRequirement
+from app.models.scholarship import (
+    ApplicationRequirement,
+    SpecialRequirement,
+    validate_http_url_string,
+)
 
 
 class ScoreBreakdown(BaseModel):
@@ -57,6 +61,11 @@ class MatchResult(BaseModel):
     )
     special_requirements: list[SpecialRequirement] = Field(default_factory=list)
     application_requirements: list[ApplicationRequirement] = Field(default_factory=list)
+
+    @field_validator("verification_source_url")
+    @classmethod
+    def _verification_source_url_is_http(cls, value: str | None) -> str | None:
+        return validate_http_url_string(value)
 
 
 class ScholarshipNearMiss(BaseModel):

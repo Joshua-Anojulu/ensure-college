@@ -1,6 +1,9 @@
 """Tests for production configuration safety (session secret resolution)."""
 
+import importlib
+
 import pytest
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.main import DEV_SESSION_SECRET, _resolve_session_secret, is_production_deploy
 
@@ -56,3 +59,19 @@ def test_is_production_deploy_false_locally(monkeypatch):
     monkeypatch.delenv("RENDER", raising=False)
     monkeypatch.setenv("DATABASE_URL", "sqlite:///local.db")
     assert is_production_deploy() is False
+
+
+def test_cors_middleware_absent_under_vercel_production(monkeypatch):
+    import app.main as main
+
+    monkeypatch.setenv("VERCEL_ENV", "production")
+    monkeypatch.setenv("SESSION_SECRET", "a-strong-unique-secret")
+    production_main = importlib.reload(main)
+    try:
+        assert all(
+            middleware.cls is not CORSMiddleware
+            for middleware in production_main.app.user_middleware
+        )
+    finally:
+        monkeypatch.delenv("VERCEL_ENV", raising=False)
+        importlib.reload(main)

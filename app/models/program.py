@@ -12,13 +12,14 @@ from __future__ import annotations
 from datetime import date
 from typing import Literal, Union
 
-from pydantic import BaseModel, Field, HttpUrl
+from pydantic import BaseModel, Field, HttpUrl, field_validator
 
 from app.models.scholarship import (
     ApplicationRequirement,
     Eligibility,
     SpecialRequirement,
     VerificationMetadata,
+    validate_http_url_string,
 )
 
 CostCategory = Literal["free", "stipend", "paid", "VERIFY"]
@@ -105,6 +106,11 @@ class ProgramMatchResult(BaseModel):
         description="True when niche eligibility requirements need manual confirmation.",
     )
     special_requirements: list[SpecialRequirement] = Field(default_factory=list)
+
+    @field_validator("verification_source_url")
+    @classmethod
+    def _verification_source_url_is_http(cls, value: str | None) -> str | None:
+        return validate_http_url_string(value)
 
 
 class ProgramNearMiss(BaseModel):

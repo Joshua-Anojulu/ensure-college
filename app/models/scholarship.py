@@ -1,7 +1,21 @@
 from datetime import date
 from typing import Literal, Union
+from urllib.parse import urlsplit
 
 from pydantic import BaseModel, Field, HttpUrl, model_validator
+
+
+def validate_http_url_string(value: str | None) -> str | None:
+    if value is None:
+        return None
+    text = str(value)
+    try:
+        parsed = urlsplit(text)
+    except ValueError as exc:
+        raise ValueError("URL must be a valid http(s) URL") from exc
+    if parsed.scheme.lower() not in {"http", "https"} or not parsed.netloc:
+        raise ValueError("URL must use http or https")
+    return text
 
 
 class EligibleSchool(BaseModel):

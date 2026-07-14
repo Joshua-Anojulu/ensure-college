@@ -165,6 +165,23 @@ class TestProfileAndMatches:
         assert page.locator("#results-container .match-card").count() > 0
         assert page.locator("#results-summary").inner_text().strip() != ""
 
+    def test_non_http_verification_source_renders_as_plain_text(self, page):
+        rendered = page.evaluate(
+            """() => {
+                const node = buildVerificationSource({
+                    verification_source_url: "javascript:alert(1)",
+                    last_verified_at: null,
+                });
+                document.body.appendChild(node);
+                return {
+                    links: node.querySelectorAll("a").length,
+                    text: node.textContent,
+                };
+            }"""
+        )
+        assert rendered["links"] == 0
+        assert "javascript:alert(1)" in rendered["text"]
+
     def test_form_validation_blocks_incomplete_step(self, page):
         page.locator("#profile-form").scroll_into_view_if_needed()
         page.click("#step-next-btn")  # nothing filled
