@@ -267,7 +267,11 @@
           "label": "Craft essay responses",
           "details": "Essays include your Horatio Alger story and American Dream experience per official how-to-apply steps.",
           "required": true,
-          "source_url": "https://horatioalger.org/scholarships-and-services/undergraduate-scholarships/"
+          "source_url": "https://horatioalger.org/scholarships-and-services/undergraduate-scholarships/",
+          "essay_prompts": {
+            "status": "gated",
+            "items": []
+          }
         },
         {
           "id": "counselor-certification-form",
@@ -290,7 +294,8 @@
           "required": true,
           "source_url": "https://horatioalger.org/scholarships-and-services/undergraduate-scholarships/"
         }
-      ]
+      ],
+      "last_verified_at": "2026-07-14"
     },
     {
       "id": "davidson-fellows",
@@ -1547,7 +1552,16 @@
           "label": "Write original essay on contest topic",
           "details": "Describe and analyze an act of political courage by a U.S. elected official who served during or after 1917. Minimum 700, maximum 1,000 words; bibliography excluded from count.",
           "required": true,
-          "source_url": "https://www.jfklibrary.org/learn/education/profile-in-courage-essay-contest/getting-started"
+          "source_url": "https://www.jfklibrary.org/learn/education/profile-in-courage-essay-contest/contest-topic-and-information",
+          "essay_prompts": {
+            "status": "public",
+            "items": [
+              {
+                "prompt": "Describe and analyze an act of political courage by a U.S. elected official who served during or after 1917, the year John F. Kennedy was born. Include an analysis of the obstacles, risks, and consequences associated with the act. The essay may concern an issue at the local, state, national, or international level.",
+                "length": "700-1,000 words"
+              }
+            ]
+          }
         },
         {
           "id": "bibliography-and-sources",
@@ -1570,7 +1584,8 @@
           "required": true,
           "source_url": "https://www.jfklibrary.org/learn/education/profile-in-courage-essay-contest/eligibility-and-requirements"
         }
-      ]
+      ],
+      "last_verified_at": "2026-07-14"
     },
     {
       "id": "shpe-scholarship",
@@ -4022,9 +4037,31 @@
           "label": "Short answers and essay",
           "details": "Three short answers (250/250/150 word limits) plus one 550-word essay.",
           "required": true,
-          "source_url": "https://knight-hennessy.stanford.edu/admission/preparing-your-applications/short-answers-essay"
+          "source_url": "https://knight-hennessy.stanford.edu/admission/preparing-your-applications/short-answers-essay",
+          "essay_prompts": {
+            "status": "public",
+            "items": [
+              {
+                "prompt": "Describe your short-term and long-term academic and professional intentions.",
+                "length": "250 word limit"
+              },
+              {
+                "prompt": "Please tell us when you: a) engaged with someone with a different perspective, b) acted with courage, and c) fell short of expectations.",
+                "length": "250 word limit combined"
+              },
+              {
+                "prompt": "Please tell us eight improbable facts (things that are unlikely but true) about you.",
+                "length": "150 word limit combined"
+              },
+              {
+                "prompt": "Connect the dots. How have the influences in your life shaped you?",
+                "length": "550 word limit"
+              }
+            ]
+          }
         }
-      ]
+      ],
+      "last_verified_at": "2026-07-14"
     },
     {
       "id": "forty-acres-scholars-program",
