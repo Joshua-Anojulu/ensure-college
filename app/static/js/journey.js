@@ -50,6 +50,9 @@
   const PEACH = 0xf2c49a;
   const MOSS = 0x76a06d;
   const AUTUMN = 0xcf8a3d;
+  // Tree base tier: deep enough to give the canopy depth, close enough to the
+  // tier above that the step does not read as a hard band.
+  const TREE_BASE = 0x3d7a58;
 
   const renderer = new T.WebGLRenderer({ canvas, antialias: true });
   renderer.setClearColor(CANVAS, 1);
@@ -197,8 +200,11 @@
     top.receiveShadow = true;
     g.add(top);
 
+    // The soil keel must stay UNDER the grass, never poking out past the
+    // coastline. The grass plateau is noised outward up to ~1.13x, so the keel
+    // is cut well inside that (0.72) and its taper starts below the rim.
     const base = new T.Mesh(
-      new T.ConeGeometry(radius * 0.86, radius * 0.62, 12),
+      new T.ConeGeometry(radius * 0.72, radius * 0.62, 14),
       mat(ISLAND_DARK)
     );
     base.rotation.x = Math.PI;
@@ -246,13 +252,16 @@
     const lean = (rnd() - 0.5) * 0.12;
     const grp = new T.Group();
     cyl(grp, 0.12 * k, 0.17 * k, 0.8 * k, AMBER_DEEP, 0, 0.4 * k, 0, 6);
+    // Tiers run light at the base to light at the tip. The old bottom tier was
+    // near-black forest against a mid sage above it, and the jump read as a
+    // hard band; MOSS keeps the foliage reading as one tree.
     let tiers;
     if (kind === "autumn") {
       tiers = [AUTUMN, jitter(0.5, 1) > 0.5 ? TERRACOTTA : AUTUMN, GOLD];
     } else if (kind === "moss") {
       tiers = [MOSS, SAGE, SAGE_LIGHT];
     } else {
-      tiers = [FOREST, jitter(0.5, 1) > 0.5 ? SAGE : MOSS, SAGE_LIGHT];
+      tiers = [TREE_BASE, SAGE, SAGE_LIGHT];
     }
     cone(grp, 0.8 * k, 1.4 * k, tiers[0], 0, 1.35 * k, 0, 7);
     cone(grp, 0.62 * k, 1.15 * k, tiers[1], 0, 2.05 * k, 0, 7);
@@ -704,12 +713,27 @@
     box(arch, 8.8, 1.2, 1.5, BONE, 0, 7.1, 0);
     box(arch, 9.2, 0.5, 1.7, FOREST, 0, 7.95, 0);
     box(arch, 1.7, 0.55, 0.2, AMBER, 0, 6.1, 0.78);
-    // ivy with autumn touches
-    const IVY = [SAGE, FOREST, AUTUMN, MOSS];
-    for (let i = 0; i < 6; i += 1) {
-      blob(arch, jitter(0.4, 0.2), IVY[i % 4], jitter(-3.1, 0.9), jitter(2.4, 2.6), 0.65, 1.1, 0.9, 0.5);
-      blob(arch, jitter(0.4, 0.2), IVY[(i + 2) % 4], jitter(3.1, 0.9), jitter(3.2, 2.8), 0.65, 1.1, 0.9, 0.5);
-    }
+    // Climbing ivy: a vine hugging each pillar face with leaf clusters along
+    // it, so it reads as ivy rather than as blobs stuck to the stone.
+    const ivyVine = (px) => {
+      const vine = new T.Group();
+      for (let i = 0; i < 7; i += 1) {
+        const t = i / 6;
+        const y = 0.5 + t * 5.2;
+        const sway = Math.sin(t * 4.2) * 0.28;
+        // stem segment
+        box(vine, 0.05, 0.85, 0.05, TREE_BASE, sway, y, 0.66);
+        // leaf cluster (two tones of green, no autumn debris)
+        blob(vine, 0.2 + rnd() * 0.12, i % 2 ? SAGE : MOSS, sway + (rnd() - 0.5) * 0.4, y + 0.2, 0.7, 1.2, 0.75, 0.45);
+        if (i % 2 === 0) {
+          blob(vine, 0.16 + rnd() * 0.08, SAGE_LIGHT, sway - 0.3, y - 0.15, 0.7, 1.1, 0.7, 0.45);
+        }
+      }
+      vine.position.x = px;
+      arch.add(vine);
+    };
+    ivyVine(-3.1);
+    ivyVine(3.1);
     arch.position.z = -3;
     g.add(arch);
     shadowDisc(g, 5.0, 0, -3, 0.08);
@@ -838,7 +862,18 @@
     const band = (el.dataset.band || "0,1").split(",").map(Number);
     return { el, start: band[0], end: band[1] };
   });
-  const dots = Array.from(document.querySelectorAll(".journey-rail span"));
+  const dots = Array.from(document.querySelectorAll(".journey-rail button"));
+
+  // Rail stops fly the camera to an island: scroll to the point on the track
+  // whose flight progress matches that stop, and let the existing damping
+  // carry the camera there as a real move rather than a cut.
+  for (const dot of dots) {
+    dot.addEventListener("click", () => {
+      const stop = parseFloat(dot.dataset.stop || "0");
+      const max = track.offsetHeight - window.innerHeight;
+      window.scrollTo({ top: track.offsetTop + max * stop, behavior: "smooth" });
+    });
+  }
 
   let target = 0;
   let t = 0;

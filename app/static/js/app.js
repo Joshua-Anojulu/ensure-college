@@ -2,8 +2,9 @@
  * EnsureCollege frontend.
  *
  * Logged-out users get the original stateless experience. Logged-in users can
- * save their profile (it prefills on return) and bookmark scholarships/programs. Session
- * state lives in an httponly cookie set by the server, not in browser storage.
+ * save their profile (it prefills on return) and turn matches into a tracked
+ * application plan. Session state lives in an httponly cookie set by the
+ * server, not in browser storage.
  */
 
 const AI_ENABLED =
@@ -1522,8 +1523,8 @@ function openAuthModal(mode, message) {
   authModalIntro.textContent =
     message ||
     (isLogin
-      ? "Log in to save your profile and bookmark scholarships/programs."
-      : "Sign up to save your profile and bookmark scholarships/programs.");
+      ? "Log in to save your profile and turn opportunities into an application plan."
+      : "Sign up to save your profile and turn opportunities into an application plan.");
   authSubmit.textContent = isLogin ? "Log in" : "Create account";
   authSwitchText.textContent = isLogin ? "New here?" : "Already have an account?";
   authSwitchBtn.textContent = isLogin ? "Create an account" : "Log in";
@@ -5068,6 +5069,17 @@ function buildProgramStatRow(program) {
   return row;
 }
 
+// A free competition just says "Free" on the card. The dataset keeps the full
+// sourcing prose ("Free to enter; no fee, confirmed on the official rules
+// page...") because that is our verification evidence, and the opportunity page
+// still shows it in full. A card is not the place to read a paragraph.
+function competitionCostValue(competition) {
+  if (competition.cost_category === "free") {
+    return "Free";
+  }
+  return programStatValue(competition.cost);
+}
+
 function buildCompetitionStatRow(competition) {
   const row = document.createElement("div");
   row.className = "card-stats";
@@ -5079,7 +5091,7 @@ function buildCompetitionStatRow(competition) {
   }
   cost.innerHTML =
     '<span class="stat-label">Cost</span>' +
-    `<span class="stat-value">${escapeHtml(programStatValue(competition.cost))}</span>`;
+    `<span class="stat-value">${escapeHtml(competitionCostValue(competition))}</span>`;
   row.appendChild(cost);
 
   const recognition = document.createElement("div");

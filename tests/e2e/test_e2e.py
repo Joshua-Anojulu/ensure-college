@@ -96,6 +96,40 @@ class TestPublicPages:
         )
         assert ok, "landing teaser never initialized"
 
+    @pytest.mark.parametrize("path", ["/privacy", "/terms"])
+    def test_legal_pages_link_home_not_app(self, page, live_server, path):
+        page.goto(f"{live_server}{path}", wait_until="domcontentloaded")
+        back = page.locator("header .btn-ghost")
+        assert back.inner_text().strip() == "Back to homepage"
+        back.click()
+        page.wait_for_url(f"{live_server}/")
+
+    def test_brand_returns_to_homepage_from_every_surface(self, page, live_server):
+        for path in ["/", "/privacy", "/terms", "/journey", "/browse"]:
+            page.goto(f"{live_server}{path}", wait_until="domcontentloaded")
+            brand = page.locator("header .brand")
+            assert brand.evaluate("el => el.tagName.toLowerCase()") == "a", path
+            assert brand.get_attribute("href") == "/", path
+
+    def test_google_button_uses_the_real_google_mark(self, page):
+        page.click("#open-login")
+        page.wait_for_selector("#auth-modal[open]")
+        fills = page.eval_on_selector_all(
+            "#google-login-link .google-mark svg path",
+            "els => els.map(e => e.getAttribute('fill').toUpperCase())",
+        )
+        assert set(fills) == {"#4285F4", "#34A853", "#FBBC05", "#EA4335"}
+
+    def test_journey_rail_stops_are_clickable(self, page, live_server):
+        page.goto(f"{live_server}/journey", wait_until="load")
+        page.wait_for_timeout(1500)
+        stops = page.locator(".journey-rail button")
+        assert stops.count() == 4
+        before = page.evaluate("() => window.scrollY")
+        stops.nth(3).click()
+        page.wait_for_timeout(1800)
+        assert page.evaluate("() => window.scrollY") > before + 500
+
     def test_hero_cta_scrolls_to_profile_form(self, page):
         page.click(".hero-cta")
         page.wait_for_timeout(2000)
@@ -136,6 +170,20 @@ class TestProfileAndMatches:
         page.click("#step-next-btn")  # nothing filled
         page.wait_for_timeout(400)
         assert page.locator("#submit-btn").is_hidden(), "advanced past an empty step"
+
+    def test_free_competitions_say_free_not_a_paragraph(self, page):
+        fill_profile_and_submit(page)
+        page.click("#tab-competitions")
+        page.wait_for_selector("#competitions-section:not([hidden])", timeout=15000)
+        page.wait_for_timeout(800)
+        costs = page.eval_on_selector_all(
+            "#competitions-container .stat-award .stat-value",
+            "els => els.map(e => e.textContent.trim())",
+        )
+        frees = [c for c in costs if c.lower().startswith("free")]
+        assert frees, "expected at least one free competition on screen"
+        for c in frees:
+            assert c == "Free", f"free competition still shows an essay: {c[:60]}..."
 
     def test_all_three_lanes_populate(self, page):
         fill_profile_and_submit(page)

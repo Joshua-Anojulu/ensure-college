@@ -1238,7 +1238,10 @@ html.motion-ready .fit-ring-value { stroke-dashoffset: var(--circ); animation: r
   transition: background var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
 }
 .btn-google:hover, .btn-google:focus-visible { border-color: var(--brand); background: var(--brand-tint); }
-.google-mark { display: inline-grid; width: 1.35rem; height: 1.35rem; border-radius: 50%; place-items: center; color: #fff; background: #4285f4; font-weight: 800; }
+/* Google's own mark, per their branding rules: the four-color G on a plain
+   surface, never recolored or replaced with a letter. */
+.google-mark { display: inline-grid; width: 1.15rem; height: 1.15rem; place-items: center; }
+.google-mark svg { display: block; width: 100%; height: 100%; }
 .auth-divider { display: flex; margin: 0 0 0.85rem; align-items: center; gap: 0.7rem; color: var(--muted); font-size: 0.74rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
 .auth-divider::before, .auth-divider::after { content: ""; height: 1px; flex: 1; background: var(--line); }
 .settings-note { margin-bottom: 0.95rem; }
