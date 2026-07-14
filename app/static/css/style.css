@@ -2643,6 +2643,76 @@ body.has-scrolled .site-header {
   text-transform: uppercase;
 }
 
+/* Journey teaser: a live miniature of the flight, docked on the landing.
+   The canvas paints the island against a dark forest vignette; copy rides
+   above it. If motion or WebGL is unavailable the panel stands on copy. */
+.journey-teaser {
+  position: relative;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  min-height: clamp(23rem, 52vh, 31rem);
+  margin: clamp(1.6rem, 4vw, 3rem) 0;
+  border: 1px solid var(--brand-strong);
+  border-radius: var(--radius-xl);
+  background: radial-gradient(120% 130% at 72% 24%, #2c5546 0%, var(--brand) 52%, var(--brand-strong) 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 30px 70px -28px rgba(18, 42, 33, 0.5),
+    var(--shadow-lg);
+}
+
+#journey-teaser-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.journey-teaser-copy {
+  position: relative;
+  z-index: 2;
+  max-width: 26rem;
+  padding: clamp(1.6rem, 4vw, 3.2rem);
+}
+
+.journey-teaser-copy h2 {
+  margin: 0 0 0.7rem;
+  color: var(--brand-ink);
+  font-size: clamp(2rem, 3.8vw, 3.1rem);
+  font-weight: 800;
+  line-height: 0.98;
+  letter-spacing: -0.015em;
+}
+
+.journey-teaser-copy p {
+  margin: 0 0 1.3rem;
+  color: color-mix(in srgb, var(--brand-ink) 82%, transparent);
+  font-size: clamp(0.98rem, 1.3vw, 1.1rem);
+  line-height: 1.6;
+  max-width: 40ch;
+}
+
+.journey-teaser-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.35rem;
+  border-radius: var(--radius-sm);
+  color: var(--accent-ink);
+  background: var(--accent);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.journey-teaser-cta:hover {
+  background: #b87f24;
+  color: var(--accent-ink);
+}
+
+.journey-teaser.teaser-static #journey-teaser-canvas { display: none; }
+
 /* Craft details */
 ::selection {
   background: var(--brand);
@@ -2677,6 +2747,9 @@ body.has-scrolled .site-header {
     margin-block: 0;
     transform: none;
   }
+
+  .journey-teaser { min-height: 21rem; }
+  #journey-teaser-canvas { opacity: 0.45; }
 
   .profile-form::before {
     transform: rotate(-0.5deg) translate(-6px, 8px);
