@@ -232,6 +232,23 @@ def audit_dataset(scholarships: list[Scholarship], today: date | None = None) ->
         if s.estimated_deadline is not None and _parse_iso_deadline(s.estimated_deadline) is None:
             errors.append(f"{s.id}: invalid estimated_deadline {s.estimated_deadline!r} (must be an ISO date)")
 
+        # A projection that has already passed is stale: it means "expect this
+        # date next cycle", so once the date goes by it must be rolled forward
+        # or replaced with the sponsor's published date. Left alone it shows a
+        # date in the past on a student-facing card.
+        est = _parse_iso_deadline(s.estimated_deadline or "")
+        if est and est < today:
+            warnings.append(
+                f"{s.id}: estimated_deadline {s.estimated_deadline} has passed "
+                "(roll it to the next cycle or replace it with the published date)"
+            )
+        real = _parse_iso_deadline(s.deadline)
+        if real and real < today:
+            warnings.append(
+                f"{s.id}: confirmed deadline {s.deadline} has passed "
+                "(the matcher gates it out; re-check the sponsor for the next cycle)"
+            )
+
         elig = s.eligibility
         if isinstance(elig.min_gpa, (int, float)) and not 0.0 <= float(elig.min_gpa) <= 4.0:
             errors.append(f"{s.id}: min_gpa out of range ({elig.min_gpa})")
@@ -535,6 +552,31 @@ def audit_competitions(competitions: list[Competition], today: date | None = Non
     return {"errors": errors, "warnings": warnings, "stats": stats}
 
 
+def cross_lane_duplicate_errors(scholarships, programs, competitions) -> list[str]:
+    """The same opportunity must live in exactly one lane.
+
+    Each lane checked its own ids for duplicates, so nothing caught an entry
+    that existed in TWO lanes: the student saw it twice, in two places, with
+    two sets of facts that drifted apart. (This is how the JFK Profile in
+    Courage contest ended up a "scholarship" AND a "competition" with two
+    different estimated deadlines.)
+    """
+    lanes = {
+        "scholarships": {s.id for s in scholarships},
+        "programs": {p.id for p in programs},
+        "competitions": {c.id for c in competitions},
+    }
+    errors: list[str] = []
+    names = sorted(lanes)
+    for i, a in enumerate(names):
+        for b in names[i + 1:]:
+            for shared in sorted(lanes[a] & lanes[b]):
+                errors.append(
+                    f"{shared}: same id in two lanes ({a} and {b}); an opportunity belongs to one lane"
+                )
+    return errors
+
+
 def main() -> int:
     scholarships = load_scholarships()
     programs = load_summer_programs()
@@ -542,6 +584,9 @@ def main() -> int:
     report = audit_dataset(scholarships)
     program_report = audit_programs(programs)
     competition_report = audit_competitions(competitions)
+    report["errors"].extend(
+        cross_lane_duplicate_errors(scholarships, programs, competitions)
+    )
     stats = report["stats"]
     program_stats = program_report["stats"]
 

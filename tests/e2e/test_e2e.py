@@ -171,6 +171,25 @@ class TestProfileAndMatches:
         page.wait_for_timeout(400)
         assert page.locator("#submit-btn").is_hidden(), "advanced past an empty step"
 
+    def test_soonest_sort_puts_confirmed_deadlines_before_estimates(self, page):
+        fill_profile_and_submit(page)
+        page.select_option("#filter-sort", "deadline")
+        page.wait_for_timeout(900)
+        # The card's deadline stat prefixes an estimate with "~".
+        values = page.eval_on_selector_all(
+            "#results-container .stat-deadline .stat-value",
+            "els => els.map(e => e.textContent.trim())",
+        )
+        assert values, "no deadlines rendered"
+        seen_estimate = False
+        for v in values:
+            if v.startswith("~"):
+                seen_estimate = True
+            elif seen_estimate and v.lower() not in ("rolling", "see sponsor site"):
+                raise AssertionError(
+                    f"a confirmed deadline ({v}) sorted BELOW an estimate; order: {values[:8]}"
+                )
+
     def test_free_competitions_say_free_not_a_paragraph(self, page):
         fill_profile_and_submit(page)
         page.click("#tab-competitions")

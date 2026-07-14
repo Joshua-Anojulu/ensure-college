@@ -979,7 +979,7 @@ function sortPrograms(programs) {
       sorted.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: "base" }));
       break;
     case "deadline":
-      sorted.sort((a, b) => deadlineSortValue(a) - deadlineSortValue(b));
+      sorted.sort(compareByDeadline);
       break;
     default:
       // "fit": preserve the server's score/name ordering.
@@ -1057,7 +1057,7 @@ function sortCompetitions(competitions) {
       sorted.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: "base" }));
       break;
     case "deadline":
-      sorted.sort((a, b) => deadlineSortValue(a) - deadlineSortValue(b));
+      sorted.sort(compareByDeadline);
       break;
     default:
       // "fit": preserve the server's score/name ordering.
@@ -1126,7 +1126,7 @@ function sortResults(results) {
       sorted.sort((a, b) => awardSortValue(b.award_amount) - awardSortValue(a.award_amount));
       break;
     case "deadline":
-      sorted.sort((a, b) => deadlineSortValue(a) - deadlineSortValue(b));
+      sorted.sort(compareByDeadline);
       break;
     default:
       // "fit": preserve the server's score/deadline/name ordering.
@@ -1135,18 +1135,54 @@ function sortResults(results) {
   return sorted;
 }
 
-// Soonest real deadline first; an estimated date is used as a fallback when there
-// is no confirmed deadline; rolling and unknown deadlines sort to the end.
-function deadlineSortValue(result) {
-  let value = result.deadline;
-  if (!value || value === "rolling" || String(value).startsWith("VERIFY")) {
-    value = result.estimated_deadline;
+// "Deadline (soonest)" ranks what a student can actually act on:
+//   tier 0 - a confirmed deadline, by date
+//   tier 1 - an estimate, by its NEXT occurrence
+//   tier 2 - rolling or unknown
+// Estimates are a projection of an annual cycle, so a Feb estimate that has
+// already passed means "expect roughly this date next year", not "closed
+// months ago". Sorting them on their literal past date used to pile every
+// unverified February entry at the top of the list, ahead of the deadlines a
+// student can actually meet. The rolled-forward date is used for ORDER only;
+// the card still displays the sponsor's estimate exactly as recorded.
+const DEADLINE_TIER_REAL = 0;
+const DEADLINE_TIER_ESTIMATE = 1;
+const DEADLINE_TIER_NONE = 2;
+
+function isUsableDate(value) {
+  return Boolean(value) && value !== "rolling" && !String(value).startsWith("VERIFY");
+}
+
+function nextOccurrence(date) {
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const rolled = new Date(date.getTime());
+  while (rolled < today) {
+    rolled.setFullYear(rolled.getFullYear() + 1);
   }
-  if (!value || value === "rolling" || String(value).startsWith("VERIFY")) {
-    return Infinity;
+  return rolled;
+}
+
+function deadlineSortKey(result) {
+  if (isUsableDate(result.deadline)) {
+    const real = parseRealDeadline(result.deadline);
+    if (real) {
+      return [DEADLINE_TIER_REAL, real.getTime()];
+    }
   }
-  const time = new Date(value).getTime();
-  return Number.isNaN(time) ? Infinity : time;
+  if (isUsableDate(result.estimated_deadline)) {
+    const est = parseRealDeadline(result.estimated_deadline);
+    if (est) {
+      return [DEADLINE_TIER_ESTIMATE, nextOccurrence(est).getTime()];
+    }
+  }
+  return [DEADLINE_TIER_NONE, Infinity];
+}
+
+function compareByDeadline(a, b) {
+  const ka = deadlineSortKey(a);
+  const kb = deadlineSortKey(b);
+  return ka[0] - kb[0] || ka[1] - kb[1];
 }
 
 // Best-effort numeric value for sorting only; descriptive/VERIFY amounts sort last.
@@ -2081,11 +2117,10 @@ function quickApplyCandidate(kind, item) {
   return { ...base, requiredCount, unverified: false };
 }
 
-// Three strict tiers, exactly as the spec calls for: every real deadline sorts
-// ahead of every estimated-only one, which sorts ahead of every item with
-// neither (unlike deadlineSortValue, which the lane lists use for a flat
-// chronological sort and would let an early *estimated* date outrank a later
-// *real* one).
+// Three strict tiers: every real deadline sorts ahead of every estimated-only
+// one, which sorts ahead of every item with neither. The lane lists now use the
+// same tiering (compareByDeadline), so both surfaces agree: a confirmed date a
+// student can meet always outranks a projection.
 const QUICK_APPLY_TIER_ESTIMATED = 1e13;
 
 function quickApplySortValue(candidate) {

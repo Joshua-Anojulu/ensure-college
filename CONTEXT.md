@@ -31,8 +31,8 @@ The literal string `VERIFY` in an unknown field. It means "we do not know," neve
 _Avoid_: Null, missing, unknown, TBD
 
 **Estimated deadline**:
-A previous-cycle date shown explicitly as an estimate because the sponsor has not published the current cycle. Never presented as a real deadline. A wrong deadline is worse than an honest placeholder.
-_Avoid_: Approximate deadline, projected date
+A projection of the *upcoming* cycle, inferred from the most recent published one, shown explicitly as an estimate ("~Feb 15, 2027 · Estimated; confirm on sponsor site"). Never presented as a real deadline, never gates a match, never fires a closing-soon badge, and always sorts behind every confirmed deadline. Once the projected date passes it is stale: roll it to the next cycle or replace it with the sponsor's published date. A wrong deadline is worse than an honest placeholder.
+_Avoid_: Approximate deadline, past-cycle date
 
 **Fact audit**:
 A fresh re-check of an entry against its sponsor page, stamped in `last_verified_at`. Audits older than 90 days enter the re-verification queue.

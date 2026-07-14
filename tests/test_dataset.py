@@ -9,12 +9,32 @@ from app.data.loader import DEFAULT_SPECIAL_REQUIREMENTS_PATH, load_scholarships
 from app.models.competition import Competition
 from app.models.program import SummerProgram
 from app.models.scholarship import Eligibility, Scholarship, SpecialRequirement
-from scripts.validate_dataset import audit_competitions, audit_dataset, audit_programs
+from scripts.validate_dataset import (
+    audit_competitions,
+    audit_dataset,
+    audit_programs,
+    cross_lane_duplicate_errors,
+)
 
 
 def test_dataset_loads_and_has_entries():
     scholarships = load_scholarships()
     assert len(scholarships) >= 100
+
+
+def test_no_opportunity_lives_in_two_lanes():
+    """An opportunity belongs to exactly one lane.
+
+    Each lane only ever checked its own ids, so a contest could sit in
+    scholarships AND competitions: the student saw it twice, and the two copies'
+    facts drifted apart.
+    """
+    from app.data.loader import load_competitions, load_summer_programs
+
+    errors = cross_lane_duplicate_errors(
+        load_scholarships(), load_summer_programs(), load_competitions()
+    )
+    assert errors == []
 
 
 def _scholarship(**overrides):
@@ -80,8 +100,14 @@ def test_dataset_has_no_structural_errors():
 
 def test_no_vocabulary_warnings():
     # The seed set should only use canonical field/grade/demographic/state tags.
+    #
+    # Staleness warnings ("...has passed") are excluded on purpose: they depend
+    # on today's date, so asserting on them here would turn CI red on an
+    # arbitrary future morning when a deadline rolls by. They are advisory, and
+    # `scripts/validate_dataset.py` still reports them to whoever runs the audit.
     report = audit_dataset(load_scholarships())
-    assert report["warnings"] == [], report["warnings"]
+    warnings = [w for w in report["warnings"] if "has passed" not in w]
+    assert warnings == [], warnings
 
 
 def test_audit_warns_when_hard_identity_requirement_is_not_special_checked():
