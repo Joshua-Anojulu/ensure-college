@@ -276,6 +276,15 @@ class TestCatalog:
             page.wait_for_timeout(400)
         assert not page.console_errors, page.console_errors
 
+    def test_journey_browse_all_opens_homepage_catalog(self, page, live_server):
+        page.goto(f"{live_server}/journey", wait_until="load")
+        page.click('.account-nav a[href="/#browse"]')
+        page.wait_for_selector("#catalog-section:not([hidden])", timeout=15000)
+        assert page.locator("#catalog-container > *").count() > 0
+        # The deep-link hash is consumed so a refresh returns to the landing view.
+        assert page.evaluate("() => window.location.hash") == ""
+        assert not page.console_errors, page.console_errors
+
 
 # ---------------------------------------------------------------- accounts
 

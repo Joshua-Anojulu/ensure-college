@@ -347,6 +347,14 @@ async function init() {
   wireQuickApplies();
   wireSiteNav();
   await loadSession();
+
+  // Deep link used by other pages (e.g. /journey) to open the in-app
+  // catalog: /#browse lands here, then the hash is cleared so a refresh
+  // returns to the normal landing view.
+  if (window.location.hash === "#browse") {
+    window.history.replaceState({}, "", window.location.pathname + window.location.search);
+    activateOpportunityView("catalog", { scroll: true });
+  }
 }
 
 /* ---------- Page feedback and motion ---------- */
