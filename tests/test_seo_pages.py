@@ -174,7 +174,7 @@ class TestBrowsePages:
 
     def test_homepage_footer_links_browse(self, client):
         response = client.get("/")
-        assert 'href="/browse"' in response.text
+        assert 'href="/#browse"' in response.text
 
 
 class TestSitemap:
