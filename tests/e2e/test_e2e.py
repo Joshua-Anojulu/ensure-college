@@ -64,6 +64,14 @@ class TestPublicPages:
         resp = page.goto(f"{live_server}/scholarships/does-not-exist")
         assert resp.status == 404
 
+    def test_essay_guide_cards_navigate(self, page, live_server):
+        page.goto(f"{live_server}/guides/essays", wait_until="load")
+        cards = page.locator(".guide-card")
+        assert cards.count() == 5
+        cards.first.click()
+        page.wait_for_url("**/guides/essays/identity")
+        assert page.locator(".guide-body").count() == 1
+
     def test_nav_and_journey_links_reachable(self, page, live_server):
         page.click('.site-nav a[href="/journey"]')
         page.wait_for_url("**/journey")
