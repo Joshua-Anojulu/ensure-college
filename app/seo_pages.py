@@ -13,6 +13,7 @@ from pathlib import Path
 from fastapi import APIRouter, Request
 from fastapi.responses import HTMLResponse
 from jinja2 import Environment, FileSystemLoader, select_autoescape
+from markupsafe import Markup
 
 seo_router = APIRouter()
 
@@ -57,6 +58,21 @@ KINDS = {
 def public_base_url(request: Request) -> str:
     env = os.getenv("PUBLIC_APP_URL", "").strip().rstrip("/")
     return env or str(request.base_url).rstrip("/")
+
+
+# Vercel Web Analytics. The script is served same-origin by the Vercel edge
+# (so the script-src 'self' CSP already allows it) but the path only exists on
+# Vercel deployments — injecting it locally would 404 in every dev console and
+# trip the e2e console-hygiene tests, so the tag is emitted only when the
+# VERCEL env marker is present.
+ANALYTICS_TAG = '<script defer src="/_vercel/insights/script.js"></script>'
+
+
+def analytics_tag() -> str:
+    return ANALYTICS_TAG if os.getenv("VERCEL") else ""
+
+
+_env.globals["analytics_tag"] = lambda: Markup(analytics_tag())
 
 
 def render_page(request: Request, template: str, status_code: int = 200, **context) -> HTMLResponse:

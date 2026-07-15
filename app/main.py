@@ -9,7 +9,7 @@ from urllib.parse import parse_qs, urlsplit
 from dotenv import load_dotenv
 from fastapi import Depends, FastAPI, File, Form, Header, HTTPException, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, HTMLResponse, PlainTextResponse, Response
+from fastapi.responses import HTMLResponse, PlainTextResponse, Response
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
 from starlette.middleware.base import BaseHTTPMiddleware
@@ -291,7 +291,7 @@ if not _is_production_runtime():
 app.include_router(auth_router)
 app.include_router(account_router)
 
-from app.seo_pages import seo_router  # noqa: E402  (import near use, matches file's route grouping)
+from app.seo_pages import analytics_tag, seo_router  # noqa: E402  (import near use, matches file's route grouping)
 from app.guide_pages import GUIDE_THEME_KEYS, guides_router  # noqa: E402
 
 app.include_router(seo_router)
@@ -336,6 +336,7 @@ def serve_index(request: Request) -> HTMLResponse:
     html = html.replace("__COUNT_SCHOLARSHIPS__", str(len(request.app.state.scholarships)))
     html = html.replace("__COUNT_PROGRAMS__", str(len(request.app.state.programs)))
     html = html.replace("__COUNT_COMPETITIONS__", str(len(request.app.state.competitions)))
+    html = html.replace("<!--__ANALYTICS__-->", analytics_tag())
     return HTMLResponse(html, headers={"Cache-Control": "no-cache"})
 
 
@@ -379,19 +380,25 @@ def sitemap_xml(request: Request) -> Response:
     )
 
 
+def _serve_static_page(filename: str) -> HTMLResponse:
+    html = (STATIC_DIR / filename).read_text(encoding="utf-8")
+    html = html.replace("<!--__ANALYTICS__-->", analytics_tag())
+    return HTMLResponse(html, headers={"Cache-Control": "no-cache"})
+
+
 @app.get("/journey")
-def serve_journey() -> FileResponse:
-    return FileResponse(STATIC_DIR / "journey.html", headers={"Cache-Control": "no-cache"})
+def serve_journey() -> HTMLResponse:
+    return _serve_static_page("journey.html")
 
 
 @app.get("/privacy")
-def serve_privacy() -> FileResponse:
-    return FileResponse(STATIC_DIR / "privacy.html", headers={"Cache-Control": "no-cache"})
+def serve_privacy() -> HTMLResponse:
+    return _serve_static_page("privacy.html")
 
 
 @app.get("/terms")
-def serve_terms() -> FileResponse:
-    return FileResponse(STATIC_DIR / "terms.html", headers={"Cache-Control": "no-cache"})
+def serve_terms() -> HTMLResponse:
+    return _serve_static_page("terms.html")
 
 
 @app.get("/health")

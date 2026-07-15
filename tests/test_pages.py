@@ -43,6 +43,32 @@ class TestLegalPages:
         assert "sponsor" in response.text.lower()
 
 
+class TestVercelAnalytics:
+    """The Web Analytics tag is injected only on Vercel deployments: the
+    /_vercel/insights/ path does not exist locally and would 404 in every
+    dev console."""
+
+    ANALYTICS_SRC = "/_vercel/insights/script.js"
+    PAGES = ["/", "/journey", "/privacy", "/terms", "/browse", "/guides/essays", "/scholarships/coca-cola-scholars"]
+
+    @pytest.mark.parametrize("page", PAGES)
+    def test_tag_absent_locally(self, client, page, monkeypatch):
+        monkeypatch.delenv("VERCEL", raising=False)
+        response = client.get(page)
+        assert response.status_code == 200
+        assert self.ANALYTICS_SRC not in response.text
+        # The placeholder comment is swapped out (for the tag or for nothing),
+        # never served raw.
+        assert "__ANALYTICS__" not in response.text
+
+    @pytest.mark.parametrize("page", PAGES)
+    def test_tag_present_on_vercel(self, client, page, monkeypatch):
+        monkeypatch.setenv("VERCEL", "1")
+        response = client.get(page)
+        assert response.status_code == 200
+        assert f'<script defer src="{self.ANALYTICS_SRC}"></script>' in response.text
+
+
 class TestProductionHygiene:
     def test_security_headers_on_index(self, client):
         response = client.get("/")
