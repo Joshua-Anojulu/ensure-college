@@ -331,7 +331,38 @@
         "source_url": "https://www.davidsongifted.org/gifted-programs/fellows-scholarship/eligibility/",
         "last_verified_at": "2026-06-21",
         "notes": "Eligibility page: $100k/$50k/$25k awards, age 18 or under (no grade minimum), U.S. citizen or PR; 2026 deadline was Feb 18 — 2027 application opens fall 2026."
-      }
+      },
+      "application_requirements": [
+        {
+          "id": "initial-application",
+          "label": "Submit part one: a brief description of your project or portfolio",
+          "details": "Part one screens eligibility and is held for review for 1-2 business days. Submit it as early as possible: you cannot start part two until it is approved, and approval is what gives you and your nominators time to finish. Applying as a 2-person team? Email DavidsonFellows@DavidsonGifted.org BEFORE starting.",
+          "required": true,
+          "source_url": "https://www.davidsongifted.org/gifted-programs/fellows-scholarship/eligibility/how-to-apply/"
+        },
+        {
+          "id": "category-requirements",
+          "label": "Submit part two: your category requirements",
+          "details": "Categories are Science, Technology, Engineering, Mathematics, Literature, Music, Philosophy, and Outside the Box; each has its own requirements. Community service projects are NOT accepted, and describing a future major or occupation is not an eligible submission. Google products, including Google Docs and videos, are not accepted; any YouTube videos must be set to Unlisted.",
+          "required": true,
+          "source_url": "https://www.davidsongifted.org/gifted-programs/fellows-scholarship/eligibility/how-to-apply/"
+        },
+        {
+          "id": "nominating-forms",
+          "label": "Send your nominators their nominating forms",
+          "details": "You enter your nominators' information in part two and the system sends them their forms. Read the sponsor's SAMPLE Nominating Form first so you can choose the best nominators to support your submission.",
+          "required": true,
+          "source_url": "https://www.davidsongifted.org/gifted-programs/fellows-scholarship/eligibility/how-to-apply/"
+        },
+        {
+          "id": "parent-approval-form",
+          "label": "Send your parent their approval form",
+          "details": "Only one parent approval form is required. For a team submission, one parent form is required per team member.",
+          "required": true,
+          "source_url": "https://www.davidsongifted.org/gifted-programs/fellows-scholarship/eligibility/how-to-apply/"
+        }
+      ],
+      "last_verified_at": "2026-07-16"
     },
     {
       "id": "regeneron-sts",
