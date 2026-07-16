@@ -1647,7 +1647,31 @@
         "source_url": "https://www.sighpc.org/opportunities/fellowships",
         "last_verified_at": "2026-06-25",
         "notes": "Official SIGHPC fellowship page says nominations for the 2026 cycle ran Mar 15-May 15 2026; awards are $20,000 annually for up to four years for PhD students or two years for master's students. Eligibility is for students pursuing graduate degrees in computational or data science at institutions anywhere in the world; no GPA minimum or citizenship requirement is stated."
-      }
+      },
+      "application_requirements": [
+        {
+          "id": "advisor-nomination",
+          "label": "Have your advisor submit the nomination",
+          "details": "Submitted by the student's advisor (or soon-to-be advisor), who explains how the candidate qualifies for a fellowship. All three components must be submitted in sequence and completed by the deadline.",
+          "required": true,
+          "source_url": "https://www.sighpc.org/opportunities/fellowships"
+        },
+        {
+          "id": "cv-and-candidate-statement",
+          "label": "Submit your CV and candidate statement",
+          "details": "Submitted by the student, along with contact information for an endorser.",
+          "required": true,
+          "source_url": "https://www.sighpc.org/opportunities/fellowships"
+        },
+        {
+          "id": "brief-endorsement",
+          "label": "Have an endorser submit a brief endorsement",
+          "details": "Submitted by a current or former instructor, project supervisor, or employer with personal knowledge of your past accomplishments who can speak to your suitability.",
+          "required": true,
+          "source_url": "https://www.sighpc.org/opportunities/fellowships"
+        }
+      ],
+      "last_verified_at": "2026-07-16"
     },
     {
       "id": "acs-catalyst-scholarship",
@@ -1679,7 +1703,56 @@
         "source_url": "https://www.acs.org/education/acs-undergraduate-scholarship.html",
         "last_verified_at": "2026-06-21",
         "notes": "ACS Catalyst page: renewable $10k, 3.0 GPA, U.S. citizen or PR; 2026-27 cycle closed Dec 1 2025–Mar 1 2026; essays and FAFSA required."
-      }
+      },
+      "application_requirements": [
+        {
+          "id": "acs-online-application",
+          "label": "Create an account and complete the online application",
+          "details": "Applications ran December 1, 2025 to March 1, 2026 for the 2026-2027 year. All materials, including transcripts, are submitted with the form; you may save and return until the deadline. You must agree to abide by the ACS Code of Conduct.",
+          "required": true,
+          "source_url": "https://www.acs.org/education/acs-undergraduate-scholarship.html"
+        },
+        {
+          "id": "unofficial-transcripts",
+          "label": "Upload your unofficial transcripts",
+          "required": true,
+          "source_url": "https://www.acs.org/education/acs-undergraduate-scholarship.html"
+        },
+        {
+          "id": "resume-or-cv",
+          "label": "Prepare a resume or CV",
+          "required": true,
+          "source_url": "https://www.acs.org/education/acs-undergraduate-scholarship.html"
+        },
+        {
+          "id": "recommendation-letters",
+          "label": "Collect 2 letters of recommendation",
+          "required": true,
+          "source_url": "https://www.acs.org/education/acs-undergraduate-scholarship.html"
+        },
+        {
+          "id": "personal-essays",
+          "label": "Write the personal essays",
+          "details": "ACS does not publish the essay questions outside the application; its November 2025 information-session recording covers essay strategy.",
+          "required": true,
+          "source_url": "https://www.acs.org/education/acs-undergraduate-scholarship.html"
+        },
+        {
+          "id": "fafsa-submission-summary",
+          "label": "Submit your FAFSA Submission Summary",
+          "details": "Formerly the Student Aid Report (SAR); required as part of the application.",
+          "required": true,
+          "source_url": "https://www.acs.org/education/acs-undergraduate-scholarship.html"
+        },
+        {
+          "id": "confirm-submission",
+          "label": "Confirm your submission",
+          "details": "After submitting you receive a confirmation email from ACS Undergraduate Scholarships (administrator@grantinterface.com). If it does not arrive, check that you clicked Submit, look in spam, and verify your email address. Results are announced in May; if selected, accept by May 30.",
+          "required": false,
+          "source_url": "https://www.acs.org/education/acs-undergraduate-scholarship.html"
+        }
+      ],
+      "last_verified_at": "2026-07-16"
     },
     {
       "id": "astronaut-scholarship",
@@ -1930,7 +2003,52 @@
         "source_url": "https://aiaa.org/get-involved/university-students/undergraduate-scholarships-graduate-awards/eligibility-requirements/",
         "last_verified_at": "2026-06-25",
         "notes": "AIAA eligibility page: Student member, at least one completed semester, 3.3 GPA for most undergraduate scholarships, aerospace-related engineering/science; applications accepted Oct 15-Jan 31 annually; no single citizenship rule because some awards have award-specific restrictions."
-      }
+      },
+      "application_requirements": [
+        {
+          "id": "aiaa-online-application",
+          "label": "Submit the online application by 31 January",
+          "details": "Applications are accepted 15 October to 31 January and must be submitted by 11:59 PM EST on 31 January. All materials must be in by the deadline for the application to count as complete; AIAA makes no exceptions.",
+          "required": true,
+          "source_url": "https://aiaa.org/get-involved/university-students/undergraduate-scholarships-graduate-awards/application-requirements/"
+        },
+        {
+          "id": "college-transcripts",
+          "label": "Upload your college transcripts as one PDF",
+          "details": "Transcripts from ALL colleges attended, through the most recent Fall term, combined into a single PDF. Unofficial transcripts are accepted, but official ones are requested if you are offered an award. AIAA does not accept high school transcripts.",
+          "required": true,
+          "source_url": "https://aiaa.org/get-involved/university-students/undergraduate-scholarships-graduate-awards/application-requirements/"
+        },
+        {
+          "id": "career-objectives-essay",
+          "label": "Write the 500-1,000 word career-objectives essay",
+          "details": "Specify your career objectives and outline the academic program required to achieve them. Essays must be your own original work; any plagiarized portion disqualifies the application.",
+          "required": true,
+          "source_url": "https://aiaa.org/get-involved/university-students/undergraduate-scholarships-graduate-awards/application-requirements/"
+        },
+        {
+          "id": "award-specific-writing-prompt",
+          "label": "Answer the award-specific writing prompt",
+          "details": "Only if applying for a Technical Committee or Section-sponsored award. AIAA does not publish these prompts outside the application.",
+          "required": false,
+          "source_url": "https://aiaa.org/get-involved/university-students/undergraduate-scholarships-graduate-awards/application-requirements/"
+        },
+        {
+          "id": "recommendation-letters",
+          "label": "Arrange two professional letters of recommendation",
+          "details": "Any combination of academic or career references (advisors, supervisors, bosses, cohort leaders); relatives may not submit them. Submitted through the online system. AIAA's two pages disagree on the letter deadline: the application-requirements page says 13 February, the eligibility page says 14 February. Treat 13 February as the safe date.",
+          "required": true,
+          "source_url": "https://aiaa.org/get-involved/university-students/undergraduate-scholarships-graduate-awards/application-requirements/"
+        },
+        {
+          "id": "resume-or-cv",
+          "label": "Prepare a resume or CV",
+          "details": "Highlight professional experience, extracurricular activities, and awards or certifications.",
+          "required": true,
+          "source_url": "https://aiaa.org/get-involved/university-students/undergraduate-scholarships-graduate-awards/application-requirements/"
+        }
+      ],
+      "last_verified_at": "2026-07-16"
     },
     {
       "id": "ans-scholarships",
@@ -2123,7 +2241,17 @@
         "source_url": "https://www.aacnnursing.org/foundation/scholarships/aacn-2-pathway-to-critical-care-nursing-scholarship",
         "last_verified_at": "2026-06-21",
         "notes": "AACN page: eight $2,500 awards; BSN students at AACN member schools, 3.2 GPA, graduating within 6–12 months; applications open Jul 1, close Sep 1 2026."
-      }
+      },
+      "application_requirements": [
+        {
+          "id": "aacn-online-application",
+          "label": "Submit the online application through the AACN scholarship portal",
+          "details": "Applications open July 1 and close September 1. The portal requires a MyAACN account; AACN does not publish the application's contents outside it.",
+          "required": true,
+          "source_url": "https://www.aacnnursing.org/foundation/scholarships/aacn-2-pathway-to-critical-care-nursing-scholarship"
+        }
+      ],
+      "last_verified_at": "2026-07-16"
     },
     {
       "id": "bmi-composer-awards",
@@ -2274,7 +2402,42 @@
         "source_url": "https://www.americanbar.org/groups/diversity/diversity_pipeline/projects_initiatives/legal_opportunity_scholarship/",
         "last_verified_at": "2026-06-21",
         "notes": "$15,000 over three years to 20–25 first-year law students; 2027 cycle opens Feb 1, closes Apr 15 2027; 2.5 GPA; DEI commitment required, not explicit race restriction."
-      }
+      },
+      "application_requirements": [
+        {
+          "id": "losf-application",
+          "label": "Submit the LOSF application through the Kaleidoscope portal",
+          "details": "The 2027 application period opens February 1, 2027 and the portal closes at 11:59 p.m. Central Time on April 15, 2027.",
+          "required": true,
+          "source_url": "https://www.americanbar.org/groups/diversity/diversity_pipeline/projects_initiatives/legal_opportunity_scholarship/"
+        },
+        {
+          "id": "personal-statement",
+          "label": "Write a personal statement",
+          "details": "Required material. The ABA asks applicants not to submit a resume.",
+          "required": true,
+          "source_url": "https://www.americanbar.org/groups/diversity/diversity_pipeline/projects_initiatives/legal_opportunity_scholarship/material-requirements/"
+        },
+        {
+          "id": "transcript",
+          "label": "Submit an official or unofficial transcript",
+          "required": true,
+          "source_url": "https://www.americanbar.org/groups/diversity/diversity_pipeline/projects_initiatives/legal_opportunity_scholarship/material-requirements/"
+        },
+        {
+          "id": "recommendation-letters",
+          "label": "Collect 2-4 letters of recommendation",
+          "required": true,
+          "source_url": "https://www.americanbar.org/groups/diversity/diversity_pipeline/projects_initiatives/legal_opportunity_scholarship/material-requirements/"
+        },
+        {
+          "id": "signed-release-form",
+          "label": "Sign the release form inside the LOSF application",
+          "required": true,
+          "source_url": "https://www.americanbar.org/groups/diversity/diversity_pipeline/projects_initiatives/legal_opportunity_scholarship/material-requirements/"
+        }
+      ],
+      "last_verified_at": "2026-07-16"
     },
     {
       "id": "sigma-tau-delta-scholarships",
