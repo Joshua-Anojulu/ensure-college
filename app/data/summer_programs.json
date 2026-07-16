@@ -1143,9 +1143,13 @@
         {
           "id": "essay-responses",
           "label": "Complete essay responses on STEM goals",
-          "details": "Essays should detail goals in science, technology, engineering, or mathematics.",
+          "details": "Essays should detail goals in science, technology, engineering, or mathematics. The questions themselves appear only inside the Slideroom application, which charges a $75 non-refundable fee (waivers may be available on request).",
           "required": true,
-          "source_url": "https://www.cee.org/apply-rsi"
+          "source_url": "https://www.cee.org/apply-rsi",
+          "essay_prompts": {
+            "status": "gated",
+            "items": []
+          }
         },
         {
           "id": "recommendations",
@@ -3672,9 +3676,13 @@
         {
           "id": "short-answer-and-video",
           "label": "Complete a short-answer question response and a 1-2 minute video response",
-          "details": "Applicants submit a written short-answer response plus a 1-2 minute video response as part of the application.",
+          "details": "Applicants submit a written short-answer response plus a 1-2 minute video response as part of the application. The question wording appears only inside the AFS awards platform application.",
           "required": true,
-          "source_url": "https://hutton.fisheries.org/students/what-is-fisheries-science/faqs-2/"
+          "source_url": "https://hutton.fisheries.org/students/what-is-fisheries-science/faqs-2/",
+          "essay_prompts": {
+            "status": "gated",
+            "items": []
+          }
         },
         {
           "id": "student-reference-form",
@@ -3748,9 +3756,26 @@
         {
           "id": "three-essays",
           "label": "Write three short essays",
-          "details": "The application requires three short essays.",
+          "details": "Submit all three essays as ONE document (PDF, Word, or Pages; Google Docs not accepted). Applicants must affirm the essays are their own work, written without the help of AI. Prompt wording is from the sponsor's Sample Application 2025, still published as its sample for the open cycle; confirm in the portal before writing.",
           "required": true,
-          "source_url": "https://freedomandcitizenship.columbia.edu/how-to-apply"
+          "source_url": "https://freedomandcitizenship.columbia.edu/sample-application",
+          "essay_prompts": {
+            "status": "public",
+            "items": [
+              {
+                "prompt": "In Freedom & Citizenship we ask the big questions about how humans live together in society. We use ancient texts to help us think about the world today and our own place in it. Tell us about yourself and why you're interested in asking big questions about humanity. What specific questions are you interested in?",
+                "length": "300 - 500 words per essay"
+              },
+              {
+                "prompt": "Former students describe the summer seminar as both exciting and challenging. How are you looking for a challenge? What kind of skills would you like to improve, or what new experiences would you like to have?",
+                "length": "300 - 500 words per essay"
+              },
+              {
+                "prompt": "During your senior year you'll work with a group of students on a civic leadership project. What topic would you like to work on, why are you interested in that topic, and what kind of changes would you like to make?",
+                "length": "300 - 500 words per essay"
+              }
+            ]
+          }
         },
         {
           "id": "high-school-transcript",

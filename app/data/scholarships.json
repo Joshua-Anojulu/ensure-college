@@ -4181,7 +4181,7 @@
         {
           "id": "utd-supplemental-materials",
           "label": "Add the encouraged supplemental materials",
-          "details": "Encouraged but not required: a resume, one essay on any topic, and up to three letters of recommendation strengthen your holistic review.",
+          "details": "Encouraged but not required: UT Dallas invites letters of recommendation (maximum of 3), a resume, and/or an essay with your application for its holistic review. The sponsor sets no essay prompt or topic.",
           "required": false,
           "source_url": "https://enroll.utdallas.edu/affordability/freshman-scholarships/academic-excellence-scholarship/aes-for-prospective-freshmen/"
         },
@@ -5564,7 +5564,28 @@
           "label": "Submit the completed AiC High School Award application",
           "details": "Application includes short essays and multiple-choice sections; educator endorsement strongly recommended for national consideration.",
           "required": true,
-          "source_url": "https://www.aspirations.org/award-programs/apply-for-the-award-for-aic"
+          "source_url": "https://www.aspirations.org/award-programs/guide-to-preparing-your-application",
+          "essay_prompts": {
+            "status": "public",
+            "items": [
+              {
+                "prompt": "Describe your journey of working with technology, including how you became interested and the experiences you have had since then. Be sure to provide specific details on your technology skills and activities",
+                "length": "required 25-250 words, recommended 100-250 words"
+              },
+              {
+                "prompt": "Describe how technology may play a central role as you imagine your future (including education, hobbies, career).",
+                "length": "required 25-250 words, recommended 100-250 words"
+              },
+              {
+                "prompt": "Explain how you could use technology to solve a real-world problem you are passionate about (this could be a social problem, a technical problem, a local problem, a world problem, etc.).",
+                "length": "required 25-250 words, recommended 100-250 words"
+              },
+              {
+                "prompt": "Technologies are designed to help meet human needs. How would you ensure that technology meets needs without harming people?",
+                "length": "required 25-250 words, recommended 100-250 words"
+              }
+            ]
+          }
         }
       ],
       "verified": true,
