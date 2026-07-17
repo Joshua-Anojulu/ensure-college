@@ -2066,7 +2066,31 @@
         "source_url": "https://bhw.hrsa.gov/sites/default/files/bureau-health-workforce/funding/nursecorps-sp-guidance.pdf",
         "last_verified_at": "2026-06-21",
         "notes": "Official 2026 HRSA guidance PDF: tuition/fees/stipend for accredited U.S. RN/APRN programs; citizen/national/PR; 2026 cycle closed Apr 9 2026; personal essays no longer required."
-      }
+      },
+      "application_requirements": [
+        {
+          "id": "read-application-program-guidance",
+          "label": "Read the Application and Program Guidance (APG)",
+          "details": "HRSA publishes the APG and a separate Definitions document as PDFs, and expects applicants to understand them before applying. It also publishes an Application Checklist PDF listing exactly what you need; that checklist, not this page, is the authoritative materials list.",
+          "required": true,
+          "source_url": "https://bhw.hrsa.gov/programs/nurse-corps/scholarship/apply"
+        },
+        {
+          "id": "nurse-corps-application",
+          "label": "Create a My BHW account and apply during the open cycle",
+          "details": "The 2026 cycle is closed; all applicants are notified of award status by September 30. Funding preference goes to those with the greatest financial need. You must begin classes no later than September 30, and you are ineligible if you have federal judgment liens, an existing service commitment, or are overdue on a federal debt.",
+          "required": true,
+          "source_url": "https://bhw.hrsa.gov/programs/nurse-corps/scholarship/apply"
+        },
+        {
+          "id": "service-commitment",
+          "label": "Understand the service commitment before you accept",
+          "details": "This is not a no-strings award. In exchange for tuition, fees, costs, and a monthly stipend, you must work after graduating at an eligible critical shortage facility -- a site in, designated as, or serving a Health Professional Shortage Area. The entire award is also taxable and reported to the IRS; HRSA does not withhold state or local taxes and cannot give tax advice.",
+          "required": false,
+          "source_url": "https://bhw.hrsa.gov/programs/nurse-corps/scholarship/apply"
+        }
+      ],
+      "last_verified_at": "2026-07-17"
     },
     {
       "id": "nhsc-scholarship-program",
@@ -2159,7 +2183,17 @@
         "source_url": "https://actuarialfoundation.org/scholarships/stem-stars/",
         "last_verified_at": "2026-06-25",
         "notes": "Official STEM Stars page says the program offers $20,000 ($5,000 annually for four years), mentoring, internships, and networking for high school students skilled in math and interested in actuarial careers. 2026 season is closed and reopens in fall; no numeric GPA minimum published."
-      }
+      },
+      "application_requirements": [
+        {
+          "id": "stem-stars-application",
+          "label": "Apply through Submittable when the season reopens",
+          "details": "The 2026 season is closed and reopens in the fall. The Actuarial Foundation does not publish the application's contents outside Submittable, and states no numeric GPA minimum: the stated bar is being skilled in math and interested in the actuarial field. The award is $5,000 a year for up to four years, plus a summer orientation, mentorship, and internship access.",
+          "required": true,
+          "source_url": "https://actuarialfoundation.org/scholarships/stem-stars/"
+        }
+      ],
+      "last_verified_at": "2026-07-17"
     },
     {
       "id": "cas-trust-scholarship",
