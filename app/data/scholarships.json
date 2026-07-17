@@ -3807,7 +3807,38 @@
         "source_url": "https://www.legion.org/get-involved/youth-programs/oratorical-contest",
         "last_verified_at": "2026-06-21",
         "notes": "Grades 9-12, under age 20; citizen or eligible to receive scholarship; post→state→national; local deadlines vary by department."
-      }
+      },
+      "application_requirements": [
+        {
+          "id": "enter-through-your-department",
+          "label": "Enter through the department where you live or attend school",
+          "details": "You must be legally domiciled within, or attend school within, the department you compete in, and you may enter through only ONE department. Local deadlines vary by department, so contact your local American Legion. Early graduates may still compete if not enrolled in higher education at the time of the department finals. The three national finalists are ineligible to participate again at any level.",
+          "required": true,
+          "source_url": "https://www.legion.org/get-involved/youth-programs/oratorical-contest/how-to-participate"
+        },
+        {
+          "id": "prepared-oration",
+          "label": "Write and memorize your prepared oration (8-10 minutes)",
+          "details": "On some aspect of the Constitution, emphasizing a citizen's duties and obligations to our government. The same subject and oration used at the department contest must be used at nationals. No notes, amplification, lectern, props, or prompting of any kind. Quotations over 10 words need the author named in the manuscript AND cited orally. Singing is an immediate disqualification. Going over or under time costs one point per minute or fraction.",
+          "required": true,
+          "source_url": "https://www.legion.org/get-involved/youth-programs/oratorical-contest/how-to-participate"
+        },
+        {
+          "id": "assigned-topic-discourse",
+          "label": "Prepare for the assigned topic discourse (3-5 minutes)",
+          "details": "You learn the topic about five minutes before speaking, drawn from a card, then wait in supervised privacy with no text or notes on the subject; you may reference only the actual words on the card. The sponsor publishes the assigned topics in advance, so study them. You must deliver BOTH the prepared oration and the assigned topic discourse to receive any scholarship money.",
+          "required": true,
+          "source_url": "https://www.legion.org/get-involved/youth-programs/oratorical-contest/how-to-participate"
+        },
+        {
+          "id": "chaperone-and-attire",
+          "label": "Arrange a chaperone and business attire for the national contest",
+          "details": "A chaperone over 21 must accompany each contestant; the American Legion pays travel and lodging for department winners and their chaperones. Business attire is required: no uniforms, and no awards or medals from previous competitions.",
+          "required": false,
+          "source_url": "https://www.legion.org/get-involved/youth-programs/oratorical-contest/how-to-participate"
+        }
+      ],
+      "last_verified_at": "2026-07-17"
     },
     {
       "id": "vfw-voice-of-democracy",
@@ -4057,13 +4088,30 @@
         "essay_required": false,
         "citizenship_requirement": "VERIFY"
       },
-      "description": "Scholarship opportunities for young people ages 13-25 who complete volunteer or community-service campaigns; no GPA, essay, or recommendations required, and winners are selected by random drawing. Open to U.S. residents and U.S. citizens living abroad.",
+      "description": "Scholarship opportunities for young people ages 13-25 who complete volunteer or community-service campaigns; no GPA, essay, recommendations, or application required. Recipients are selected using predetermined judging criteria set out in each contest's official rules. Open to U.S. residents and U.S. citizens living abroad.",
       "verified": true,
       "verification": {
         "source_url": "https://dosomething.org/pays-to-do-good",
         "last_verified_at": "2026-06-21",
-        "notes": "Ages 13-25 U.S. residents or citizens abroad; campaign-based random drawings up to $1,500; no GPA/essay — deadlines vary by campaign."
-      }
+        "notes": "Ages 13-25 U.S. residents or citizens abroad; campaign-based entries up to $1,500; no GPA/essay/recommendations/application — deadlines vary by campaign. Corrected 2026-07-17: the sponsor's FAQ says recipients are selected using PREDETERMINED JUDGING CRITERIA per each contest's official rules, not by random drawing as this entry previously claimed."
+      },
+      "application_requirements": [
+        {
+          "id": "enter-a-campaign",
+          "label": "Take action in a DoSomething campaign to enter",
+          "details": "The sponsor's terms: no essays, no GPA requirement, no recommendations, and no application. You may enter multiple scholarships. Each campaign sets its own action and deadline; the current one asks you to take a distraction-free driving pledge and hold a 7- or 30-day streak.",
+          "required": true,
+          "source_url": "https://dosomething.org/pays-to-do-good"
+        },
+        {
+          "id": "review-official-rules",
+          "label": "Read the Scholarship Contest Official Rules before entering",
+          "details": "Recipients are selected using predetermined judging criteria, which the official rules for each contest spell out; this is not a random drawing. Worth knowing before you enter: you have through age 25 to redeem an award, and any unused funds are forfeited back to DoSomething once you turn 26. You do not need to have picked a school first.",
+          "required": false,
+          "source_url": "https://dosomething.org/pays-to-do-good"
+        }
+      ],
+      "last_verified_at": "2026-07-17"
     },
     {
       "id": "rhodes-scholarship",
