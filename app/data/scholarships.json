@@ -880,7 +880,31 @@
         "source_url": "https://www.possefoundation.org/recruiting-students/the-nomination-process",
         "last_verified_at": "2026-06-25",
         "notes": "Nomination page: not minority- or need-based; open to all backgrounds; must be nominated in a recruitment city; requirements mention academic potential but no national numeric GPA minimum; deadlines vary by city."
-      }
+      },
+      "application_requirements": [
+        {
+          "id": "secure-nomination",
+          "label": "Be nominated by your high school or a community-based organization",
+          "details": "You cannot apply to Posse directly. Only a high school or community-based organization registered with Posse, in one of its 20-plus recruitment cities, can nominate you; they may do so as early as the second semester of junior year. The Posse Arts Program and Posse Veterans Program run their nomination process separately.",
+          "required": true,
+          "source_url": "https://www.possefoundation.org/recruiting-students/the-nomination-process"
+        },
+        {
+          "id": "contact-local-posse-office",
+          "label": "Contact your local Posse office for this year's deadlines",
+          "details": "Nomination timelines and deadlines vary by Posse city and program; nominations are generally accepted in the spring and summer before senior year begins. Posse asks students to check with the local office at the start of every calendar year.",
+          "required": true,
+          "source_url": "https://www.possefoundation.org/recruiting-students/the-nomination-process"
+        },
+        {
+          "id": "dynamic-assessment-process",
+          "label": "Take part in the Dynamic Assessment Process",
+          "details": "Posse's selection process, which nominated students participate in. Posse looks for leaders in their high schools and communities, students committed to their education who show academic potential, and students interested in teamwork and diversity.",
+          "required": true,
+          "source_url": "https://www.possefoundation.org/recruiting-students/the-nomination-process"
+        }
+      ],
+      "last_verified_at": "2026-07-17"
     },
     {
       "id": "goldwater-scholarship",
