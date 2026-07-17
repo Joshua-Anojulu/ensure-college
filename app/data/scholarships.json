@@ -480,7 +480,45 @@
         "source_url": "https://burgerking.scholarsapply.org/information.php",
         "last_verified_at": "2026-07-02",
         "notes": "Official Scholarship America guidelines: General Track $1k-$60k, 2.0 GPA minimum for seniors, U.S./PR/Guam/Canada residency; application was complete only if submitted electronically by Dec 15 2025 or before the 30,000-application cap. Citizenship not stated for General Track."
-      }
+      },
+      "application_requirements": [
+        {
+          "id": "register-student-account",
+          "label": "Register a student account and complete your student profile",
+          "details": "Apply early: submissions are capped at 30,000 and access to the application closes once that number is reached, whether or not the deadline has passed. The 2026 program's dates are tentative; the last cycle ran October 15 to December 15. Registration uses an email validation step, so use a valid address.",
+          "required": true,
+          "source_url": "https://scholarshipamerica.org/scholarship/burgerking/"
+        },
+        {
+          "id": "transcript",
+          "label": "Upload a current, complete transcript of grades",
+          "details": "High school or college transcript. Grade reports are NOT accepted. An unofficial or online transcript must display your name, the school name, grades, and credit hours for each course and term.",
+          "required": true,
+          "source_url": "https://scholarshipamerica.org/scholarship/burgerking/"
+        },
+        {
+          "id": "work-and-activities-list",
+          "label": "Gather your work experience and activities list",
+          "details": "A list of your work experiences and involvement in school and community activities. Awards weigh GPA, work experience, extracurricular activities, community service, and financial need.",
+          "required": true,
+          "source_url": "https://scholarshipamerica.org/scholarship/burgerking/"
+        },
+        {
+          "id": "family-financial-information",
+          "label": "Gather your family's financial information",
+          "details": "The sponsor suggests having a copy of your parents' most recent tax form filed with the IRS or Revenue Canada on hand when filling out that section.",
+          "required": true,
+          "source_url": "https://scholarshipamerica.org/scholarship/burgerking/"
+        },
+        {
+          "id": "bk-employee-information",
+          "label": "Add Burger King employee information",
+          "details": "Only if your application is to be affiliated with a Burger King employee (the Employee-Based Track).",
+          "required": false,
+          "source_url": "https://scholarshipamerica.org/scholarship/burgerking/"
+        }
+      ],
+      "last_verified_at": "2026-07-17"
     },
     {
       "id": "elks-mvs",
