@@ -1387,7 +1387,7 @@
       "name": "YoungArts National Arts Competition",
       "sponsor": "National YoungArts Foundation",
       "award_amount": "$250 to $10,000",
-      "deadline": "VERIFY",
+      "deadline": "2026-10-06",
       "url": "https://youngarts.org/apply/",
       "eligibility": {
         "min_gpa": null,
@@ -1406,12 +1406,35 @@
       },
       "description": "National arts competition for emerging artists ages 15-18 (grades 10-12) across 10 disciplines including visual, literary, and performing arts. Award winners receive cash prizes from $250 to $10,000 and mentorship; selection is by portfolio or audition.",
       "verified": true,
-      "estimated_deadline": "2026-10-08",
       "verification": {
-        "source_url": "https://youngarts.org/apply/",
-        "last_verified_at": "2026-06-21",
-        "notes": "Apply page: ages 15-18 grades 10-12; citizen, permanent resident, or legally able to receive taxable income in U.S.; portfolio/audition (not essay); 2027 application opens summer 2026."
-      }
+        "source_url": "https://youngarts.org/faq/",
+        "last_verified_at": "2026-07-17",
+        "notes": "Apply page: ages 15-18 grades 10-12; citizen, permanent resident, or legally able to receive taxable income in U.S.; portfolio/audition (not essay). 2027 application opens Jul 21 2026; FAQ now publishes a CONFIRMED deadline of Tue Oct 6 2026, 8 PM ET / 5 PM PT, replacing the earlier 2026-10-08 estimate. Application requires an application fee or fee-waiver documentation."
+      },
+      "application_requirements": [
+        {
+          "id": "youngarts-application",
+          "label": "Submit the online application before the deadline",
+          "details": "The 2027 application opens July 21, 2026 and closes Tuesday, October 6, 2026 at 8 PM ET / 5 PM PT. Everything must be uploaded and submitted before the deadline, including payment or a fee waiver. YoungArts strongly recommends not waiting until deadline day.",
+          "required": true,
+          "source_url": "https://youngarts.org/faq/"
+        },
+        {
+          "id": "discipline-portfolio",
+          "label": "Prepare the portfolio for your discipline and category",
+          "details": "Depending on discipline, the portfolio is video recordings, audio recordings, documents, or images. There are 10 disciplines: Classical Music, Dance, Design, Film, Jazz, Photography, Theater, Visual Arts, Voice, and Writing. Follow the sponsor's guidelines for the exact discipline and category you enter.",
+          "required": true,
+          "source_url": "https://youngarts.org/faq/"
+        },
+        {
+          "id": "application-fee-or-waiver",
+          "label": "Pay the application fee or submit fee-waiver documentation",
+          "details": "The application is not considered complete until payment is processed or fee-waiver documentation is submitted, and this must happen before the deadline like everything else.",
+          "required": true,
+          "source_url": "https://youngarts.org/faq/"
+        }
+      ],
+      "last_verified_at": "2026-07-17"
     },
     {
       "id": "smart-scholarship",
