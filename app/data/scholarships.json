@@ -2364,7 +2364,24 @@
         "source_url": "https://www.ans.org/scholarships/",
         "last_verified_at": "2026-06-25",
         "notes": "ANS page: student member and nuclear-related field; applications open Nov 1, general deadline Feb 1, incoming freshman and community/trade school deadline Apr 1; no single deadline fits all listed grade levels, and no numeric GPA or citizenship rule is stated."
-      }
+      },
+      "application_requirements": [
+        {
+          "id": "ans-scholarship-application",
+          "label": "Apply in the window for your award category",
+          "details": "Applications open November 1. Two different deadlines: April 1 for the Incoming Freshman and Community College/Trade School scholarships, February 1 for the General, ANS Cares, Division-Administered, and Local Section ones. Notifications go out April 15 to May 15 and awards are dispersed after August 20. Evaluation weighs academic excellence, leadership within ANS, references, career goals, and financial need.",
+          "required": true,
+          "source_url": "https://www.ans.org/scholarships/"
+        },
+        {
+          "id": "ans-membership",
+          "label": "Join ANS (timing depends on which award you want)",
+          "details": "The rule differs by category: undergraduate and graduate scholarships are open only to existing ANS student members, but graduating high-school seniors applying for an Incoming Freshman scholarship do NOT need to be members to apply -- they must join before funds are distributed. Do not let membership stop you from applying as a senior.",
+          "required": false,
+          "source_url": "https://www.ans.org/scholarships/"
+        }
+      ],
+      "last_verified_at": "2026-07-17"
     },
     {
       "id": "tau-beta-pi-scholarship",
@@ -2392,7 +2409,38 @@
         "source_url": "https://www.tbp.org/scholarships.cfm",
         "last_verified_at": "2026-07-02",
         "notes": "Official TBP page: members or candidates initiated by June 1 who will be full-time senior undergraduate engineering students in 2026-27; application due Apr 1 and recommendations Apr 8. No citizenship restriction is stated."
-      }
+      },
+      "application_requirements": [
+        {
+          "id": "tbp-membership-or-candidacy",
+          "label": "Be an initiated Tau Beta Pi member, or a candidate initiated by June 1",
+          "details": "The Constitution and Bylaws restrict these scholarships to initiated members of the Association on the date the scholarship is awarded, and TBP HQ's membership records are the single source of proof. Candidates for membership may apply if they will be initiated by June 1.",
+          "required": true,
+          "source_url": "https://www.tbp.org/scholarships.cfm"
+        },
+        {
+          "id": "tbp-application",
+          "label": "Submit the application by 11:59 p.m. EDT April 1",
+          "details": "Recipients must be full-time senior undergraduate engineering students during the award year; students graduating in the fall semester are eligible for partial scholarships.",
+          "required": true,
+          "source_url": "https://www.tbp.org/scholarships.cfm"
+        },
+        {
+          "id": "transcript",
+          "label": "Upload your transcript",
+          "details": "Official or unofficial is fine, but it must be current as of this semester and include collegiate coursework from ALL institutions you have attended.",
+          "required": true,
+          "source_url": "https://www.tbp.org/scholarships.cfm"
+        },
+        {
+          "id": "recommendation-letters",
+          "label": "Arrange letters of recommendation (due 11:59 p.m. EDT April 8)",
+          "details": "Note the letters are due a WEEK AFTER the application itself, not with it. They need to address the scholarship criteria; TBP suggests research mentors, faculty who know you outside the classroom and can speak to your academic and leadership abilities and co-curricular participation, and supervisors.",
+          "required": true,
+          "source_url": "https://www.tbp.org/scholarships.cfm"
+        }
+      ],
+      "last_verified_at": "2026-07-17"
     },
     {
       "id": "gmis-scholars-program",
@@ -2466,7 +2514,44 @@
         "source_url": "https://aises.org/scholarships/",
         "last_verified_at": "2026-06-25",
         "notes": "AISES scholarships page: A.T. Anderson $1k undergrad/$2k grad; AISES member, 3.0 GPA, STEM; tribal/Indigenous eligibility required; applications open Dec 15 and close Apr 30."
-      }
+      },
+      "application_requirements": [
+        {
+          "id": "aises-membership",
+          "label": "Become an AISES member",
+          "details": "Membership is FREE for students and is a minimum requirement for every AISES scholarship. Step one of the sponsor's own checklist.",
+          "required": true,
+          "source_url": "https://aises.org/scholarships/"
+        },
+        {
+          "id": "oasis-general-application-profile",
+          "label": "Create a general application profile in OASIS",
+          "details": "OASIS is the shared system AISES runs with Indigenous Education, Inc. The General Application Profile can be completed, revised, and submitted year-round, and it matches you only with scholarships you are eligible for -- including the Cobell Scholarship and Dream Warriors awards, each with their own criteria. Doing this early is what opens the rest.",
+          "required": true,
+          "source_url": "https://aises.org/scholarships/"
+        },
+        {
+          "id": "transcripts-and-documents",
+          "label": "Gather transcripts and other required documents",
+          "required": true,
+          "source_url": "https://aises.org/scholarships/"
+        },
+        {
+          "id": "recommendation-letters",
+          "label": "Reach out to references for letters of recommendation",
+          "details": "Letters are due May 7, a week after applications close on April 30, so the ask can go out before you submit.",
+          "required": true,
+          "source_url": "https://aises.org/scholarships/"
+        },
+        {
+          "id": "submit-application",
+          "label": "Submit your application",
+          "details": "Applications open December 15 and close April 30. Review runs April-May and award notifications go out August-September on a rolling basis. You must be a full-time student (12+ credit hours) in a STEM field at an accredited college or university.",
+          "required": true,
+          "source_url": "https://aises.org/scholarships/"
+        }
+      ],
+      "last_verified_at": "2026-07-17"
     },
     {
       "id": "fnsna-undergraduate-scholarship",
@@ -2495,7 +2580,42 @@
         "source_url": "https://fnsna.org/2027-undergraduate-scholarship-application",
         "last_verified_at": "2026-06-21",
         "notes": "FNSNA application page: up to $10,000; U.S. citizen or permanent resident; state-approved nursing programs (ADN/BSN/diploma/direct-entry MSN/LPN-RN/accelerated BSN); min 6 credits per semester; high school students ineligible; opens Sep 8 2026, closes Jan 11 2027; no minimum GPA stated."
-      }
+      },
+      "application_requirements": [
+        {
+          "id": "fnsna-application",
+          "label": "Submit the online application by January 11",
+          "details": "The 2027-2028 application is available from September 8, 2026 and closes January 11, 2027. You must be taking no fewer than six credits per semester and graduate after July 1, 2027. High school students are ineligible. Selection weighs academic achievement, financial need, and involvement in nursing student organizations and health-care-related community activities. The sponsor notes complete details live inside the online application.",
+          "required": true,
+          "source_url": "https://www.fnsna.org/2027-undergraduate-scholarship-application"
+        },
+        {
+          "id": "nursing-school-transcripts",
+          "label": "Submit a copy of recent nursing school unofficial transcripts",
+          "required": true,
+          "source_url": "https://www.fnsna.org/2027-undergraduate-scholarship-application"
+        },
+        {
+          "id": "faculty-member-certification-form",
+          "label": "Have a faculty member complete the Faculty Member Certification Form",
+          "required": true,
+          "source_url": "https://www.fnsna.org/2027-undergraduate-scholarship-application"
+        },
+        {
+          "id": "financial-aid-certification-form",
+          "label": "Have your school complete the Financial Aid Certification Form",
+          "required": true,
+          "source_url": "https://www.fnsna.org/2027-undergraduate-scholarship-application"
+        },
+        {
+          "id": "nursing-license-copy",
+          "label": "Submit a copy of your nursing license",
+          "details": "Career Mobility Scholarships only: required from registered nurses in baccalaureate programs and from licensed practical/vocational nurses in programs leading to RN licensure.",
+          "required": false,
+          "source_url": "https://www.fnsna.org/2027-undergraduate-scholarship-application"
+        }
+      ],
+      "last_verified_at": "2026-07-17"
     },
     {
       "id": "aacn2-pathway-critical-care-nursing-scholarship",
@@ -2565,7 +2685,38 @@
         "source_url": "https://bmifoundation.org/by-application/bmicomposerawards",
         "last_verified_at": "2026-06-25",
         "notes": "BMI page: classical/concert music, under age 28; U.S./territories resident or Western Hemisphere citizen; anonymous score submission; $20k total pool; 2026 deadline was Jan 15 and next-cycle deadline is not yet published."
-      }
+      },
+      "application_requirements": [
+        {
+          "id": "bmi-application",
+          "label": "Submit one application before the deadline",
+          "details": "The 2026 deadline was January 15; the next cycle's date is not yet published. You may submit only ONE application per BMI Foundation awards program, and may not send the same work to more than one of their programs. You may reapply only if you have not already won more than two BMI Composer Awards (Honorable Mention excluded).",
+          "required": true,
+          "source_url": "https://bmifoundation.org/by-application/bmicomposerawards"
+        },
+        {
+          "id": "anonymized-score",
+          "label": "Prepare the anonymized score of your original composition",
+          "details": "Judging is anonymous: the score may carry NO name or identifying marks beyond the title and composition. Both transposed and C-scores are accepted. The work may not be co-composed, may not have won any other award or recognition, and may not be under contract with a publisher or record label. Any instrumentation and any classical genre is allowed.",
+          "required": true,
+          "source_url": "https://bmifoundation.org/by-application/bmicomposerawards"
+        },
+        {
+          "id": "audio-rendering",
+          "label": "Generate an audio rendering from your engraving program",
+          "details": "Only audio renderings (\"midi\" files) generated from your music engraving software are accepted -- a live recording will not do; the sponsor does this to keep the playing field equal. If your score has non-notatable elements or electronics, you may add a further sound file.",
+          "required": true,
+          "source_url": "https://bmifoundation.org/by-application/bmicomposerawards"
+        },
+        {
+          "id": "text-permission",
+          "label": "Provide permission or public-domain proof for any text you set",
+          "details": "Only if your score contains text you did not write: submit a letter of permission from the writer, or proof the text is in the public domain.",
+          "required": false,
+          "source_url": "https://bmifoundation.org/by-application/bmicomposerawards"
+        }
+      ],
+      "last_verified_at": "2026-07-17"
     },
     {
       "id": "ascap-morton-gould-young-composer-awards",
@@ -2596,7 +2747,45 @@
         "source_url": "https://www.ascapfoundation.org/programs/awards/young-composer-awards",
         "last_verified_at": "2026-07-02",
         "notes": "2026 cycle Jan 6–Feb 6 ET; age 13–under 30; U.S. citizen, PR, or valid U.S. student visa; single original concert work; prize amount at Foundation discretion."
-      }
+      },
+      "application_requirements": [
+        {
+          "id": "ascap-online-application",
+          "label": "Complete the online application within the entry window",
+          "details": "The 2026 window ran January 6 to February 6 at 11:59 p.m. ET. ONE submission per entrant: if you send more, only the first qualifies and the rest are disqualified. You must also be an ASCAP writer member in good standing, unaffiliated with any PRO, or a member of an international PRO whose works ASCAP licenses. Read the Official Rules first; entering binds you to them.",
+          "required": true,
+          "source_url": "https://www.ascapfoundation.org/programs/awards/young-composer-awards"
+        },
+        {
+          "id": "score-of-original-concert-work",
+          "label": "Submit the score of one original concert work",
+          "details": "Published or unpublished, but no arrangements and no co-written works. It must be entirely your own (no sampling) and written within the three years before submission. Unlike the BMI Composer Awards, ASCAP requires every uploaded item to separately BEAR YOUR NAME -- do not reuse an anonymized BMI score here. Previous recipients of three or more Morton Gould awards are ineligible; other past Foundation winners may enter only a work written after the one that won.",
+          "required": true,
+          "source_url": "https://www.ascapfoundation.org/programs/awards/young-composer-awards"
+        },
+        {
+          "id": "mp3-realization",
+          "label": "Submit an mp3 of an electronic realization or recording",
+          "details": "ASCAP accepts either an electronic realization or an actual recording of the work.",
+          "required": true,
+          "source_url": "https://www.ascapfoundation.org/programs/awards/young-composer-awards"
+        },
+        {
+          "id": "parental-consent-form",
+          "label": "Have a parent or guardian apply on your behalf and file the Parental Consent Form",
+          "details": "Required if you are under 18 (or the age of majority where you live): the parent or guardian must complete and submit the online application FOR you, and upload the signed Parental Consent Form with it. The completed hard-copy form must be received by the deadline. Do not put a minor's email or phone on the application or the consent form.",
+          "required": false,
+          "source_url": "https://www.ascapfoundation.org/programs/awards/young-composer-awards"
+        },
+        {
+          "id": "text-clearance",
+          "label": "Clear the rights to any text you set",
+          "details": "For vocal compositions setting text or a translation: provide evidence the text is in the public domain, or written permission from the author, translator, publisher, or estate.",
+          "required": false,
+          "source_url": "https://www.ascapfoundation.org/programs/awards/young-composer-awards"
+        }
+      ],
+      "last_verified_at": "2026-07-17"
     },
     {
       "id": "aiga-worldstudio-dxd-scholarships",
@@ -2958,7 +3147,38 @@
         "source_url": "https://www.nfmc-music.org/competitions-awards/",
         "last_verified_at": "2026-06-25",
         "notes": "Official competitions and awards page states NFMC offers more than $750,000 in prizes nationally; most awards require native-born/naturalized U.S. citizen and NFMC membership; deadlines vary per competition on C&A chart."
-      }
+      },
+      "application_requirements": [
+        {
+          "id": "read-entrance-rules-and-chart",
+          "label": "Read the NFMC Entrance Rules and the Competitions & Awards Chart",
+          "details": "There is no single NFMC deadline: each competition has its own, listed on the downloadable Competitions & Awards Chart. Most awards require you to be a native-born or naturalized U.S. citizen, though the Lynn Freeman Olson Composition and Piano Pedagogy awards, the Ruth Morse Wilson Handbell Award, and International Music Camp are exceptions.",
+          "required": true,
+          "source_url": "https://www.nfmc-music.org/competitions-awards/"
+        },
+        {
+          "id": "nfmc-membership-in-the-right-division",
+          "label": "Join NFMC in the division your competition is listed under",
+          "details": "Membership must be in place BEFORE applications are accepted, and it must be in the matching division -- Junior entrants in the Junior Division, Student entrants in the Student/Collegiate Division. You may not enter competitions in multiple divisions in the same year even if you hold membership in more than one. Some awards are exempt from the membership rule, including the Young Artist and Ellis Piano Duo awards and the Summer Music Center awards.",
+          "required": true,
+          "source_url": "https://www.nfmc-music.org/competitions-awards/"
+        },
+        {
+          "id": "print-and-mail-application",
+          "label": "Print, complete, and MAIL the application form",
+          "details": "NFMC is paper-based: you print the form and additional information sheets for your specific competition, then mail them, following that competition's own instructions. Leave postal time. First-place winners generally may not compete for the same award again.",
+          "required": true,
+          "source_url": "https://www.nfmc-music.org/competitions-awards/"
+        },
+        {
+          "id": "contact-competition-chairman",
+          "label": "Contact the competition chairman with any questions",
+          "details": "NFMC directs applicants to the individual competition's chairman for anything the rules do not cover.",
+          "required": false,
+          "source_url": "https://www.nfmc-music.org/competitions-awards/"
+        }
+      ],
+      "last_verified_at": "2026-07-17"
     },
     {
       "id": "phi-alpha-theta-scholarships",
