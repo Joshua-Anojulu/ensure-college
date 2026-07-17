@@ -1014,7 +1014,51 @@
         "source_url": "https://haganscholarships.org/application/",
         "last_verified_at": "2026-06-25",
         "notes": "Official application page says all students who meet the eligibility criteria can apply regardless of nationality or citizenship; finalists submit either FAFSA summary if U.S. citizens or proof of non-U.S. citizenship. 2027-2028 fall application opens Sept 1 2026, deadline Dec 1 2026; 3.50 unweighted GPA; no essay."
-      }
+      },
+      "application_requirements": [
+        {
+          "id": "hagan-online-application",
+          "label": "Create an account and submit the application",
+          "details": "You can apply ONE TIME ONLY, so do not open the application until you are ready. The 2027-2028 application is available from September 1, 2026 for the 2027 graduating class; up to 1,500 scholarships are awarded. Read the sponsor's Scholarship Particulars first: the award must be re-earned every semester. Hagan communicates with applicants only.",
+          "required": true,
+          "source_url": "https://haganscholarships.org/application/"
+        },
+        {
+          "id": "high-school-transcript",
+          "label": "Provide a current copy of your high school transcript",
+          "required": true,
+          "source_url": "https://haganscholarships.org/application/"
+        },
+        {
+          "id": "letter-of-recommendation",
+          "label": "Provide an \"unsealed\" letter of recommendation",
+          "details": "The sponsor specifies the letter must be unsealed.",
+          "required": true,
+          "source_url": "https://haganscholarships.org/application/"
+        },
+        {
+          "id": "finalist-citizenship-documents",
+          "label": "If named a finalist, submit your FAFSA Summary or proof of non-U.S. citizenship",
+          "details": "Finalists only. U.S. citizens provide the first two pages of their FAFSA Summary, which must show the SAI. Non-U.S. citizens provide proof of non-U.S. citizenship: a copy of a foreign passport or green card.",
+          "required": false,
+          "source_url": "https://haganscholarships.org/application/"
+        },
+        {
+          "id": "apply-for-federal-and-state-grants",
+          "label": "Apply for Federal and State grants if eligible",
+          "details": "Listed by the sponsor under eligibility criteria with no exceptions.",
+          "required": false,
+          "source_url": "https://haganscholarships.org/application/"
+        },
+        {
+          "id": "work-240-hours",
+          "label": "Work 240 hours before your fall disbursement",
+          "details": "Required to receive the fall semester disbursement, not to apply: 240 hours between January 1 and September 1 of your enrolling year. Must be regularly scheduled non-family employment, performed under supervision, for compensation; full-time or part-time both count.",
+          "required": false,
+          "source_url": "https://haganscholarships.org/application/"
+        }
+      ],
+      "last_verified_at": "2026-07-17"
     },
     {
       "id": "stamps-scholars",
