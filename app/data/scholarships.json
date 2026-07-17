@@ -1741,7 +1741,31 @@
         "source_url": "https://shpe.org/engage/programs/scholarshpe/",
         "last_verified_at": "2026-06-21",
         "notes": "SHPE page: 2.5 GPA, SHPE membership, STEM major; citizenship not required for SHPE-funded awards; 2026-27 app opens Feb 2 2026 closes Feb 16 2026 — next cycle estimated Feb 2027."
-      }
+      },
+      "application_requirements": [
+        {
+          "id": "active-shpe-membership",
+          "label": "Become an active SHPE member",
+          "details": "Active membership is a minimum requirement for every ScholarSHPE scholarship, so join before the application window rather than during it.",
+          "required": true,
+          "source_url": "https://shpe.org/engage/programs/scholarshpe/"
+        },
+        {
+          "id": "scholarshpe-common-application",
+          "label": "Complete the ScholarSHPE Common Application",
+          "details": "One common application lets you apply to multiple ScholarSHPE opportunities without starting over each time. The window is short: the 2026-2027 application opened February 2 and closed February 16, 2026. GPA is taken as the cumulative GPA on the transcript of your latest institution (2.5 minimum).",
+          "required": true,
+          "source_url": "https://shpe.org/engage/programs/scholarshpe/"
+        },
+        {
+          "id": "sponsor-specific-requirements",
+          "label": "Check for sponsor-specific requirements on the scholarships you pick",
+          "details": "Some sponsored scholarships add their own requirements or specifications; SHPE lists those on the ScholarSHPE application page rather than here.",
+          "required": false,
+          "source_url": "https://shpe.org/engage/programs/scholarshpe/"
+        }
+      ],
+      "last_verified_at": "2026-07-17"
     },
     {
       "id": "nsbe-scholarships",
@@ -1776,6 +1800,30 @@
         "last_verified_at": "2026-06-25",
         "notes": "Official NSBE scholarships page lists Spring 2026 awards with a June 30 deadline, required GPA and residency filters, and sponsor-specific GPA/citizenship rules. Examples include 3.0 GPA/U.S. citizen, 3.0 GPA/U.S. citizen or permanent resident, 2.8 GPA/U.S. citizen, 2.5 GPA/U.S. citizen or permanent resident, and 2.0 GPA/U.S. citizen; GPA and citizenship fields are left unknown because there is no single program-wide rule."
       },
+      "application_requirements": [
+        {
+          "id": "nsbe-membership",
+          "label": "Hold active NSBE membership",
+          "details": "High-school students join as NSBE Jr. members, who have their own GPA verification form separate from the collegiate/graduate one.",
+          "required": true,
+          "source_url": "https://nsbe.org/scholarships/"
+        },
+        {
+          "id": "gpa-verification",
+          "label": "Verify your GPA inside the current verification window",
+          "details": "You cannot apply without a currently valid verified GPA, and NSBE requires re-verification EVERY semester. Spring/Summer window: April 1 to July 31, 11:59 PM EDT. Fall/Winter window: September 1 to February 26, 11:59 PM EDT. A GPA verified in the Spring goes invalid on August 31; one verified in the Fall expires March 31.",
+          "required": true,
+          "source_url": "https://nsbe.org/scholarships/"
+        },
+        {
+          "id": "nsbe-scholarship-application",
+          "label": "Apply during the scholarship cycle",
+          "details": "NSBE runs Fall and Spring cycles. Individual awards set their own GPA and citizenship rules, so check the specific scholarship: there is no single program-wide rule. NSBE does not publish the application's contents outside the portal.",
+          "required": true,
+          "source_url": "https://nsbe.org/scholarships/"
+        }
+      ],
+      "last_verified_at": "2026-07-17",
       "estimated_deadline": "2027-06-30"
     },
     {
@@ -1806,7 +1854,17 @@
         "source_url": "https://students.ieee.org/ieee-presidents-scholarship/",
         "last_verified_at": "2026-06-25",
         "notes": "Official IEEE Students page says the award is $10,000 payable over four years plus complimentary IEEE Student membership; finalists at Regeneron ISEF are eligible, and IEEE judges review projects in IEEE fields of interest. No separate application, essay, GPA minimum, or citizenship requirement is stated."
-      }
+      },
+      "application_requirements": [
+        {
+          "id": "isef-finalist-with-ieee-project",
+          "label": "Compete as a Regeneron ISEF finalist with a project in an IEEE field of interest",
+          "details": "There is nothing to apply to and no form to find: only ISEF finalists are eligible, and a team of IEEE members and volunteers reviews every project in IEEE fields of interest, then selects the winners. Your ISEF project IS the application. Winners are announced at the ISEF Special Awards Ceremony, where second-place ($600) and third-place ($400) awards are also given.",
+          "required": true,
+          "source_url": "https://students.ieee.org/ieee-presidents-scholarship/"
+        }
+      ],
+      "last_verified_at": "2026-07-17"
     },
     {
       "id": "acm-sighpc-computational-data-science-fellowship",
