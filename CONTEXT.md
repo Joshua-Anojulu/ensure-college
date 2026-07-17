@@ -78,6 +78,10 @@ _Avoid_: Stage, state, progress
 The persistent, source-linked list of application requirements derived for a saved opportunity. Feeds the recommendation-letters rollup.
 _Avoid_: Todo, tasks, steps
 
+**Quick apply**:
+A match nothing stands between the student and applying to: no essay, few requirement steps, and no **special check**. Drawn from the current match set, not the saved set. It names what is *actionable*, never what is easy — assembling an arts portfolio is a quick apply if nothing blocks the student from starting it, while a nomination-only award never is, however few its steps.
+_Avoid_: Easy win, low effort, low-hanging fruit
+
 **Digest**:
 The opt-in weekly email covering saved items closing within 14 days plus strong-match alerts for newly added opportunities. Sent by Vercel cron, guarded by `CRON_SECRET`.
 _Avoid_: Newsletter, notification, reminder email

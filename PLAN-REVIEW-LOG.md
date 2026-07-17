@@ -121,3 +121,85 @@ Full implementation of rev 3: 26 files. CORS production-gated (_is_production_ru
 
 ### Claude's verdict (round 0)
 Diff read in full; spec-faithful, all three round-3 build-time cautions honored (floor on EmailDeliveryError path; four-case Origin test matrix; api/index.py function key). ONE REAL DEFECT Codex's report missed: it added a functions block to vercel.json while keeping the legacy builds block — Vercel rejects configs with both (documented conflicting-configuration error), so the next deploy would have failed. Claude fixed directly per the anti-trivia rule (dropped builds; api/*.py is zero-config @vercel/python, which the functions block then configures). Caveat recorded: with builds gone, buildCommand may execute for the first time — the config MUST be proven on a throwaway preview-branch deploy before reaching main (this repo's vercel.json has bitten before: the 2026-07-06 static-CDN attempt). Proof run independently by Claude: 384 request + 41 e2e green (venv python), validate_dataset.py exit 0 with pre-existing notes only. No fix rounds spent. Awaiting diff sign-off + preview-deploy proof.
+
+---
+
+# Plan Review Log: quick-apply rule (docs/2026-07-17-quick-apply-rule.md)
+Act 1 (grill-with-docs) complete — plan locked, CONTEXT.md updated with the
+**Quick apply** term. MAX_ROUNDS=5. Codex model gpt-5.5 (config pins
+gpt-5.6-sol; overridden per the box's known-good setting), read-only.
+
+## Round 1 — Codex — VERDICT: REVISE
+Eight findings. Verbatim critique in tmp/codex-verdict-qa.txt. Summary:
+1. Panel is fed by lastResults/lastPrograms/lastCompetitions (all matches),
+   not saved — glossary said "saved opportunity". VALID.
+2. No cache-bust `?v=` bump for a frontend JS change — CLAUDE.md violation. VALID.
+3. Unverified fallback + count copy: line 2178 asserts "3 or fewer
+   requirements" for items line 2117 admits with empty requirements. VALID.
+4. `activity_or_lifestyle` rows not honest Special checks; service commitment
+   is a post-award stakes term, debt/clearance are legal/status gates. VALID (point).
+5. TBP row omits the candidate-initiated-by-June-1 path. VALID.
+6. "All three kinds": guard works (programs/competitions serialize the flag),
+   but special_requirements.json is merged only by load_scholarships(). VALID.
+7. One e2e assertion too thin for 3 payload kinds + count-copy + fallback. VALID.
+8. Plan self-contradicts ("two verified rows" then four); only Nurse Corps
+   reaches the panel (NHSC/SMART essay-required, TBP 4 steps). VALID.
+
+### Claude's response (arbiter) — rev 2
+Verified every code claim before acting:
+- #1 confirmed: collectQuickApplyCandidates() walks the match sets, no saved
+  filter. Fixed the CONTEXT.md glossary entry ("a match … not the saved set").
+- #6 confirmed: loader.py:29-35 merges the sidecar only for scholarships;
+  program_matcher.py:211 / competition_matcher.py:212 set the flag from their
+  own eligibility. Guard works for all three; sidecar note added.
+- Decisive finding: 16 opportunities already carry a special-check row AND
+  currently leak into the panel (Posse, SHPE, NSBE, IEEE, +12). The guard
+  ALONE fixes all 16 with no dataset change — so the four rows rev 1 bundled
+  in were never needed for the panel goal.
+ACCEPTED: #1 (glossary), #2 (cache-bust added), #3 (count-copy split; fallback
+kept per the VERIFY rule), #6 (sidecar note), #7 (per-kind + count-copy tests),
+#8 (rows removed → contradiction gone).
+ACCEPTED THE POINT of #4 by REMOVING all four special-check rows from the plan:
+the guard needs none of them, and the enum-taxonomy question they raise (no
+honest `kind` for federal-service/clearance/debt gates) is deferred to the
+follow-up audit rather than forced. #5 (TBP) becomes moot — row deferred.
+Net: rev 2 is guard + count-copy fix + cache-bust + glossary + per-kind tests.
+No dataset rows. Re-submitting to the same Codex session.
+
+## Round 2 — Codex — VERDICT: REVISE (round-1 blockers resolved)
+Codex confirmed the four questionable rows are gone, cache-bust is in, glossary
+matches the match-based panel, and the guard is mechanically sufficient for all
+three match shapes. Three new precision findings, no design flaws:
+1. The exact "16" leak count is not reproducible — a catalog scan finds ~20
+   scholarship + 4 program + (Codex) 3 competition potential leaks, profile-
+   gated. VALID.
+2. Plan said it was "unconfirmed" whether special-check programs/competitions
+   exist live — they do (Boys State, ALA Girls State; JSHS, Zero Robotics). VALID.
+3. "verified rows" in the count-copy split is ambiguous against the existing
+   `verified` (source-audited) field; the real flag is `candidate.unverified`. VALID.
+
+### Claude's response (arbiter) — rev 3
+Verified both factual claims before acting:
+- #2 confirmed: programs/competitions carry special checks INLINE in their own
+  eligibility.special_requirements (15 programs, 25 competitions), not via the
+  sidecar — which is why my round-1 sidecar-only scan wrongly found 0. Codex's
+  named examples are real.
+- #1 confirmed and self-demonstrating: my honest cross-lane recount is 16/4/0,
+  Codex's is 20/4/3 — the divergence proves an exact count is fragile. Removed
+  the number from the Goal; the e2e fixture is now the source of truth.
+ACCEPTED all three: dropped the exact count (qualitative + test as truth);
+corrected the false "unconfirmed" and named live examples while keeping
+constructed fixtures for test stability; respecified the count copy in code
+terms (knownRequirementCount = !c.unverified, unknownRequirementCount =
+c.unverified, incl. the K==0/U>0 case). No design change. Re-submitting rev 3.
+
+## Round 3 — Codex — VERDICT: REVISE (single residual)
+One finding: a stray "fixes 16 real leaks" survived in Key decisions (line 84)
+after the count was removed from the Goal. Everything else from round 2
+confirmed resolved. Fixed: "16 real leaks" -> "the existing real leaks". Re-submitting rev 3.1.
+
+## Round 4 — Codex — VERDICT: APPROVED
+Confirmed the stray exact count is gone and the approximate scan language is
+explicitly non-authoritative with the fixture as source of truth. No new
+blockers. Plan converged at rev 3.1 after 4 rounds. Awaiting Josh sign-off
+before any code.
