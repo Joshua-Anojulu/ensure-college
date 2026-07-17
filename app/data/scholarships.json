@@ -1105,14 +1105,45 @@
         "essay_required": false,
         "citizenship_requirement": "VERIFY"
       },
-      "description": "Scholarship for students ages 16-26 who are legal residents of the 50 U.S. states or D.C. (or dependents of active-duty U.S. military) pursuing post-secondary education. Selection is based on passion rather than grades or test scores; applicants submit a two-minute video.",
+      "description": "Scholarship for students ages 16-26 who are legal residents of the 50 U.S. states or D.C. (or dependents of active-duty U.S. military) pursuing post-secondary education. Selection is based on passion rather than grades or test scores; applicants submit one response, as either a short video or a 250-500 word essay.",
       "verified": true,
       "estimated_deadline": "2027-01-06",
       "verification": {
         "source_url": "https://tacobellfoundation.org/live-mas-scholarship/eligibilityfaq/",
         "last_verified_at": "2026-07-02",
-        "notes": "Official Eligibility & FAQs page: 2026 window was Oct 14 2025-Jan 6 2026 at 5:00 PM PST; no GPA, test scores, transcripts, or recommendations required; legal-resident/dependent-of-active-duty eligibility does not map cleanly to citizenship tags, so citizenship remains unconfirmed."
-      }
+        "notes": "Official Eligibility & FAQs page: 2026 window was Oct 14 2025-Jan 6 2026 at 5:00 PM PST; no GPA, test scores, transcripts, or recommendations required; response may be a 30s-2min video OR a 250-500 word essay; legal-resident/dependent-of-active-duty eligibility does not map cleanly to citizenship tags, so citizenship remains unconfirmed."
+      },
+      "application_requirements": [
+        {
+          "id": "live-mas-application",
+          "label": "Apply online during the application window",
+          "details": "It costs nothing to apply, and there is no GPA or test-score requirement. The 2026 window ran October 14, 2025 to January 6, 2026 at 5:00 PM PST. Mail-in submissions are not accepted. Minors: the instruction email goes to a parent or legal guardian's address.",
+          "required": true,
+          "source_url": "https://tacobellfoundation.org/live-mas-scholarship/eligibilityfaq/"
+        },
+        {
+          "id": "original-response",
+          "label": "Submit one original response: a video or an essay",
+          "details": "ONE original response, in either format: a video of 30 seconds to 2 minutes, or an essay of 250-500 words (an essay may include one photo representing your passion). One response addresses all three questions below; the length limit covers the whole response, not each question.",
+          "required": true,
+          "source_url": "https://tacobellfoundation.org/live-mas-scholarship/eligibilityfaq/",
+          "essay_prompts": {
+            "status": "public",
+            "items": [
+              {
+                "prompt": "What is your passion and how are you pursuing it? Show your passion and explain what steps you're taking toward it."
+              },
+              {
+                "prompt": "What impact do you hope to make with your passion or career path? Share how you're sparking positive change through your educational and career goals."
+              },
+              {
+                "prompt": "How do you embody the spirit of Live Más in your everyday life?"
+              }
+            ]
+          }
+        }
+      ],
+      "last_verified_at": "2026-07-17"
     },
     {
       "id": "prudential-emerging-visionaries",
