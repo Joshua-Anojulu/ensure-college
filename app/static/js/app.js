@@ -2092,12 +2092,16 @@ function quickApplyItemName(kind, item) {
   return kind === "scholarship" ? item.scholarship_name : item.name;
 }
 
-// Qualifies when the item does not require an essay and has 3 or fewer required
-// application steps. When a match result has no application_requirements data
-// (not yet verified for that scholarship, the backend serializes that as an
-// empty list, never as a missing key), it qualifies on essay alone and is
-// labeled "requirements not yet verified" rather than given a count.
+// Qualifies when the item does not require a special check, does not require
+// an essay, and has 3 or fewer required application steps. When a match result
+// has no application_requirements data (not yet verified for that scholarship,
+// the backend serializes that as an empty list, never as a missing key), it
+// qualifies on essay alone and is labeled "requirements not yet verified"
+// rather than given a count.
 function quickApplyCandidate(kind, item) {
+  if (item.requires_special_check) {
+    return null;
+  }
   if (item.essay_required) {
     return null;
   }
@@ -2175,9 +2179,18 @@ function renderQuickApplies() {
   quickAppliesList.innerHTML = "";
   quickAppliesEmpty.hidden = candidates.length > 0;
   if (quickAppliesCount) {
-    quickAppliesCount.textContent = candidates.length
-      ? `${candidates.length} match${candidates.length === 1 ? "" : "es"} need no essay and 3 or fewer requirements.`
-      : "";
+    const knownRequirementCount = candidates.filter((c) => !c.unverified).length;
+    const unknownRequirementCount = candidates.filter((c) => c.unverified).length;
+    const countParts = [];
+    if (knownRequirementCount > 0) {
+      countParts.push(`${knownRequirementCount} need no essay and 3 or fewer requirements`);
+    }
+    if (unknownRequirementCount > 0) {
+      countParts.push(
+        `${unknownRequirementCount} more have requirements we haven't verified yet`
+      );
+    }
+    quickAppliesCount.textContent = countParts.length ? `${countParts.join("; ")}.` : "";
   }
   const visible = candidates.slice(0, quickAppliesVisibleCount);
   for (const candidate of visible) {

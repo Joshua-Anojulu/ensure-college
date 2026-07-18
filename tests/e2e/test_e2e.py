@@ -4,6 +4,7 @@ Grouped by surface. Each test drives the actual UI (no API shortcuts) so a
 broken selector, a dead listener, or a JS exception fails here, which the
 request-level tests cannot catch.
 """
+import json
 import re
 
 import pytest
@@ -11,7 +12,7 @@ import pytest
 from tests.e2e.conftest import unique_email
 
 
-def fill_profile_and_submit(page):
+def submit_profile_form(page):
     """Walk the three-step profile form exactly as a student would."""
     page.fill("#gpa", "3.8")
     page.select_option("#grade-level", "high_school_junior")
@@ -25,6 +26,10 @@ def fill_profile_and_submit(page):
     page.fill("#target-schools", "Rice University")
     page.fill("#activities", "robotics club")
     page.click("#submit-btn")
+
+
+def fill_profile_and_submit(page):
+    submit_profile_form(page)
     page.wait_for_selector("#results-section:not([hidden])", timeout=25000)
     page.wait_for_selector("#results-container .match-card", timeout=25000)
 
@@ -38,6 +43,170 @@ def signup(page, email=None, password="e2e-password-123"):
     page.click("#auth-submit")
     page.wait_for_selector("#auth-logged-in:not([hidden])", timeout=15000)
     return email, password
+
+
+ROOT_MATCH_URL = re.compile(r"^https?://[^/]+/match$")
+PROGRAM_MATCH_URL = re.compile(r"^https?://[^/]+/programs/match$")
+COMPETITION_MATCH_URL = re.compile(r"^https?://[^/]+/competitions/match$")
+
+
+def fulfill_json(route, payload):
+    route.fulfill(
+        status=200,
+        content_type="application/json",
+        body=json.dumps(payload),
+    )
+
+
+def route_match_fixtures(page, scholarships=None, programs=None, competitions=None):
+    page.route(
+        ROOT_MATCH_URL,
+        lambda route: fulfill_json(route, {"matches": scholarships or [], "near_misses": []}),
+    )
+    page.route(
+        PROGRAM_MATCH_URL,
+        lambda route: fulfill_json(route, {"matches": programs or [], "near_misses": []}),
+    )
+    page.route(
+        COMPETITION_MATCH_URL,
+        lambda route: fulfill_json(route, {"matches": competitions or [], "near_misses": []}),
+    )
+
+
+def application_requirement(req_id="application-form"):
+    return {
+        "id": req_id,
+        "label": "Application form",
+        "required": True,
+        "details": "Fixture requirement.",
+        "source_url": "https://example.com/requirements",
+    }
+
+
+def special_requirement(kind):
+    return {
+        "kind": kind,
+        "label": "Fixture special check",
+        "details": "This constructed fixture requires a special eligibility check.",
+    }
+
+
+SCHOLARSHIP_BREAKDOWN = {
+    "field_of_study": 40,
+    "demographics": 0,
+    "target_school": 0,
+    "activities": 0,
+    "financial_need": 10,
+    "total": 85,
+}
+PROGRAM_BREAKDOWN = {"subject": 40, "demographics": 0, "financial_access": 10, "total": 85}
+COMPETITION_BREAKDOWN = {"category": 40, "demographics": 0, "financial_access": 10, "total": 85}
+
+
+def scholarship_match(slug, name, *, requires_special_check=False, requirements=None):
+    return {
+        "scholarship_id": slug,
+        "scholarship_name": name,
+        "sponsor": "Fixture Scholarship Sponsor",
+        "award_amount": 1000,
+        "deadline": "2099-12-31",
+        "estimated_deadline": None,
+        "url": "https://example.com/scholarship",
+        "verified": True,
+        "verification_source_url": "https://example.com/scholarship-source",
+        "last_verified_at": "2026-07-17",
+        "essay_required": False,
+        "closing_soon": False,
+        "score": 85,
+        "match_tier": "strong",
+        "match_reasons": [],
+        "score_breakdown": SCHOLARSHIP_BREAKDOWN,
+        "eligible_schools": [],
+        "requires_special_check": requires_special_check,
+        "special_requirements": (
+            [special_requirement("nomination")] if requires_special_check else []
+        ),
+        "application_requirements": (
+            [application_requirement(f"{slug}-application")]
+            if requirements is None
+            else requirements
+        ),
+    }
+
+
+def program_match(slug, name, *, requires_special_check=False):
+    return {
+        "program_id": slug,
+        "name": name,
+        "host": "Fixture Program Host",
+        "subject": "STEM research",
+        "cost": "Free",
+        "cost_category": "free",
+        "selectivity": "Selective",
+        "program_format": "residential",
+        "location": "Austin, TX",
+        "program_dates": "June 2099",
+        "deadline": "2099-12-31",
+        "estimated_deadline": None,
+        "url": "https://example.com/program",
+        "verified": True,
+        "verification_source_url": "https://example.com/program-source",
+        "last_verified_at": "2026-07-17",
+        "essay_required": False,
+        "score": 85,
+        "match_tier": "strong",
+        "match_reasons": [],
+        "score_breakdown": PROGRAM_BREAKDOWN,
+        "application_requirements": [application_requirement(f"{slug}-application")],
+        "requires_special_check": requires_special_check,
+        "special_requirements": (
+            [special_requirement("membership")] if requires_special_check else []
+        ),
+    }
+
+
+def competition_match(slug, name, *, requires_special_check=False):
+    return {
+        "competition_id": slug,
+        "name": name,
+        "host": "Fixture Competition Host",
+        "category": "Engineering",
+        "cost": "Free",
+        "cost_category": "free",
+        "recognition": "National recognition",
+        "participation_format": "team",
+        "location": "Virtual",
+        "competition_dates": "Spring 2099",
+        "deadline": "2099-12-31",
+        "estimated_deadline": None,
+        "url": "https://example.com/competition",
+        "verified": True,
+        "verification_source_url": "https://example.com/competition-source",
+        "last_verified_at": "2026-07-17",
+        "essay_required": False,
+        "score": 85,
+        "match_tier": "strong",
+        "match_reasons": [],
+        "score_breakdown": COMPETITION_BREAKDOWN,
+        "application_requirements": [application_requirement(f"{slug}-application")],
+        "requires_special_check": requires_special_check,
+        "special_requirements": (
+            [special_requirement("competition_or_finalist")]
+            if requires_special_check
+            else []
+        ),
+    }
+
+
+def wait_for_quick_apply_text(page, text):
+    page.wait_for_function(
+        """text => {
+            const list = document.querySelector("#quick-applies-list");
+            return Boolean(list && list.textContent.includes(text));
+        }""",
+        arg=text,
+        timeout=15000,
+    )
 
 
 # ---------------------------------------------------------------- marketing
@@ -261,6 +430,107 @@ class TestProfileAndMatches:
         page.wait_for_timeout(400)
         assert page.locator("#results-section").is_visible()
         assert not page.console_errors, page.console_errors
+
+
+# ---------------------------------------------------------------- quick applies
+
+class TestQuickApplies:
+    def test_special_check_scholarship_never_renders(self, page):
+        regular_name = "Fixture Regular Scholarship Quick Apply"
+        special_name = "Fixture Special Scholarship Quick Apply"
+        route_match_fixtures(
+            page,
+            scholarships=[
+                scholarship_match("fixture-regular-scholarship", regular_name),
+                scholarship_match(
+                    "fixture-special-scholarship",
+                    special_name,
+                    requires_special_check=True,
+                ),
+            ],
+        )
+
+        submit_profile_form(page)
+        wait_for_quick_apply_text(page, regular_name)
+
+        quick_apply_text = page.locator("#quick-applies-list").text_content()
+        assert regular_name in quick_apply_text
+        assert special_name not in quick_apply_text
+
+    def test_special_check_program_never_renders(self, page):
+        regular_name = "Fixture Regular Program Quick Apply"
+        special_name = "Fixture Special Program Quick Apply"
+        route_match_fixtures(
+            page,
+            programs=[
+                program_match("fixture-regular-program", regular_name),
+                program_match(
+                    "fixture-special-program",
+                    special_name,
+                    requires_special_check=True,
+                ),
+            ],
+        )
+
+        submit_profile_form(page)
+        wait_for_quick_apply_text(page, regular_name)
+
+        quick_apply_text = page.locator("#quick-applies-list").text_content()
+        assert regular_name in quick_apply_text
+        assert special_name not in quick_apply_text
+
+    def test_special_check_competition_never_renders(self, page):
+        regular_name = "Fixture Regular Competition Quick Apply"
+        special_name = "Fixture Special Competition Quick Apply"
+        route_match_fixtures(
+            page,
+            competitions=[
+                competition_match("fixture-regular-competition", regular_name),
+                competition_match(
+                    "fixture-special-competition",
+                    special_name,
+                    requires_special_check=True,
+                ),
+            ],
+        )
+
+        submit_profile_form(page)
+        wait_for_quick_apply_text(page, regular_name)
+
+        quick_apply_text = page.locator("#quick-applies-list").text_content()
+        assert regular_name in quick_apply_text
+        assert special_name not in quick_apply_text
+
+    def test_count_copy_distinguishes_unverified_requirements(self, page):
+        unknown_name = "Fixture Unknown Requirements Quick Apply"
+        route_match_fixtures(
+            page,
+            scholarships=[
+                scholarship_match(
+                    "fixture-unknown-requirements",
+                    unknown_name,
+                    requirements=[],
+                )
+            ],
+        )
+
+        submit_profile_form(page)
+        wait_for_quick_apply_text(page, unknown_name)
+        page.wait_for_function(
+            """() => {
+                const count = document.querySelector("#quick-applies-count");
+                return Boolean(
+                    count &&
+                    count.textContent.includes("requirements we haven't verified yet")
+                );
+            }""",
+            timeout=15000,
+        )
+
+        count_text = page.locator("#quick-applies-count").text_content()
+        assert "requirements we haven't verified yet" in count_text
+        assert "3 or fewer requirements" not in count_text
+        assert not count_text.startswith("0 ")
 
 
 # ---------------------------------------------------------------- catalog

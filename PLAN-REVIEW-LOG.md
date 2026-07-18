@@ -203,3 +203,40 @@ Confirmed the stray exact count is gone and the approximate scan language is
 explicitly non-authoritative with the fixture as source of truth. No new
 blockers. Plan converged at rev 3.1 after 4 rounds. Awaiting Josh sign-off
 before any code.
+
+---
+
+## Act 3 — Build (codex-build)
+
+### Round 1 — Codex build
+Codex (gpt-5.5, --yolo, run under Josh's hand after the classifier blocked
+the launch and self-granting the permission) implemented rev 3.1. Report:
+- app/static/js/app.js: guard `if (item.requires_special_check) return null;`
+  as the first check in quickApplyCandidate; count copy split into
+  knownRequirementCount (!c.unverified) / unknownRequirementCount (c.unverified),
+  joined with "; ", empty-string when both zero.
+- tests/e2e/test_e2e.py: new TestQuickApplies class — per-kind constructed
+  fixtures (scholarship/program/competition) via page.route interception,
+  asserting a requires_special_check item never renders; plus a count-copy
+  test asserting the unverified clause shows and "3 or fewer requirements"
+  does not. Refactored fill_profile_and_submit -> submit_profile_form + wrapper.
+- Cache-bust 20260715-2 -> 20260715-3 across index/journey/privacy/terms.html,
+  base.html, and tests/test_pages.py.
+- No app/data/*.json changes (spec-compliant).
+
+### Claude's verdict — VERIFIED, PASS
+Ran all proof myself (Codex's pasted output is advisory):
+- tests/ (request): 398 passed.
+- tests/e2e (full): 47 passed (43 prior + 4 new).
+- tests/test_dom_contract.py: 7 passed (DOM contract intact).
+- scripts/validate_dataset.py: no structural errors (3 pre-existing warnings).
+Read the full diff: app.js guard + count split are exactly per spec and match
+surrounding style; e2e fixtures are self-contained (no live-catalog dependence)
+as the plan required. Scope clean — 8 files, none under app/data.
+Reconciled Codex's stderr showing "4 failed": that was an intermediate build
+iteration; the final tree and my independent re-run are fully green. The
+pre-existing ?v=20260713-3 on journey.html's favicon + vendored three.min.js
+predates this change (git HEAD confirms) and is correctly untouched — the repo
+bumps app assets per change while vendored assets follow a slower cadence, and
+test_pages.py only checks app assets. Not a regression.
+Awaiting Josh's diff sign-off before commit. Codex does not commit; Claude does.
