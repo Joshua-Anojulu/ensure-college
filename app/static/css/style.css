@@ -3088,6 +3088,31 @@ body::after {
     background-image: url("/static/img/journey-map-mobile.webp");
     aspect-ratio: 900 / 520;
   }
-  .journey-stop-label { font-size: 0.7rem; }
-  .journey-stop-badge { font-size: 0.62rem; }
+  /* The desktop landmark percentages cluster the middle stops, so nowrap labels
+     collide on a narrow screen. Below 768px, distribute the six stops evenly in a
+     flex row pinned to the scene bottom: equal room per label, no overlap or
+     edge-clip. Exact landmark alignment is a desktop nicety; the mobile art is a
+     compressed scene where an even progress row reads cleaner. */
+  .journey-map-stops {
+    position: absolute;
+    inset: auto 0 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 0.15rem;
+    padding: 0 3% 4%;
+  }
+  .journey-stop {
+    position: static;
+    left: auto;
+    bottom: auto;
+    transform: none;
+    flex: 0 1 auto;
+    min-width: 0;
+  }
+  .journey-stop-label {
+    font-size: 0.6rem;
+    padding: 0.03rem 0.28rem;
+  }
+  .journey-stop-badge { font-size: 0.56rem; }
 }
