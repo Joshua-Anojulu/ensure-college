@@ -2930,3 +2930,68 @@ body::after {
   }
 }
 
+
+/* ============================================================
+   Forest-Journey redesign - Phase 0  (branch: redesign/forest-journey)
+   The illustrated world is the STAGE; working content rides in legible
+   panels over it. Decorative CSS backgrounds so text LCP paints first.
+   ============================================================ */
+
+/* Full-bleed illustrated stages use 100vw; clip the scrollbar-width overflow
+   they (and the pre-existing .proof-band) create. overflow-x: clip (not hidden)
+   preserves the sticky header, and clip on the root catches root-propagated
+   overflow that a body-only clip misses. */
+html, body { overflow-x: clip; }
+
+.hero { position: relative; isolation: isolate; }
+
+/* Illustrated forest stage: full-bleed, behind the hero content. */
+.hero::before {
+  content: "";
+  position: absolute;
+  top: clamp(-2rem, -3vw, -1.2rem);
+  bottom: clamp(-3rem, -4vw, -1.8rem);
+  left: calc(-50vw + 50%);
+  width: 100vw;
+  z-index: -2;
+  background: url("/static/img/hero-forest.webp") right bottom / cover no-repeat;
+  pointer-events: none;
+}
+
+/* Paper wash so the left headline + copy stay crisp over the art. */
+.hero::after {
+  content: "";
+  position: absolute;
+  top: clamp(-2rem, -3vw, -1.2rem);
+  bottom: clamp(-3rem, -4vw, -1.8rem);
+  left: calc(-50vw + 50%);
+  width: 100vw;
+  z-index: -1;
+  background: linear-gradient(101deg,
+    var(--canvas) 0%,
+    var(--canvas) 24%,
+    color-mix(in srgb, var(--canvas) 80%, transparent) 40%,
+    transparent 60%);
+  pointer-events: none;
+}
+
+/* Keep the working preview panel unmistakably legible over the forest. */
+.hero-demo {
+  background: color-mix(in srgb, var(--surface) 94%, transparent);
+  backdrop-filter: saturate(1.05) blur(1px);
+}
+
+@media (max-width: 768px) {
+  .hero::before {
+    background-image: url("/static/img/hero-forest-mobile.webp");
+    background-position: center bottom;
+    bottom: clamp(-2rem, -6vw, -1rem);
+  }
+  .hero::after {
+    background: linear-gradient(180deg,
+      var(--canvas) 0%,
+      var(--canvas) 30%,
+      color-mix(in srgb, var(--canvas) 78%, transparent) 52%,
+      transparent 82%);
+  }
+}
