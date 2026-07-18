@@ -641,6 +641,20 @@
         "details": "Applicants must be IEEE student members to enter the Lance Stafford Larson paper contest."
       }
     ],
+    "nabj-scholarship": [
+      {
+        "kind": "membership",
+        "label": "NABJ student membership required",
+        "details": "NABJ scholarships are for NABJ student members; the profile does not ask about NABJ membership, so join before applying."
+      }
+    ],
+    "chick-fil-a-remarkable-futures": [
+      {
+        "kind": "institution_channel",
+        "label": "Current Chick-fil-A Team Member required",
+        "details": "Open only to current Chick-fil-A restaurant Team Members — an employment status the profile does not capture. You must already work at a Chick-fil-A restaurant to apply."
+      }
+    ],
     "northrop-grumman-hip-program": [
       {
         "kind": "institution_channel",
