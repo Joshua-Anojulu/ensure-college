@@ -2521,7 +2521,7 @@ function buildRecLetterNeedRow({ item, kind, requirement }) {
    Milestones read independent sources so a stale/unrun session never lies. */
 
 // x-positions (percent) of the six landmarks in journey-map.webp, in order.
-const JOURNEY_STOP_X = [7, 26, 44, 57, 70, 92];
+const JOURNEY_STOP_X = [6, 21, 40, 57, 74, 92];
 
 function computeJourneyMapState() {
   const items = trackerItems || [];
