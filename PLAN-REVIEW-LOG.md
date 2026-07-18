@@ -327,3 +327,23 @@ source-backed by UGSP materials; the six no-row IDs check out against sidecar
 + inline. Residual non-blocking nit: courageous-persuaders doesn't look
 gate-shaped — addressed by softening its framing (queued for verification, may
 need no row). Converged at rev 3 after 3 rounds. Awaiting Josh sign-off.
+
+## Act 3 — Build (codex-build)
+
+### Round 1 — Codex build
+Codex (gpt-5.5, --yolo run under Josh's hand) implemented rev 3 steps 2-3.
+Report: edited only app/data/special_requirements.json — added tau-beta-pi
+(kind=membership) and replaced nih-ugsp (no_direct_application/"Service payback"
+-> identity_or_status/"Disadvantaged-background"). Flagged an honest deviation:
+validator now shows 4 warnings not 3, because sallie-mae-bridging-the-dream's
+confirmed deadline (Jul 17) passed as of Jul 18 — unrelated to this change.
+
+### Claude's verdict — VERIFIED, PASS
+Read the full diff: exactly the two rows from the plan, verbatim, nothing else
+touched (no CONTEXT.md, no .py, no scholarships.json). Ran all proof myself:
+validator "No structural errors"; request suite 398 passed; e2e 47 passed.
+Behavioral check via load_scholarships(): tau-beta-pi now special_reqs=1
+(membership) so it moves Strong -> special-check lane; nih-ugsp special_reqs=1
+(identity_or_status) so it stays in the lane for the corrected reason. The
+extra validator warning is a real deadline-rollover on an unrelated scholarship,
+not a regression. Awaiting Josh's commit sign-off. Codex does not commit.

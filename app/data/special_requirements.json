@@ -283,6 +283,13 @@
         "details": "Applicants must be AIAA student members pursuing an eligible aerospace-related path."
       }
     ],
+    "tau-beta-pi-scholarship": [
+      {
+        "kind": "membership",
+        "label": "Tau Beta Pi membership required",
+        "details": "These scholarships are restricted to initiated members of the Tau Beta Pi Association on the date the award is made; candidates for membership may apply if they will be initiated by June 1. Tau Beta Pi is an invitation-based engineering honor society — you cannot simply join, so confirm your standing before counting on this."
+      }
+    ],
     "aacn2-pathway-critical-care-nursing-scholarship": [
       {
         "kind": "institution_channel",
@@ -514,9 +521,9 @@
     ],
     "nih-undergraduate-scholarship-program": [
       {
-        "kind": "no_direct_application",
-        "label": "Service payback commitment",
-        "details": "Scholars must fulfill NIH service payback requirements after graduation as described in the official UGSP terms and conditions."
+        "kind": "identity_or_status",
+        "label": "Disadvantaged-background eligibility",
+        "details": "UGSP is limited to students from a disadvantaged background (as NIH defines it) with exceptional financial need — a status the profile does not capture. Confirm you meet NIH's definition before applying. The post-graduation service payback is a condition of accepting the award, tracked in the checklist, not an eligibility gate."
       }
     ],
     "nhs-scholarship": [
