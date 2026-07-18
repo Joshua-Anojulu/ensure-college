@@ -1439,7 +1439,7 @@
     {
       "id": "smart-scholarship",
       "name": "SMART Scholarship-for-Service Program",
-      "sponsor": "U.S. Department of Defense",
+      "sponsor": "U.S. Department of War",
       "award_amount": "full tuition plus annual stipend",
       "deadline": "VERIFY",
       "url": "https://www.smartscholarship.org/",
@@ -1462,13 +1462,13 @@
         "essay_required": true,
         "citizenship_requirement": "us_citizen"
       },
-      "description": "Department of Defense scholarship-for-service covering full tuition, an annual stipend, and summer internships for students in STEM fields. Recipients commit to post-graduation civilian employment with the DoD. Requires U.S. citizenship, a 3.0 GPA, and ability to obtain a security clearance.",
+      "description": "Department of War scholarship-for-service covering full tuition, an annual stipend, and summer internships for students in STEM fields. Recipients commit to post-graduation civilian employment with the DoW. Open to citizens of the United States, Australia, Canada, New Zealand, or the United Kingdom; requires a 3.0 GPA and the ability to obtain a security clearance.",
       "verified": true,
       "estimated_deadline": "2026-12-04",
       "verification": {
-        "source_url": "https://www.smartscholarship.org/sys_attachment.do?sys_id=8179e64b1bdc871060e7a798624bcbc2",
-        "last_verified_at": "2026-06-21",
-        "notes": "Official DoW SMART program PDF: U.S. citizen, 3.0 GPA, STEM degree, security-clearance eligible, service commitment; applications open annually Aug 1 — close date not confirmed on fetched materials."
+        "source_url": "https://www.smartscholarship.org/smart?id=smart_eligibility",
+        "last_verified_at": "2026-07-18",
+        "notes": "Official DoW SMART eligibility page (2026): sponsor rebranded Dept of Defense -> Dept of War (DoW); 3.0 GPA, STEM, clearance-eligible, one-for-one post-grad DoW civilian service commitment; opens Aug 1. Sponsor accepts citizens of the U.S., Australia, Canada, New Zealand, or the U.K. Gate stays us_citizen deliberately: the profile can't mark those four beyond 'international', and 'any' would falsely surface SMART to the intl students it rejects. Real rule is in the description."
       }
     },
     {
