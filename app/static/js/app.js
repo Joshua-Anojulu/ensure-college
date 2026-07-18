@@ -2554,7 +2554,7 @@ function computeJourneyMapState() {
 
 function journeyStatusLine(state) {
   if (state.activeSaved === 0) {
-    return "Your trail starts here — save opportunities that fit you.";
+    return "Your trail starts here. Save opportunities that fit you.";
   }
   const parts = [`${state.activeSaved} active`];
   if (state.submitted) parts.push(`${state.submitted} submitted`);
@@ -2584,7 +2584,7 @@ function renderJourneyMap() {
     );
   }).join("");
   const rejectedHtml = state.rejected
-    ? `<p class="journey-map-rejected">${state.rejected} not this cycle — that is part of the path too.</p>`
+    ? `<p class="journey-map-rejected">${state.rejected} not this cycle, and that is part of the path too.</p>`
     : "";
   journeyMap.innerHTML =
     `<div class="journey-map-head">` +
