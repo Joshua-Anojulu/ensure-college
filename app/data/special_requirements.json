@@ -634,23 +634,11 @@
         "details": "Applicants must identify as women or nonbinary, be age 35 or older, and pursue a first associate or bachelor's degree."
       }
     ],
-    "national-space-club-keynote-scholarship": [
-      {
-        "kind": "competition_or_finalist",
-        "label": "Keynote speech and video audition required",
-        "details": "Selected scholar delivers the Goddard Memorial Dinner keynote; application includes a space-inspiration video and finalist speech rounds."
-      }
-    ],
     "ieee-lance-stafford-larson-student-award": [
       {
         "kind": "membership",
         "label": "IEEE student membership required",
         "details": "Applicants must be IEEE student members to enter the Lance Stafford Larson paper contest."
-      },
-      {
-        "kind": "competition_or_finalist",
-        "label": "Annual paper contest entry",
-        "details": "Award is selected from papers submitted during the October 1–31 contest window each year."
       }
     ],
     "northrop-grumman-hip-program": [
