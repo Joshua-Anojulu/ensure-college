@@ -2937,11 +2937,13 @@ body::after {
    panels over it. Decorative CSS backgrounds so text LCP paints first.
    ============================================================ */
 
-/* Full-bleed illustrated stages use 100vw; clip the scrollbar-width overflow
-   they (and the pre-existing .proof-band) create. overflow-x: clip (not hidden)
-   preserves the sticky header, and clip on the root catches root-propagated
-   overflow that a body-only clip misses. */
-html, body { overflow-x: clip; }
+/* Full-bleed illustrated stages use 100vw and overflow by the scrollbar width.
+   Clip that on a FULL-WIDTH, AUTO-HEIGHT wrapper (.bleed-clip) around <main>:
+   NOT html/body, because on the root/body overflow-x: clip couples overflow-y
+   to clip and (via viewport propagation) freezes vertical scroll. An auto-height
+   wrapper has no vertical overflow to clip, so scroll and the sticky header keep
+   working while the horizontal bleed is contained. */
+.bleed-clip { overflow-x: clip; }
 
 .hero { position: relative; isolation: isolate; }
 
@@ -2994,4 +2996,98 @@ html, body { overflow-x: clip; }
       color-mix(in srgb, var(--canvas) 78%, transparent) 52%,
       transparent 82%);
   }
+}
+
+/* Journey map: illustrated scene as backdrop; the fog lifts as milestones are
+   reached, stop annotations sit under their landmarks. */
+.journey-map {
+  padding: clamp(1rem, 2.4vw, 1.6rem) clamp(1rem, 2.4vw, 1.8rem) clamp(0.9rem, 1.6vw, 1.3rem);
+  border-color: var(--brand-tint-2);
+}
+.journey-map-head { margin-bottom: 0.7rem; }
+.journey-map-head h3 {
+  margin: 0.1rem 0 0.3rem;
+  font-size: clamp(1.3rem, 2.2vw, 1.75rem);
+  font-weight: 800;
+  letter-spacing: -0.012em;
+}
+.journey-map-status { margin: 0; color: var(--muted); font-size: 0.95rem; }
+
+.journey-map-scene {
+  position: relative;
+  aspect-ratio: 1760 / 600;
+  min-height: 190px;
+  border-radius: 14px;
+  overflow: hidden;
+  background:
+    url("/static/img/journey-map.webp") center 40% / 108% no-repeat,
+    var(--surface-inset);
+}
+
+/* Fog: everything to the right of the furthest reached stop is still unfolding. */
+.journey-map-fog {
+  position: absolute;
+  top: 0; bottom: 0; right: 0;
+  left: var(--fog-start, 101%);
+  background: linear-gradient(90deg,
+    transparent 0,
+    color-mix(in srgb, var(--canvas) 74%, transparent) 12%,
+    color-mix(in srgb, var(--canvas) 90%, transparent) 46%,
+    var(--canvas) 100%);
+  transition: left 700ms var(--ease, ease-out);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.journey-map-stops { position: absolute; inset: 0; margin: 0; padding: 0; list-style: none; }
+.journey-stop {
+  position: absolute;
+  left: var(--x);
+  bottom: 7%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  text-align: center;
+  z-index: 2;
+}
+.journey-stop-dot {
+  width: 0.72rem; height: 0.72rem; border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 26%, transparent);
+}
+.journey-stop-badge {
+  font-family: var(--font-mono);
+  font-size: 0.7rem; font-weight: 700; line-height: 1.5;
+  color: var(--accent-ink); background: var(--accent);
+  padding: 0.04rem 0.42rem; border-radius: 999px;
+  order: -1;
+}
+.journey-stop-label {
+  font-size: 0.8rem; font-weight: 600; color: var(--ink);
+  background: color-mix(in srgb, var(--canvas) 84%, transparent);
+  padding: 0.05rem 0.4rem; border-radius: 6px;
+  white-space: nowrap;
+}
+.journey-stop.is-ahead { opacity: 0.55; }
+.journey-stop.is-ahead .journey-stop-dot { background: var(--muted-2); box-shadow: none; }
+.journey-stop.is-ahead .journey-stop-badge,
+.journey-stop.is-muted .journey-stop-badge {
+  color: var(--muted); background: var(--surface-3);
+}
+.journey-stop.is-flag.is-reached .journey-stop-dot { width: 0.92rem; height: 0.92rem; }
+
+.journey-map-rejected { margin: 0.65rem 0 0; color: var(--muted); font-size: 0.85rem; }
+
+@media (prefers-reduced-motion: reduce) {
+  .journey-map-fog { transition: none; }
+}
+@media (max-width: 768px) {
+  .journey-map-scene {
+    background-image: url("/static/img/journey-map-mobile.webp");
+    aspect-ratio: 900 / 520;
+  }
+  .journey-stop-label { font-size: 0.7rem; }
+  .journey-stop-badge { font-size: 0.62rem; }
 }

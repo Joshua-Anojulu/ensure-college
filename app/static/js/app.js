@@ -231,6 +231,7 @@ const savedSection = document.getElementById("saved-section");
 const savedSummary = document.getElementById("saved-summary");
 const savedEmpty = document.getElementById("saved-empty");
 const savedContainer = document.getElementById("saved-container");
+const journeyMap = document.getElementById("journey-map");
 const recLettersPanel = document.getElementById("rec-letters-panel");
 const recLettersList = document.getElementById("rec-letters-list");
 const recLettersEmpty = document.getElementById("rec-letters-empty");
@@ -2065,6 +2066,7 @@ function refreshTrackerSummary() {
   }
   renderRecLettersRollup(trackerItems);
   renderQuickApplies();
+  renderJourneyMap();
 }
 
 /* ---------- Quick applies ---------- */
@@ -2512,6 +2514,92 @@ function buildRecLetterNeedRow({ item, kind, requirement }) {
   return row;
 }
 
+/* ---------- Journey map ----------
+   The 2D illustrated progress map on the saved view. One state function reads
+   the real saved data (all three lanes, via trackerItems) plus the session's
+   lastResults; the illustrated scene's fog lifts as milestones are reached.
+   Milestones read independent sources so a stale/unrun session never lies. */
+
+// x-positions (percent) of the six landmarks in journey-map.webp, in order.
+const JOURNEY_STOP_X = [7, 26, 44, 57, 70, 92];
+
+function computeJourneyMapState() {
+  const items = trackerItems || [];
+  const known = new Set(SAVED_STATUSES.map((s) => s.value));
+  const count = (v) => items.filter((it) => (it.status || "interested") === v).length;
+  for (const it of items) {
+    const s = it.status || "interested";
+    if (!known.has(s)) console.warn(`Journey map: ignoring unknown saved status "${s}"`);
+  }
+  const rejected = count("rejected");
+  const activeSaved = items.length - rejected; // active = everything not rejected
+  const drafting = count("drafting");
+  const submitted = count("submitted");
+  const awarded = count("awarded");
+  const matchesRun = Boolean(lastResults && lastResults.length);
+  // Reaching the authenticated saved view means a profile exists.
+  const stops = [
+    { key: "profile", label: "Profile", reached: true, badge: "Done" },
+    { key: "matches", label: "Matches", reached: matchesRun,
+      badge: matchesRun ? String(lastResults.length) : "Not run", muted: !matchesRun },
+    { key: "saved", label: "Saved", reached: activeSaved > 0, badge: String(activeSaved) },
+    { key: "drafting", label: "Drafting", reached: drafting > 0, badge: String(drafting) },
+    { key: "submitted", label: "Submitted", reached: submitted > 0, badge: String(submitted) },
+    { key: "awarded", label: "Awarded", reached: awarded > 0, badge: String(awarded), flag: true },
+  ];
+  let reachedIndex = -1;
+  stops.forEach((s, i) => { if (s.reached) reachedIndex = i; });
+  return { stops, reachedIndex, rejected, activeSaved, submitted, awarded };
+}
+
+function journeyStatusLine(state) {
+  if (state.activeSaved === 0) {
+    return "Your trail starts here — save opportunities that fit you.";
+  }
+  const parts = [`${state.activeSaved} active`];
+  if (state.submitted) parts.push(`${state.submitted} submitted`);
+  if (state.awarded) parts.push(`${state.awarded} awarded`);
+  return parts.join(", ");
+}
+
+function renderJourneyMap() {
+  if (!journeyMap) return;
+  const state = computeJourneyMapState();
+  // Fog covers from just past the furthest reached stop to the end.
+  const ri = state.reachedIndex;
+  const fogStart = ri >= JOURNEY_STOP_X.length - 1
+    ? 101
+    : (JOURNEY_STOP_X[ri] + JOURNEY_STOP_X[ri + 1]) / 2;
+  const stopsHtml = state.stops.map((s, i) => {
+    const cls = ["journey-stop"];
+    cls.push(s.reached ? "is-reached" : "is-ahead");
+    if (s.flag) cls.push("is-flag");
+    if (s.muted) cls.push("is-muted");
+    return (
+      `<li class="${cls.join(" ")}" style="--x:${JOURNEY_STOP_X[i]}%">` +
+      `<span class="journey-stop-dot" aria-hidden="true"></span>` +
+      `<span class="journey-stop-badge">${escapeHtml(s.badge)}</span>` +
+      `<span class="journey-stop-label">${escapeHtml(s.label)}</span>` +
+      `</li>`
+    );
+  }).join("");
+  const rejectedHtml = state.rejected
+    ? `<p class="journey-map-rejected">${state.rejected} not this cycle — that is part of the path too.</p>`
+    : "";
+  journeyMap.innerHTML =
+    `<div class="journey-map-head">` +
+      `<p class="eyebrow">Your journey</p>` +
+      `<h3 id="journey-map-title">Your path to award day</h3>` +
+      `<p class="journey-map-status">${escapeHtml(journeyStatusLine(state))}</p>` +
+    `</div>` +
+    `<div class="journey-map-scene" style="--fog-start:${fogStart}%">` +
+      `<div class="journey-map-fog" aria-hidden="true"></div>` +
+      `<ol class="journey-map-stops">${stopsHtml}</ol>` +
+    `</div>` +
+    rejectedHtml;
+  journeyMap.hidden = false;
+}
+
 function renderSaved(scholarshipItems, programItems = [], competitionItems = []) {
   const items = [
     ...(scholarshipItems || []),
@@ -2519,6 +2607,7 @@ function renderSaved(scholarshipItems, programItems = [], competitionItems = [])
     ...(competitionItems || []),
   ];
   trackerItems = items;
+  renderJourneyMap();
   savedContainer.innerHTML = "";
   renderRecLettersRollup(items);
   renderQuickApplies();
