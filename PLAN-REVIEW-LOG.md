@@ -347,3 +347,64 @@ Behavioral check via load_scholarships(): tau-beta-pi now special_reqs=1
 (identity_or_status) so it stays in the lane for the corrected reason. The
 extra validator warning is a real deadline-rollover on an unrelated scholarship,
 not a regression. Awaiting Josh's commit sign-off. Codex does not commit.
+
+---
+
+# Plan Review Log: Forest-Journey redesign (docs/2026-07-18-forest-journey-redesign.md)
+Act 1 (grill-with-docs) complete — plan locked; CONTEXT.md gains "Journey map";
+ADR 0001 records the immersive-everywhere decision. MAX_ROUNDS=5. Codex gpt-5.5
+(config pins gpt-5.6-sol; overridden per the box's known-good setting),
+read-only.
+
+## Round 1 — Codex — VERDICT: REVISE
+Ten findings, all substantive; verified the two load-bearing factual claims
+(F6: renderSaved merges 3 lanes; F10: journey-teaser.js hardcodes a separate
+three.min.js ?v= outside the lockstep, 40 test defs not 47). Accepted all ten:
+1. LCP hand-waved (blocking) -> added a hard LCP budget (no new render-blocking
+   landing request, CSS growth cap, no data-URI scene art in inlined CSS, one
+   preloaded mobile hero only if it's the LCP element, else lazy w/ dims,
+   AVIF/WebP srcset, Lighthouse mobile as a release gate).
+2. Mockup gate validated only aesthetics -> each mockup must carry mobile comp,
+   asset inventory, LCP element, byte target, format, preload/lazy, RM fallback.
+3. DOM contract only checks selector existence, not behavior -> freeze ids/data
+   unless app.js changes; add semantic Playwright tests (tabs, 3-step form,
+   .card-body containment, overlay clickability, saved-status re-render).
+4. SEO list incomplete -> golden request tests for head tags + visible
+   verification/deadline/source blocks per lane + JSON-LD escaping.
+5. Legal copy under-tested -> snapshot-hash privacy/terms/footer/age-gate.
+6. Journey map underspecified -> single computeJourneyMapState() aggregating all
+   3 lanes, called from match flow + renderSaved + tracker refresh + status
+   handlers.
+7. Edge cases mislead -> explicit zero/all-rejected/awarded-only/unknown-status/
+   logged-out-sample states; rejected excluded from active saved, shown as side
+   count.
+8. Branch strategy too casual -> daily rebase, Vercel preview-env parity,
+   main-freeze window, full proof after final rebase.
+9. Scope too big -> Phase 0 spike (landing hero + saved Journey map only) proves
+   LCP/DOM/e2e before fanning out; explicit off-ramp to the ADR fallback.
+10. Stale counts / cache-bust gap -> removed hardcoded test counts; assert every
+   ?v= resolves to one central version; include dynamic loader URLs.
+No push-back — the review materially strengthened the plan. Re-submitting rev 2.
+
+## Round 2 — Codex — VERDICT: REVISE (round-1 blockers fixed in substance)
+Four precision refinements, all accepted:
+1. LCP gate lacked a deterministic protocol -> pinned: Lighthouse mobile vs the
+   Vercel preview URL, median of 3 runs <2.5s AND no single run >2.7s.
+2. LCP budget ignored JS/main-thread cost (map code lands in the synchronous
+   eager app.js) -> added a JS budget: map byte cap, no eager SVG build before
+   first paint, lazy-init on saved view / requestIdleCallback, TBT evidence.
+3. Cache-bust test "every ?v= in the tree" was overbroad (would catch docs/log
+   history) -> scoped to served HTML/templates + static JS loader URLs;
+   excludes docs/, PLAN-REVIEW-LOG, logs, vendor contents.
+4. `matches` milestone session-state ambiguous -> milestones read independent
+   sources: saved/drafting/submitted/awarded light from persisted data
+   regardless of lastResults; `matches` reads "not run this session" when there
+   are no current results, never implying failure.
+No push-back; these are precision, not design changes. Re-submitting rev 3.
+
+## Round 3 — Codex — VERDICT: APPROVED
+Rev 3 closes the material gaps: LCP gate measurable/repeatable, JS/main-thread
+path budgeted, cache-bust scope enforceable, Journey map no longer depends on
+current-session matches to show persisted progress. One non-blocking nit ("other
+nine surfaces" vs the Phase 1 list) fixed to "remaining surfaces". Converged at
+rev 3 after 3 rounds. Awaiting Josh sign-off before any code.

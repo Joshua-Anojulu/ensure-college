@@ -104,6 +104,10 @@ _Avoid_: Demo, tour, animation, 3D page
 The live miniature island docked on the landing page, linking to the Journey. A promotion for it, not a second Journey.
 _Avoid_: Widget, preview (that word means the three-question matcher demo)
 
+**Journey map**:
+The 2D illustrated dotted-path progress map. On the saved-applications view it is personalized — its milestone landmarks (profile, matches, saved, drafting, submitted, awarded) light up from the student's real [[Saved opportunity]] [[Status]] data, never fabricated. A generic sample version may appear on marketing surfaces. Distinct from the [[Journey]] (the 3D scroll flight) and the [[Teaser]] (the landing promo for it).
+_Avoid_: Journey (that is the 3D flight), progress bar, roadmap
+
 **Forest Light**:
 The design system shipped 2026-07-13: light-only, token-driven, deep forest brand on a cool paper canvas with a single amber accent. All color, type, and depth come from the tokens in `style.css`; nothing hardcodes a hex.
 _Avoid_: Theme, skin, palette (as a name for the whole system)
