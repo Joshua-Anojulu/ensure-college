@@ -53,8 +53,8 @@ An additive scoring component that raises fit without ever excluding (field over
 _Avoid_: Weight, factor, score bump
 
 **Special check**:
-An opportunity held back from ordinary results because it carries a niche gate the profile cannot verify (nomination, membership, finalist status, first-generation-only). Surfaced in its own "special opportunities to check" group — never as a Strong match.
-_Avoid_: Edge case, manual review, gated match
+An opportunity held back from ordinary results because the profile cannot verify a gate requiring a status the student must hold — nomination, membership (whether invitation-only or free-to-join), finalist status, first-generation-only. Surfaced in its own "special opportunities to check" group — never as a Strong match. Not selective-only: a free-to-join membership still qualifies because the profile can't confirm the student actually joined. A **passive, near-universal condition** the student meets by doing nothing (no federal debt, eligible to obtain a security clearance, no existing service obligation) is **not** a special check — flagging it would wrongly demote a scholarship most students are eligible for; record such conditions in the [[Checklist]] details instead.
+_Avoid_: Edge case, manual review, gated match, selective-only
 
 **Match quality**:
 The bucket a scored result lands in: **Strong**, **Possible**, or **Special check**. These three words are the only correct names for the buckets.

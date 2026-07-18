@@ -240,3 +240,90 @@ predates this change (git HEAD confirms) and is correctly untouched — the repo
 bumps app assets per change while vendored assets follow a slower cadence, and
 test_pages.py only checks app assets. Not a regression.
 Awaiting Josh's diff sign-off before commit. Codex does not commit; Claude does.
+
+---
+
+# Plan Review Log: special-check audit (docs/2026-07-18-special-check-audit.md)
+Act 1 (grill-with-docs) complete — plan locked; CONTEXT.md "Special check"
+sharpened to the affirmative-vs-passive criterion. MAX_ROUNDS=5. Codex model
+gpt-5.5 (config pins gpt-5.6-sol; overridden per the box's known-good setting),
+read-only.
+
+## Round 1 — Codex — VERDICT: REVISE
+Confirmed non-flaws: kind is inert (not scored, not rendered); TBP row valid
+(kind=membership, label 31, details 327<400) and gate supported by sponsor.
+Four findings:
+1. (High) Out-of-scope is load-bearing: nabj/ans/chick-fil-a state hard gates
+   with no row, still surface as ordinary matches.
+2. (High) nih-undergraduate-scholarship-program is special-checked ONLY for a
+   "Service payback commitment" — exactly what the new criterion says belongs
+   in checklist details. Contradiction on day one.
+3. (Med) "action" is too broad; national-space-club-keynote-scholarship treats
+   a video audition / finalist rounds (application work) as special eligibility.
+4. (Med) Proof skips e2e, but CLAUDE.md's proof command names both suites.
+
+### Claude's response (arbiter) — rev 2
+Verified all three data claims before acting:
+- F2 CONFIRMED and fixed IN-plan: NIH's row cites service payback (wrong) and
+  kind=no_direct_application (also wrong), but NIH UGSP has a REAL pre-existing
+  gate — disadvantaged background + exceptional financial need, an unverifiable
+  status (demographics list empty, matcher never gates on it). Re-justified the
+  row to kind=identity_or_status citing that gate; NIH keeps its lane place
+  (no behavioral change), now for the right reason.
+- F3 ACCEPTED: tightened CONTEXT.md — "pre-existing eligibility status or
+  channel", with an explicit carve-out that ordinary application work (essay,
+  video, audition/interview in the award's own selection) is NOT a special
+  check. national-space-club now visibly contradicts the tightened rule, so it
+  is NAMED in Out-of-scope as a follow-on reclassification rather than hidden.
+- F4 ACCEPTED: proof now runs validate + request + e2e.
+- F1 PARTIALLY: verified — nabj reads clean, but ans is CONDITIONAL (freshmen
+  exempt) and chick-fil-a is EMPLOYMENT (Team Member, no honest kind), so
+  Codex's "add them now" over-generalizes. Kept deferred, but reframed
+  Out-of-scope to name each one's actual shape and state plainly that these
+  still surface as ordinary matches until the verification pass.
+Net rev 2: TBP row + NIH re-justification (both data-only, existing kinds),
+tightened glossary, both test suites, honestly-named backlog. No model change.
+
+## Round 2 — Codex — VERDICT: REVISE
+Confirmed TBP + NIH schema-safe; NIH's disadvantaged-background gate verified
+against training.nih.gov. Three findings:
+1. (High) national-space-club still contradicts the tightened glossary — the
+   plan changed the rule but left the row, shipping a doc-vs-data conflict.
+2. (Med) The follow-on candidate list is stale — several listed IDs already
+   have rows.
+3. (Med) chick-fil-a is not blocked by "no honest kind" — kfc-foundation-
+   scholarship already models an employer gate as institution_channel.
+
+### Claude's response (arbiter) — rev 3
+Verified all three:
+- F2 CONFIRMED, I was wrong: national-beta-club, nshss, naba, sons-of-norway,
+  women-in-aviation carry EFFECTIVE special rows stored INLINE in
+  eligibility.special_requirements (loader.py appends sidecar to inline);
+  afcea-rotc has a sidecar row. My candidate list came from a sidecar-only
+  grep that missed inline rows — the same mistake as the quick-apply grill.
+  Re-verified with inline included: only 6 truly lack a row (nabj, ans,
+  chick-fil-a, afcea-stem-majors, american-physical-society,
+  courageous-persuaders). List corrected.
+- F3 CONFIRMED: kfc-foundation-scholarship uses kind=institution_channel for
+  "must be a participating-KFC employee" — the exact analog for chick-fil-a's
+  Team Member gate. Fixed the plan's "no honest kind" claim; chick-fil-a fits
+  institution_channel after verification.
+- F1 ACCEPTED via Codex's own exit (b): do NOT ship the application-work
+  clause in this plan. A mini-sweep showed it condemns at least TWO live rows
+  (national-space-club AND ieee-lance-stafford-larson), i.e. it's a sweep, not
+  a one-row fix. Reverted CONTEXT.md to the minimal change TBP+NIH actually
+  need — the passive-condition carve-out only — which creates NO contradiction
+  with a competition/audition row. The application-work refinement AND its row
+  cleanup are bundled into the follow-on so they land together.
+Net rev 3: TBP add + NIH re-justify (both existing kinds), minimal glossary
+(passive carve-out only), corrected 6-item backlog, chick-fil-a=institution_channel.
+No doc-vs-data contradiction shipped. No model change.
+
+## Round 3 — Codex — VERDICT: APPROVED
+Plan internally consistent: glossary adds only the passive-condition carve-out
+(no longer condemns national-space-club pre-cleanup); TBP/NIH rows schema-safe
+(membership / identity_or_status, details 326/329 < 400); NIH rationale
+source-backed by UGSP materials; the six no-row IDs check out against sidecar
++ inline. Residual non-blocking nit: courageous-persuaders doesn't look
+gate-shaped — addressed by softening its framing (queued for verification, may
+need no row). Converged at rev 3 after 3 rounds. Awaiting Josh sign-off.
