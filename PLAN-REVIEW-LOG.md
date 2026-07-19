@@ -408,3 +408,89 @@ path budgeted, cache-bust scope enforceable, Journey map no longer depends on
 current-session matches to show persisted progress. One non-blocking nit ("other
 nine surfaces" vs the Phase 1 list) fixed to "remaining surfaces". Converged at
 rev 3 after 3 rounds. Awaiting Josh sign-off before any code.
+
+# Plan Review Log: Phase 0 LCP tuning (docs/2026-07-19-phase0-lcp-tuning.md)
+Act 1 (grill-with-docs) complete — plan locked. Decisions: fixes on the branch;
+CLS via CSS-reservation-first (app.js only if forced); LCP is the gate (median-of-5
+<2500, no run >2700), CLS best-effort <0.1. No new CONTEXT.md terms; no new ADR
+(fallback already ADR 0001). MAX_ROUNDS=5. Codex read-only, config default model.
+
+## Round 1 — Codex (gpt-5.5) — VERDICT: REVISE
+Ten findings, all substantive; accepted all ten (no push-back — they materially
+sharpen the plan):
+1. Don't treat Lighthouse opportunity savings as LCP causality — campus-quad is
+   below-fold/lazy; classify as byte cleanup until the trace waterfall proves it
+   delays the measured LCP candidate.
+2. The custom Puppeteer/CDP script is for element ATTRIBUTION only, never a
+   timing source; all pass/fail timings come from the pinned Lighthouse protocol
+   (pin version, viewport, DPR, throttling, cache, URL, deployed commit).
+3. CLS diagnosis too narrow (led with app.js) — collect ALL layout-shift entries
+   w/ source nodes + timestamps; candidates also include font swap, auth/header
+   reveal, deferred motion setup, hero/demo layout. Trace decides the category.
+4. Responsive sizing underspecified — mobile ~100vw overstates (.main has side
+   padding) and ignores DPR; derive srcset candidates + sizes from measured CSS
+   widths (mobile calc(100vw - 3rem), desktop capped to the proof column) with
+   1x/2x descriptors.
+5. DOM-contract overconfidence — dom_contract.json does NOT track the proof
+   image, so wrapping in <picture> can change CSS/e2e silently without a contract
+   failure; add explicit assertions for picture/source/img, currentSrc,
+   dimensions, alt, loading, decoding.
+6. Cache-bust lockstep incomplete — test_pages.py checks app CSS/JS strings, not
+   srcset candidates or image preloads; extend it to parse src/srcset/href and
+   versioned landing asset URLs.
+7. Hero-preload "exactly one" contradicts "desktop variant under its own media";
+   the gate is mobile — preload ONLY the mobile variant, media matching the CSS
+   breakpoint, and only if it is the LCP element.
+8. Versioned preload won't dedupe against an unversioned CSS url() background —
+   make the CSS background URL and the preload href byte-identical (incl. ?v=).
+9. rel=prefetch isn't guaranteed non-competing — verify the priority/waterfall
+   after the change; if it still competes with the LCP path, remove the landing
+   stylesheet hint entirely.
+10. No regression guard for the inlined-CSS non-negotiable — add a test that /
+   contains inline CSS, uses no rel="stylesheet" for landing CSS, and carries
+   only the intended prefetch/preload hint.
+
+### Claude's response
+Accepted all ten; revising to rev 2. Softened the campus-quad causality claim to
+"top byte-cleanup + likely bandwidth competitor, confirmed by the step-1
+waterfall"; split step 1 into attribution-only tooling vs the pinned-LH timing
+source and broadened the CLS candidate set; specified measured-width srcset/sizes
+with DPR; added explicit responsive-image + inlined-CSS-guard tests and extended
+the ?v= lockstep test to image URLs; made the hero preload mobile-only + byte-
+identical to the CSS url(); added the prefetch waterfall check with a remove-the-
+hint fallback.
+
+## Round 2 — Codex (gpt-5.5) — VERDICT: REVISE
+Five findings — three consistency gaps where rev-2 softened the Goal but left the
+step bodies stale, two genuine refinements. Accepted all five:
+1. Step-1 attribution must run under the SAME viewport/DPR/cache/throttle as the
+   gate (CDP device emulation alone can shift the LCP element, lazy-load, CLS
+   race) — while Lighthouse stays the only pass/fail timing.
+2. Step 5 still narrowed CLS to app.js-populated containers despite step 1
+   broadening the candidate set — rewrite as culprit-specific branches (CSS
+   reservation for DOM/layout causes; distinct fixes for font/header/motion).
+3. Step 2 still called campus-quad "the dominant LCP bandwidth cost" that "still
+   downloads in the critical window" before step 1 proves it — reframe as top
+   byte-cleanup opportunity; LCP lever only if the trace confirms competition.
+4. Step 2 self-contradicted on sizing (led with ~100vw/~48vw then said don't
+   hand-wave vw) — remove the rough language; measured widths + DPR descriptors
+   are the sole source of truth.
+5. NEW: step 7 pins Lighthouse @11 but didn't state the failing baseline was @11
+   — pin the baseline version for a valid comparison.
+
+### Claude's response
+Accepted all five; revising to rev 3. Step 1 now runs attribution under
+gate-matching throttle/DPR/cache. Step 2 reframed as byte-cleanup-first and the
+rough vw language removed. Step 5 rewritten as culprit-specific branches. Step 7
+records that the 3548 ms baseline was measured with lighthouse@11, so @11 is the
+consistent comparison version.
+
+## Round 3 — Codex (gpt-5.5) — VERDICT: APPROVED
+Rev 3 verified: step 1 attribution runs under gate-matching throttle/DPR/cache and
+is not a timing source; step 2 is byte-cleanup-first (LCP lever only if the trace
+proves contention) with the rough vw language gone; step 5 branches by actual CLS
+culprit category; step 7 ties Lighthouse @11 to the baseline version. No new
+blocking flaw. One non-blocking nit — the "CSS-reservation first" key-decision
+wording was stale vs the branched step 5 — fixed to "fix by the trace-confirmed
+culprit category, preferring the contract-safe fix per branch." Converged at rev 3
+after 3 rounds. Awaiting Josh sign-off before any code.
