@@ -34,6 +34,18 @@ def fill_profile_and_submit(page):
     page.wait_for_selector("#results-container .match-card", timeout=25000)
 
 
+def save_first_result(page):
+    """Save the first match and wait until the server round-trip confirms it.
+
+    The Save button flips to "Saved" only after the POST resolves (see
+    applySavedButtonState in app.js), so this is the deterministic signal that
+    the item is persisted before the caller navigates to the plan and fetches
+    /account/saved. A fixed sleep here races the POST under full-suite load.
+    """
+    page.locator("#results-container button:has-text('Save')").first.click()
+    page.wait_for_selector("#results-container button:text-is('Saved')", timeout=15000)
+
+
 def signup(page, email=None, password="e2e-password-123"):
     email = email or unique_email()
     page.click("#open-signup")
@@ -539,6 +551,9 @@ class TestCatalog:
     def test_browse_catalog_and_search(self, page):
         page.click("#nav-browse-btn")
         page.wait_for_selector("#catalog-section:not([hidden])", timeout=15000)
+        # showCatalogView reveals the section before it awaits the catalog fetch,
+        # so wait for the container to actually populate, not just for the section.
+        page.wait_for_selector("#catalog-container > *", timeout=15000)
         assert page.locator("#catalog-container > *").count() > 0
         page.fill("#catalog-search", "coca")
         page.wait_for_timeout(800)
@@ -558,6 +573,7 @@ class TestCatalog:
         page.goto(f"{live_server}/journey", wait_until="load")
         page.click('.account-nav a[href="/#browse"]')
         page.wait_for_selector("#catalog-section:not([hidden])", timeout=15000)
+        page.wait_for_selector("#catalog-container > *", timeout=15000)
         assert page.locator("#catalog-container > *").count() > 0
         # The deep-link hash is consumed so a refresh returns to the landing view.
         assert page.evaluate("() => window.location.hash") == ""
@@ -629,21 +645,20 @@ class TestPlan:
     def test_save_opportunity_then_see_it_in_plan(self, page):
         signup(page)
         fill_profile_and_submit(page)
-        save_btn = page.locator("#results-container button:has-text('Save')").first
-        save_btn.click()
-        page.wait_for_timeout(1200)
+        save_first_result(page)
         page.click("#nav-plan-btn")
         page.wait_for_selector("#saved-section:not([hidden])", timeout=15000)
+        page.wait_for_selector("#saved-container > *", timeout=15000)
         assert page.locator("#saved-container > *").count() > 0
         assert page.locator("#saved-count").inner_text().strip() not in ("", "0")
 
     def test_saved_item_status_and_checklist(self, page):
         signup(page)
         fill_profile_and_submit(page)
-        page.locator("#results-container button:has-text('Save')").first.click()
-        page.wait_for_timeout(1200)
+        save_first_result(page)
         page.click("#nav-plan-btn")
         page.wait_for_selector("#saved-section:not([hidden])", timeout=15000)
+        page.wait_for_selector("#saved-container > *", timeout=15000)
         status = page.locator("#saved-container select").first
         if status.count():
             status.select_option(index=1)
@@ -657,12 +672,127 @@ class TestPlan:
     def test_plan_rollups_render(self, page):
         signup(page)
         fill_profile_and_submit(page)
-        page.locator("#results-container button:has-text('Save')").first.click()
-        page.wait_for_timeout(1200)
+        save_first_result(page)
         page.click("#nav-plan-btn")
         page.wait_for_selector("#saved-section:not([hidden])", timeout=15000)
         assert page.locator("#rec-letters-panel").count() == 1
         assert page.locator("#quick-applies-panel").count() == 1
+
+
+# ------------------------------------------------------------ the journey map
+
+def journey_stops(page):
+    """The Journey-map stops as a label -> state dict, read from the live DOM.
+
+    Reads classes/badges the way the eye would, so a stop that stops lighting
+    or a re-render that never fires shows up as a failing assertion, not a
+    silently-passing selector-existence check.
+    """
+    return page.evaluate(
+        """() => Object.fromEntries(
+            Array.from(document.querySelectorAll('#journey-map .journey-stop')).map(li => [
+                li.querySelector('.journey-stop-label').textContent.trim(),
+                {
+                    badge: li.querySelector('.journey-stop-badge').textContent.trim(),
+                    reached: li.classList.contains('is-reached'),
+                    muted: li.classList.contains('is-muted'),
+                    flag: li.classList.contains('is-flag'),
+                },
+            ])
+        )"""
+    )
+
+
+def open_plan_with_one_saved(page):
+    """Sign up, run the matcher, save the first result, land on the plan view."""
+    signup(page)
+    fill_profile_and_submit(page)
+    save_first_result(page)
+    page.click("#nav-plan-btn")
+    page.wait_for_selector("#saved-section:not([hidden])", timeout=15000)
+    page.wait_for_selector("#journey-map:not([hidden])", timeout=15000)
+
+
+class TestJourneyMap:
+    def test_logged_out_landing_shows_no_personal_map(self, page):
+        # Honesty rule: a returning-less visitor must never see a personal plan.
+        # The map only un-hides once renderSaved runs for a signed-in student.
+        assert page.locator("#journey-map").get_attribute("hidden") is not None
+
+    def test_new_account_sees_inviting_empty_state(self, page):
+        # Fresh account, no match run, nothing saved: the map still draws, the
+        # path invites a start, and Matches honestly reads "not run this session".
+        signup(page)
+        page.click("#nav-plan-btn")
+        page.wait_for_selector("#saved-section:not([hidden])", timeout=15000)
+        page.wait_for_selector("#journey-map:not([hidden])", timeout=15000)
+        status = page.locator(".journey-map-status").inner_text().lower()
+        assert "starts here" in status
+        stops = journey_stops(page)
+        assert stops["Profile"]["reached"] is True
+        assert stops["Matches"]["reached"] is False
+        assert stops["Matches"]["badge"] == "Not run"
+        assert stops["Saved"]["reached"] is False
+        assert not page.console_errors, page.console_errors
+
+    def test_saving_lights_profile_and_saved_stops(self, page):
+        open_plan_with_one_saved(page)
+        stops = journey_stops(page)
+        assert stops["Profile"]["reached"] is True
+        assert stops["Profile"]["badge"] == "Done"
+        assert stops["Matches"]["reached"] is True  # matcher ran this session
+        assert stops["Saved"]["reached"] is True
+        assert stops["Saved"]["badge"] == "1"
+        assert "1 active" in page.locator(".journey-map-status").inner_text()
+        assert not page.console_errors, page.console_errors
+
+    def test_status_change_to_submitted_relights_the_map(self, page):
+        open_plan_with_one_saved(page)
+        assert journey_stops(page)["Submitted"]["reached"] is False
+        page.locator("#saved-container select").first.select_option("submitted")
+        # The map must re-render off the status change, not just the saved card.
+        page.wait_for_function(
+            """() => {
+                const s = Array.from(document.querySelectorAll('#journey-map .journey-stop'))
+                    .find(li => li.querySelector('.journey-stop-label').textContent.trim() === 'Submitted');
+                return s && s.classList.contains('is-reached');
+            }""",
+            timeout=10000,
+        )
+        stops = journey_stops(page)
+        assert stops["Submitted"]["reached"] is True
+        assert stops["Submitted"]["badge"] == "1"
+        assert "1 submitted" in page.locator(".journey-map-status").inner_text()
+        assert not page.console_errors, page.console_errors
+
+    def test_rejected_is_a_muted_side_count_not_progress(self, page):
+        open_plan_with_one_saved(page)
+        page.locator("#saved-container select").first.select_option("rejected")
+        page.wait_for_function(
+            """() => {
+                const el = document.querySelector('#journey-map .journey-map-rejected');
+                return Boolean(el);
+            }""",
+            timeout=10000,
+        )
+        stops = journey_stops(page)
+        # The sole item is rejected -> zero active saved, so Saved is NOT progress.
+        assert stops["Saved"]["reached"] is False
+        assert stops["Saved"]["badge"] == "0"
+        assert page.locator(".journey-map-rejected").count() == 1
+        assert "starts here" in page.locator(".journey-map-status").inner_text().lower()
+        assert not page.console_errors, page.console_errors
+
+    def test_map_draws_fully_under_reduced_motion(self, page):
+        # The static fallback must be fully drawn, not animation-dependent.
+        page.emulate_media(reduced_motion="reduce")
+        open_plan_with_one_saved(page)
+        stops = journey_stops(page)
+        assert set(stops) == {
+            "Profile", "Matches", "Saved", "Drafting", "Submitted", "Awarded"
+        }
+        assert stops["Awarded"]["flag"] is True
+        assert not page.console_errors, page.console_errors
 
 
 # ---------------------------------------------------------------- hygiene
