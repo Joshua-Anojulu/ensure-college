@@ -494,3 +494,226 @@ blocking flaw. One non-blocking nit — the "CSS-reservation first" key-decision
 wording was stale vs the branched step 5 — fixed to "fix by the trace-confirmed
 culprit category, preferring the contract-safe fix per branch." Converged at rev 3
 after 3 rounds. Awaiting Josh sign-off before any code.
+
+## Step 1 executed — 2026-07-19 — plan retargeted to rev 4
+
+Rev 3 was APPROVED and signed off, then step 1 (the measurement gate) was run
+before any fix, exactly as the plan required. **It refuted the plan's central
+hypothesis**, so the approach changed materially and the plan re-enters Codex
+review rather than proceeding to build.
+
+Harness: puppeteer-core driving installed Chrome under gate-matching conditions
+(412x823 @ DPR 1.75, Moto G Power UA, CPU 4x, applied throttling equivalent to
+Lighthouse mobileSlow4G, cold cache + fresh profile per run). Attribution only.
+Coherence check: cold median 3540 ms vs the pinned Lighthouse baseline 3548 ms.
+
+Findings (full detail in the plan's "Step 1 findings" section):
+- **F1 — LCP is the age-gate modal, not any image.** Cold (what Lighthouse
+  measures) median LCP 3540 ms, element = `<p>` in `#age-gate`. With
+  `site_consent_v1` pre-seeded: **1396 ms**, element = `h1.hero-headline`. The
+  gate is 2144 ms of the LCP. Lighthouse's fresh profile means the consent flag
+  is never set, so the modal opens on every measured run.
+- **F2 — CLS 0.906 is deferred motion blanking painted content.** Blocking
+  `landing-motion.js` moves CLS 0.9491 -> 0.0432 with LCP unchanged.
+  `landing-motion.js:75-88` tags five above-fold sections `.reveal-on-scroll`
+  and adds `motion-ready`; CSS sets `opacity: 0`, so sections paint at FCP and
+  are then blanked 44-82 ms after the last script lands.
+- **F1 and F2 are independent** — each bisection left the other metric unmoved.
+- **F3 — campus-quad is not the LCP lever.** Real debt (285 KB, Low priority,
+  1412-3939 ms, starving the VeryHigh font requests) but not the LCP element.
+  Its `<img>` has `sizes` but no `srcset`, so `sizes` is inert. Measured
+  `.proof-photo` box is 380 px CSS at 412 vw (~665 px at DPR 1.75) vs 1200 px
+  shipped. Hero preload (step 3) dropped — LCP is text.
+- **F4 — pre-existing prod debt, not redesign debt.** ensurecollege.com (main)
+  measures median LCP 3544 ms with the same age-gate element and the same CLS
+  0.9491. The immersive hero is implicated in neither failure; the ADR 0001
+  fallback would have cost the redesign and fixed nothing.
+- **F5 — confounds:** the preview injects a never-completing
+  `/_next-live/feedback/feedback.js` toolbar (present in the baseline too, so
+  before/after on the preview stays valid); one prod run spiked to 6068 ms.
+
+Josh's calls on the findings (2026-07-19):
+- LCP fix = **decide consent before first paint** (inline head script + CSS),
+  over "just make the JS path faster" or reopening whether the gate should block.
+- Scope = **fix on the branch, merge normally** — no cherry-pick to main ahead
+  of the redesign, despite the bugs being live on prod.
+
+Rev 4 accordingly: step 2 becomes the consent-before-paint fix (with a mandatory
+mitigation for the new undismissable-modal risk if `app.js` fails to load), step 3
+becomes the CLS fix by skipping already-in-viewport reveal targets, step 4 demotes
+campus-quad to byte cleanup, step 5 is kept as hygiene rather than a lever, and
+step 7 pins the immutable deployment URL and records a falsifiable prediction
+(~1396 ms) so the re-measure can fail honestly.
+
+## Round 1 (rev 4) — Codex (gpt-5.5, effort=high) — VERDICT: REVISE
+
+_Thread 019f7ed9-0b2d-7e00-ab10-0facbc9169e5. Note: the first two attempts died on a broken
+Windows sandbox (helper shipped in codex-resources/ but codex.exe looks in bin/); repaired by
+copying codex-windows-sandbox-setup.exe + codex-command-runner.exe into bin/. Reasoning effort
+dropped xhigh->high, which was blowing the 10-minute cap._
+
+**Findings**
+
+1. Blocking: the inline `<head>` script will be blocked by the current CSP. [app/main.py](/c:/Users/josha/OneDrive/Documents/ScholarMatch/app/main.py:78) has `script-src 'self'`; rev 4 requires an inline script at [docs/2026-07-19-phase0-lcp-tuning.md](/c:/Users/josha/OneDrive/Documents/ScholarMatch/docs/2026-07-19-phase0-lcp-tuning.md:101).  
+Fix: add a hash/nonce-based CSP plan and request tests proving the consent script is allowed without broadly adding inline script execution.
+
+2. Blocking: the 1396 ms prediction is not supported by the proposed cold-state fix. The 1396 ms run is consent-preseeded with no gate; Lighthouse cold runs will now paint the gate at FCP, likely with `#age-gate p` still as LCP, not `h1.hero-headline` ([docs…:35](/c:/Users/josha/OneDrive/Documents/ScholarMatch/docs/2026-07-19-phase0-lcp-tuning.md:35), [docs…:206](/c:/Users/josha/OneDrive/Documents/ScholarMatch/docs/2026-07-19-phase0-lcp-tuning.md:206)).  
+Fix: measure or explicitly predict the final cold path: gate visible before paint, LCP element expected, and a numeric bound; keep the consented 1396 ms run as a separate comparison only.
+
+3. Blocking: the undismissable-modal mitigation is left undecided, and `<noscript>` is not enough. If external `app.js` fails, JS is still enabled so `<noscript>` will not run; the visible fixed overlay at [app/static/index.html:867](/c:/Users/josha/OneDrive/Documents/ScholarMatch/app/static/index.html:867) has a dead Continue button.  
+Fix: choose the mitigation in the plan, preferably an inline, CSP-allowed dismiss handler that wires checkbox/change/click independently of `app.js`, plus a browser test with `/static/js/app.js` blocked.
+
+4. Blocking: storage-blocked browsers are only handled for the new head read, not the existing accept path. `wireAgeGate()` still reads `localStorage` without `try/catch` at [app/static/js/app.js:1319](/c:/Users/josha/OneDrive/Documents/ScholarMatch/app/static/js/app.js:1319) and writes before hiding at [app/static/js/app.js:1331](/c:/Users/josha/OneDrive/Documents/ScholarMatch/app/static/js/app.js:1331).  
+Fix: define safe helpers for get/set; on accepted consent, hide the gate for the current page even if persistence fails.
+
+5. High: first-paint modal accessibility is underspecified. The modal is a fixed `div` near the end of the DOM with `role="dialog"` / `aria-modal="true"` ([app/static/index.html:867](/c:/Users/josha/OneDrive/Documents/ScholarMatch/app/static/index.html:867)); removing `hidden` means keyboard and screen-reader users can encounter page content behind the modal before JS focuses/traps it.  
+Fix: require explicit first-load focus behavior, background inertness or equivalent, Escape/Tab behavior, and Playwright keyboard assertions for cold and consented states.
+
+6. High: the e2e fixture plan is muddled. The repo overrides Playwright’s `page` fixture to always navigate to `/` and click through the gate ([tests/e2e/conftest.py:67](/c:/Users/josha/OneDrive/Documents/ScholarMatch/tests/e2e/conftest.py:67), [tests/e2e/conftest.py:77](/c:/Users/josha/OneDrive/Documents/ScholarMatch/tests/e2e/conftest.py:77)); that fixture cannot test cold first paint or app.js-failure behavior.  
+Fix: split fixtures into raw/cold and accepted pages, or add a dedicated cold-page fixture that does not auto-dismiss the gate.
+
+7. Medium: “visible on first paint” is not proven by a `domcontentloaded` test. The proposed assertion at [docs…:123](/c:/Users/josha/OneDrive/Documents/ScholarMatch/docs/2026-07-19-phase0-lcp-tuning.md:123) can pass after scripts have already run.  
+Fix: add request-level markup/CSS assertions plus a browser test that blocks `app.js` and still observes the intended initial gate state and dismiss fallback.
+
+8. Medium: the CLS fix is too absolute for a one-time `getBoundingClientRect()` test. `landing-motion.js` currently adds reveal classes at [app/static/js/landing-motion.js:75](/c:/Users/josha/OneDrive/Documents/ScholarMatch/app/static/js/landing-motion.js:75) and observes later at [app/static/js/landing-motion.js:105](/c:/Users/josha/OneDrive/Documents/ScholarMatch/app/static/js/landing-motion.js:105); restored scroll position, hash navigation, resize/orientation, and late layout can make “not intersecting at init” become visible while still hidden.  
+Fix: compute after scroll restoration/first rAF, mark any currently or near-viewport target revealed before applying the hidden class, and add browser CLS checks for cold top load, hash/restored scroll, and mobile resize/orientation.
+
+9. Medium: step 7 says “Record CLS alongside” but does not require LCP attribution after the fix, despite the risk section saying the element must be reconfirmed ([docs…:180](/c:/Users/josha/OneDrive/Documents/ScholarMatch/docs/2026-07-19-phase0-lcp-tuning.md:180), [docs…:220](/c:/Users/josha/OneDrive/Documents/ScholarMatch/docs/2026-07-19-phase0-lcp-tuning.md:220)).  
+Fix: make post-deploy attribution mandatory: record LCP element, render/load time, and trace/screenshots for all five Lighthouse runs or a companion gate-matched harness run.
+
+VERDICT: REVISE
+### Claude's response (rev 5)
+
+Accepted all nine; rejected none. Verified #1 independently before acting —
+`app/main.py:78` sends `script-src 'self'` with no `'unsafe-inline'` and no
+hashes, `style-src` does carry `'unsafe-inline'` (that is how `_inline_css`
+works), there are zero inline `<script>` tags in the app today, and the live
+preview header confirms it. Rev 4's mechanism would have been silently blocked:
+class never set, gate never suppressed, fix appearing to do nothing.
+
+Changes:
+1. **CSP (blocking).** The inline boot is admitted by a derived `sha256-` hash in
+   `script-src` — never `'unsafe-inline'`. The hash must be computed from the
+   actual served bytes, not hand-maintained, plus a self-verifying test that
+   extracts the served script, hashes it, and asserts the served CSP admits that
+   hash. A same-origin external `consent-boot.js` was considered and rejected: a
+   render-blocking head request costs ~one RTT (~560 ms at the gate's latency).
+2. **Prediction corrected.** Rev 4 predicted `h1.hero-headline` @ ~1396 ms, which
+   was unsound — 1396 ms came from *suppressing* the gate, but the fix *paints it
+   earlier*. Honest cold prediction now: gate visible at first paint, LCP element
+   **remains `#age-gate p`**, LCP ≈ FCP ≈ 1400–1700 ms. The consented run is a
+   separate comparison only, and an unexpected element halts step 7.
+3. **Mitigation decided, not deferred.** `<noscript>` is useless here (JS is
+   enabled; `app.js` merely failed to load). The inline boot now **owns the whole
+   gate lifecycle** — checkbox, Continue, hide — independent of `app.js` and of
+   the `/vocabulary` await. That also closes the normal-path window Codex found
+   where the modal is painted but dead.
+4. **Storage-safe on both paths.** `app.js:1319`/`:1331` stop touching
+   `localStorage` unguarded; on accept the gate hides for the current page even
+   if persistence throws.
+5. **A11y specified:** first-paint focus, background inertness, Tab trap, an
+   explicit decision on Escape (a consent gate arguably must not be
+   Escape-dismissible), with Playwright keyboard assertions for cold + consented.
+6. **E2E fixtures split** — the existing `page` override always dismisses the gate
+   and structurally cannot see cold first paint; added cold and accepted fixtures.
+7. **First paint proven properly** — request-level markup/CSS assertions plus a
+   browser test with `/static/js/app.js` blocked, rather than a
+   `domcontentloaded` check that can pass after scripts ran.
+8. **CLS test hardened** — compute after scroll restoration and a first `rAF`,
+   use a near-viewport margin, and assert CLS for cold top load, hash/restored
+   scroll (`/#browse` is a real footer link), and resize/orientation.
+9. **Post-fix LCP attribution mandatory** for all five runs; a passing number
+   with an unexpected element is not a pass.
+
+Also folded in, from this session rather than from Codex: step 4's WebP variants
+now come from a committed generator run with `.venv/Scripts/python.exe` (Pillow
+12.3.0 with WebP support is already in the venv; there is no cwebp/ImageMagick/
+ffmpeg on this box), which retires the "no repo image pipeline" risk instead of
+restating it.
+
+## Round 2 (rev 5) — Codex (gpt-5.5, effort=high) — VERDICT: REVISE
+
+Rev 5 is materially stronger, but I still see blockers.
+
+1. Blocking: the “single inline consent boot” is underspecified in a way that can reintroduce the dead-modal window. A synchronous `<head>` script can set `html.has-site-consent`, but `#age-gate` is not parsed until [app/static/index.html:867](/c:/Users/josha/OneDrive/Documents/ScholarMatch/app/static/index.html:867), so it cannot directly attach listeners or focus the dialog at first paint unless it uses delegation/MutationObserver or the markup moves. The plan claims it closes the painted-but-dead window at [docs/2026-07-19-phase0-lcp-tuning.md:95](/c:/Users/josha/OneDrive/Documents/ScholarMatch/docs/2026-07-19-phase0-lcp-tuning.md:95) and requires first-paint focus at [docs/2026-07-19-phase0-lcp-tuning.md:122](/c:/Users/josha/OneDrive/Documents/ScholarMatch/docs/2026-07-19-phase0-lcp-tuning.md:122), but does not specify a timing design that makes that true.  
+Fix: state the exact boot strategy: immediate document-level delegated handlers plus MutationObserver/readystatechange focus/inert setup, or move the gate/lifecycle script earlier so listeners and focus exist as soon as the gate can paint.
+
+2. High: the CSP-hash mechanism is workable, but the plan does not say where the per-page CSP is applied. Current security headers are static in `_SECURITY_HEADERS` ([app/main.py:73](/c:/Users/josha/OneDrive/Documents/ScholarMatch/app/main.py:73)) and middleware only `setdefault`s them ([app/main.py:155](/c:/Users/josha/OneDrive/Documents/ScholarMatch/app/main.py:155)); `/` currently returns only `Cache-Control` ([app/main.py:340](/c:/Users/josha/OneDrive/Documents/ScholarMatch/app/main.py:340)).  
+Fix: require `serve_index()` to set a landing-specific CSP header derived from the inserted boot bytes, with middleware preserving that override, and test that the served `/` CSP is the effective one.
+
+3. High: the no-storage consent behavior is internally inconsistent. Step 2 says “hide the gate for the current page even if persistence throws” ([docs…:99](/c:/Users/josha/OneDrive/Documents/ScholarMatch/docs/2026-07-19-phase0-lcp-tuning.md:99)), but risks says storage-blocked browsers hide “for the session” ([docs…:241](/c:/Users/josha/OneDrive/Documents/ScholarMatch/docs/2026-07-19-phase0-lcp-tuning.md:241)). Those are different consent semantics.  
+Fix: define the exact fallback: current document only, same-tab session memory, or cookie-backed consent, and add a storage-blocked reload/navigation test for that chosen behavior.
+
+4. Medium: the corrected prediction is closer, but not actually enforced. It predicts `#age-gate p` at ~1400-1700 ms ([docs…:211](/c:/Users/josha/OneDrive/Documents/ScholarMatch/docs/2026-07-19-phase0-lcp-tuning.md:211)), while the GO rule still allows median 2499 ms as long as the element is expected ([docs…:195](/c:/Users/josha/OneDrive/Documents/ScholarMatch/docs/2026-07-19-phase0-lcp-tuning.md:195)).  
+Fix: add a prediction-fail rule, e.g. if cold median LCP exceeds 1700/1800 ms or LCP-FCP delta exceeds a fixed threshold, stop and re-attribute even if the release gate technically passes.
+
+VERDICT: REVISE
+### Claude's response (rev 6)
+
+Accepted all four; rejected none. Verified #2 against the code before acting:
+`_SECURITY_HEADERS` is static (`app/main.py:73`), the middleware only
+`setdefault`s (`app/main.py:158`), and `serve_index()` returns just
+`Cache-Control` (`app/main.py:340`) — so a route-set CSP survives untouched, and
+the override fits `serve_index`'s existing `html.replace()` shape.
+
+1. **Boot timing specified (was the real hole).** Rev 5 asserted the inline boot
+   "closes the painted-but-dead window" without a mechanism, and Codex is right
+   that a head script cannot bind to `#age-gate` (line 867) before it parses. Rev
+   6 names the mechanism: **document-level delegated handlers attached
+   immediately**, so `change`/`click` are captured no matter when the gate paints
+   — that, not element-bound wiring, is what makes the gate never dead. Focus and
+   inertness genuinely need the node, so they apply at the earlier of a
+   `MutationObserver` hit or `DOMContentLoaded`; the plan now states plainly that
+   focus may land a few ms after first paint, which is acceptable where a dead
+   button would not be. Moving the markup after `<body>` is recorded as a
+   permitted alternative (the contract tracks ids, not order).
+2. **CSP application point pinned:** `serve_index()` sets a landing-specific CSP
+   derived from the bytes it inserted; middleware `setdefault` preserves it; tests
+   assert the served `/` CSP admits the served script's hash, that `/` still has
+   no `'unsafe-inline'`, and that a non-landing route keeps the global CSP so the
+   override is provably scoped.
+3. **Storage semantics made consistent.** Rev 5 contradicted itself — "current
+   page" in step 2 vs "for the session" in risks. Resolved to the narrower
+   reading: **current document only**, no cookie and no second storage mechanism
+   (either would be a new persistence category requiring a privacy-policy update,
+   which this plan does not cover). Consequence documented and tested: accept →
+   navigate → gate reappears. Flagged for Josh's sign-off as a consent decision.
+4. **Prediction now bites.** The GO rule alone would accept 2499 ms — ~800 ms
+   worse than predicted and a sign something else is wrong. Added a
+   prediction-fail rule: cold median >1800 ms, or LCP−FCP >250 ms, halts and
+   re-attributes even if the release gate technically passes.
+
+## Round 3 (rev 6) — Codex (gpt-5.5, effort=high) — VERDICT: APPROVED
+
+No material flaws found in rev 6.
+
+The delegated-handler boot is implementable as written: document-level `change`/`click` listeners registered from the head can catch events from `#age-gate-agree` and `#age-gate-continue` once they exist, including enabling the initially disabled Continue button after checkbox change. The plan also correctly prevents double ownership by requiring `app.js::wireAgeGate` to be reduced/removed and to stop touching `localStorage` unguarded ([app/static/js/app.js](/c:/Users/josha/OneDrive/Documents/ScholarMatch/app/static/js/app.js:1317), plan lines 128-130).
+
+The CSP override is now mechanically sound. `SecurityHeadersMiddleware` uses `setdefault` ([app/main.py](/c:/Users/josha/OneDrive/Documents/ScholarMatch/app/main.py:155)), so a `serve_index()` response-level CSP will survive; the plan requires that scoped override plus tests that `/` admits the served hash and non-landing routes keep the global CSP (plan lines 138-148).
+
+The remaining consent-storage behavior is explicitly narrowed to current-document only and marked for Josh’s sign-off, which is appropriate for the plan stage. The re-measure prediction now has a real fail condition: cold median LCP >1800 ms or LCP-FCP >250 ms forces re-attribution even if the release gate passes (plan lines 253-258).
+
+VERDICT: APPROVED
+
+### Convergence
+
+Rev 6 approved after 3 rounds on the rev-4 retarget arc (9 findings -> 4 -> 0).
+Across the whole plan's life: 6 revisions, 6 Codex rounds, 2 APPROVED verdicts —
+the first (rev 3) was invalidated by the plan's own step-1 measurement, which is
+the system working as intended rather than a failure of it.
+
+Awaiting Josh sign-off before any code. Two items need his explicit yes:
+- the plan itself;
+- the consent-storage semantics: storage-blocked visitors get the gate hidden for
+  the current document only, so they are re-prompted on each navigation (chosen
+  over a cookie/sessionStorage fallback, either of which would need a
+  privacy-policy update).
+
+### Josh sign-off — 2026-07-20
+
+Plan approved for implementation. Consent-storage semantics confirmed:
+storage-blocked visitors get the gate hidden for the **current document only**
+and are re-prompted on each navigation — chosen over a `sessionStorage` or cookie
+fallback, both of which would add a persistence category requiring a
+privacy-policy update. Build route: **Codex** (`/codex-build`), with Claude
+reviewing the diff and running the proof suites.
