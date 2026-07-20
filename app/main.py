@@ -348,6 +348,11 @@ def serve_index(request: Request) -> HTMLResponse:
     # a stale cached page would keep requesting old asset versions.
     html = (STATIC_DIR / "index.html").read_text(encoding="utf-8")
     html = html.replace("/*__INLINE_CSS__*/", _inline_css())
+    # Browser JS cannot read the Save-Data request header, so reflect it as a
+    # class; app.js checks this plus navigator.connection.saveData before
+    # hydrating decorative world plates.
+    if request.headers.get("save-data", "").lower() == "on":
+        html = html.replace('<html lang="en">', '<html lang="en" class="save-data">', 1)
     html = _absolute_og_image_urls(html, _public_base_url(request))
     html = html.replace(
         "__AI_FEATURES_ENABLED__", "true" if _ai_features_enabled() else "false"
@@ -748,6 +753,16 @@ def reminders_run(
         ),
         "new_match_alerts": send_new_match_alerts(db, scholarships, programs, competitions),
     }
+
+
+@app.middleware("http")
+async def _world_asset_cache_headers(request: Request, call_next):
+    # World art ships content-hashed (see scripts/generate_world_assets.py),
+    # so these responses — and only these — are safe to cache forever.
+    response = await call_next(request)
+    if request.url.path.startswith("/static/img/world/"):
+        response.headers["Cache-Control"] = "public, max-age=31536000, immutable"
+    return response
 
 
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
