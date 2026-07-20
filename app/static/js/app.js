@@ -6377,3 +6377,41 @@ async function handleProgramAdvice(programId, button, panel, loading, errorEl) {
     button.disabled = false;
   }
 }
+
+// ---- Phase 1: the World layer (decorative; Save-Data aware) --------------
+(function initWorldLayer() {
+  var saveData =
+    document.documentElement.classList.contains("save-data") ||
+    (navigator.connection && navigator.connection.saveData === true);
+  if (!saveData) {
+    var plates = document.querySelectorAll(
+      ".world-plate img[data-src], .world-marginalia img[data-src], .world-dusk img[data-src]"
+    );
+    plates.forEach(function (img) {
+      img.addEventListener(
+        "load",
+        function () {
+          img.classList.add("world-loaded");
+        },
+        { once: true }
+      );
+      if (img.dataset.srcset) img.srcset = img.dataset.srcset;
+      img.src = img.dataset.src;
+    });
+  }
+  var fireflies = document.querySelectorAll(".fireflies");
+  if (
+    fireflies.length &&
+    "IntersectionObserver" in window &&
+    !window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  ) {
+    var fireflyObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        entry.target.classList.toggle("fireflies-live", entry.isIntersecting);
+      });
+    });
+    fireflies.forEach(function (el) {
+      fireflyObserver.observe(el);
+    });
+  }
+})();
