@@ -101,7 +101,7 @@ The `/journey` page: one continuous scroll-driven camera flight through four ren
 _Avoid_: Demo, tour, animation, 3D page
 
 **Teaser**:
-The live miniature island docked on the landing page, linking to the Journey. A promotion for it, not a second Journey.
+The valley-overlook promo docked on the landing page, linking to the Journey: a painted overlook first, becoming the live miniature island on capable devices after load. A promotion for the Journey, not a second Journey.
 _Avoid_: Widget, preview (that word means the three-question matcher demo)
 
 **Journey map**:
@@ -111,3 +111,15 @@ _Avoid_: Journey (that is the 3D flight), progress bar, roadmap
 **Forest Light**:
 The design system shipped 2026-07-13: light-only, token-driven, deep forest brand on a cool paper canvas with a single amber accent. All color, type, and depth come from the tokens in `style.css`; nothing hardcodes a hex.
 _Avoid_: Theme, skin, palette (as a name for the whole system)
+
+**World**:
+The continuous illustrated forest environment every surface lives inside; working content always rides in legible panels over it. On the landing it deepens as you scroll, from morning trailhead to dusk treeline. The world decorates the journey; it never gates an action.
+_Avoid_: Background, theme, scenery
+
+**Trail**:
+The marigold dotted path — the one persistent world element. It connects sections and waypoints and marks the student's route through the world.
+_Avoid_: Path, line, connector
+
+**World glyph**:
+A hand-inked pictogram used inside illustrated moments (waypoint chips, facts panels). Distinct from the functional icon family used by working controls; the two never mix within one tier.
+_Avoid_: Icon (reserved for the functional family), illustration
