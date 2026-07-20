@@ -3129,3 +3129,215 @@ body::after {
   }
   .journey-stop-badge { font-size: 0.56rem; }
 }
+
+/* ---- Phase 1: the World layer (landing) -------------------------------- */
+/* Plates are decorative, hydrated by app.js (Save-Data aware); sections
+   keep transparent backgrounds so the scene shows through behind panels. */
+
+.catalog-numbers,
+.proof-band,
+.difference-panel {
+  position: relative;
+  /* Contain the z-index:-1 decorative layers inside each staged section so
+     they can never interleave with neighboring sections' paint. */
+  isolation: isolate;
+}
+
+.world-plate {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.world-plate img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+}
+
+/* The stage replaces the proof band's tint: the panel keeps its own surface. */
+.proof-band { background: transparent; }
+
+/* Stat labels go ink over the clearing: amber-on-amber-trail was illegible. */
+.catalog-number span { color: var(--ink-soft); }
+
+/* Stats ride openly on the clearing (comp 02): no cards on this section.
+   The :nth-child variants outrank a bare class, so name them explicitly. */
+.catalog-number,
+.catalog-number:nth-child(1),
+.catalog-number:nth-child(2),
+.catalog-number:nth-child(3) {
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+/* Tall sections keep the plate at natural aspect anchored top (cover would
+   zoom absurdly) and fade its lower edge into the canvas. */
+.difference-panel .world-plate img { height: auto; }
+.difference-panel .world-plate {
+  -webkit-mask-image: linear-gradient(to bottom, #000 78%, transparent);
+  mask-image: linear-gradient(to bottom, #000 78%, transparent);
+}
+
+.world-plate img.world-loaded {
+  opacity: 1;
+  transition: opacity 480ms var(--ease-out);
+}
+
+/* The owl lives inside the plate layer so multiply blends against the grove
+   in the same stacking context (its source has a paper background). */
+.world-plate .world-owl-img {
+  display: none;
+  position: absolute;
+  top: 0.6rem;
+  right: 1.2rem;
+  left: auto;
+  width: 108px;
+  height: auto;
+  mix-blend-mode: multiply;
+}
+
+.world-plate .world-leaves-img {
+  display: none;
+  position: absolute;
+  top: 12%;
+  left: 2.5%;
+  right: auto;
+  width: 92px;
+  height: auto;
+  mix-blend-mode: multiply;
+}
+
+@media (min-width: 1200px) {
+  .world-plate .world-owl-img,
+  .world-plate .world-leaves-img { display: block; }
+}
+
+/* The section heading rides a soft paper wash so copy stays legible over
+   the grove (quiet-center rule: more mist, never smaller type). */
+.difference-copy {
+  padding: 1.1rem 1.4rem;
+  border-radius: var(--radius-lg);
+  background: color-mix(in srgb, var(--canvas) 86%, transparent);
+}
+
+.world-dusk {
+  position: relative;
+  height: clamp(160px, 26vw, 300px);
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.world-dusk img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: bottom;
+  opacity: 0;
+}
+
+.world-dusk img.world-loaded {
+  opacity: 1;
+  transition: opacity 480ms var(--ease-out);
+}
+
+.world-dusk + .site-footer { margin-top: 0; }
+
+.fireflies { position: absolute; inset: 0; }
+
+.firefly {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+  opacity: 0.45;
+}
+
+.firefly:nth-child(1) { left: 58%; top: 38%; }
+.firefly:nth-child(2) { left: 63%; top: 55%; animation-delay: 0.7s; }
+.firefly:nth-child(3) { left: 70%; top: 30%; animation-delay: 1.3s; }
+.firefly:nth-child(4) { left: 76%; top: 48%; animation-delay: 0.4s; }
+.firefly:nth-child(5) { left: 82%; top: 26%; animation-delay: 1.9s; }
+.firefly:nth-child(6) { left: 87%; top: 44%; animation-delay: 1.1s; }
+.firefly:nth-child(7) { left: 92%; top: 34%; animation-delay: 2.4s; }
+
+@keyframes firefly-twinkle {
+  from { opacity: 0.15; }
+  to { opacity: 0.8; }
+}
+
+.fireflies-live .firefly { animation: firefly-twinkle 3.4s ease-in-out infinite alternate; }
+
+/* The Trail: dotted connectors between sections. Dots come from the dotted
+   stroke; the draw-on comes from a mask whose solid stroke is scrubbed by a
+   CSS scroll-driven animation. Without support (or with reduced motion) the
+   mask rests fully drawn: the static trail is the baseline, not a fallback. */
+.journey-teaser { position: relative; }
+
+.trail-link {
+  display: none;
+  position: absolute;
+  top: -84px;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.trail-link-1 { right: 9%; }
+.trail-link-2 { left: 11%; }
+.trail-link-3 { right: 22%; }
+/* Link 4 hangs from the difference panel's bottom edge: the teaser's
+   overflow:hidden + opaque panel would swallow anything placed inside it,
+   and anything hanging into the teaser's box gets painted over, so the
+   tail stays within the gap. */
+.trail-link-4 { top: auto; bottom: -20px; left: 30%; }
+
+.trail-dots {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 5;
+  stroke-linecap: round;
+  stroke-dasharray: 0.6 12;
+  opacity: 0.75;
+}
+
+.trail-reveal {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 12;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+}
+
+@media (min-width: 1200px) {
+  .trail-link { display: block; }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    /* The mask path has no box of its own, so the view timeline is named on
+       the svg root and referenced by the descendant. */
+    .trail-link { view-timeline: --trail-draw block; }
+    .trail-reveal {
+      animation: trail-draw both;
+      animation-timeline: --trail-draw;
+      animation-range: entry 10% cover 45%;
+    }
+  }
+}
+
+@keyframes trail-draw {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .world-plate img.world-loaded,
+  .world-owl img.world-loaded,
+  .world-dusk img.world-loaded { transition: none; }
+  .fireflies-live .firefly { animation: none; }
+}

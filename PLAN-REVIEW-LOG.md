@@ -894,3 +894,157 @@ Phase 0 is COMPLETE: the age-gate pop-in is gone (consent decided before
 first paint, CSP-hashed boot, single owner, a11y-trapped), CLS is zero, image
 debt is paid, and the Phase 1 fan-out is UNBLOCKED with per-feature budgets
 priced by the harness (docs/2026-07-20-phase1-forest-world-design.md).
+
+
+# Plan Review Log: Phase 1 - the World carried across every surface (2026-07-20)
+Act 1 (grill-with-docs) complete - plan locked at docs/2026-07-20-phase1-forest-world.md, CONTEXT.md updated (World, Trail, World glyph; Teaser amended). MAX_ROUNDS=5.
+
+## Round 1 — Codex (gpt-5.5/high, thread 019f7f8e-a5a9-77e2-a226-84fe7b5eaf22)
+
+**Findings**
+
+- [Phase 1 plan](C:/Users/josha/OneDrive/Documents/ScholarMatch/docs/2026-07-20-phase1-forest-world.md:52) uses the old pinned Lighthouse gate even though [Phase 0 outcome](C:/Users/josha/OneDrive/Documents/ScholarMatch/docs/2026-07-19-phase0-lcp-tuning.md:306) says Lighthouse 11 cannot attribute this page and will read about 2.9s. Fix: make the real-throttle attribution harness the release gate, with Lighthouse recorded as advisory unless attribution is fixed.
+
+- The “target ≤1800ms” budget is stale against Phase 0’s accepted observed LCP of ~2440-2880ms. Fix: set a delta budget from the accepted Phase 0 baseline, not a fantasy absolute target.
+
+- [app/main.py](C:/Users/josha/OneDrive/Documents/ScholarMatch/app/main.py:336) inlines the whole `style.css` into `/`, so every Stage B/Journey/template CSS addition bloats landing critical CSS. Fix: add a hard inline CSS byte/gzip cap and split non-landing world CSS out of the landing inline path.
+
+- The plan says CSS background layers but also `loading="lazy"`, `decoding="async"`, and width/height for below-fold plates, which CSS backgrounds cannot provide. Fix: use absolutely positioned `<picture><img>` plates for any sizable scene art, with reserved aspect ratio and `fetchpriority="low"`.
+
+- “Five new lazy plates” has no aggregate request budget or concurrency limit. Fix: inventory must include per-stage total bytes, first-viewport bytes, max parallel image requests, and decoded memory estimates.
+
+- Asset cache-busting conflicts with the current hero contract: [index.html](C:/Users/josha/OneDrive/Documents/ScholarMatch/app/static/index.html:27) and [tests](C:/Users/josha/OneDrive/Documents/ScholarMatch/tests/test_pages.py:246) require the mobile hero preload/source to stay unversioned and byte-identical. Fix: explicitly exempt or content-hash hero LCP art and add a no-double-fetch test.
+
+- The plan says CSP is `script-src 'self'`, but the landing already depends on a hashed inline consent boot [app/main.py](C:/Users/josha/OneDrive/Documents/ScholarMatch/app/main.py:100). Fix: preserve the derived-hash CSP path and test that no new inline executable scripts or inline event handlers are introduced.
+
+- `journey-teaser.js` dynamically loads Three with a stale hardcoded version [journey-teaser.js](C:/Users/josha/OneDrive/Documents/ScholarMatch/app/static/js/journey-teaser.js:50), while the HTML asset parser will not catch JS string URLs. Fix: scan CSS `url()` and JS string asset URLs in the lockstep/version test or switch world assets to content-hash filenames.
+
+- Existing CSS already hardcodes world colors [style.css](C:/Users/josha/OneDrive/Documents/ScholarMatch/app/static/css/style.css:2763), contradicting the plan’s final “no hardcoded hex” audit. Fix: convert current exceptions to tokens first, then enforce new CSS/JS hex scans with an explicit allowlist.
+
+- “Hero untouched” conflicts with approved comps 01/10 showing a different hero/sign/form treatment, and comp 10 uses State where CONTEXT defines Preview as GPA, grade, interest [CONTEXT.md](C:/Users/josha/OneDrive/Documents/ScholarMatch/CONTEXT.md:63). Fix: state that Preview fields and DOM semantics remain GPA/grade/interest, and the sign/card treatment is decorative only.
+
+- Comp 08 shows nav labels like Colleges/Resources/About Us, but current template IA is How it works/Browse all/Find my matches [base.html](C:/Users/josha/OneDrive/Documents/ScholarMatch/app/templates/base.html:33). Fix: declare comp nav text non-binding and preserve existing IA/route labels.
+
+- The DOM contract does not protect overlay behavior, z-index, dimensions, or `pointer-events`; it mostly tracks ids/selectors/classes [dom_contract.json](C:/Users/josha/OneDrive/Documents/ScholarMatch/tests/dom_contract.json:2). Fix: add Playwright hit-testing assertions with `elementFromPoint` for every primary control under world layers.
+
+- E2E additions are named but too narrow: current teaser test only checks `window.THREE` and canvas width [test_e2e.py](C:/Users/josha/OneDrive/Documents/ScholarMatch/tests/e2e/test_e2e.py:279). Fix: test painting-first image visibility, same-box live swap, reduced-motion static mode, no layout shift, and clickable CTA.
+
+- Reduced-motion coverage misses reduced data, forced colors, focus visibility, and decorative label semantics. Fix: add tests for `prefers-reduced-motion`, `Save-Data`/low-end fallback, forced-colors contrast, focus rings over art, and `aria-hidden` on decorative plates.
+
+- The template-family plan only says CWV should be “spot-checked” across 322 indexed pages [plan](C:/Users/josha/OneDrive/Documents/ScholarMatch/docs/2026-07-20-phase1-forest-world.md:64). Fix: gate at least one Opportunity page, browse page, guide page, and 404 with request budgets, LCP element attribution, and schema/verification assertions.
+
+- World glyphs in the facts panel risk changing verification semantics on Opportunity pages, where verified/estimated labels and JSON-LD are already carefully handled [detail.html](C:/Users/josha/OneDrive/Documents/ScholarMatch/app/templates/detail.html:84). Fix: require tests for verified, unverified, and estimated-deadline entries plus unchanged JSON-LD.
+
+- “CSS dots paused off-viewport” is underspecified; pure CSS cannot know off-viewport in broad browser support. Fix: either use an IntersectionObserver class to pause them or keep fireflies static/non-animated.
+
+- The “all art generated up front” approach increases style-drift and wasted asset risk despite staged merges. Fix: generate the reusable frame/glyph system first, then produce only the next merge’s plates after its byte and layout contract is proven.
+
+- Observability stops at proof suites and preview measurements; no resource timing or post-deploy check is specified. Fix: record loaded world asset URLs/bytes, LCP element URL, long tasks, CLS contributors, and post-deploy CWV/RUM snapshots per stage.
+
+VERDICT: REVISE
+### Claude's response (rev 2)
+
+Accepted 17 of 18: harness is now the release gate with pinned Lighthouse advisory-only; delta budget (+150ms over Phase 0 accepted baseline, <2500ms hard, CLS<0.1) replaces the stale 1800ms target; plates become positioned picture/img (not CSS backgrounds) with aspect-ratio reservation + fetchpriority=low + aria-hidden; inlined landing CSS gets a hard gzip growth cap (<=4KB) and non-landing world CSS splits into world.css; world assets ship content-hashed and the lockstep parser extends to CSS url() and JS string URLs; hero preload stays unversioned/byte-identical with a no-double-fetch test; CSP derived-hash consent boot preserved with a no-new-inline test; comps declared binding for art direction only (Preview stays GPA/grade/interest; comp nav/footer IA non-binding; sign treatment decorative around the existing panel); existing hardcoded hexes tokenized before the new hex scan; elementFromPoint hit-testing e2e for primary controls; Teaser e2e covers painting-first/same-box swap/reduced-motion/CTA; Save-Data + forced-colors + focus-visible + aria-hidden coverage added; template family gains gated representatives (opportunity/browse/guide/404) plus verified/unverified/estimated + JSON-LD byte-unchanged tests; fireflies pause via existing IntersectionObserver infra (pure-CSS off-viewport claim dropped); per-stage aggregate budgets in the inventory; post-merge harness-on-prod snapshot recorded per stage ledger entry (no new RUM infra).
+
+Rejected 1: per-stage art generation. The Higgsfield trial window (~2026-07-23) is a hard economic boundary chosen at grill Q8; plates cost ~2 credits each, so drift/waste risk is cheap and carried by a shared style block + reserved redo budget. Logged as arbiter's decision.
+
+## Round 2 — Codex
+
+Most prior findings are addressed in rev 2, but a few new contradictions remain.
+
+- [docs/2026-07-20-phase1-forest-world.md](C:/Users/josha/OneDrive/Documents/ScholarMatch/docs/2026-07-20-phase1-forest-world.md:35): The release gate is internally inconsistent: “within +150 ms of Phase 0 baseline (~2440-2880 ms)” and “hard-capped under 2500 ms median” can both fail by definition if the remeasured accepted baseline is above 2350 ms. Fix: use either a remeasured delta gate or an absolute cap, and define what happens when the baseline itself exceeds 2500.
+
+- [docs/2026-07-20-phase1-forest-world.md](C:/Users/josha/OneDrive/Documents/ScholarMatch/docs/2026-07-20-phase1-forest-world.md:30): The gate appears cold/consent-gated only, which can hide hero/world regressions behind the age-gate LCP element. Fix: require both cold and pre-consented returning-visitor harness runs, each with LCP element attribution.
+
+- [docs/2026-07-20-phase1-forest-world.md](C:/Users/josha/OneDrive/Documents/ScholarMatch/docs/2026-07-20-phase1-forest-world.md:41): “Post-merge check once against prod” is too weak for the already noisy Phase 0 measurement model. Fix: run the same median-of-5 protocol post-merge, or at least 3 runs with a no-outlier threshold.
+
+- [docs/2026-07-20-phase1-forest-world.md](C:/Users/josha/OneDrive/Documents/ScholarMatch/docs/2026-07-20-phase1-forest-world.md:80): `world.css` “loaded only by non-landing surfaces” conflicts with Stage B SPA views, because match lanes/catalog/saved/profile all live in `/`’s `index.html`. Fix: explicitly classify SPA world CSS as landing post-LCP async CSS, or keep it in `style.css` under the inline gzip cap.
+
+- [docs/2026-07-20-phase1-forest-world.md](C:/Users/josha/OneDrive/Documents/ScholarMatch/docs/2026-07-20-phase1-forest-world.md:62): Content-hashed world assets are said to be immutable, but the repo currently mounts `StaticFiles` without any immutable cache header. Fix: add static-cache middleware/route behavior plus tests asserting `Cache-Control: public, max-age=31536000, immutable` for hashed world assets only.
+
+- [docs/2026-07-20-phase1-forest-world.md](C:/Users/josha/OneDrive/Documents/ScholarMatch/docs/2026-07-20-phase1-forest-world.md:63): The parser extension prevents unhashed references but does not prove the filename hash matches file contents. Fix: add a hash-integrity test or generated manifest that verifies each `world/` filename digest against bytes on disk.
+
+- [docs/2026-07-20-phase1-forest-world.md](C:/Users/josha/OneDrive/Documents/ScholarMatch/docs/2026-07-20-phase1-forest-world.md:82): The inline SVG Trail can bloat HTML/DOM outside the CSS byte cap. Fix: add HTML byte growth, DOM node count, and SVG path complexity limits to Stage A gates.
+
+- [docs/2026-07-20-phase1-forest-world.md](C:/Users/josha/OneDrive/Documents/ScholarMatch/docs/2026-07-20-phase1-forest-world.md:90): “Existing IntersectionObserver motion infrastructure” is not a reusable visibility toggler; current reveal IO is one-shot. Fix: specify a dedicated firefly observer with disconnect/cleanup behavior and tests.
+
+- [docs/2026-07-20-phase1-forest-world.md](C:/Users/josha/OneDrive/Documents/ScholarMatch/docs/2026-07-20-phase1-forest-world.md:112): The template-family scope incorrectly implies legal pages are under `base.html`; current privacy/terms are static HTML served separately. Fix: either explicitly migrate legal pages to the template family or list them as separate static-page reskin targets with their own tests.
+
+- [docs/2026-07-20-phase1-forest-world.md](C:/Users/josha/OneDrive/Documents/ScholarMatch/docs/2026-07-20-phase1-forest-world.md:28): Performance gates cover LCP/CLS but not INP/main-thread cost, despite adding images, observers, scroll animation, and Three swaps. Fix: add long-task/script-eval/frame-budget checks, especially for Stage C.
+
+- [docs/2026-07-20-phase1-forest-world.md](C:/Users/josha/OneDrive/Documents/ScholarMatch/docs/2026-07-20-phase1-forest-world.md:19): The comps bind art direction, but there is no visual regression or screenshot acceptance gate. Fix: require Playwright screenshots for the ten mapped sections against approved comps, with manual signoff or explicit tolerance.
+
+VERDICT: REVISE
+### Claude's response (rev 3)
+
+Accepted all 11: gate arithmetic fixed (delta vs remeasured median-of-5 baseline is the gate; >2500ms stage median = stop-and-investigate; baseline >2500ms = pre-existing regression investigated first); dual harness scenarios (cold + pre-consented) with LCP attribution; post-merge = same median-of-5 protocol; world.css mechanism corrected for SPA-in-index.html (template family via <link>, SPA via app.js-appended stylesheet after init, landing above-fold world rules stay in style.css under the cap); immutable Cache-Control set explicitly for /static/img/world/ with a request test (StaticFiles gap confirmed); hash-integrity manifest test added; Trail SVG bounded (HTML <=6KB gzip growth, <=40 DOM nodes, one path per section link, no filters); dedicated firefly IntersectionObserver with disconnect/cleanup + e2e (one-shot reveal IO not reused); legal pages reclassified as static reskin targets with snapshot-hashed copy untouched; TBT/long-task budget (<=50ms new long-task time) + Stage C frame-budget check; per-stage Playwright screenshot capture with manual Josh sign-off as the visual acceptance gate.
+
+## Round 3 — Codex
+
+Rev 3 resolves the substantive round 1-2 findings: comp scope, Lighthouse caveat, cold/returning LCP coverage, CSS/HTML byte caps, hashed asset caching, JS/CSS asset scanning, legal-page scope, schema preservation, clickability, reduced-motion, main-thread budget, and visual signoff are now covered.
+
+Remaining issues:
+
+- [docs/2026-07-20-phase1-forest-world.md](C:/Users/josha/OneDrive/Documents/ScholarMatch/docs/2026-07-20-phase1-forest-world.md:99): SPA `world.css` is appended “after init/idle” but also promised before first tab activation; existing deep links and nav clicks can activate catalog/saved before idle, causing unstyled first render or a late visual pop. Fix: load/await `world.css` before any world-staged SPA activation, or render Forest Light until CSS is loaded with no mid-view swap.
+
+- [docs/2026-07-20-phase1-forest-world.md](C:/Users/josha/OneDrive/Documents/ScholarMatch/docs/2026-07-20-phase1-forest-world.md:88): Save-Data skipping is not enforceable if below-fold plates are normal `<picture><img src/srcset>` markup; the browser may still fetch them on scroll. Fix: use inert `data-src/srcset` world plates hydrated only when `navigator.connection?.saveData !== true` and no `Save-Data: on` request signal, with a no-JS Forest Light fallback and a request/browser test.
+
+- [docs/2026-07-20-phase1-forest-world.md](C:/Users/josha/OneDrive/Documents/ScholarMatch/docs/2026-07-20-phase1-forest-world.md:52): The ledger asks for “LCP element URL,” but cold/returning LCP may be text, not an image URL. Fix: record selector/node summary plus resource URL only when the LCP entry is resource-backed.
+
+VERDICT: REVISE
+### Claude's response (rev 4)
+
+Accepted all 3: SPA world stages scoped under .world-ready set only in the stylesheet load callback (deep links render plain Forest Light, stage fades in as decorative opacity, instant/off under reduced-motion — no unstyled pop); Save-Data enforced by construction via inert data-src world plates hydrated only when neither navigator.connection.saveData nor the Save-Data request signal is present, no-JS fallback is plain Forest Light, with a saveData-on => zero-plate-requests browser test; ledger records LCP element as selector/node summary with resource URL only when resource-backed.
+
+## Round 3 — Codex
+
+Rev 3 resolves the substantive round 1-2 findings: comp scope, Lighthouse caveat, cold/returning LCP coverage, CSS/HTML byte caps, hashed asset caching, JS/CSS asset scanning, legal-page scope, schema preservation, clickability, reduced-motion, main-thread budget, and visual signoff are now covered.
+
+Remaining issues:
+
+- [docs/2026-07-20-phase1-forest-world.md](C:/Users/josha/OneDrive/Documents/ScholarMatch/docs/2026-07-20-phase1-forest-world.md:99): SPA `world.css` is appended “after init/idle” but also promised before first tab activation; existing deep links and nav clicks can activate catalog/saved before idle, causing unstyled first render or a late visual pop. Fix: load/await `world.css` before any world-staged SPA activation, or render Forest Light until CSS is loaded with no mid-view swap.
+
+- [docs/2026-07-20-phase1-forest-world.md](C:/Users/josha/OneDrive/Documents/ScholarMatch/docs/2026-07-20-phase1-forest-world.md:88): Save-Data skipping is not enforceable if below-fold plates are normal `<picture><img src/srcset>` markup; the browser may still fetch them on scroll. Fix: use inert `data-src/srcset` world plates hydrated only when `navigator.connection?.saveData !== true` and no `Save-Data: on` request signal, with a no-JS Forest Light fallback and a request/browser test.
+
+- [docs/2026-07-20-phase1-forest-world.md](C:/Users/josha/OneDrive/Documents/ScholarMatch/docs/2026-07-20-phase1-forest-world.md:52): The ledger asks for “LCP element URL,” but cold/returning LCP may be text, not an image URL. Fix: record selector/node summary plus resource URL only when the LCP entry is resource-backed.
+
+VERDICT: REVISE
+### Claude's response (rev 4)
+
+Accepted all 3: SPA world stages scoped under .world-ready set only in the stylesheet load callback (deep links render plain Forest Light, stage fades in as decorative opacity, instant/off under reduced-motion — no unstyled pop); Save-Data enforced by construction via inert data-src world plates hydrated only when neither navigator.connection.saveData nor the Save-Data request signal is present, no-JS fallback is plain Forest Light, with a saveData-on => zero-plate-requests browser test; ledger records LCP element as selector/node summary with resource URL only when resource-backed.
+
+## Round 4 — Codex
+
+Rounds 1-3 are largely resolved in rev 4. The remaining problems are narrower, but still concrete:
+
+- [docs/2026-07-20-phase1-forest-world.md](C:/Users/josha/OneDrive/Documents/ScholarMatch/docs/2026-07-20-phase1-forest-world.md:131): `app.js` cannot directly know the `Save-Data: on` request header; that signal exists server-side, not in browser JS. Fix: have `serve_index()` emit a meta/class from `Request.headers["save-data"]`, or scope the guarantee to `navigator.connection.saveData` only, with tests for the chosen path.
+
+- [docs/2026-07-20-phase1-forest-world.md](C:/Users/josha/OneDrive/Documents/ScholarMatch/docs/2026-07-20-phase1-forest-world.md:102): `world.css` appended at init can still compete with returning-visitor LCP before any SPA tab is used. The harness may catch this, but the plan should make the request explicitly non-critical. Fix: load it only on first SPA-world activation, or use a low-priority preload/fetch path proven not to compete in the returning-visitor waterfall.
+
+- [docs/2026-07-20-phase1-forest-world.md](C:/Users/josha/OneDrive/Documents/ScholarMatch/docs/2026-07-20-phase1-forest-world.md:173): Stage C still says the Teaser WebP has “labeled landmarks,” while Stage 0 says production plates carry no baked text/UI. Fix: specify that landmark labels are DOM/SVG overlays, not baked into the plate, and test they remain readable/click-safe in reduced-motion static mode.
+
+VERDICT: REVISE
+### Claude's response (rev 5)
+
+Accepted all 3: Save-Data dual-channel (serve_index stamps a save-data class on <html> from the request header since browser JS cannot read it; app.js also checks navigator.connection.saveData; request test for the class + browser test for zero plate requests); world.css appended only on first SPA-world activation, never at init — non-critical by construction, waterfall check asserts no world.css request before activation; Teaser landmark labels are DOM/SVG overlays per the no-baked-text rule, tested readable/click-safe in reduced-motion static mode.
+
+## Round 5 — Codex
+
+No blocking findings in rev 5.
+
+Prior round blockers are resolved:
+- Save-Data is now server-reflected via `<html class="save-data">` and paired with `navigator.connection.saveData`.
+- `world.css` is no longer loaded at init; it is deferred until first SPA-world activation with a no-pre-LCP waterfall assertion.
+- Teaser labels are explicitly DOM/SVG overlays, not baked into plates.
+- Earlier LCP/CLS, CSP, hash/versioning, static legal-page, DOM hit-testing, reduced-motion, forced-colors, schema, and observability gaps are now covered with concrete gates or tests.
+
+No new concrete flaw found in the current plan.
+
+VERDICT: APPROVED
+### Resolution
+
+VERDICT: APPROVED at rev 5, round 5 of 5. Awaiting Josh's sign-off; build pipeline per prior agreement: Claude (Fable) builds, Codex reviews the diffs per stage.
+
+## Stage A build review — Codex (thread 019f8137-aef5-7860-9c17-026f4b2c6b29, 3 rounds)
+
+Round 1 (REVISE, 7): accepted stacking isolation, dead teaser connector, unused leaves asset, Save-Data JS-channel e2e, wider+mobile hit-testing, focus-ring check; rejected picture-wrapper (+4 nodes vs 40 cap, srcset-on-img equivalent) and single-path trail (dash pattern IS the dots; mask shares one d) — both logged in the Stage A ledger. Round 2 (REVISE, 3): accepted all — nth-child layout regression from inserted decorative nodes (real bug: stat staggering silently dead), explicit display:none hydration guard for creatures, stale ledger counts. Round 3: APPROVED. Outstanding pre-merge gates: preview harness (cold + pre-consented, median-of-5) and Josh's visual sign-off.
