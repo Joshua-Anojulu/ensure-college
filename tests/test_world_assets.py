@@ -80,3 +80,50 @@ def test_save_data_header_stamps_html_class():
         assert 'class="save-data"' not in plain.text
         saving = client.get("/", headers={"Save-Data": "on"})
         assert '<html lang="en" class="save-data">' in saving.text
+
+
+def test_template_family_and_legal_pages_carry_the_world_frame():
+    """Stage B: every template-family + legal page links world.css and marks
+    the body world-frame; the landing never links it (SPA appends it only on
+    first tool-view activation)."""
+    with TestClient(app) as client:
+        for path in (
+            "/scholarships/coca-cola-scholars",
+            "/browse",
+            "/guides/essays",
+            "/privacy",
+            "/terms",
+            "/scholarships/definitely-not-a-real-slug",
+        ):
+            response = client.get(path)
+            assert response.status_code in (200, 404), path
+            assert "world.css?v=" in response.text, path
+            assert "world-frame" in response.text, path
+        landing = client.get("/")
+        assert "world.css" not in landing.text
+
+
+def test_reskin_leaves_verification_blocks_and_jsonld_untouched():
+    """Stage B gate: a verified, an unverified, and an estimated-deadline
+    Opportunity page keep valid JSON-LD and their honesty labels, with no
+    world markup inside either (frames are pure CSS)."""
+    import re
+
+    cases = {
+        "/scholarships/coca-cola-scholars": None,
+        "/competitions/conrad-challenge": "Not yet verified",
+        "/scholarships/dell-scholars": "Estimated",
+    }
+    with TestClient(app) as client:
+        for path, marker in cases.items():
+            response = client.get(path)
+            assert response.status_code == 200, path
+            match = re.search(
+                r'<script type="application/ld\+json">(.*?)</script>', response.text, re.S
+            )
+            assert match, f"{path}: JSON-LD missing"
+            payload = json.loads(match.group(1))
+            assert payload, path
+            assert "world" not in match.group(1), f"{path}: world markup leaked into JSON-LD"
+            if marker:
+                assert marker.lower() in response.text.lower(), f"{path}: honesty label missing"

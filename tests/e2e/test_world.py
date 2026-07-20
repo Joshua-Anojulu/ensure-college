@@ -174,6 +174,45 @@ def test_reduced_motion_keeps_fireflies_static_and_trail_drawn(browser, live_ser
     context.close()
 
 
+def test_world_css_loads_only_on_spa_activation(page):
+    """Stage B waterfall gate: world.css must never load before a tool view
+    is activated; activating one loads it, sets .world-ready in its load
+    callback, and the quiet-center stage appears behind the catalog."""
+    loaded_before = page.evaluate(
+        "performance.getEntriesByType('resource').filter(e => e.name.includes('world.css')).length"
+    )
+    assert loaded_before == 0
+    page.click("#nav-browse-btn")
+    wait_until(page, "document.documentElement.classList.contains('world-ready')")
+    loaded_after = page.evaluate(
+        "performance.getEntriesByType('resource').filter(e => e.name.includes('world.css')).length"
+    )
+    assert loaded_after == 1
+    wait_until(
+        page,
+        "parseFloat(getComputedStyle(document.querySelector('#catalog-section'), '::before').opacity) > 0",
+    )
+
+
+def test_template_page_frame_glyphs_and_request_budget(browser, live_server):
+    context = browser.new_context(viewport={"width": 1440, "height": 900})
+    page = context.new_page()
+    page.goto(live_server + "/scholarships/coca-cola-scholars", wait_until="networkidle")
+    canopy = page.evaluate("getComputedStyle(document.body, '::before').backgroundImage")
+    assert "canopy-edge" in canopy, canopy
+    ferns = page.evaluate("getComputedStyle(document.body, '::after').backgroundImage")
+    assert "fern-corner-left" in ferns and "fern-corner-right" in ferns, ferns
+    glyph = page.evaluate(
+        "getComputedStyle(document.querySelector('.detail-page .stat-label'), '::before').backgroundImage"
+    )
+    assert "glyph-sheet" in glyph, glyph
+    world_requests = page.evaluate(
+        "performance.getEntriesByType('resource').filter(e => e.name.includes('/static/img/world/')).length"
+    )
+    assert world_requests <= 5, world_requests
+    context.close()
+
+
 def test_hero_preload_never_double_fetches_on_mobile(browser, live_server):
     context = browser.new_context(
         viewport={"width": 412, "height": 823}, device_scale_factor=1.75
