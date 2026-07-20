@@ -300,3 +300,17 @@ explain is not a pass.
 - Matcher gates/scoring, auth, digest cron, dataset, dormant AI — untouched.
 - Whether the age gate should block at all (vs a dismissible bar) — a product
   question Josh deferred; this rev keeps the existing blocking behaviour.
+
+## Outcome — 2026-07-20
+
+Executed through six measurement rounds (30 pinned-protocol runs; full record
+in PLAN-REVIEW-LOG.md). **CLS 0.9491 -> 0 everywhere. Real-throttle LCP
+3540 -> ~2440-2880 ms with the hero art painting at/near FCP as a real,
+High-priority `<img>`.** The pinned simulated gate itself never passed:
+Lighthouse 11 cannot attribute this page's LCP element under any tested
+shape, so its simulator reports an unattributed pessimistic fallback
+(~FCP + 1.2 s) that responded to no real change. **Josh accepted Phase 0 on
+the observed evidence** and the simulated number is recorded as a
+measurement-model caveat. The Phase 1 fan-out is unblocked; future audits of
+this page with lantern-based tooling will read ~2.9 s until the tooling can
+attribute the element — cite this section.

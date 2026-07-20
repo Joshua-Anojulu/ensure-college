@@ -869,3 +869,28 @@ test: .hero-stage carries aria-hidden="true"; if Lighthouse's element
 attribution skips aria-hidden subtrees, that single attribute explains the
 non-attribution and removing it (alt="" already carries the semantics) could
 flip lantern onto the real image model.
+
+## Phase 0 close-out — 2026-07-20 (Josh's decision, made before the final round)
+
+Final round (d8fddc6, aria-hidden removed): median 2909, worst 3011, CLS 0,
+element STILL unattributed — hypothesis refuted; the attribute was not the
+cause. Observed LCP stabilized at 2584-2814, consistent with the harness.
+
+ACCEPTED ON OBSERVED EVIDENCE, per the decision tree Josh approved before the
+round ran:
+- Real-throttle, gate-matched harness: 3540 -> ~2440-2880 ms; the LCP element
+  is the hero <img>, fetched High, painting at/near FCP.
+- CLS 0.9491 -> 0 in all 30 protocol runs across six rounds.
+- Lighthouse 11.7.1 cannot attribute this page's LCP element under any of the
+  four shapes tested (::before bg, img+async, img, img sans aria-hidden); its
+  simulator therefore reports a pessimistic unattributed fallback (~FCP+1.2s)
+  that responds to nothing real. The simulated number is the only failing
+  measure and is recorded as a measurement-model caveat, not page slowness.
+- Remaining real floor is FCP (~1.7-1.9 simulated, ~2.4-2.9 real-throttle),
+  dominated by the inline-CSS landing payload — out of scope per the
+  _inline_css non-negotiable; a candidate Phase 1+ lever if wanted.
+
+Phase 0 is COMPLETE: the age-gate pop-in is gone (consent decided before
+first paint, CSP-hashed boot, single owner, a11y-trapped), CLS is zero, image
+debt is paid, and the Phase 1 fan-out is UNBLOCKED with per-feature budgets
+priced by the harness (docs/2026-07-20-phase1-forest-world-design.md).
