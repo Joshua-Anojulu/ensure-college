@@ -224,7 +224,11 @@ def test_forced_colors_suppresses_world_decoration(browser, live_server):
     canopy = page.evaluate("getComputedStyle(document.body, '::before').content")
     assert canopy in ("none", "normal"), canopy
     # The primary action stays rendered and clickable under forced colors.
-    assert page.locator(".detail-source-link, .verification-source a").first.is_visible()
+    assert page.locator(".card-link").first.is_visible()
+    page.locator(".card-link").first.scroll_into_view_if_needed()
+    page.wait_for_timeout(300)
+    result = _hit_is_inside(page, ".card-link")
+    assert result is True, f"[forced-colors] card-link intercepted by: {result}"
     context.close()
 
 
