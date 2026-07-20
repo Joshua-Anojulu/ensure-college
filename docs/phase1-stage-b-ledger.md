@@ -48,3 +48,28 @@ visible); template frame + glyphs + request budget; forced-colors smoke
 2. Codex approval.
 3. Josh's visual sign-off (detail page + catalog stage screenshots shown
    in-session; final call on the preview).
+
+## Preview gates (run 2026-07-20, preview @ 18e88bc)
+
+Representative pages (throttled mobile, median of 3, LCP attribution):
+
+| Page | Median LCP | LCP element | World requests / bytes |
+|---|---|---|---|
+| /scholarships/coca-cola-scholars | 1600 ms (one TTFB-3602 cold-start outlier) | P.detail-description | 5 / 96 KB |
+| /browse | 1144 ms | SPAN.footer-mark | 4 / 58 KB |
+| /guides/essays | 1380 ms | P (guide copy) | 4 / 58 KB |
+| 404 (unknown slug) | 1132 ms | SPAN.footer-mark | 4 / 58 KB |
+
+World art never takes LCP on any template page. All under the 2500 ms
+ceiling with full margin.
+
+Landing delta re-check (median of 5 per scenario): cold 1380 ms
+(render median ~958 ms), pre-consented 1304 ms - within +30 ms of the
+Stage A prod measurements, render equal-or-better. CLS 0.0000 in all 10
+runs; long tasks unchanged.
+
+## Gate summary - ALL PASS
+
+CSS-only reskin, suites 422 request + 75 e2e, Codex APPROVED (3 rounds:
+6 findings round 1 - 5 accepted, 1 rejected with reasoning; 2 accepted
+round 2), preview gates above. Awaiting Josh's sign-off for merge 2.
