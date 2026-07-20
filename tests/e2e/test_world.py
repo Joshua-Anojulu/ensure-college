@@ -213,6 +213,21 @@ def test_template_page_frame_glyphs_and_request_budget(browser, live_server):
     context.close()
 
 
+def test_forced_colors_suppresses_world_decoration(browser, live_server):
+    context = browser.new_context(
+        viewport={"width": 1440, "height": 900}, forced_colors="active"
+    )
+    page = context.new_page()
+    page.goto(live_server + "/scholarships/coca-cola-scholars", wait_until="networkidle")
+    body_bg = page.evaluate("getComputedStyle(document.body).backgroundImage")
+    assert "world" not in body_bg, body_bg
+    canopy = page.evaluate("getComputedStyle(document.body, '::before').content")
+    assert canopy in ("none", "normal"), canopy
+    # The primary action stays rendered and clickable under forced colors.
+    assert page.locator(".detail-source-link, .verification-source a").first.is_visible()
+    context.close()
+
+
 def test_hero_preload_never_double_fetches_on_mobile(browser, live_server):
     context = browser.new_context(
         viewport={"width": 412, "height": 823}, device_scale_factor=1.75
