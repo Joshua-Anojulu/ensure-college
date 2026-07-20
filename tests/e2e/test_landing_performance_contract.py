@@ -180,6 +180,19 @@ class TestLandingClsAndResponsiveImage:
         assert_no_visible_reveal_is_hidden(page)
         context.close()
 
+    def test_hero_stage_image_paints_the_mobile_art(self, accepted_page):
+        """The hero art is a real, eagerly-fetched <img> that resolves the
+        mobile source at a mobile viewport and fills the stage box."""
+        img = accepted_page.locator(".hero-stage img")
+        accepted_page.wait_for_function(
+            "() => document.querySelector('.hero-stage img')?.complete"
+        )
+        assert "hero-forest-mobile.webp" in img.evaluate("img => img.currentSrc")
+        assert img.get_attribute("fetchpriority") == "high"
+        assert img.get_attribute("loading") is None  # eager: it is the LCP
+        box = img.bounding_box()
+        assert box is not None and box["width"] >= 412
+
     @pytest.mark.parametrize(
         "device_scale_factor,expected_candidate",
         [

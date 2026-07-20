@@ -803,3 +803,34 @@ so the simulated LCP kept its gap. Refinement of the same approved lever:
 fetchpriority="high" on the preload (attribute only; href byte-identity and
 media scope unchanged), which promotes the fetch in both real Chrome and the
 simulation. Test updated to pin the attribute.
+
+## Step 7 re-measure, round 3 (5e792a9, preview eqgrs3tq4) — 2026-07-20
+
+fetchpriority=high: median 2790, worst 3058, CLS 0 — FAIL, delta still ~1200.
+Three levers (no preload / Low preload / High preload) left the simulated
+delta unmoved, which disproves the network hypothesis for the SIMULATED metric.
+
+Decisive extraction from the run JSONs:
+- observed LCP == observed FCP in every run (1195/1195, 801/801, 3144/3144):
+  in Chrome's actual paint timeline the page is fixed, by Lighthouse's own
+  observation. CLS 0 throughout.
+- audits['largest-contentful-paint-element'] is score:null with NO details in
+  every run: Lighthouse cannot attribute the LCP element because the hero art
+  is a ::before pseudo-element background. With no DOM node, lantern cannot
+  build the image dependency chain, cannot see the preload, and falls back to
+  a pessimistic estimate ~FCP + 1200 ms that no real optimization can move.
+
+Conclusion: the remaining gate failure is a measurement-model artifact of
+pseudo-element LCP, not page slowness. Decision on the fix path goes to Josh.
+
+### The fix, Josh's call: a real, attributable hero image
+
+Chosen over accept-on-observed-evidence and over re-pinning to devtools
+throttling. The ::before background becomes a positioned .hero-stage
+<picture>/<img> (aria-hidden, alt="", fetchpriority=high, object-fit cover)
+with the identical box (same clamps, same z-index; the ::after paper wash is
+unchanged), so rendering is equivalent while the LCP element becomes a DOM
+node Lighthouse can attribute and lantern can model. URLs stay unversioned,
+byte-identical to the preload href. style.css no longer references the hero
+art. Lockstep bump to 20260720-2. New request test pins the markup shape; new
+e2e test pins currentSrc/eagerness/box at mobile viewport. Proof: 414 + 64.

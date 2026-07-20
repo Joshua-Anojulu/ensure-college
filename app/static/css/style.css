@@ -2950,17 +2950,24 @@ body::after {
 
 .hero { position: relative; isolation: isolate; }
 
-/* Illustrated forest stage: full-bleed, behind the hero content. */
-.hero::before {
-  content: "";
+/* Illustrated forest stage: full-bleed, behind the hero content. A real
+   <img> rather than a ::before background so the LCP element is attributable
+   (Lighthouse cannot attribute pseudo-element paints). Same box as the old
+   pseudo-element. */
+.hero-stage {
   position: absolute;
   top: clamp(-2rem, -3vw, -1.2rem);
   bottom: clamp(-3rem, -4vw, -1.8rem);
   left: calc(-50vw + 50%);
   width: 100vw;
   z-index: -2;
-  background: url("/static/img/hero-forest.webp") right bottom / cover no-repeat;
   pointer-events: none;
+}
+.hero-stage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: right bottom;
 }
 
 /* Paper wash so the left headline + copy stay crisp over the art. */
@@ -2987,10 +2994,13 @@ body::after {
 }
 
 @media (max-width: 768px) {
-  .hero::before {
-    background-image: url("/static/img/hero-forest-mobile.webp");
-    background-position: center bottom;
+  /* The <picture> source swaps to the mobile art; only box and framing
+     change here. */
+  .hero-stage {
     bottom: clamp(-2rem, -6vw, -1rem);
+  }
+  .hero-stage img {
+    object-position: center bottom;
   }
   .hero::after {
     background: linear-gradient(180deg,

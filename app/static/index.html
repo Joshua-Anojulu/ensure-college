@@ -24,11 +24,11 @@
   <meta name="ai-features-enabled" content="__AI_FEATURES_ENABLED__">
   <link rel="preload" href="/static/fonts/CabinetGrotesk-Extrabold.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/static/fonts/Satoshi-Regular.woff2" as="font" type="font/woff2" crossorigin>
-  <!-- Mobile hero art is the LCP element (a CSS background, discovered late
-       without this). href must stay byte-identical to the style.css url()
-       (unversioned) or the preload double-fetches instead of deduping. -->
+  <!-- Mobile hero art is the LCP element. href must stay byte-identical to
+       the .hero-stage <source> srcset (unversioned) or the preload
+       double-fetches instead of deduping. -->
   <link rel="preload" href="/static/img/hero-forest-mobile.webp" as="image" media="(max-width: 768px)" fetchpriority="high">
-  <link rel="prefetch" href="/static/css/style.css?v=20260720-1" as="style">
+  <link rel="prefetch" href="/static/css/style.css?v=20260720-2" as="style">
   <script id="site-consent-boot">
 (() => {
   const CONSENT_KEY = "site_consent_v1";
@@ -384,6 +384,15 @@
   <div class="bleed-clip">
   <main id="main" class="main">
     <section class="intro hero" data-motion-section>
+      <!-- Real element, not a ::before background: Lighthouse cannot attribute
+           pseudo-element LCP, so its simulator taxes the page ~1.2s it does
+           not spend. URLs stay byte-identical to the preload href. -->
+      <div class="hero-stage" aria-hidden="true">
+        <picture>
+          <source media="(max-width: 768px)" srcset="/static/img/hero-forest-mobile.webp">
+          <img src="/static/img/hero-forest.webp" alt="" fetchpriority="high" decoding="async">
+        </picture>
+      </div>
       <h1 class="hero-headline">Find opportunities that <span class="mark mark-strong">fit you.</span></h1>
       <div class="hero-copy">
         <p class="intro-copy">
@@ -457,8 +466,8 @@
     <section class="proof-band" aria-label="How EnsureCollege works" data-motion-section>
       <div class="proof-photo photo">
         <picture>
-          <source type="image/webp" srcset="/static/img/campus-quad-380.webp?v=20260720-1 380w, /static/img/campus-quad-760.webp?v=20260720-1 760w" sizes="(max-width: 760px) calc(100vw - 2rem), 48vw">
-          <img src="/static/img/campus-quad.jpg?v=20260720-1" alt="Students walking across a college campus between classes" loading="lazy" decoding="async" width="1200" height="800" sizes="(max-width: 760px) calc(100vw - 2rem), 48vw">
+          <source type="image/webp" srcset="/static/img/campus-quad-380.webp?v=20260720-2 380w, /static/img/campus-quad-760.webp?v=20260720-2 760w" sizes="(max-width: 760px) calc(100vw - 2rem), 48vw">
+          <img src="/static/img/campus-quad.jpg?v=20260720-2" alt="Students walking across a college campus between classes" loading="lazy" decoding="async" width="1200" height="800" sizes="(max-width: 760px) calc(100vw - 2rem), 48vw">
         </picture>
       </div>
       <div class="proof-copy">
@@ -1060,10 +1069,10 @@
     </div>
   </div>
 
-  <script defer src="/static/js/vendor/gsap.min.js?v=20260720-1"></script>
-  <script defer src="/static/js/vendor/ScrollTrigger.min.js?v=20260720-1"></script>
-  <script defer src="/static/js/landing-motion.js?v=20260720-1"></script>
-  <script defer src="/static/js/journey-teaser.js?v=20260720-1"></script>
-  <script src="/static/js/app.js?v=20260720-1"></script>
+  <script defer src="/static/js/vendor/gsap.min.js?v=20260720-2"></script>
+  <script defer src="/static/js/vendor/ScrollTrigger.min.js?v=20260720-2"></script>
+  <script defer src="/static/js/landing-motion.js?v=20260720-2"></script>
+  <script defer src="/static/js/journey-teaser.js?v=20260720-2"></script>
+  <script src="/static/js/app.js?v=20260720-2"></script>
 </body>
 </html>

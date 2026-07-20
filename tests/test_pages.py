@@ -10,7 +10,7 @@ from fastapi.testclient import TestClient
 from app.main import _SECURITY_HEADERS, app
 
 
-ASSET_VERSION = "20260720-1"
+ASSET_VERSION = "20260720-2"
 FONT_ASSETS = [
     "/static/fonts/CabinetGrotesk-Bold.woff2",
     "/static/fonts/CabinetGrotesk-Extrabold.woff2",
@@ -251,10 +251,26 @@ class TestProductionHygiene:
             '<link rel="preload" href="/static/img/hero-forest-mobile.webp" '
             'as="image" media="(max-width: 768px)" fetchpriority="high">'
         ) in response.text
-        css = Path("app/static/css/style.css").read_text(encoding="utf-8")
-        assert 'url("/static/img/hero-forest-mobile.webp")' in css
         # No desktop hero preload: the gate is the mobile gate.
         assert 'preload" href="/static/img/hero-forest.webp"' not in response.text
+
+    def test_landing_hero_art_is_a_real_attributable_image(self, client):
+        """The forest stage must be a DOM <img>, not a ::before background:
+        Lighthouse cannot attribute pseudo-element LCP. URLs stay unversioned,
+        byte-identical to the mobile preload href."""
+        response = client.get("/")
+        assert '<div class="hero-stage" aria-hidden="true">' in response.text
+        assert (
+            '<source media="(max-width: 768px)" '
+            'srcset="/static/img/hero-forest-mobile.webp">'
+        ) in response.text
+        assert (
+            '<img src="/static/img/hero-forest.webp" alt="" '
+            'fetchpriority="high" decoding="async">'
+        ) in response.text
+        css = Path("app/static/css/style.css").read_text(encoding="utf-8")
+        assert ".hero-stage" in css
+        assert 'url("/static/img/hero-forest' not in css
 
     def test_landing_consent_gate_initial_markup_is_paintable(self, client):
         response = client.get("/")
