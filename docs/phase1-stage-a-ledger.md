@@ -83,3 +83,20 @@ equivalent, cold cache + fresh profile per run.
 Budget caps PASS · 419 request + 72 e2e PASS · Codex diff review APPROVED
 (3 rounds) · visual sign-off: Josh, 2026-07-20 ("preview looks good") ·
 harness delta gate PASS (attribution above). Stage A cleared for merge 1.
+
+## Post-merge check (prod @ 95151eb, minutes after deploy)
+
+Median of 5, both scenarios, same protocol. Deploy-fresh serverless
+functions produced TTFB outliers to 6.4 s; render time is the signal.
+
+- Pre-consented: median LCP 1276 ms (render median 875 ms) - better than
+  both pre-merge baselines. LCP element: h1.hero-headline / hero image.
+- Cold: raw median 2980 ms dominated by two deploy-cold runs (TTFB 3.0-4.8 s);
+  the three warm-function runs sat at 1368-1424 ms with render ~905-912 ms,
+  matching the preview measurements.
+- CLS 0.0000 in all 10 runs. No new CLS contributors.
+- World assets on prod: exactly 6 requests (clearing, waypoints, grove, owl,
+  leaves, dusk-treeline), all 200 with Cache-Control public,
+  max-age=31536000, immutable; ~113 KB total per manifest.
+
+Stage A: COMPLETE and LIVE.
