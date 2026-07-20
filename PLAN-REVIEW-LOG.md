@@ -834,3 +834,38 @@ node Lighthouse can attribute and lantern can model. URLs stay unversioned,
 byte-identical to the preload href. style.css no longer references the hero
 art. Lockstep bump to 20260720-2. New request test pins the markup shape; new
 e2e test pins currentSrc/eagerness/box at mobile viewport. Proof: 414 + 64.
+
+## Step 7 re-measure, rounds 4-5 (abcc560 / 338066f) — 2026-07-20
+
+Round 4 (real <img> hero): median 3037, worst 4581 — FAIL. Element STILL
+unattributed by Lighthouse despite now being a plain DOM <img>; observed LCP
+became unstable (1667-4070 on identical bytes). Hypothesis: decoding=async
+(reflexively copied onto the img) defers the LCP paint past busy main-thread
+work. Attribute removed (an LCP anti-pattern regardless), 338066f.
+
+Round 5 (decode fix): median 3089, worst 3808, CLS 0 — FAIL, and the observed
+instability PERSISTS (1376-4497), refuting the async-decode explanation for
+the instability. Still unattributed in every run.
+
+## The 25-run picture
+
+Across five protocol rounds and three page shapes (::before bg / img with
+async decode / img with sync decode):
+- The pinned SIMULATED metric sits at ~2790-3089 and does not respond to any
+  real change (no preload / Low / High / real img / decode fix).
+- Lighthouse 11.7.1 fails to attribute the LCP element in EVERY run, even
+  with a plain <img> — with no node, lantern falls back to a pessimistic
+  estimate ~FCP + 1.2-1.4s. The unattributed simulated number is the ONLY
+  failing measure.
+- Reality, gate-matched real throttling (harness): 3540 -> ~2440-2880 ms,
+  LCP = the hero img painting at/near FCP, fetched High.
+- CLS: 0.9491 -> 0 in every one of the 25 runs. Perf score ~86-91.
+- Remaining real-throttle floor is FCP itself (~2.4-2.9s), dominated by the
+  367KB inline-CSS landing payload — explicitly out of scope per the plan's
+  _inline_css non-negotiable.
+
+Declared: no further levers without Josh. Open hypothesis worth one cheap
+test: .hero-stage carries aria-hidden="true"; if Lighthouse's element
+attribution skips aria-hidden subtrees, that single attribute explains the
+non-attribution and removing it (alt="" already carries the semantics) could
+flip lantern onto the real image model.
