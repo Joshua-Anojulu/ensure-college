@@ -3158,6 +3158,9 @@ body::after {
 /* The stage replaces the proof band's tint: the panel keeps its own surface. */
 .proof-band { background: transparent; }
 
+/* Stat labels go ink over the clearing: amber-on-amber-trail was illegible. */
+.catalog-number span { color: var(--ink-soft); }
+
 /* Stats ride openly on the clearing (comp 02): no cards on this section.
    The :nth-child variants outrank a bare class, so name them explicitly. */
 .catalog-number,
@@ -3254,6 +3257,64 @@ body::after {
 }
 
 .fireflies-live .firefly { animation: firefly-twinkle 3.4s ease-in-out infinite alternate; }
+
+/* The Trail: dotted connectors between sections. Dots come from the dotted
+   stroke; the draw-on comes from a mask whose solid stroke is scrubbed by a
+   CSS scroll-driven animation. Without support (or with reduced motion) the
+   mask rests fully drawn: the static trail is the baseline, not a fallback. */
+.journey-teaser { position: relative; }
+
+.trail-link {
+  display: none;
+  position: absolute;
+  top: -84px;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.trail-link-1 { right: 9%; }
+.trail-link-2 { left: 11%; }
+.trail-link-3 { right: 22%; }
+.trail-link-4 { left: 30%; }
+
+.trail-dots {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 5;
+  stroke-linecap: round;
+  stroke-dasharray: 0.6 12;
+  opacity: 0.75;
+}
+
+.trail-reveal {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 12;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+}
+
+@media (min-width: 1200px) {
+  .trail-link { display: block; }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    /* The mask path has no box of its own, so the view timeline is named on
+       the svg root and referenced by the descendant. */
+    .trail-link { view-timeline: --trail-draw block; }
+    .trail-reveal {
+      animation: trail-draw both;
+      animation-timeline: --trail-draw;
+      animation-range: entry 10% cover 45%;
+    }
+  }
+}
+
+@keyframes trail-draw {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+}
 
 @media (prefers-reduced-motion: reduce) {
   .world-plate img.world-loaded,

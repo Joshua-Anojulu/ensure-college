@@ -38,6 +38,30 @@ def test_every_world_asset_digest_matches_manifest_and_filename():
         assert digest.startswith(stem_hash), f"{name}: filename hash segment does not match digest"
 
 
+def test_every_world_reference_uses_a_hashed_manifest_name():
+    """Scan HTML, CSS url(), and JS string literals: any /static/img/world/
+    reference must name a manifest entry (content-hashed) — never a bare or
+    stale path. Extends the ?v= lockstep discipline to non-HTML references."""
+    import re
+
+    manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
+    root = Path(__file__).resolve().parents[1]
+    sources = (
+        list((root / "app" / "static").glob("*.html"))
+        + list((root / "app" / "templates").glob("*.html"))
+        + list((root / "app" / "static" / "css").glob("*.css"))
+        + [p for p in (root / "app" / "static" / "js").glob("*.js")]
+    )
+    pattern = re.compile(r"/static/img/world/([A-Za-z0-9._-]+)")
+    referenced = set()
+    for source in sources:
+        for match in pattern.finditer(source.read_text(encoding="utf-8")):
+            name = match.group(1)
+            assert name in manifest, f"{source.name} references unhashed/unknown world asset: {name}"
+            referenced.add(name)
+    assert referenced, "no world references found anywhere; scan is miswired"
+
+
 def test_world_assets_served_with_immutable_cache_header():
     name = next(iter(json.loads(MANIFEST.read_text(encoding="utf-8"))))
     with TestClient(app) as client:
