@@ -6388,6 +6388,9 @@ async function handleProgramAdvice(programId, button, panel, loading, errorEl) {
       ".world-plate img[data-src], .world-dusk img[data-src]"
     );
     plates.forEach(function (img) {
+      // Creatures are display:none below 1200px; do not hydrate what cannot
+      // show (loading=lazy would likely skip the fetch, but be explicit).
+      if (getComputedStyle(img).display === "none") return;
       img.addEventListener(
         "load",
         function () {

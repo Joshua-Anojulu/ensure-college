@@ -9,16 +9,18 @@ _Branch phase1-forest-world; gates per docs/2026-07-20-phase1-forest-world.md._
 | Landing HTML growth (gzip -9) | ≤ 6,144 B | **+565 B** (10,399 → 10,964) | PASS |
 | DOM node growth | ≤ 40 | **+38** (3 plate divs, 5 plate imgs incl. owl+leaves, dusk div+img, fireflies 8, 4 trail SVGs × 5) | PASS |
 | Trail SVG complexity | 1 path geometry per section link, no filters | 4 links, 1 geometry each — but 2 `<path>` nodes per link (dots + mask reveal share the same `d`); see deviations | PASS (as deviation) |
-| World plate requests (landing) | ≤ 7 | 6 (clearing, waypoints, grove, owl, dusk ×1376 tier; 760 tier alternates) | PASS |
-| Stage A world bytes | ≤ 360 KB desktop / ≤ 155 KB mobile | ~112 KB / ~47 KB (excl. overlook, deferred to Stage C) | PASS |
+| World plate requests (landing) | ≤ 7 | 6 desktop (clearing, waypoints, grove, owl, leaves, dusk; 760 tier alternates on mobile, where creatures are neither shown nor hydrated) | PASS |
+| Stage A world bytes | ≤ 360 KB desktop / ≤ 155 KB mobile | ~113 KB desktop / ~46 KB mobile (excl. overlook, deferred to Stage C) | PASS |
 
 ## Proof suites
 
 - Request: **419 passed** (world manifest integrity ×2, immutable cache header,
   Save-Data class, world-reference scan, plus the full pre-existing suite)
-- E2E: **69 passed**, including the five new world gates: hit-testing under
-  plates, Save-Data zero world requests, firefly intersection toggle,
-  reduced-motion static trail + fireflies, hero preload single-fetch
+- E2E: **72 passed**, including the eight world gates: hit-testing under
+  plates (desktop + mobile), Save-Data zero world requests on both channels
+  (header and navigator.connection), focus-ring visibility over art, firefly
+  intersection toggle, reduced-motion static trail + fireflies, hero preload
+  single-fetch
 - Harness note for future e2e: the CSP blocks Playwright `wait_for_function`
   string pollers (`unsafe-eval`); poll via `page.evaluate` (see
   tests/e2e/test_world.py::wait_until)
