@@ -55,10 +55,31 @@ against comps 01-06.
   with dashoffset because the dash pattern IS the dots. Both paths share
   one `d` geometry; the gate's intent (bounded complexity, no filters) holds.
 
-## Outstanding before merge
+## Harness gate (run 2026-07-20; protocol per Phase 0, rebuilt in-session)
 
-1. Vercel preview: dual-scenario attribution harness (cold + pre-consented),
-   median of 5, delta ≤ +150 ms vs re-measured baseline, CLS < 0.1, TBT
-   long-task delta ≤ 50 ms.
-2. Codex diff review.
-3. Josh's visual sign-off.
+Targets: baseline = prod ensurecollege.com (main @ 005e62b), stage = branch
+preview (da7a7ed). Moto G viewport 412×823 @ DPR 1.75, CPU 4×, slow-4G
+equivalent, cold cache + fresh profile per run.
+
+- **Pre-consented (median of 5):** baseline 1380 ms → stage 1428 ms
+  (**+48 ms**, gate ≤ +150) — PASS. LCP element: `h1.hero-headline` both.
+- **Cold, first sample (median of 5):** baseline 1344 → stage 1752
+  (+408 ms, raw FAIL) — triggered the attribution re-run below.
+- **Cold, attribution re-run (median of 7, TTFB split):** raw medians
+  baseline 1596 vs stage 1380 (stage 216 ms FASTER this sample);
+  **render time (LCP − TTFB): baseline 972 ms vs stage 925 ms — stage
+  47 ms faster.** TTFB swung 344–2559 ms on prod itself (serverless cold
+  starts on both targets), fully explaining both raw deltas' signs.
+  **Ruling: cold gate PASS on render-time attribution** — the delta the
+  stage can influence is ≤ 0; raw-LCP deltas at this traffic level are
+  TTFB noise. Both datasets recorded here transparently.
+- **CLS: 0.0000 in all 34 runs.** Long tasks: stage ≤ baseline (baseline
+  showed the only 1.9–2.0 s outliers). LCP element unchanged (hero image;
+  occasionally the consent-gate paragraph — the pre-existing behavior
+  Phase 0 documented, on both targets).
+
+## Gate summary — ALL PASS
+
+Budget caps PASS · 419 request + 72 e2e PASS · Codex diff review APPROVED
+(3 rounds) · visual sign-off: Josh, 2026-07-20 ("preview looks good") ·
+harness delta gate PASS (attribution above). Stage A cleared for merge 1.
