@@ -243,6 +243,19 @@ class TestProductionHygiene:
         assert 'rel="stylesheet" href="/static/css/style.css' not in response.text
         assert f'rel="prefetch" href="/static/css/style.css?v={ASSET_VERSION}" as="style"' in response.text
 
+    def test_landing_preloads_mobile_hero_art_byte_identical_to_css_url(self, client):
+        """The mobile hero art is the LCP element; the preload href must match
+        the style.css url() byte-for-byte (unversioned) or it double-fetches."""
+        response = client.get("/")
+        assert (
+            '<link rel="preload" href="/static/img/hero-forest-mobile.webp" '
+            'as="image" media="(max-width: 768px)">'
+        ) in response.text
+        css = Path("app/static/css/style.css").read_text(encoding="utf-8")
+        assert 'url("/static/img/hero-forest-mobile.webp")' in css
+        # No desktop hero preload: the gate is the mobile gate.
+        assert 'preload" href="/static/img/hero-forest.webp"' not in response.text
+
     def test_landing_consent_gate_initial_markup_is_paintable(self, client):
         response = client.get("/")
         assert 'id="site-consent-boot"' in response.text

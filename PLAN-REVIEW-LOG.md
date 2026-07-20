@@ -767,3 +767,26 @@ Proof, run by Claude: 412 request + 63 e2e + validator "No structural errors"
 (4 warnings: 3 pre-existing + sallie-mae deadline passed 2026-07-17, date-driven).
 Awaiting Josh's commit sign-off; step 7 (deploy + pinned Lighthouse re-measure)
 follows the commit.
+
+## Step 7 re-measure, round 1 (cdcd609, preview mdvtkk5b9) — 2026-07-20
+
+Pinned Lighthouse 11.7.1, mobile, 5 cold runs:
+LCP 2969/2871/2768/3204/2787 (median 2871), FCP median ~1737, CLS 0 in all
+five. CLS: FIXED outright (0.9491 -> 0). LCP: gate FAIL (<2500 needed, worst
+3204 > 2700), and BOTH halt rules fired (median > 1800; LCP-FCP delta 1200 ms).
+
+Re-attribution (harness, 2 runs): the boot works — the gate <p> paints exactly
+at FCP. The LCP element is now hero-forest-mobile.webp (311,884 px² vs the
+gate's 35,708), painting ~2850 ms. It never registered in ANY baseline run
+because the old motion init collapsed the hero ::before to 0x0 (the 0.906 CLS)
+in a near-tie race with the image's throttled decode — fixing CLS exposed the
+page's true largest element. The image is a CSS background: discovered only
+after inline-CSS parse + layout, fetched at Low priority, hence the 1200 ms
+LCP-FCP gap.
+
+Josh's call: apply rev 3's step-3 conditional hero preload — the condition
+("only if it IS the LCP element") was false at step-1 time and is now true.
+One media-scoped mobile-only preload, href byte-identical to the CSS url()
+(unversioned), no desktop preload, plus a request test asserting the hint and
+the byte-identity constraint. ADR 0001 fallback explicitly rejected again: the
+hero art costs ~1.2 s only because it is discovered late.
