@@ -790,3 +790,16 @@ One media-scoped mobile-only preload, href byte-identical to the CSS url()
 (unversioned), no desktop preload, plus a request test asserting the hint and
 the byte-identity constraint. ADR 0001 fallback explicitly rejected again: the
 hero art costs ~1.2 s only because it is discovered late.
+
+## Step 7 re-measure, round 2 (2575226, preview fpulen31e) — 2026-07-20
+
+LCP 2645/2923/2846/3151/2849 (median 2849), CLS 0 again, delta ~1275 ms:
+FAIL, unchanged from round 1 within noise. Waterfall on the preview shows the
+preload IS effective in real Chrome — the image starts at 1008 ms, finishes at
+2049 ms, and the harness observed LCP == FCP exactly (image ready before first
+paint). But image preloads fetch at LOW priority by default, and Lighthouse's
+simulated (lantern) scheduler queues Low resources behind the critical path,
+so the simulated LCP kept its gap. Refinement of the same approved lever:
+fetchpriority="high" on the preload (attribute only; href byte-identity and
+media scope unchanged), which promotes the fetch in both real Chrome and the
+simulation. Test updated to pin the attribute.

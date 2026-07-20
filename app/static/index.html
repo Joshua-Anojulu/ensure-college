@@ -27,7 +27,7 @@
   <!-- Mobile hero art is the LCP element (a CSS background, discovered late
        without this). href must stay byte-identical to the style.css url()
        (unversioned) or the preload double-fetches instead of deduping. -->
-  <link rel="preload" href="/static/img/hero-forest-mobile.webp" as="image" media="(max-width: 768px)">
+  <link rel="preload" href="/static/img/hero-forest-mobile.webp" as="image" media="(max-width: 768px)" fetchpriority="high">
   <link rel="prefetch" href="/static/css/style.css?v=20260720-1" as="style">
   <script id="site-consent-boot">
 (() => {

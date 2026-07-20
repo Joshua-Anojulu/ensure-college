@@ -249,7 +249,7 @@ class TestProductionHygiene:
         response = client.get("/")
         assert (
             '<link rel="preload" href="/static/img/hero-forest-mobile.webp" '
-            'as="image" media="(max-width: 768px)">'
+            'as="image" media="(max-width: 768px)" fetchpriority="high">'
         ) in response.text
         css = Path("app/static/css/style.css").read_text(encoding="utf-8")
         assert 'url("/static/img/hero-forest-mobile.webp")' in css
