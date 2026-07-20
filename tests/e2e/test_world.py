@@ -43,14 +43,38 @@ def _hit_is_inside(page, selector):
 
 def test_world_plates_hydrate_and_primary_controls_stay_clickable(page):
     wait_until(page, "document.querySelectorAll('.world-plate img[src]').length >= 3")
-    for selector in ("#preview-form button", "#preview-form input, #preview-form select", ".site-header a"):
+    for selector in (
+        "#preview-form button",
+        "#preview-form input, #preview-form select",
+        ".site-header a",
+        ".hero-actions a, .hero-actions button",
+    ):
         result = _hit_is_inside(page, selector)
         assert result is True, f"{selector} intercepted by: {result}"
-    # Scroll the world sections into view and re-test a below-fold control.
+    # Scroll the world sections into view and re-test below-fold controls.
+    for selector in (".journey-teaser-cta", ".footer-links a"):
+        page.locator(selector).first.scroll_into_view_if_needed()
+        page.wait_for_timeout(400)
+        result = _hit_is_inside(page, selector)
+        assert result is True, f"{selector} intercepted by: {result}"
+
+
+def test_primary_controls_clickable_on_mobile(browser, live_server):
+    context = browser.new_context(
+        viewport={"width": 412, "height": 823}, device_scale_factor=1.75
+    )
+    context.add_init_script("window.localStorage.setItem('site_consent_v1', 'yes');")
+    page = context.new_page()
+    page.goto(live_server, wait_until="domcontentloaded")
+    page.wait_for_timeout(600)
+    for selector in ("#preview-form button", ".hero-actions a, .hero-actions button"):
+        result = _hit_is_inside(page, selector)
+        assert result is True, f"[mobile] {selector} intercepted by: {result}"
     page.locator(".journey-teaser-cta").scroll_into_view_if_needed()
     page.wait_for_timeout(400)
     result = _hit_is_inside(page, ".journey-teaser-cta")
-    assert result is True, f"teaser CTA intercepted by: {result}"
+    assert result is True, f"[mobile] teaser CTA intercepted by: {result}"
+    context.close()
 
 
 def test_save_data_suppresses_every_world_asset_request(browser, live_server):
@@ -71,6 +95,48 @@ def test_save_data_suppresses_every_world_asset_request(browser, live_server):
     page.wait_for_timeout(1500)
     assert world_requests == [], world_requests
     context.close()
+
+
+def test_connection_savedata_js_channel_suppresses_world_requests(browser, live_server):
+    """The client channel alone (navigator.connection.saveData, no header)."""
+    context = browser.new_context(viewport={"width": 1440, "height": 900})
+    context.add_init_script(
+        """
+        window.localStorage.setItem('site_consent_v1', 'yes');
+        const conn = navigator.connection || {};
+        try {
+          Object.defineProperty(conn, 'saveData', { get: () => true });
+          if (!navigator.connection) {
+            Object.defineProperty(navigator, 'connection', { get: () => conn });
+          }
+        } catch (e) {}
+        """
+    )
+    page = context.new_page()
+    world_requests = []
+    page.on(
+        "request",
+        lambda r: world_requests.append(r.url) if "/static/img/world/" in r.url else None,
+    )
+    page.goto(live_server, wait_until="networkidle")
+    page.mouse.wheel(0, 30000)
+    page.wait_for_timeout(1500)
+    assert world_requests == [], world_requests
+    context.close()
+
+
+def test_focus_ring_stays_visible_over_world_art(page):
+    page.locator(".journey-teaser-cta").scroll_into_view_if_needed()
+    page.evaluate("document.querySelector('.journey-teaser-cta').focus()")
+    outline = page.evaluate(
+        """(() => {
+          const el = document.querySelector('.journey-teaser-cta');
+          const s = getComputedStyle(el);
+          return { outline: s.outlineStyle, width: s.outlineWidth, shadow: s.boxShadow };
+        })()"""
+    )
+    has_ring = outline["outline"] != "none" or outline["shadow"] != "none"
+    assert has_ring, outline
 
 
 def test_fireflies_twinkle_only_in_view(page):

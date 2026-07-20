@@ -7,8 +7,8 @@ _Branch phase1-forest-world; gates per docs/2026-07-20-phase1-forest-world.md._
 |---|---|---|---|
 | Inlined CSS growth (gzip -9) | ≤ 4,096 B | **+1,545 B** (21,707 → 23,252) | PASS |
 | Landing HTML growth (gzip -9) | ≤ 6,144 B | **+565 B** (10,399 → 10,964) | PASS |
-| DOM node growth | ≤ 40 | **+37** (3 plate divs, 4 plate imgs, dusk div+img, fireflies 8, 4 trail SVGs × 5) | PASS |
-| Trail SVG complexity | 1 path geometry per section link, no filters | 4 links, 1 geometry each (dots + mask reveal reference the same d) | PASS |
+| DOM node growth | ≤ 40 | **+38** (3 plate divs, 5 plate imgs incl. owl+leaves, dusk div+img, fireflies 8, 4 trail SVGs × 5) | PASS |
+| Trail SVG complexity | 1 path geometry per section link, no filters | 4 links, 1 geometry each — but 2 `<path>` nodes per link (dots + mask reveal share the same `d`); see deviations | PASS (as deviation) |
 | World plate requests (landing) | ≤ 7 | 6 (clearing, waypoints, grove, owl, dusk ×1376 tier; 760 tier alternates) | PASS |
 | Stage A world bytes | ≤ 360 KB desktop / ≤ 155 KB mobile | ~112 KB / ~47 KB (excl. overlook, deferred to Stage C) | PASS |
 
@@ -37,11 +37,21 @@ against comps 01-06.
 
 - Teaser section gets no Stage A plate: the overlook painting is Stage C's
   painting-first swap (sequencing choice; the live canvas remains the
-  section's miniature-world beat meanwhile).
+  section's miniature-world beat meanwhile). Its trail connector hangs from
+  the difference panel's bottom edge instead — the teaser's overflow:hidden
+  and opaque panel would swallow anything placed inside it.
 - Hero fireflies skipped: "hero untouched" outranks marginalia; fireflies
   live at the dusk band only.
 - Comp 03's waypoint chips not adopted: the proof band keeps its existing
   photo + copy DOM (contract-frozen); chips reconsidered at Stage B.
+- Plates are bare `<img srcset>` rather than the plan's `<picture><img>`
+  (Codex round 1 finding, rejected by the arbiter): srcset-on-img is the
+  identical responsive mechanism; `<picture>` adds art-direction/format
+  alternates we do not use, at +4 DOM nodes against a 40-node cap.
+- Two `<path>` nodes per trail link (Codex round 1): the draw-on requires a
+  mask whose stroke is scrubbed — a single dotted path cannot be drawn on
+  with dashoffset because the dash pattern IS the dots. Both paths share
+  one `d` geometry; the gate's intent (bounded complexity, no filters) holds.
 
 ## Outstanding before merge
 

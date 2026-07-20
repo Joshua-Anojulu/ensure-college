@@ -3138,6 +3138,9 @@ body::after {
 .proof-band,
 .difference-panel {
   position: relative;
+  /* Contain the z-index:-1 decorative layers inside each staged section so
+     they can never interleave with neighboring sections' paint. */
+  isolation: isolate;
 }
 
 .world-plate {
@@ -3198,8 +3201,20 @@ body::after {
   mix-blend-mode: multiply;
 }
 
+.world-plate .world-leaves-img {
+  display: none;
+  position: absolute;
+  top: 12%;
+  left: 2.5%;
+  right: auto;
+  width: 92px;
+  height: auto;
+  mix-blend-mode: multiply;
+}
+
 @media (min-width: 1200px) {
-  .world-plate .world-owl-img { display: block; }
+  .world-plate .world-owl-img,
+  .world-plate .world-leaves-img { display: block; }
 }
 
 /* The section heading rides a soft paper wash so copy stays legible over
@@ -3275,7 +3290,11 @@ body::after {
 .trail-link-1 { right: 9%; }
 .trail-link-2 { left: 11%; }
 .trail-link-3 { right: 22%; }
-.trail-link-4 { left: 30%; }
+/* Link 4 hangs from the difference panel's bottom edge: the teaser's
+   overflow:hidden + opaque panel would swallow anything placed inside it,
+   and anything hanging into the teaser's box gets painted over, so the
+   tail stays within the gap. */
+.trail-link-4 { top: auto; bottom: -20px; left: 30%; }
 
 .trail-dots {
   fill: none;
