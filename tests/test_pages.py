@@ -1,13 +1,16 @@
+import base64
+import hashlib
+from html.parser import HTMLParser
 import re
 from pathlib import Path
 
 import pytest
 from fastapi.testclient import TestClient
 
-from app.main import app
+from app.main import _SECURITY_HEADERS, app
 
 
-ASSET_VERSION = "20260715-3"
+ASSET_VERSION = "20260720-1"
 FONT_ASSETS = [
     "/static/fonts/CabinetGrotesk-Bold.woff2",
     "/static/fonts/CabinetGrotesk-Extrabold.woff2",
@@ -20,6 +23,78 @@ VENDOR_ASSETS = [
     "/static/js/vendor/gsap.min.js",
     "/static/js/vendor/ScrollTrigger.min.js",
 ]
+VERSIONED_ASSET_PATHS = {
+    "/static/css/style.css",
+    "/static/js/app.js",
+    "/static/js/gsap.min.js",
+    "/static/js/landing-motion.js",
+    "/static/js/journey-teaser.js",
+    "/static/js/journey.js",
+    "/static/js/vendor/gsap.min.js",
+    "/static/js/vendor/ScrollTrigger.min.js",
+    "/static/img/campus-quad.jpg",
+    "/static/img/campus-quad-380.webp",
+    "/static/img/campus-quad-760.webp",
+}
+VERSION_EXEMPT_PATHS = {
+    "/static/favicon.svg",
+    "/static/js/vendor/three.min.js",
+}
+
+
+class AssetUrlParser(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.urls = []
+        self.inline_scripts = []
+        self._script_attrs = None
+        self._script_parts = []
+
+    def handle_starttag(self, tag, attrs):
+        attrs = dict(attrs)
+        for name in ("href", "src"):
+            value = attrs.get(name)
+            if value:
+                self.urls.append(value)
+        srcset = attrs.get("srcset")
+        if srcset:
+            for candidate in srcset.split(","):
+                url = candidate.strip().split(" ", 1)[0]
+                if url:
+                    self.urls.append(url)
+        if tag == "script" and "src" not in attrs:
+            self._script_attrs = attrs
+            self._script_parts = []
+
+    def handle_data(self, data):
+        if self._script_attrs is not None:
+            self._script_parts.append(data)
+
+    def handle_endtag(self, tag):
+        if tag == "script" and self._script_attrs is not None:
+            self.inline_scripts.append((self._script_attrs, "".join(self._script_parts)))
+            self._script_attrs = None
+            self._script_parts = []
+
+
+def parse_html(text):
+    parser = AssetUrlParser()
+    parser.feed(text)
+    return parser
+
+
+def path_and_query(url):
+    path, _, query = url.partition("?")
+    return path, query
+
+
+def csp_directives(csp):
+    directives = {}
+    for directive in csp.split(";"):
+        parts = directive.strip().split()
+        if parts:
+            directives[parts[0]] = parts[1:]
+    return directives
 
 
 @pytest.fixture
@@ -76,6 +151,28 @@ class TestProductionHygiene:
         assert response.headers.get("X-Frame-Options") == "DENY"
         assert response.headers.get("Referrer-Policy") == "strict-origin-when-cross-origin"
         assert "Content-Security-Policy" in response.headers
+
+    def test_landing_csp_admits_served_consent_boot_hash(self, client):
+        response = client.get("/")
+        parser = parse_html(response.text)
+        scripts = [
+            script
+            for attrs, script in parser.inline_scripts
+            if attrs.get("id") == "site-consent-boot"
+        ]
+        assert len(scripts) == 1
+        digest = base64.b64encode(hashlib.sha256(scripts[0].encode("utf-8")).digest()).decode("ascii")
+        script_src = csp_directives(response.headers["Content-Security-Policy"])["script-src"]
+        assert f"'sha256-{digest}'" in script_src
+
+    def test_landing_script_csp_has_no_unsafe_inline(self, client):
+        response = client.get("/")
+        script_src = csp_directives(response.headers["Content-Security-Policy"])["script-src"]
+        assert "'unsafe-inline'" not in script_src
+
+    def test_non_landing_route_keeps_global_csp(self, client):
+        response = client.get("/privacy")
+        assert response.headers["Content-Security-Policy"] == _SECURITY_HEADERS["Content-Security-Policy"]
 
     def test_csp_uses_self_hosted_styles_and_fonts(self, client):
         response = client.get("/")
@@ -138,6 +235,35 @@ class TestProductionHygiene:
         assert f"/static/js/app.js?v={ASSET_VERSION}" in response.text
         assert f"/static/js/landing-motion.js?v={ASSET_VERSION}" in response.text
 
+    def test_landing_keeps_inline_css_and_only_prefetches_external_stylesheet(self, client):
+        response = client.get("/")
+        assert response.status_code == 200
+        assert "<style>" in response.text
+        assert "/*__INLINE_CSS__*/" not in response.text
+        assert 'rel="stylesheet" href="/static/css/style.css' not in response.text
+        assert f'rel="prefetch" href="/static/css/style.css?v={ASSET_VERSION}" as="style"' in response.text
+
+    def test_landing_consent_gate_initial_markup_is_paintable(self, client):
+        response = client.get("/")
+        assert 'id="site-consent-boot"' in response.text
+        assert '<div id="age-gate" class="age-gate">' in response.text
+        assert 'id="age-gate-continue" disabled' in response.text
+        assert "html.has-site-consent .age-gate" in response.text
+
+    def test_landing_campus_quad_uses_responsive_webp_picture(self, client):
+        response = client.get("/")
+        assert response.status_code == 200
+        assert '<picture>' in response.text
+        assert (
+            f'<source type="image/webp" srcset="/static/img/campus-quad-380.webp?v={ASSET_VERSION} 380w, '
+            f'/static/img/campus-quad-760.webp?v={ASSET_VERSION} 760w" '
+            'sizes="(max-width: 760px) calc(100vw - 2rem), 48vw">'
+        ) in response.text
+        assert f'<img src="/static/img/campus-quad.jpg?v={ASSET_VERSION}"' in response.text
+        assert 'alt="Students walking across a college campus between classes"' in response.text
+        assert 'loading="lazy"' in response.text
+        assert 'decoding="async"' in response.text
+
     def test_index_uses_self_hosted_fonts(self, client):
         response = client.get("/")
         assert response.status_code == 200
@@ -150,6 +276,41 @@ class TestProductionHygiene:
     def test_self_hosted_font_and_vendor_assets_return_200(self, client, asset):
         response = client.get(asset)
         assert response.status_code == 200, asset
+
+    @pytest.mark.parametrize(
+        "asset",
+        [
+            "/static/img/campus-quad-380.webp",
+            "/static/img/campus-quad-760.webp",
+            "/static/img/campus-quad.jpg",
+        ],
+    )
+    def test_campus_quad_assets_return_200(self, client, asset):
+        response = client.get(asset)
+        assert response.status_code == 200, asset
+
+    @pytest.mark.parametrize(
+        "page",
+        [
+            "app/static/index.html",
+            "app/static/journey.html",
+            "app/static/privacy.html",
+            "app/static/terms.html",
+            "app/templates/base.html",
+        ],
+    )
+    def test_versioned_asset_urls_are_cache_busted_in_lockstep(self, page):
+        parser = parse_html(Path(page).read_text(encoding="utf-8"))
+        seen = set()
+        for url in parser.urls:
+            path, query = path_and_query(url)
+            if path in VERSION_EXEMPT_PATHS:
+                continue
+            if path not in VERSIONED_ASSET_PATHS:
+                continue
+            seen.add(path)
+            assert query == f"v={ASSET_VERSION}", url
+        assert seen, page
 
     def test_index_substitutes_live_catalog_counts(self, client):
         response = client.get("/")

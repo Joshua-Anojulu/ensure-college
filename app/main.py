@@ -1,7 +1,10 @@
 import functools
+import base64
+import hashlib
 import hmac
 import html
 import os
+import re
 from contextlib import asynccontextmanager
 from pathlib import Path
 from urllib.parse import parse_qs, urlsplit
@@ -87,6 +90,23 @@ _SECURITY_HEADERS = {
         "form-action 'self'"
     ),
 }
+
+_CONSENT_BOOT_RE = re.compile(
+    r'<script id="site-consent-boot">(?P<script>.*?)</script>',
+    re.DOTALL,
+)
+
+
+def _csp_with_consent_boot(html_text: str) -> str:
+    match = _CONSENT_BOOT_RE.search(html_text)
+    if not match:
+        raise RuntimeError("landing consent boot script is missing")
+    script = match.group("script")
+    digest = base64.b64encode(hashlib.sha256(script.encode("utf-8")).digest()).decode("ascii")
+    return _SECURITY_HEADERS["Content-Security-Policy"].replace(
+        "script-src 'self';",
+        f"script-src 'self' 'sha256-{digest}';",
+    )
 
 
 def is_production_deploy() -> bool:
@@ -337,7 +357,13 @@ def serve_index(request: Request) -> HTMLResponse:
     html = html.replace("__COUNT_PROGRAMS__", str(len(request.app.state.programs)))
     html = html.replace("__COUNT_COMPETITIONS__", str(len(request.app.state.competitions)))
     html = html.replace("<!--__ANALYTICS__-->", analytics_tag())
-    return HTMLResponse(html, headers={"Cache-Control": "no-cache"})
+    return HTMLResponse(
+        html,
+        headers={
+            "Cache-Control": "no-cache",
+            "Content-Security-Policy": _csp_with_consent_boot(html),
+        },
+    )
 
 
 @app.get("/robots.txt", response_class=PlainTextResponse)

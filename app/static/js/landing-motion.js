@@ -82,10 +82,27 @@
     .flatMap((selector) => Array.from(document.querySelectorAll(selector)))
     .filter(Boolean);
 
-  for (const target of revealTargets) {
-    target.classList.add("reveal-on-scroll");
-  }
-  root.classList.add("motion-ready");
+  const nearViewportMargin = () => Math.max(160, window.innerHeight * 0.25);
+  const isNearViewport = (target) => {
+    const rect = target.getBoundingClientRect();
+    const margin = nearViewportMargin();
+    return rect.top < window.innerHeight + margin && rect.bottom > -margin;
+  };
+
+  const revealNow = (target) => {
+    target.classList.add("is-revealed");
+    if (revealObserver) {
+      revealObserver.unobserve(target);
+    }
+  };
+
+  const revealNearViewportTargets = () => {
+    for (const target of revealTargets) {
+      if (!target.classList.contains("is-revealed") && isNearViewport(target)) {
+        revealNow(target);
+      }
+    }
+  };
 
   const revealObserver = "IntersectionObserver" in window
     ? new IntersectionObserver(
@@ -94,22 +111,31 @@
             if (!entry.isIntersecting) {
               continue;
             }
-            entry.target.classList.add("is-revealed");
-            revealObserver.unobserve(entry.target);
+            revealNow(entry.target);
           }
         },
-        { rootMargin: "0px 0px -12% 0px", threshold: 0.12 }
+        { rootMargin: "25% 0px 25% 0px", threshold: 0.01 }
       )
     : null;
 
-  revealTargets.forEach((target, index) => {
-    target.style.setProperty("--reveal-delay", `${Math.min(index * 55, 220)}ms`);
-    if (revealObserver) {
-      revealObserver.observe(target);
-    } else {
-      target.classList.add("is-revealed");
-    }
-  });
+  const setupReveals = () => {
+    revealTargets.forEach((target, index) => {
+      target.style.setProperty("--reveal-delay", `${Math.min(index * 55, 220)}ms`);
+      if (isNearViewport(target)) {
+        target.classList.add("reveal-on-scroll", "is-revealed");
+      } else if (revealObserver) {
+        target.classList.add("reveal-on-scroll");
+        revealObserver.observe(target);
+      } else {
+        target.classList.add("reveal-on-scroll", "is-revealed");
+      }
+    });
+    root.classList.add("motion-ready");
+    window.addEventListener("resize", () => window.requestAnimationFrame(revealNearViewportTargets), { passive: true });
+    window.addEventListener("orientationchange", () => window.requestAnimationFrame(revealNearViewportTargets), { passive: true });
+  };
+
+  window.requestAnimationFrame(setupReveals);
 
   // Catalog numbers count up from zero the first time they scroll into view.
   // The server-injected totals stay in the markup for no-JS and SEO; this
@@ -151,6 +177,10 @@
 
   const runHeroEntrance = () => {
     if (!window.gsap) {
+      return;
+    }
+    const heroPieces = Array.from(document.querySelectorAll(".hero-headline, .hero-copy, .hero-demo"));
+    if (heroPieces.some(isNearViewport)) {
       return;
     }
     const gsap = window.gsap;

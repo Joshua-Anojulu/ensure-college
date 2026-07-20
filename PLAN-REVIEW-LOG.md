@@ -717,3 +717,53 @@ and are re-prompted on each navigation — chosen over a `sessionStorage` or coo
 fallback, both of which would add a persistence category requiring a
 privacy-policy update. Build route: **Codex** (`/codex-build`), with Claude
 reviewing the diff and running the proof suites.
+
+## Act 3 — Build (2026-07-20)
+
+### Round 1 — Codex build (gpt-5.5, effort=high, thread 019f7efc-0562-7310-bf79-dc66078d4021)
+
+Josh launched via `.handoff/run-codex-build.sh` (the `--yolo` flag is
+classifier-blocked for Claude). Codex implemented steps 2-6 + tests: derived-CSP
+consent boot (delegated handlers, focus trap, inert background, Escape
+swallowed), single gate owner (wireAgeGate deleted from app.js), fade-only
+near-viewport-aware reveals, WebP picture/srcset from a committed Pillow
+generator (q32: 13,338 + 44,494 bytes vs 285,332), prefetch swap, lockstep test
+extended to parse src/srcset/href, cold/accepted e2e fixtures, self-verifying
+CSP hash test. Its own proof run: 412 + 62 + validator clean.
+
+Declared deviations, both accepted on review: reveal motion is fade-only (its
+browser CLS proof showed late transform motion still shifted ~0.9), and the GSAP
+hero entrance is skipped whenever the hero is near-viewport (i.e. effectively
+always) rather than yanking painted content. Both faithful to "never change what
+has already been painted"; Phase 1 can reintroduce entrance motion CSS-first.
+
+### Claude's verdict
+
+Diff read in full. ONE blocking bug: the boot's `readConsent()` returned "yes"
+on a localStorage throw, silently treating storage-blocked (private-mode)
+visitors as CONSENTED — the signed-off semantics are the opposite (gate on
+every navigation). The e2e suite missed it because its storage-blocked test
+mocks getItem as returning null rather than throwing. Likely seeded by ambiguous
+phrasing in the build prompt ("if localStorage throws, hide the gate for the
+current document only" was written about the accept path).
+
+Fixed directly by Claude rather than a resume round (a ~5-line fix; resume needs
+the classifier-blocked bypass flag, and the skill forbids ping-ponging trivia):
+- boot `readConsent()` catch now returns null (not consented)
+- new e2e test: getItem AND setItem both throw -> gate visible, accept hides
+  current document only, reload re-prompts
+- the CSP hash needed no touch: it derives from served bytes at response time,
+  which is the drift-proofing working exactly as designed
+- one em dash in the new boot comment tripped the repo's dash sweep (caught by
+  Claude's own proof run, absent from Codex's because the comment was Claude's)
+
+Everything else passed review: CSP derivation genuinely runtime-derived,
+contract change deliberate (has-site-consent + inline-boot id extractor), sizes
+from the measured box (calc(100vw - 2rem)), WebP q32 acceptable under the
+overlay+grain treatment, cache-bust lockstep complete with three.min.js/favicon
+correctly exempt.
+
+Proof, run by Claude: 412 request + 63 e2e + validator "No structural errors"
+(4 warnings: 3 pre-existing + sallie-mae deadline passed 2026-07-17, date-driven).
+Awaiting Josh's commit sign-off; step 7 (deploy + pinned Lighthouse re-measure)
+follows the commit.

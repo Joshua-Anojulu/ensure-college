@@ -344,7 +344,6 @@ async function init() {
   wireSearchControls();
   wireResumeImport();
   wireSettings();
-  wireAgeGate();
   wireQuickApplies();
   wireSiteNav();
   await loadSession();
@@ -1312,27 +1311,6 @@ function summarizeExtraction(profile) {
 const settingsModal = document.getElementById("settings-modal");
 const googleSettingsNote = document.getElementById("google-settings-note");
 const passwordSettingsSection = document.getElementById("password-settings-section");
-const SITE_CONSENT_KEY = "site_consent_v1";
-
-function wireAgeGate() {
-  const gate = document.getElementById("age-gate");
-  if (!gate || localStorage.getItem(SITE_CONSENT_KEY) === "yes") {
-    return;
-  }
-  const agree = document.getElementById("age-gate-agree");
-  const cont = document.getElementById("age-gate-continue");
-  agree.addEventListener("change", () => {
-    cont.disabled = !agree.checked;
-  });
-  cont.addEventListener("click", () => {
-    if (!agree.checked) {
-      return;
-    }
-    localStorage.setItem(SITE_CONSENT_KEY, "yes");
-    gate.hidden = true;
-  });
-  gate.hidden = false;
-}
 
 function wireSettings() {
   const openBtn = document.getElementById("open-settings");

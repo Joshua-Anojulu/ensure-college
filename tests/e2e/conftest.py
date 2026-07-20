@@ -63,9 +63,7 @@ def _is_real_error(text: str) -> bool:
     return not any(b in text for b in BENIGN)
 
 
-@pytest.fixture
-def page(page, live_server):
-    """A page with the age gate already accepted and console errors captured."""
+def _attach_console_errors(page):
     errors = []
     page.on("pageerror", lambda e: errors.append(str(e)))
     page.on(
@@ -74,14 +72,43 @@ def page(page, live_server):
         if (m.type == "error" and _is_real_error(m.text))
         else None,
     )
+    page.console_errors = errors
+
+
+@pytest.fixture
+def page(page, live_server):
+    """A page with the age gate already accepted and console errors captured."""
+    _attach_console_errors(page)
     page.goto(live_server, wait_until="domcontentloaded")
     gate = page.locator("#age-gate")
     if gate.count() and gate.is_visible():
         page.check("#age-gate-agree")
         page.click("#age-gate-continue")
         gate.wait_for(state="hidden", timeout=5000)
-    page.console_errors = errors
     return page
+
+
+@pytest.fixture
+def cold_page(browser, live_server):
+    """A fresh landing page that does not auto-dismiss the age gate."""
+    context = browser.new_context(viewport={"width": 412, "height": 823}, device_scale_factor=1.75)
+    page = context.new_page()
+    _attach_console_errors(page)
+    page.goto(live_server, wait_until="domcontentloaded")
+    yield page
+    context.close()
+
+
+@pytest.fixture
+def accepted_page(browser, live_server):
+    """A landing page with consent present before the first document script runs."""
+    context = browser.new_context(viewport={"width": 412, "height": 823}, device_scale_factor=1.75)
+    context.add_init_script("window.localStorage.setItem('site_consent_v1', 'yes');")
+    page = context.new_page()
+    _attach_console_errors(page)
+    page.goto(live_server, wait_until="domcontentloaded")
+    yield page
+    context.close()
 
 
 def unique_email() -> str:

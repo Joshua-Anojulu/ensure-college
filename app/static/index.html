@@ -24,7 +24,179 @@
   <meta name="ai-features-enabled" content="__AI_FEATURES_ENABLED__">
   <link rel="preload" href="/static/fonts/CabinetGrotesk-Extrabold.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/static/fonts/Satoshi-Regular.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="/static/css/style.css?v=20260715-3" as="style">
+  <link rel="prefetch" href="/static/css/style.css?v=20260720-1" as="style">
+  <script id="site-consent-boot">
+(() => {
+  const CONSENT_KEY = "site_consent_v1";
+  const CONSENT_CLASS = "has-site-consent";
+  const root = document.documentElement;
+  let inertObserver = null;
+
+  function readConsent() {
+    try {
+      return window.localStorage.getItem(CONSENT_KEY);
+    } catch {
+      // Storage-blocked (private mode): treat as NOT consented; the visitor
+      // must see the gate. Never assume consent that could not be read.
+      return null;
+    }
+  }
+
+  function writeConsent() {
+    try {
+      window.localStorage.setItem(CONSENT_KEY, "yes");
+    } catch {
+      // Storage-blocked fallback is current-document-only: hide this gate but
+      // do not add a cookie, sessionStorage, or any other persistence layer.
+    }
+  }
+
+  function gate() {
+    return document.getElementById("age-gate");
+  }
+
+  function agreeBox() {
+    return document.getElementById("age-gate-agree");
+  }
+
+  function continueButton() {
+    return document.getElementById("age-gate-continue");
+  }
+
+  function dialog() {
+    const node = gate();
+    return node ? node.querySelector('[role="dialog"]') : null;
+  }
+
+  function gateIsOpen() {
+    const node = gate();
+    return Boolean(node && !root.classList.contains(CONSENT_CLASS));
+  }
+
+  function setBackgroundInert(enabled) {
+    const node = gate();
+    if (!document.body || !node) return;
+    for (const child of Array.from(document.body.children)) {
+      if (child === node || child.tagName === "SCRIPT") continue;
+      if (enabled) {
+        child.setAttribute("inert", "");
+      } else {
+        child.removeAttribute("inert");
+      }
+    }
+    if (enabled && !inertObserver) {
+      inertObserver = new MutationObserver(() => setBackgroundInert(true));
+      inertObserver.observe(document.body, { childList: true });
+    } else if (!enabled && inertObserver) {
+      inertObserver.disconnect();
+      inertObserver = null;
+    }
+  }
+
+  function syncButton() {
+    const checkbox = agreeBox();
+    const button = continueButton();
+    if (button) button.disabled = !checkbox || !checkbox.checked;
+  }
+
+  function focusGate() {
+    if (!gateIsOpen()) return;
+    const checkbox = agreeBox();
+    const panel = dialog();
+    if (panel && !panel.hasAttribute("tabindex")) {
+      panel.setAttribute("tabindex", "-1");
+    }
+    (checkbox || panel)?.focus({ preventScroll: true });
+  }
+
+  function hideGate() {
+    root.classList.add(CONSENT_CLASS);
+    setBackgroundInert(false);
+    gate()?.setAttribute("aria-hidden", "true");
+  }
+
+  function prepareGate() {
+    const node = gate();
+    if (!node) return false;
+    syncButton();
+    if (root.classList.contains(CONSENT_CLASS)) {
+      node.setAttribute("aria-hidden", "true");
+      setBackgroundInert(false);
+      return true;
+    }
+    node.removeAttribute("aria-hidden");
+    setBackgroundInert(true);
+    focusGate();
+    return true;
+  }
+
+  function focusables() {
+    const node = gate();
+    if (!node) return [];
+    return Array.from(node.querySelectorAll('a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'))
+      .filter((el) => el.offsetParent !== null || el === document.activeElement);
+  }
+
+  if (readConsent() === "yes") {
+    root.classList.add(CONSENT_CLASS);
+  }
+
+  document.addEventListener("change", (event) => {
+    if (event.target && event.target.id === "age-gate-agree") {
+      syncButton();
+    }
+  }, true);
+
+  document.addEventListener("click", (event) => {
+    const target = event.target instanceof Element ? event.target : null;
+    const button = target ? target.closest("#age-gate-continue") : null;
+    if (!button) return;
+    event.preventDefault();
+    if (!agreeBox()?.checked) {
+      syncButton();
+      return;
+    }
+    writeConsent();
+    hideGate();
+  }, true);
+
+  document.addEventListener("keydown", (event) => {
+    if (!gateIsOpen()) return;
+    if (event.key === "Escape") {
+      event.preventDefault();
+      event.stopPropagation();
+      return;
+    }
+    if (event.key !== "Tab") return;
+    const items = focusables();
+    if (!items.length) {
+      event.preventDefault();
+      focusGate();
+      return;
+    }
+    const first = items[0];
+    const last = items[items.length - 1];
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    } else if (!items.includes(document.activeElement)) {
+      event.preventDefault();
+      first.focus();
+    }
+  }, true);
+
+  if (!prepareGate()) {
+    const observer = new MutationObserver(() => {
+      if (prepareGate()) observer.disconnect();
+    });
+    observer.observe(document.documentElement, { childList: true, subtree: true });
+    document.addEventListener("DOMContentLoaded", prepareGate, { once: true });
+  }
+})();
+  </script>
   <style>/*__INLINE_CSS__*/</style>
   <!--__ANALYTICS__-->
 </head>
@@ -280,7 +452,10 @@
 
     <section class="proof-band" aria-label="How EnsureCollege works" data-motion-section>
       <div class="proof-photo photo">
-        <img src="/static/img/campus-quad.jpg" alt="Students walking across a college campus between classes" loading="lazy" decoding="async" width="1200" height="800" sizes="(max-width: 760px) 100vw, 48vw">
+        <picture>
+          <source type="image/webp" srcset="/static/img/campus-quad-380.webp?v=20260720-1 380w, /static/img/campus-quad-760.webp?v=20260720-1 760w" sizes="(max-width: 760px) calc(100vw - 2rem), 48vw">
+          <img src="/static/img/campus-quad.jpg?v=20260720-1" alt="Students walking across a college campus between classes" loading="lazy" decoding="async" width="1200" height="800" sizes="(max-width: 760px) calc(100vw - 2rem), 48vw">
+        </picture>
       </div>
       <div class="proof-copy">
         <h2>Every match traces back to an official source.</h2>
@@ -864,7 +1039,7 @@
     </p>
   </footer>
 
-  <div id="age-gate" class="age-gate" hidden>
+  <div id="age-gate" class="age-gate">
     <div class="modal-card panel" role="dialog" aria-modal="true" aria-labelledby="age-gate-title">
       <h2 id="age-gate-title">Before you start</h2>
       <p>
@@ -881,10 +1056,10 @@
     </div>
   </div>
 
-  <script defer src="/static/js/vendor/gsap.min.js?v=20260715-3"></script>
-  <script defer src="/static/js/vendor/ScrollTrigger.min.js?v=20260715-3"></script>
-  <script defer src="/static/js/landing-motion.js?v=20260715-3"></script>
-  <script defer src="/static/js/journey-teaser.js?v=20260715-3"></script>
-  <script src="/static/js/app.js?v=20260715-3"></script>
+  <script defer src="/static/js/vendor/gsap.min.js?v=20260720-1"></script>
+  <script defer src="/static/js/vendor/ScrollTrigger.min.js?v=20260720-1"></script>
+  <script defer src="/static/js/landing-motion.js?v=20260720-1"></script>
+  <script defer src="/static/js/journey-teaser.js?v=20260720-1"></script>
+  <script src="/static/js/app.js?v=20260720-1"></script>
 </body>
 </html>

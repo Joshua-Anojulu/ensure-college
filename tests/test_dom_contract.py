@@ -148,6 +148,20 @@ def extract_app_js_queries():
     return ids, sorted(set(selectors))
 
 
+def extract_inline_consent_boot_ids():
+    html = INDEX.read_text(encoding="utf-8")
+    match = re.search(
+        r'<script id="site-consent-boot">(?P<script>.*?)</script>',
+        html,
+        re.DOTALL,
+    )
+    if not match:
+        return []
+    return sorted(
+        set(re.findall(r"getElementById\(\s*[\"']([^\"']+)[\"']\s*\)", match.group("script")))
+    )
+
+
 def css_has_class_rule(css, class_name):
     escaped = re.escape(class_name)
     return re.search(rf"\.{escaped}(?![\w-])", css) is not None
@@ -156,6 +170,7 @@ def css_has_class_rule(css, class_name):
 def test_manifest_matches_current_app_js_queries():
     manifest = load_manifest()
     ids, selectors = extract_app_js_queries()
+    ids = sorted(set(ids).union(extract_inline_consent_boot_ids()))
     assert manifest["ids"] == ids
     assert manifest["selectors"] == selectors
 
