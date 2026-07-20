@@ -259,7 +259,7 @@ class TestProductionHygiene:
         Lighthouse cannot attribute pseudo-element LCP. URLs stay unversioned,
         byte-identical to the mobile preload href."""
         response = client.get("/")
-        assert '<div class="hero-stage" aria-hidden="true">' in response.text
+        assert '<div class="hero-stage">' in response.text
         assert (
             '<source media="(max-width: 768px)" '
             'srcset="/static/img/hero-forest-mobile.webp">'
