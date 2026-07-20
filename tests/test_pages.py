@@ -266,7 +266,7 @@ class TestProductionHygiene:
         ) in response.text
         assert (
             '<img src="/static/img/hero-forest.webp" alt="" '
-            'fetchpriority="high" decoding="async">'
+            'fetchpriority="high">'
         ) in response.text
         css = Path("app/static/css/style.css").read_text(encoding="utf-8")
         assert ".hero-stage" in css
