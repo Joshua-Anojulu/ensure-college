@@ -1044,3 +1044,7 @@ VERDICT: APPROVED
 ### Resolution
 
 VERDICT: APPROVED at rev 5, round 5 of 5. Awaiting Josh's sign-off; build pipeline per prior agreement: Claude (Fable) builds, Codex reviews the diffs per stage.
+
+## Stage A build review — Codex (thread 019f8137-aef5-7860-9c17-026f4b2c6b29, 3 rounds)
+
+Round 1 (REVISE, 7): accepted stacking isolation, dead teaser connector, unused leaves asset, Save-Data JS-channel e2e, wider+mobile hit-testing, focus-ring check; rejected picture-wrapper (+4 nodes vs 40 cap, srcset-on-img equivalent) and single-path trail (dash pattern IS the dots; mask shares one d) — both logged in the Stage A ledger. Round 2 (REVISE, 3): accepted all — nth-child layout regression from inserted decorative nodes (real bug: stat staggering silently dead), explicit display:none hydration guard for creatures, stale ledger counts. Round 3: APPROVED. Outstanding pre-merge gates: preview harness (cold + pre-consented, median-of-5) and Josh's visual sign-off.
