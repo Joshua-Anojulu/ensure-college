@@ -182,7 +182,7 @@
     ".opportunity-tab",
     ".plan-guidance",
     ".search-descriptions-toggle",
-    ".world-plate img[data-src], .world-marginalia img[data-src], .world-dusk img[data-src]",
+    ".world-plate img[data-src], .world-dusk img[data-src]",
     "input:checked",
     "input[type=checkbox]",
     "label, legend",

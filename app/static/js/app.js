@@ -6385,7 +6385,7 @@ async function handleProgramAdvice(programId, button, panel, loading, errorEl) {
     (navigator.connection && navigator.connection.saveData === true);
   if (!saveData) {
     var plates = document.querySelectorAll(
-      ".world-plate img[data-src], .world-marginalia img[data-src], .world-dusk img[data-src]"
+      ".world-plate img[data-src], .world-dusk img[data-src]"
     );
     plates.forEach(function (img) {
       img.addEventListener(

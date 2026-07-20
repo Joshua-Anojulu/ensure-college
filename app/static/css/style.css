@@ -3155,23 +3155,56 @@ body::after {
   opacity: 0;
 }
 
+/* The stage replaces the proof band's tint: the panel keeps its own surface. */
+.proof-band { background: transparent; }
+
+/* Stats ride openly on the clearing (comp 02): no cards on this section.
+   The :nth-child variants outrank a bare class, so name them explicitly. */
+.catalog-number,
+.catalog-number:nth-child(1),
+.catalog-number:nth-child(2),
+.catalog-number:nth-child(3) {
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+/* Tall sections keep the plate at natural aspect anchored top (cover would
+   zoom absurdly) and fade its lower edge into the canvas. */
+.difference-panel .world-plate img { height: auto; }
+.difference-panel .world-plate {
+  -webkit-mask-image: linear-gradient(to bottom, #000 78%, transparent);
+  mask-image: linear-gradient(to bottom, #000 78%, transparent);
+}
+
 .world-plate img.world-loaded {
   opacity: 1;
   transition: opacity 480ms var(--ease-out);
 }
 
-.world-marginalia {
+/* The owl lives inside the plate layer so multiply blends against the grove
+   in the same stacking context (its source has a paper background). */
+.world-plate .world-owl-img {
   display: none;
   position: absolute;
-  z-index: 0;
-  pointer-events: none;
+  top: 0.6rem;
+  right: 1.2rem;
+  left: auto;
+  width: 108px;
+  height: auto;
+  mix-blend-mode: multiply;
 }
 
 @media (min-width: 1200px) {
-  .world-marginalia { display: block; }
-  .world-owl { top: -1.4rem; right: 1.2rem; width: 108px; }
-  .world-owl img { width: 100%; height: auto; opacity: 0; }
-  .world-owl img.world-loaded { opacity: 1; transition: opacity 480ms var(--ease-out); }
+  .world-plate .world-owl-img { display: block; }
+}
+
+/* The section heading rides a soft paper wash so copy stays legible over
+   the grove (quiet-center rule: more mist, never smaller type). */
+.difference-copy {
+  padding: 1.1rem 1.4rem;
+  border-radius: var(--radius-lg);
+  background: color-mix(in srgb, var(--canvas) 86%, transparent);
 }
 
 .world-dusk {
