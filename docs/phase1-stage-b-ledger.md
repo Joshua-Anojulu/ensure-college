@@ -73,3 +73,18 @@ runs; long tasks unchanged.
 CSS-only reskin, suites 422 request + 75 e2e, Codex APPROVED (3 rounds:
 6 findings round 1 - 5 accepted, 1 rejected with reasoning; 2 accepted
 round 2), preview gates above. Awaiting Josh's sign-off for merge 2.
+
+## Post-merge prod snapshot (2026-07-21, merge e482a9e)
+
+Verified on ensurecollege.com after deploy (v=20260721-2):
+
+- Template frame live on detail pages (body::before canopy from world.css);
+  6 world requests on /scholarships/coca-cola-scholars.
+- Landing fixes that rode the merge, all holding in prod:
+  scroll-down-and-back blanking fix (elementsFromPoint hero guard passes),
+  first catalog stat inked like its siblings, match-preview cards capped
+  with internal scroller.
+- Josh signed off in-session after verifying the preview; the blanking bug
+  he reported (previously live in prod) is fixed by the merge.
+
+Stage B complete. Next: Stage C (Journey + Teaser, merge 3).
