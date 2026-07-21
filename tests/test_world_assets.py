@@ -80,3 +80,67 @@ def test_save_data_header_stamps_html_class():
         assert 'class="save-data"' not in plain.text
         saving = client.get("/", headers={"Save-Data": "on"})
         assert '<html lang="en" class="save-data">' in saving.text
+
+
+def test_template_family_and_legal_pages_carry_the_world_frame():
+    """Stage B: every template-family + legal page links world.css and marks
+    the body world-frame; the landing never links it (SPA appends it only on
+    first tool-view activation)."""
+    with TestClient(app) as client:
+        for path in (
+            "/scholarships/coca-cola-scholars",
+            "/browse",
+            "/guides/essays",
+            "/privacy",
+            "/terms",
+            "/scholarships/definitely-not-a-real-slug",
+        ):
+            response = client.get(path)
+            assert response.status_code in (200, 404), path
+            assert "world.css?v=" in response.text, path
+            assert "world-frame" in response.text, path
+        landing = client.get("/")
+        assert "world.css" not in landing.text
+
+
+def test_reskin_leaves_verification_blocks_and_jsonld_untouched():
+    """Stage B gate: byte-golden JSON-LD for a verified, an unverified, and
+    an estimated-deadline Opportunity page, plus their honesty labels.
+    Goldens captured 2026-07-20; the Stage B diff touches neither
+    seo_pages.py nor detail.html, so these bytes equal the pre-reskin
+    output. Regenerate deliberately if the SEO renderer changes."""
+    import re
+
+    goldens = Path(__file__).resolve().parent / "goldens"
+    cases = {
+        "/scholarships/coca-cola-scholars": ("coca-cola-scholars-jsonld.json", None),
+        "/competitions/conrad-challenge": ("conrad-challenge-jsonld.json", "Not yet verified"),
+        "/scholarships/dell-scholars": ("dell-scholars-jsonld.json", "Estimated"),
+    }
+    with TestClient(app) as client:
+        for path, (golden_name, marker) in cases.items():
+            response = client.get(path)
+            assert response.status_code == 200, path
+            match = re.search(
+                r'<script type="application/ld\+json">(.*?)</script>', response.text, re.S
+            )
+            assert match, f"{path}: JSON-LD missing"
+            golden = (goldens / golden_name).read_text(encoding="utf-8")
+            # The url field derives from the deployment host (env-dependent
+            # by design); compare bytes with the host normalized out.
+            normalize = lambda s: re.sub(r"https?://[^/\"]+", "HOST", s)
+            assert normalize(match.group(1)) == normalize(golden), (
+                f"{path}: JSON-LD drifted from golden"
+            )
+            json.loads(match.group(1))
+            if marker:
+                assert marker.lower() in response.text.lower(), f"{path}: honesty label missing"
+
+
+def test_legal_pages_reflect_save_data_header():
+    with TestClient(app) as client:
+        for path in ("/privacy", "/terms"):
+            plain = client.get(path)
+            assert 'class="save-data"' not in plain.text, path
+            saving = client.get(path, headers={"Save-Data": "on"})
+            assert '<html lang="en" class="save-data">' in saving.text, path

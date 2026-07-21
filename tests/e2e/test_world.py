@@ -174,6 +174,64 @@ def test_reduced_motion_keeps_fireflies_static_and_trail_drawn(browser, live_ser
     context.close()
 
 
+def test_world_css_loads_only_on_spa_activation(page):
+    """Stage B waterfall gate: world.css must never load before a tool view
+    is activated; activating one loads it, sets .world-ready in its load
+    callback, and the quiet-center stage appears behind the catalog."""
+    loaded_before = page.evaluate(
+        "performance.getEntriesByType('resource').filter(e => e.name.includes('world.css')).length"
+    )
+    assert loaded_before == 0
+    page.click("#nav-browse-btn")
+    wait_until(page, "document.documentElement.classList.contains('world-ready')")
+    loaded_after = page.evaluate(
+        "performance.getEntriesByType('resource').filter(e => e.name.includes('world.css')).length"
+    )
+    assert loaded_after == 1
+    wait_until(
+        page,
+        "parseFloat(getComputedStyle(document.querySelector('#catalog-section'), '::before').opacity) > 0",
+    )
+
+
+def test_template_page_frame_glyphs_and_request_budget(browser, live_server):
+    context = browser.new_context(viewport={"width": 1440, "height": 900})
+    page = context.new_page()
+    page.goto(live_server + "/scholarships/coca-cola-scholars", wait_until="networkidle")
+    canopy = page.evaluate("getComputedStyle(document.body, '::before').backgroundImage")
+    assert "canopy-edge" in canopy, canopy
+    ferns = page.evaluate("getComputedStyle(document.body, '::after').backgroundImage")
+    assert "fern-corner-left" in ferns and "fern-corner-right" in ferns, ferns
+    glyph = page.evaluate(
+        "getComputedStyle(document.querySelector('.detail-page .stat-label'), '::before').backgroundImage"
+    )
+    assert "glyph-sheet" in glyph, glyph
+    world_requests = page.evaluate(
+        "performance.getEntriesByType('resource').filter(e => e.name.includes('/static/img/world/')).length"
+    )
+    assert world_requests <= 5, world_requests
+    context.close()
+
+
+def test_forced_colors_suppresses_world_decoration(browser, live_server):
+    context = browser.new_context(
+        viewport={"width": 1440, "height": 900}, forced_colors="active"
+    )
+    page = context.new_page()
+    page.goto(live_server + "/scholarships/coca-cola-scholars", wait_until="networkidle")
+    body_bg = page.evaluate("getComputedStyle(document.body).backgroundImage")
+    assert "world" not in body_bg, body_bg
+    canopy = page.evaluate("getComputedStyle(document.body, '::before').content")
+    assert canopy in ("none", "normal"), canopy
+    # The primary action stays rendered and clickable under forced colors.
+    assert page.locator(".card-link").first.is_visible()
+    page.locator(".card-link").first.scroll_into_view_if_needed()
+    page.wait_for_timeout(300)
+    result = _hit_is_inside(page, ".card-link")
+    assert result is True, f"[forced-colors] card-link intercepted by: {result}"
+    context.close()
+
+
 def test_hero_preload_never_double_fetches_on_mobile(browser, live_server):
     context = browser.new_context(
         viewport={"width": 412, "height": 823}, device_scale_factor=1.75
@@ -188,3 +246,82 @@ def test_hero_preload_never_double_fetches_on_mobile(browser, live_server):
     page.goto(live_server, wait_until="networkidle")
     assert len(hero_requests) == 1, hero_requests
     context.close()
+
+
+def test_first_catalog_stat_shares_the_clearing_ink(page):
+    """The world layer made the stat cards transparent; the first stat must not
+    keep the cream ink that belonged to its old dark card (it vanished into
+    the clearing)."""
+    colors = page.evaluate(
+        """() => {
+          const strongs = document.querySelectorAll('.catalog-number strong');
+          const spans = document.querySelectorAll('.catalog-number span');
+          return {
+            firstStrong: getComputedStyle(strongs[0]).color,
+            secondStrong: getComputedStyle(strongs[1]).color,
+            firstSpan: getComputedStyle(spans[0]).color,
+            secondSpan: getComputedStyle(spans[1]).color,
+          };
+        }"""
+    )
+    assert colors["firstStrong"] == colors["secondStrong"], colors
+    assert colors["firstSpan"] == colors["secondSpan"], colors
+
+
+def test_preview_results_cards_scroll_inside_capped_panel(page):
+    """On two-column hero widths the match preview's cards scroll inside a
+    capped region instead of stretching the hero viewports tall and stranding
+    the left column against empty backdrop; the finish-profile CTA stays out
+    of the scroller."""
+    page.fill("#preview-gpa", "3.8")
+    page.select_option("#preview-grade", "high_school_junior")
+    page.select_option("#preview-field", "computer_science")
+    page.click("#preview-submit")
+    page.wait_for_selector("#preview-results:not([hidden])", timeout=15000)
+    cards = page.evaluate(
+        """() => {
+          const el = document.querySelector('#preview-cards');
+          const style = getComputedStyle(el);
+          return {
+            overflowY: style.overflowY,
+            maxHeight: style.maxHeight,
+            scrolls: el.scrollHeight > el.clientHeight,
+          };
+        }"""
+    )
+    assert cards["overflowY"] == "auto", cards
+    assert cards["maxHeight"] not in ("none", ""), cards
+    assert cards["scrolls"] is True, cards
+    # The CTA lives outside the scroller, still reachable without scrolling it.
+    assert page.evaluate(
+        "!document.querySelector('#preview-cards').contains(document.querySelector('#preview-complete-btn'))"
+    )
+
+
+def test_landing_paints_hero_after_scroll_down_and_back(page):
+    """Chromium regression guard: after a fast scroll to the bottom and back
+    to the top, the profile form must not paint (or hit-test) at a stale
+    viewport offset over the hero. When the layer sticks, elementsFromPoint
+    over the hero resolves to #profile-form and the landing looks blank."""
+    for _ in range(8):
+        page.mouse.wheel(0, 900)
+        page.wait_for_timeout(150)
+    page.evaluate("window.scrollTo(0, 0)")
+    wait_until(page, "window.scrollY === 0")
+    page.wait_for_timeout(500)
+    hits = page.evaluate(
+        """() => {
+          const form = document.querySelector('#profile-form');
+          const points = [[400, 300], [300, 200], [1000, 400]];
+          return points.map(([x, y]) => {
+            const top = document.elementsFromPoint(x, y)[0];
+            return {
+              point: [x, y],
+              coveredByForm: top === form || (form && form.contains(top)),
+              top: top ? top.tagName + '.' + (top.className || '').toString().slice(0, 40) : null,
+            };
+          });
+        }"""
+    )
+    for hit in hits:
+        assert not hit["coveredByForm"], hits

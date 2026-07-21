@@ -411,25 +411,30 @@ def sitemap_xml(request: Request) -> Response:
     )
 
 
-def _serve_static_page(filename: str) -> HTMLResponse:
+def _serve_static_page(filename: str, request: Request | None = None) -> HTMLResponse:
     html = (STATIC_DIR / filename).read_text(encoding="utf-8")
     html = html.replace("<!--__ANALYTICS__-->", analytics_tag())
+    # These responses are no-cache, so reflecting Save-Data per request is
+    # safe here (the edge-cached template family cannot do this and relies on
+    # the prefers-reduced-data media query in world.css instead).
+    if request is not None and request.headers.get("save-data", "").lower() == "on":
+        html = html.replace('<html lang="en">', '<html lang="en" class="save-data">', 1)
     return HTMLResponse(html, headers={"Cache-Control": "no-cache"})
 
 
 @app.get("/journey")
-def serve_journey() -> HTMLResponse:
-    return _serve_static_page("journey.html")
+def serve_journey(request: Request) -> HTMLResponse:
+    return _serve_static_page("journey.html", request)
 
 
 @app.get("/privacy")
-def serve_privacy() -> HTMLResponse:
-    return _serve_static_page("privacy.html")
+def serve_privacy(request: Request) -> HTMLResponse:
+    return _serve_static_page("privacy.html", request)
 
 
 @app.get("/terms")
-def serve_terms() -> HTMLResponse:
-    return _serve_static_page("terms.html")
+def serve_terms(request: Request) -> HTMLResponse:
+    return _serve_static_page("terms.html", request)
 
 
 @app.get("/health")

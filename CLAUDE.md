@@ -25,6 +25,21 @@ This repo already keeps plans in `docs/`, dated and paired:
 Point the skills at those paths rather than a root `PLAN.md`:
 `/grill-with-docs-codex plan=docs/2026-07-12-<feature>.md` (the round-by-round Codex argument lands in `PLAN-REVIEW-LOG.md`).
 
+## Installed tooling (OMC, Neon MCP, context7)
+
+Newer tooling exists in this environment; here is how it interacts with the rules above.
+
+1. **The plan-hardening chain overrides OMC routing.** oh-my-claudecode's autopilot/ralph/executor
+   orchestration does not replace the grill → codex-review → codex-build chain described above.
+   For anything the chain covers, OMC agents may *implement* only after the human has signed off
+   on an approved plan — never plan-and-build autonomously.
+2. **Neon MCP is read-only against prod** (`.mcp.json` → `https://mcp.neon.tech/mcp`). Before any
+   deploy, compare prod's `alembic_version` against the repo's migration head and report drift.
+   Schema changes must be rehearsed on a Neon branch before touching `main` — the 0006–0008
+   migration history (see Non-negotiables) is why this rule exists.
+3. **Consult context7 first for framework API questions.** For FastAPI/SQLAlchemy/Alembic API
+   usage, query the context7 MCP docs before implementing rather than relying on trained knowledge.
+
 ## Non-negotiables
 
 These are the ways this project has actually been broken before. A plan that violates one of them should be rejected in review.

@@ -523,6 +523,10 @@ function setOpportunityTabsVisible(visible) {
 
 async function activateOpportunityView(view, options = {}) {
   activeOpportunityView = view;
+  // First SPA-world activation loads world.css (never in the landing's
+  // critical path); the stage renders only under .world-ready, set in the
+  // stylesheet's load callback (see initWorldLayer).
+  if (typeof window.__ensureWorldStage === "function") window.__ensureWorldStage();
   setOpportunityTabsVisible(true);
 
   for (const button of opportunityTabButtons) {
@@ -6383,6 +6387,22 @@ async function handleProgramAdvice(programId, button, panel, loading, errorEl) {
   var saveData =
     document.documentElement.classList.contains("save-data") ||
     (navigator.connection && navigator.connection.saveData === true);
+  var worldStageRequested = false;
+  window.__ensureWorldStage = function () {
+    if (worldStageRequested || saveData) return;
+    worldStageRequested = true;
+    var link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = "/static/css/world.css?v=20260720-4";
+    link.addEventListener(
+      "load",
+      function () {
+        document.documentElement.classList.add("world-ready");
+      },
+      { once: true }
+    );
+    document.head.appendChild(link);
+  };
   if (!saveData) {
     var plates = document.querySelectorAll(
       ".world-plate img[data-src], .world-dusk img[data-src]"

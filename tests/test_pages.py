@@ -10,7 +10,7 @@ from fastapi.testclient import TestClient
 from app.main import _SECURITY_HEADERS, app
 
 
-ASSET_VERSION = "20260720-3"
+ASSET_VERSION = "20260721-2"
 FONT_ASSETS = [
     "/static/fonts/CabinetGrotesk-Bold.woff2",
     "/static/fonts/CabinetGrotesk-Extrabold.woff2",
@@ -25,6 +25,7 @@ VENDOR_ASSETS = [
 ]
 VERSIONED_ASSET_PATHS = {
     "/static/css/style.css",
+    "/static/css/world.css",
     "/static/js/app.js",
     "/static/js/gsap.min.js",
     "/static/js/landing-motion.js",

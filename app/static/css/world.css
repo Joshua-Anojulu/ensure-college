@@ -1,0 +1,143 @@
+/* Phase 1 Stage B: the World beyond the landing.
+   Loaded as a normal <link> by the template family and legal pages; appended
+   by app.js on FIRST SPA-world activation only (never in the landing's
+   critical path — see docs/2026-07-20-phase1-forest-world.md). World images
+   are content-hashed and immutable; this sheet is ?v-lockstep versioned. */
+
+/* ---- Template family + legal pages: quiet scene + canopy/fern frame ---- */
+
+body.world-frame {
+  position: relative;
+  isolation: isolate;
+  background-image: url("/static/img/world/stage-tools-1376.ebed5d00bf.webp");
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+}
+
+body.world-frame::before,
+body.world-frame::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  /* Below ALL body children, including static ones: a blanket
+     position:relative on children would unhide the skip-link. */
+  z-index: -1;
+  pointer-events: none;
+}
+
+body.world-frame::before {
+  top: 0;
+  height: 170px;
+  background: url("/static/img/world/canopy-edge-1376.a15ba46724.webp") top center / 100% auto no-repeat;
+  opacity: 0.85;
+}
+
+body.world-frame::after {
+  bottom: 0;
+  height: 300px;
+  background:
+    url("/static/img/world/fern-corner-left-640.ac02ba06f1.webp") bottom left / 260px auto no-repeat,
+    url("/static/img/world/fern-corner-right-640.9a7744b591.webp") bottom right / 260px auto no-repeat;
+  opacity: 0.9;
+  mix-blend-mode: multiply;
+}
+
+
+/* ---- World glyphs (facts panel, comp 08): sprite cells 240x239 on the
+   960x717 sheet, rendered at 22px. Pure ::before, no markup changes. ---- */
+
+.detail-page .stat-label::before {
+  content: "";
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  margin-right: 0.45rem;
+  vertical-align: -5px;
+  background-image: url("/static/img/world/glyph-sheet-960.f76739b45a.webp");
+  background-size: 88px 65.7px;
+  background-position: -22px 0; /* calendar (deadline default) */
+  mix-blend-mode: multiply;
+}
+
+.detail-page .stat-award .stat-label::before {
+  background-position: -66px 0; /* coin stack */
+}
+
+.detail-page .special-requirements-heading::before {
+  content: "";
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  margin-right: 0.45rem;
+  vertical-align: -5px;
+  background-image: url("/static/img/world/glyph-sheet-960.f76739b45a.webp");
+  background-size: 88px 65.7px;
+  background-position: 0 -43.8px; /* wax-seal check */
+  mix-blend-mode: multiply;
+}
+
+/* ---- SPA tool views: the quiet-center stage, scoped under .world-ready
+   (set only in the appended stylesheet's load callback). Decorative fade-in;
+   never a layout move; instant/off under reduced motion. ---- */
+
+html.world-ready .results-section {
+  position: relative;
+  isolation: isolate;
+}
+
+html.world-ready .results-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: url("/static/img/world/stage-tools-1376.ebed5d00bf.webp");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0;
+  animation: world-stage-in 480ms ease-out forwards;
+}
+
+@keyframes world-stage-in {
+  to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.world-ready .results-section::before { animation-duration: 0ms; }
+}
+
+/* ---- Save-Data: suppress every decorative world image. Two channels:
+   html.save-data (server-stamped where responses are per-request; the
+   edge-cached template family cannot vary per header, so it relies on the
+   standards media query below) and prefers-reduced-data. ---- */
+
+html.save-data body.world-frame { background-image: none; }
+html.save-data body.world-frame::before,
+html.save-data body.world-frame::after,
+html.save-data .detail-page .stat-label::before,
+html.save-data .detail-page .special-requirements-heading::before,
+html.save-data.world-ready .results-section::before { content: none; }
+
+@media (prefers-reduced-data: reduce) {
+  body.world-frame { background-image: none; }
+  body.world-frame::before,
+  body.world-frame::after,
+  .detail-page .stat-label::before,
+  .detail-page .special-requirements-heading::before,
+  html.world-ready .results-section::before { content: none; }
+}
+
+/* ---- Forced colors: decorative imagery and blending yield entirely to the
+   system palette; panels and controls render as the OS dictates. ---- */
+
+@media (forced-colors: active) {
+  body.world-frame { background-image: none; }
+  body.world-frame::before,
+  body.world-frame::after,
+  .detail-page .stat-label::before,
+  .detail-page .special-requirements-heading::before,
+  html.world-ready .results-section::before { content: none; }
+}
