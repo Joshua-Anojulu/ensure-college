@@ -70,7 +70,7 @@
       return;
     }
     const s = document.createElement("script");
-    s.src = "/static/js/vendor/three.min.js?v=20260721-3";
+    s.src = "/static/js/vendor/three.min.js?v=20260721-4";
     s.onload = cb;
     document.head.appendChild(s);
   }

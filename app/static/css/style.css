@@ -2862,6 +2862,21 @@ body.has-scrolled .site-header {
   transition: opacity 480ms var(--ease-out);
 }
 
+/* The copy column was styled for the dark brand wash; over the pale
+   painting it needs a dusk scrim. Lives inside the painting layer so the
+   live swap fades it out with the plate. */
+.teaser-painting::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    100deg,
+    color-mix(in srgb, var(--brand-strong) 84%, transparent) 0%,
+    color-mix(in srgb, var(--brand-strong) 52%, transparent) 28%,
+    transparent 56%
+  );
+}
+
 .teaser-landmarks {
   position: absolute;
   inset: 0;
