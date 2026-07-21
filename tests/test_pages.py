@@ -10,7 +10,7 @@ from fastapi.testclient import TestClient
 from app.main import _SECURITY_HEADERS, app
 
 
-ASSET_VERSION = "20260721-2"
+ASSET_VERSION = "20260721-3"
 FONT_ASSETS = [
     "/static/fonts/CabinetGrotesk-Bold.woff2",
     "/static/fonts/CabinetGrotesk-Extrabold.woff2",
@@ -393,3 +393,49 @@ class TestJourneyPage:
     def test_journey_assets_return_200(self, client, asset):
         response = client.get(asset)
         assert response.status_code == 200, asset
+
+
+class TestStageCohesion:
+    """Stage C cohesion gates: colors flow through tokens, and every
+    versioned URL a script constructs stays in cache-bust lockstep."""
+
+    HEX_RE = re.compile(r"#[0-9a-fA-F]{3,8}\b")
+    # The one legitimate CSS hex outside token definitions and mask ramps:
+    # the trail's SVG mask stroke is literal white by definition of a mask.
+    CSS_HEX_ALLOWLIST = {"stroke: #fff;"}
+
+    @pytest.mark.parametrize("name", ["style.css", "world.css"])
+    def test_css_hex_literals_are_tokens_or_allowlisted(self, name):
+        text = Path(f"app/static/css/{name}").read_text(encoding="utf-8")
+        offenders = []
+        for line in text.splitlines():
+            if not self.HEX_RE.search(line):
+                continue
+            stripped = line.strip()
+            if re.match(r"^--[\w-]+:", stripped):
+                continue  # :root token definitions are where hexes live
+            if "mask-image" in stripped:
+                continue  # alpha ramps: #000 is the only sensible literal
+            if stripped in self.CSS_HEX_ALLOWLIST:
+                continue
+            offenders.append(stripped)
+        assert offenders == [], offenders
+
+    @pytest.mark.parametrize(
+        "name", ["app.js", "journey.js", "journey-teaser.js"]
+    )
+    def test_js_versioned_urls_match_lockstep(self, name):
+        text = Path(f"app/static/js/{name}").read_text(encoding="utf-8")
+        pins = re.findall(r"/static/[\w/.-]+\?v=([\w-]+)", text)
+        assert all(v == ASSET_VERSION for v in pins), (name, pins)
+
+    @pytest.mark.parametrize(
+        "name", ["app.js", "journey.js", "journey-teaser.js"]
+    )
+    def test_js_never_carries_css_hex_strings(self, name):
+        text = Path(f"app/static/js/{name}").read_text(encoding="utf-8")
+        assert not re.search(r"['\"]#[0-9a-fA-F]{3,8}['\"]", text), name
+
+    def test_three_palette_literals_stay_in_journey_scenes(self):
+        text = Path("app/static/js/app.js").read_text(encoding="utf-8")
+        assert not re.search(r"0x[0-9a-fA-F]{6}", text)

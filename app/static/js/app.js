@@ -6393,7 +6393,7 @@ async function handleProgramAdvice(programId, button, panel, loading, errorEl) {
     worldStageRequested = true;
     var link = document.createElement("link");
     link.rel = "stylesheet";
-    link.href = "/static/css/world.css?v=20260720-4";
+    link.href = "/static/css/world.css?v=20260721-3";
     link.addEventListener(
       "load",
       function () {
@@ -6405,7 +6405,7 @@ async function handleProgramAdvice(programId, button, panel, loading, errorEl) {
   };
   if (!saveData) {
     var plates = document.querySelectorAll(
-      ".world-plate img[data-src], .world-dusk img[data-src]"
+      ".world-plate img[data-src], .world-dusk img[data-src], .teaser-painting img[data-src]"
     );
     plates.forEach(function (img) {
       // Creatures are display:none below 1200px; do not hydrate what cannot

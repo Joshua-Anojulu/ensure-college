@@ -118,6 +118,7 @@
   --brand-ink: #fbfcfa;
   --brand-tint: #dfe8e2;
   --brand-tint-2: #cedbd2;
+  --brand-lift: #2c5546;
 
   --accent-deep: #8a5e14;
   --accent: #c98d2c;
@@ -763,7 +764,7 @@ input:focus, select:focus, textarea:focus {
 .checkbox-item input::after {
   width: 0.32rem;
   height: 0.58rem;
-  border: solid #fff;
+  border: solid var(--brand-ink);
   border-width: 0 2px 2px 0;
   content: "";
   transform: rotate(45deg) scale(0);
@@ -2780,7 +2781,7 @@ body.has-scrolled .site-header {
   margin: clamp(1.6rem, 4vw, 3rem) 0;
   border: 1px solid var(--brand-strong);
   border-radius: var(--radius-xl);
-  background: radial-gradient(120% 130% at 72% 24%, #2c5546 0%, var(--brand) 52%, var(--brand-strong) 100%);
+  background: radial-gradient(120% 130% at 72% 24%, var(--brand-lift) 0%, var(--brand) 52%, var(--brand-strong) 100%);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.12),
     0 30px 70px -28px rgba(18, 42, 33, 0.5),
@@ -2832,11 +2833,74 @@ body.has-scrolled .site-header {
 }
 
 .journey-teaser-cta:hover {
-  background: #b87f24;
+  background: color-mix(in srgb, var(--accent) 78%, var(--accent-deep));
   color: var(--accent-ink);
 }
 
 .journey-teaser.teaser-static #journey-teaser-canvas { display: none; }
+
+/* Painting-first teaser: the overlook plate fills the same box the canvas
+   does, so the live swap changes pixels, never layout. */
+.teaser-painting {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.teaser-painting img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 62% 38%;
+  opacity: 0;
+}
+
+.teaser-painting img.world-loaded {
+  opacity: 1;
+  transition: opacity 480ms var(--ease-out);
+}
+
+.teaser-landmarks {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 480ms var(--ease-out) 240ms;
+}
+
+.journey-teaser:has(.teaser-painting img.world-loaded) .teaser-landmarks { opacity: 1; }
+
+.teaser-landmark rect {
+  fill: rgba(251, 252, 250, 0.92);
+  stroke: var(--brand-strong);
+  stroke-width: 1;
+}
+
+.teaser-landmark text {
+  fill: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 19px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-anchor: middle;
+}
+
+/* The live island fades in over the painting; the painting and its labels
+   yield underneath. Both layers occupy the same absolute box. */
+#journey-teaser-canvas { opacity: 0; }
+
+.journey-teaser.teaser-live #journey-teaser-canvas {
+  opacity: 1;
+  transition: opacity 560ms var(--ease-out);
+}
+
+.journey-teaser.teaser-live .teaser-painting {
+  opacity: 0;
+  transition: opacity 560ms var(--ease-out) 120ms;
+}
 
 /* Craft details */
 ::selection {

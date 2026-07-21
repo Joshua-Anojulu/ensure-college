@@ -1,12 +1,19 @@
-/* Landing-page journey teaser: one live miniature island, slowly orbiting,
-   rendered only when the section approaches the viewport. Three.js is
-   injected on demand so the landing's critical path never pays for it. */
+/* Landing-page journey teaser, painting-first: the overlook plate is the
+   guaranteed visual (hydrated by app.js with the other world plates); the
+   live miniature island is a progressive enhancement that loads three.js on
+   idle once the section approaches the viewport, then fades in over the
+   painting inside the same box so nothing painted ever moves. Reduced
+   motion, Save-Data, and low-end devices keep the painting. */
 (() => {
   const canvas = document.getElementById("journey-teaser-canvas");
   const section = document.querySelector(".journey-teaser");
   if (!canvas || !section) return;
 
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const saveData = !!(navigator.connection && navigator.connection.saveData);
+  const lowEnd =
+    (navigator.hardwareConcurrency || 4) <= 2 ||
+    (navigator.deviceMemory || 4) <= 2;
   const webgl = (() => {
     try {
       const c = document.createElement("canvas");
@@ -15,12 +22,28 @@
       return false;
     }
   })();
-  if (reduceMotion || !webgl) {
+  if (reduceMotion || saveData || lowEnd || !webgl) {
+    // The painting is the experience; under Save-Data even the plate stays
+    // unfetched (app.js suppresses all world hydration) and the section
+    // rests on its brand wash.
     section.classList.add("teaser-static");
     return;
   }
 
   let started = false;
+
+  // Idle gate: the swap is an enhancement, so it must never compete with
+  // load-critical work. requestIdleCallback with a bounded timeout keeps it
+  // deterministic on browsers without idle callbacks.
+  let idle = false;
+  const markIdle = () => {
+    idle = true;
+  };
+  if ("requestIdleCallback" in window) {
+    window.requestIdleCallback(markIdle, { timeout: 4000 });
+  } else {
+    window.setTimeout(markIdle, 2500);
+  }
 
   // Proximity gate: a cheap bounded poll, cleared the moment it fires.
   // (IntersectionObserver proved unreliable on this section, and a scroll
@@ -34,7 +57,7 @@
       window.clearInterval(gate);
       return;
     }
-    if (nearViewport()) {
+    if (idle && nearViewport()) {
       started = true;
       window.clearInterval(gate);
       loadThree(init);
@@ -47,7 +70,7 @@
       return;
     }
     const s = document.createElement("script");
-    s.src = "/static/js/vendor/three.min.js?v=20260713-5";
+    s.src = "/static/js/vendor/three.min.js?v=20260721-3";
     s.onload = cb;
     document.head.appendChild(s);
   }
@@ -204,10 +227,12 @@
       return r.top < window.innerHeight && r.bottom > 0;
     }
 
-    // Paint once immediately so the island is there the moment the canvas is
-    // ready, rather than on the next animation frame.
+    // Paint once immediately, then reveal the canvas over the painting: the
+    // swap happens only after real pixels exist, and both layers share the
+    // same absolute box, so the exchange can never shift layout.
     world.rotation.y = 0.5;
     renderer.render(scene, camera);
+    section.classList.add("teaser-live");
 
     function frame(nowMs) {
       if (!document.hidden && onScreen()) {

@@ -122,6 +122,11 @@ def test_connection_savedata_js_channel_suppresses_world_requests(browser, live_
     page.mouse.wheel(0, 30000)
     page.wait_for_timeout(1500)
     assert world_requests == [], world_requests
+    # The teaser rests on its painting mode: static class, no three.js.
+    assert page.evaluate(
+        "document.querySelector('.journey-teaser').classList.contains('teaser-static')"
+    )
+    assert not any("three.min.js" in u for u in world_requests)
     context.close()
 
 
@@ -325,3 +330,74 @@ def test_landing_paints_hero_after_scroll_down_and_back(page):
     )
     for hit in hits:
         assert not hit["coveredByForm"], hits
+
+
+def test_teaser_painting_first_and_same_box_swap(browser, live_server):
+    """Stage C gate: the overlook painting is visible before the live island
+    loads; the swap fades the canvas in inside the same box (zero layout
+    shift); the CTA is clickable before and after."""
+    context = browser.new_context(viewport={"width": 1440, "height": 900})
+    context.add_init_script("window.localStorage.setItem('site_consent_v1', 'yes');")
+    page = context.new_page()
+    held = {}
+    page.route("**/three.min.js*", lambda route: held.setdefault("route", route))
+    page.goto(live_server, wait_until="load")
+    page.locator(".journey-teaser").scroll_into_view_if_needed()
+
+    # Painting hydrates and is the visible layer; no live class yet.
+    wait_until(page, "document.querySelector('.teaser-painting img.world-loaded') !== null")
+    wait_until(page, "getComputedStyle(document.querySelector('.teaser-landmarks')).opacity === '1'")
+    assert not page.evaluate(
+        "document.querySelector('.journey-teaser').classList.contains('teaser-live')"
+    )
+    result = _hit_is_inside(page, ".journey-teaser-cta")
+    assert result is True, f"[pre-swap] CTA intercepted by: {result}"
+    rect_before = page.evaluate(
+        "JSON.stringify(document.querySelector('.journey-teaser').getBoundingClientRect())"
+    )
+
+    # Release three.js: the island initializes and swaps in.
+    elapsed = 0
+    while "route" not in held and elapsed < 8000:
+        page.wait_for_timeout(250)
+        elapsed += 250
+    assert "route" in held, "three.min.js was never requested on the live path"
+    held["route"].continue_()
+    wait_until(
+        page,
+        "document.querySelector('.journey-teaser').classList.contains('teaser-live')",
+    )
+    rect_after = page.evaluate(
+        "JSON.stringify(document.querySelector('.journey-teaser').getBoundingClientRect())"
+    )
+    assert rect_before == rect_after, (rect_before, rect_after)
+    page.wait_for_timeout(700)
+    result = _hit_is_inside(page, ".journey-teaser-cta")
+    assert result is True, f"[post-swap] CTA intercepted by: {result}"
+    context.close()
+
+
+def test_teaser_reduced_motion_keeps_painting_no_three(browser, live_server):
+    """Reduced motion never loads three.js; the painting and its landmark
+    labels are the whole experience."""
+    context = browser.new_context(
+        viewport={"width": 1440, "height": 900}, reduced_motion="reduce"
+    )
+    context.add_init_script("window.localStorage.setItem('site_consent_v1', 'yes');")
+    page = context.new_page()
+    three_requests = []
+    page.on(
+        "request",
+        lambda r: three_requests.append(r.url) if "three.min.js" in r.url else None,
+    )
+    page.goto(live_server, wait_until="networkidle")
+    assert page.evaluate(
+        "document.querySelector('.journey-teaser').classList.contains('teaser-static')"
+    )
+    page.locator(".journey-teaser").scroll_into_view_if_needed()
+    wait_until(page, "document.querySelector('.teaser-painting img.world-loaded') !== null")
+    page.wait_for_timeout(2600)
+    assert three_requests == [], three_requests
+    result = _hit_is_inside(page, ".journey-teaser-cta")
+    assert result is True, f"[reduced-motion] CTA intercepted by: {result}"
+    context.close()

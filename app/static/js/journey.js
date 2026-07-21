@@ -504,11 +504,23 @@
     bench(g, 3.4, 3.2, -2.2, BERRY);
     bench(g, -3.5, 3.0, 2.2, GOLD);
     const path = (x, z, len, ry) => {
-      const p = new T.Mesh(new T.BoxGeometry(1.7, 0.07, len), mat(PAPER));
-      p.position.set(x, 0.05, z);
-      p.rotation.y = ry;
-      p.receiveShadow = true;
-      g.add(p);
+      // Marigold trail dots, the world's wayfinding motif: the same dotted
+      // amber line the plates and the landing Trail draw, not solid paving.
+      const trail = new T.Group();
+      const count = Math.max(2, Math.round(len / 0.62));
+      for (let i = 0; i < count; i += 1) {
+        const t = count === 1 ? 0.5 : i / (count - 1);
+        const r = 0.1 + (i % 3) * 0.022;
+        const dot = new T.Mesh(
+          new T.CylinderGeometry(r, r + 0.02, 0.05, 8),
+          mat(i % 4 === 3 ? GOLD : AMBER)
+        );
+        dot.position.set(i % 2 ? 0.16 : -0.12, 0.05, len / 2 - t * len);
+        trail.add(dot);
+      }
+      trail.position.set(x, 0.02, z);
+      trail.rotation.y = ry;
+      g.add(trail);
     };
     path(-4.6, -0.4, 10, 0.65);
     path(0, -2.5, 9, 0);
