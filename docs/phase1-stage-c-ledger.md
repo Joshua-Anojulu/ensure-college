@@ -73,7 +73,35 @@ outlier (2740 / 8452 ms) retained in its median.
 LCP element is the hero art or hero text in every run - world art never
 takes LCP. All medians far under the 2500 ms ceiling.
 
+## Codex build review
+
+**Round 1 (.handoff/phase1-stageC-codex.txt): VERDICT REVISE, 9 findings.**
+Fixed 7: (P1) teaser Save-Data check was JS-channel only, header-only
+Save-Data could fetch three.js - now dual-channel (navigator.connection OR
+the server-stamped class) with the header e2e test asserting teaser-static
+and zero three.js requests; (P2) the JS-channel test's three.js assertion
+was vacuous (scanned the world-request list) - both tests now track
+three_requests separately; (P2) /journey loaded the 670 KB vendor script
+unconditionally before its fallback gates could run - the static script tag
+is gone, journey.js gates first (now including Save-Data, previously never
+checked there) and injects three.js only when the flight runs, degrading to
+journey-static on load failure, with a new reduced-motion /journey e2e gate;
+(P2) mobile landmark chips fell under readable size and the slice crop cut
+the right-side stations - hidden below 768px, the painting carries the
+mobile teaser; (P2) landmark reveal depended on :has() - replaced with an
+adjacent-sibling selector, no support cliff; (P2) no forced-colors handling
+for the teaser layers in the inlined stylesheet - added, decorative layers
+hidden and the section forced to system colors; (P2) chip fill used a raw
+rgba() - now color-mix over var(--surface). The P3 split three.js pin
+resolved itself: both pins are JS-side now and the cohesion test asserts
+them. Suites after the round: 431 request + 81 e2e.
+
+Deferred with rationale: extending the color scan to rgb()/hsl() means
+adjudicating dozens of pre-existing legitimate shadow-alpha rgba() values -
+queued as its own audit, out of stage scope; the inline-CSS byte note is
+recorded as observed-not-a-regression (the 9-run harness delta is negative).
+
 ## Outstanding before merge 3
 
-1. Codex build review rounds.
+1. Codex round 2 verdict.
 2. Josh's visual sign-off on the preview.

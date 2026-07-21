@@ -17,11 +17,36 @@
     }
   })();
 
-  if (!track || !canvas || !window.THREE || reduceMotion || !webgl) {
+  const saveData =
+    !!(navigator.connection && navigator.connection.saveData) ||
+    root.classList.contains("save-data");
+
+  if (!track || !canvas || reduceMotion || saveData || !webgl) {
     root.classList.add("journey-static");
     return;
   }
 
+  // Three.js loads only after the gates pass: reduced-motion, Save-Data,
+  // and no-WebGL visitors read the static page without paying the vendor
+  // download. Failure to load degrades to the same static mode.
+  const boot = () => {
+    if (!window.THREE) {
+      root.classList.add("journey-static");
+      return;
+    }
+    init();
+  };
+  if (window.THREE) {
+    boot();
+  } else {
+    const vendor = document.createElement("script");
+    vendor.src = "/static/js/vendor/three.min.js?v=20260721-5";
+    vendor.onload = boot;
+    vendor.onerror = () => root.classList.add("journey-static");
+    document.head.appendChild(vendor);
+  }
+
+  function init() {
   const T = window.THREE;
 
   // ---- Palette (style.css tokens, hex-locked) ----
@@ -977,4 +1002,5 @@
   });
 
   window.requestAnimationFrame(frame);
+  }
 })();

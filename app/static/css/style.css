@@ -2886,12 +2886,18 @@ body.has-scrolled .site-header {
   transition: opacity 480ms var(--ease-out) 240ms;
 }
 
-.journey-teaser:has(.teaser-painting img.world-loaded) .teaser-landmarks { opacity: 1; }
+.teaser-painting img.world-loaded + .teaser-landmarks { opacity: 1; }
 
 .teaser-landmark rect {
-  fill: rgba(251, 252, 250, 0.92);
+  fill: color-mix(in srgb, var(--surface) 92%, transparent);
   stroke: var(--brand-strong);
   stroke-width: 1;
+}
+
+@media (max-width: 767px) {
+  /* viewBox-scaled chips fall under readable size and the slice crop cuts
+     the right-side stations; the painting carries the mobile teaser alone. */
+  .teaser-landmarks { display: none; }
 }
 
 .teaser-landmark text {
@@ -2901,6 +2907,13 @@ body.has-scrolled .site-header {
   letter-spacing: 0.08em;
   text-transform: uppercase;
   text-anchor: middle;
+}
+
+@media (forced-colors: active) {
+  .teaser-painting,
+  .teaser-landmarks,
+  #journey-teaser-canvas { display: none; }
+  .journey-teaser { background: Canvas; border: 1px solid CanvasText; }
 }
 
 /* The live island fades in over the painting; the painting and its labels

@@ -10,7 +10,11 @@
   if (!canvas || !section) return;
 
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const saveData = !!(navigator.connection && navigator.connection.saveData);
+  // Dual channel, matching app.js: the JS API and the server-stamped class
+  // (the Save-Data header can arrive without navigator.connection).
+  const saveData =
+    !!(navigator.connection && navigator.connection.saveData) ||
+    document.documentElement.classList.contains("save-data");
   const lowEnd =
     (navigator.hardwareConcurrency || 4) <= 2 ||
     (navigator.deviceMemory || 4) <= 2;
@@ -70,7 +74,7 @@
       return;
     }
     const s = document.createElement("script");
-    s.src = "/static/js/vendor/three.min.js?v=20260721-4";
+    s.src = "/static/js/vendor/three.min.js?v=20260721-5";
     s.onload = cb;
     document.head.appendChild(s);
   }

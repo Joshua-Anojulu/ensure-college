@@ -85,15 +85,25 @@ def test_save_data_suppresses_every_world_asset_request(browser, live_server):
     context.add_init_script("window.localStorage.setItem('site_consent_v1', 'yes');")
     page = context.new_page()
     world_requests = []
+    three_requests = []
     page.on(
         "request",
-        lambda r: world_requests.append(r.url) if "/static/img/world/" in r.url else None,
+        lambda r: (
+            world_requests.append(r.url) if "/static/img/world/" in r.url else None,
+            three_requests.append(r.url) if "three.min.js" in r.url else None,
+        ),
     )
     page.goto(live_server, wait_until="networkidle")
     assert page.evaluate("document.documentElement.classList.contains('save-data')")
     page.mouse.wheel(0, 30000)
     page.wait_for_timeout(1500)
     assert world_requests == [], world_requests
+    # Header-only Save-Data (no JS channel) must still keep the teaser
+    # static: the dual-channel check reads the server-stamped class.
+    assert page.evaluate(
+        "document.querySelector('.journey-teaser').classList.contains('teaser-static')"
+    )
+    assert three_requests == [], three_requests
     context.close()
 
 
@@ -114,19 +124,24 @@ def test_connection_savedata_js_channel_suppresses_world_requests(browser, live_
     )
     page = context.new_page()
     world_requests = []
+    three_requests = []
     page.on(
         "request",
-        lambda r: world_requests.append(r.url) if "/static/img/world/" in r.url else None,
+        lambda r: (
+            world_requests.append(r.url) if "/static/img/world/" in r.url else None,
+            three_requests.append(r.url) if "three.min.js" in r.url else None,
+        ),
     )
     page.goto(live_server, wait_until="networkidle")
     page.mouse.wheel(0, 30000)
     page.wait_for_timeout(1500)
     assert world_requests == [], world_requests
-    # The teaser rests on its painting mode: static class, no three.js.
+    # The teaser rests on its painting mode: static class, no three.js
+    # (tracked in its own list; the world list can never contain it).
     assert page.evaluate(
         "document.querySelector('.journey-teaser').classList.contains('teaser-static')"
     )
-    assert not any("three.min.js" in u for u in world_requests)
+    assert three_requests == [], three_requests
     context.close()
 
 
@@ -400,4 +415,26 @@ def test_teaser_reduced_motion_keeps_painting_no_three(browser, live_server):
     assert three_requests == [], three_requests
     result = _hit_is_inside(page, ".journey-teaser-cta")
     assert result is True, f"[reduced-motion] CTA intercepted by: {result}"
+    context.close()
+
+
+def test_journey_reduced_motion_never_downloads_three(browser, live_server):
+    """/journey loads three.js dynamically behind its gates: reduced-motion
+    visitors read the static page without the vendor download."""
+    context = browser.new_context(
+        viewport={"width": 1440, "height": 900}, reduced_motion="reduce"
+    )
+    context.add_init_script("window.localStorage.setItem('site_consent_v1', 'yes');")
+    page = context.new_page()
+    three_requests = []
+    page.on(
+        "request",
+        lambda r: three_requests.append(r.url) if "three.min.js" in r.url else None,
+    )
+    page.goto(live_server + "/journey", wait_until="networkidle")
+    page.wait_for_timeout(800)
+    assert page.evaluate(
+        "document.documentElement.classList.contains('journey-static')"
+    )
+    assert three_requests == [], three_requests
     context.close()
