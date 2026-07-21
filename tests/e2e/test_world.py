@@ -296,3 +296,32 @@ def test_preview_results_cards_scroll_inside_capped_panel(page):
     assert page.evaluate(
         "!document.querySelector('#preview-cards').contains(document.querySelector('#preview-complete-btn'))"
     )
+
+
+def test_landing_paints_hero_after_scroll_down_and_back(page):
+    """Chromium regression guard: after a fast scroll to the bottom and back
+    to the top, the profile form must not paint (or hit-test) at a stale
+    viewport offset over the hero. When the layer sticks, elementsFromPoint
+    over the hero resolves to #profile-form and the landing looks blank."""
+    for _ in range(8):
+        page.mouse.wheel(0, 900)
+        page.wait_for_timeout(150)
+    page.evaluate("window.scrollTo(0, 0)")
+    wait_until(page, "window.scrollY === 0")
+    page.wait_for_timeout(500)
+    hits = page.evaluate(
+        """() => {
+          const form = document.querySelector('#profile-form');
+          const points = [[400, 300], [300, 200], [1000, 400]];
+          return points.map(([x, y]) => {
+            const top = document.elementsFromPoint(x, y)[0];
+            return {
+              point: [x, y],
+              coveredByForm: top === form || (form && form.contains(top)),
+              top: top ? top.tagName + '.' + (top.className || '').toString().slice(0, 40) : null,
+            };
+          });
+        }"""
+    )
+    for hit in hits:
+        assert not hit["coveredByForm"], hits

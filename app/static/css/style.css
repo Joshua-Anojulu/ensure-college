@@ -2692,6 +2692,13 @@ body.has-scrolled .site-header {
    mono step numerals. */
 .profile-form {
   isolation: isolate;
+  /* Chromium paints this panel at a stale viewport offset after a fast
+     scroll past it and back to the top, covering the hero with a blank
+     card (hit-testing follows, so the landing looks dead). Reproduced with
+     every animation, transition, reveal class, sticky card, and world
+     plate disabled; a dedicated, position-tracked layer is the only thing
+     found to prevent it. */
+  will-change: transform;
 }
 
 .profile-form::before {
