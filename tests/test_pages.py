@@ -408,12 +408,19 @@ class TestStageCohesion:
     def test_css_hex_literals_are_tokens_or_allowlisted(self, name):
         text = Path(f"app/static/css/{name}").read_text(encoding="utf-8")
         offenders = []
+        in_root = False
         for line in text.splitlines():
+            stripped = line.strip()
+            # Custom-property hexes are exempt only inside the :root token
+            # block; a --var defined mid-component is still an offender.
+            if stripped.startswith(":root"):
+                in_root = True
+            elif in_root and stripped.startswith("}"):
+                in_root = False
             if not self.HEX_RE.search(line):
                 continue
-            stripped = line.strip()
-            if re.match(r"^--[\w-]+:", stripped):
-                continue  # :root token definitions are where hexes live
+            if in_root and re.match(r"^--[\w-]+:", stripped):
+                continue
             if "mask-image" in stripped:
                 continue  # alpha ramps: #000 is the only sensible literal
             if stripped in self.CSS_HEX_ALLOWLIST:
@@ -427,6 +434,10 @@ class TestStageCohesion:
     def test_js_versioned_urls_match_lockstep(self, name):
         text = Path(f"app/static/js/{name}").read_text(encoding="utf-8")
         pins = re.findall(r"/static/[\w/.-]+\?v=([\w-]+)", text)
+        # Each of these files constructs at least one versioned URL today; an
+        # empty match means the regex silently stopped seeing it, not that
+        # the file went pin-free.
+        assert pins, f"{name}: no versioned URLs found; update or drop this file"
         assert all(v == ASSET_VERSION for v in pins), (name, pins)
 
     @pytest.mark.parametrize(
