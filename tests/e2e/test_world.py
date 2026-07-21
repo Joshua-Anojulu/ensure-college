@@ -246,3 +246,53 @@ def test_hero_preload_never_double_fetches_on_mobile(browser, live_server):
     page.goto(live_server, wait_until="networkidle")
     assert len(hero_requests) == 1, hero_requests
     context.close()
+
+
+def test_first_catalog_stat_shares_the_clearing_ink(page):
+    """The world layer made the stat cards transparent; the first stat must not
+    keep the cream ink that belonged to its old dark card (it vanished into
+    the clearing)."""
+    colors = page.evaluate(
+        """() => {
+          const strongs = document.querySelectorAll('.catalog-number strong');
+          const spans = document.querySelectorAll('.catalog-number span');
+          return {
+            firstStrong: getComputedStyle(strongs[0]).color,
+            secondStrong: getComputedStyle(strongs[1]).color,
+            firstSpan: getComputedStyle(spans[0]).color,
+            secondSpan: getComputedStyle(spans[1]).color,
+          };
+        }"""
+    )
+    assert colors["firstStrong"] == colors["secondStrong"], colors
+    assert colors["firstSpan"] == colors["secondSpan"], colors
+
+
+def test_preview_results_cards_scroll_inside_capped_panel(page):
+    """On two-column hero widths the match preview's cards scroll inside a
+    capped region instead of stretching the hero viewports tall and stranding
+    the left column against empty backdrop; the finish-profile CTA stays out
+    of the scroller."""
+    page.fill("#preview-gpa", "3.8")
+    page.select_option("#preview-grade", "high_school_junior")
+    page.select_option("#preview-field", "computer_science")
+    page.click("#preview-submit")
+    page.wait_for_selector("#preview-results:not([hidden])", timeout=15000)
+    cards = page.evaluate(
+        """() => {
+          const el = document.querySelector('#preview-cards');
+          const style = getComputedStyle(el);
+          return {
+            overflowY: style.overflowY,
+            maxHeight: style.maxHeight,
+            scrolls: el.scrollHeight > el.clientHeight,
+          };
+        }"""
+    )
+    assert cards["overflowY"] == "auto", cards
+    assert cards["maxHeight"] not in ("none", ""), cards
+    assert cards["scrolls"] is True, cards
+    # The CTA lives outside the scroller, still reachable without scrolling it.
+    assert page.evaluate(
+        "!document.querySelector('#preview-cards').contains(document.querySelector('#preview-complete-btn'))"
+    )
