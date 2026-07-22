@@ -40,7 +40,7 @@
     boot();
   } else {
     const vendor = document.createElement("script");
-    vendor.src = "/static/js/vendor/three.min.js?v=20260721-5";
+    vendor.src = "/static/js/vendor/three.min.js?v=20260721-6";
     vendor.onload = boot;
     vendor.onerror = () => root.classList.add("journey-static");
     document.head.appendChild(vendor);
@@ -750,27 +750,6 @@
     box(arch, 8.8, 1.2, 1.5, BONE, 0, 7.1, 0);
     box(arch, 9.2, 0.5, 1.7, FOREST, 0, 7.95, 0);
     box(arch, 1.7, 0.55, 0.2, AMBER, 0, 6.1, 0.78);
-    // Climbing ivy: a vine hugging each pillar face with leaf clusters along
-    // it, so it reads as ivy rather than as blobs stuck to the stone.
-    const ivyVine = (px) => {
-      const vine = new T.Group();
-      for (let i = 0; i < 7; i += 1) {
-        const t = i / 6;
-        const y = 0.5 + t * 5.2;
-        const sway = Math.sin(t * 4.2) * 0.28;
-        // stem segment
-        box(vine, 0.05, 0.85, 0.05, TREE_BASE, sway, y, 0.66);
-        // leaf cluster (two tones of green, no autumn debris)
-        blob(vine, 0.2 + rnd() * 0.12, i % 2 ? SAGE : MOSS, sway + (rnd() - 0.5) * 0.4, y + 0.2, 0.7, 1.2, 0.75, 0.45);
-        if (i % 2 === 0) {
-          blob(vine, 0.16 + rnd() * 0.08, SAGE_LIGHT, sway - 0.3, y - 0.15, 0.7, 1.1, 0.7, 0.45);
-        }
-      }
-      vine.position.x = px;
-      arch.add(vine);
-    };
-    ivyVine(-3.1);
-    ivyVine(3.1);
     arch.position.z = -3;
     g.add(arch);
     shadowDisc(g, 5.0, 0, -3, 0.08);

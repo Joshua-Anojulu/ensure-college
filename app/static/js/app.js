@@ -6393,7 +6393,7 @@ async function handleProgramAdvice(programId, button, panel, loading, errorEl) {
     worldStageRequested = true;
     var link = document.createElement("link");
     link.rel = "stylesheet";
-    link.href = "/static/css/world.css?v=20260721-5";
+    link.href = "/static/css/world.css?v=20260721-6";
     link.addEventListener(
       "load",
       function () {

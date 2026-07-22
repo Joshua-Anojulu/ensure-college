@@ -74,7 +74,7 @@
       return;
     }
     const s = document.createElement("script");
-    s.src = "/static/js/vendor/three.min.js?v=20260721-5";
+    s.src = "/static/js/vendor/three.min.js?v=20260721-6";
     s.onload = cb;
     document.head.appendChild(s);
   }
@@ -231,12 +231,30 @@
       return r.top < window.innerHeight && r.bottom > 0;
     }
 
-    // Paint once immediately, then reveal the canvas over the painting: the
-    // swap happens only after real pixels exist, and both layers share the
-    // same absolute box, so the exchange can never shift layout.
+    // Paint once immediately so real pixels exist behind the fade, but
+    // reveal only after the visitor has dwelt on the painting: the labeled
+    // overlook is the message and the live island is the reward, and
+    // swapping the moment pixels exist reads as the teaser vanishing.
+    // Bounded poll, same pattern as the proximity gate (scroll listeners
+    // are banned); the timer resets whenever the section leaves view.
     world.rotation.y = 0.5;
     renderer.render(scene, camera);
-    section.classList.add("teaser-live");
+    const DWELL_MS = 4000;
+    let dwellStart = null;
+    const dwell = window.setInterval(() => {
+      const r = section.getBoundingClientRect();
+      const visible = Math.min(r.bottom, window.innerHeight) - Math.max(r.top, 0);
+      const ratio = r.height > 0 ? visible / r.height : 0;
+      if (ratio >= 0.85 && !document.hidden) {
+        if (dwellStart === null) dwellStart = performance.now();
+        if (performance.now() - dwellStart >= DWELL_MS) {
+          window.clearInterval(dwell);
+          section.classList.add("teaser-live");
+        }
+      } else {
+        dwellStart = null;
+      }
+    }, 250);
 
     function frame(nowMs) {
       if (!document.hidden && onScreen()) {
