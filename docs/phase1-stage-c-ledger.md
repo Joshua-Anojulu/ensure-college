@@ -101,7 +101,40 @@ adjudicating dozens of pre-existing legitimate shadow-alpha rgba() values -
 queued as its own audit, out of stage scope; the inline-CSS byte note is
 recorded as observed-not-a-regression (the 9-run harness delta is negative).
 
+**Round 2 (.handoff/phase1-stageC-codex-r2.txt): VERDICT REVISE.** Codex's
+own file reads failed (sandbox + MCP), so it could not verify the CSS/test
+items from code; what it could retrieve (journey-teaser.js dual-channel
+Save-Data, journey.js gating, JS pin lockstep) it verified clean. Round 3
+re-ran with the file excerpts inlined.
+
+**Round 3 (.handoff/phase1-stageC-codex-r3.txt): VERDICT REVISE, 1 P1 + 2 P3.**
+The P1 (empty test_focus_ring body, module import failure) was a false
+positive from a truncated excerpt - the intact body is at
+tests/e2e/test_world.py:148 and the module collects 17 tests. Both P3s were
+real and fixed in 5bd83a5: the hex-scan custom-property exemption applied
+anywhere (now token-block only) and the JS pin lockstep passed vacuously on
+an empty match list (now asserts pins are found). CSS items verified clean
+in the same round: mobile landmarks hidden under 768px, adjacent-sibling
+reveal, forced-colors suppression, color-mix chip fill.
+
+**Round 4 (.handoff/phase1-stageC-codex-r4.txt): VERDICT REVISE, 1 P3.**
+Accepted the P1-truncation and vacuous-pin dispositions. Remaining: the
+hex-scan's :root tracking ignored brace depth (same-line closes and scoped
+selectors like `:root .card` mishandled). Fixed in 2d64740 (brace-depth
+tracking), proven on synthetic shapes.
+
+**Round 5 (.handoff/phase1-stageC-codex-r5.txt): VERDICT REVISE, 1 P3.**
+Same-line bare `:root { --ink: #hex }` token declarations were still
+flagged. Fixed in 36a9744 by restructuring per Codex's suggestion: bare
+:root blocks resolved as brace-matched character spans, per-hex declaration
+check back to the nearest delimiter. Proven on 8 synthetic shapes
+(same-line/multi-line/brace-next-line exempt; scoped, post-block,
+component, and non-var-in-root hexes flagged). Suites at 36a9744: 431
+request + 81 e2e green, 66 test_pages.
+
+**Round 6 (.handoff/phase1-stageC-codex-r6.txt): VERDICT APPROVED.**
+No findings; round-5 case confirmed resolved, no new issue.
+
 ## Outstanding before merge 3
 
-1. Codex round 2 verdict.
-2. Josh's visual sign-off on the preview.
+1. Josh's visual sign-off on the preview.
