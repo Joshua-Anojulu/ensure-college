@@ -371,13 +371,19 @@ def test_teaser_painting_first_and_same_box_swap(browser, live_server):
         "JSON.stringify(document.querySelector('.journey-teaser').getBoundingClientRect())"
     )
 
-    # Release three.js: the island initializes and swaps in.
+    # Release three.js: the island initializes but must NOT swap in yet.
+    # The painting keeps the box until the visitor has dwelt on it; a swap
+    # the moment pixels exist reads as the teaser vanishing.
     elapsed = 0
     while "route" not in held and elapsed < 8000:
         page.wait_for_timeout(250)
         elapsed += 250
     assert "route" in held, "three.min.js was never requested on the live path"
     held["route"].continue_()
+    page.wait_for_timeout(1500)
+    assert not page.evaluate(
+        "document.querySelector('.journey-teaser').classList.contains('teaser-live')"
+    ), "swap fired before the dwell elapsed"
     wait_until(
         page,
         "document.querySelector('.journey-teaser').classList.contains('teaser-live')",

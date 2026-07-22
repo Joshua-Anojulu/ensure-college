@@ -2922,12 +2922,12 @@ body.has-scrolled .site-header {
 
 .journey-teaser.teaser-live #journey-teaser-canvas {
   opacity: 1;
-  transition: opacity 560ms var(--ease-out);
+  transition: opacity 1200ms var(--ease-out);
 }
 
 .journey-teaser.teaser-live .teaser-painting {
   opacity: 0;
-  transition: opacity 560ms var(--ease-out) 120ms;
+  transition: opacity 1200ms var(--ease-out) 200ms;
 }
 
 /* Craft details */
