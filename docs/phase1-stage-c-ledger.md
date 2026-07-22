@@ -135,6 +135,31 @@ request + 81 e2e green, 66 test_pages.
 **Round 6 (.handoff/phase1-stageC-codex-r6.txt): VERDICT APPROVED.**
 No findings; round-5 case confirmed resolved, no new issue.
 
-## Outstanding before merge 3
+## Josh preview feedback round (2026-07-22, post-approval, not re-Codexed)
 
-1. Josh's visual sign-off on the preview.
+Visual/decorative changes only, requested by Josh off the preview:
+- Gate-pillar ivy removed (a953578): the vines read as floating green
+  blobs in the flythrough close-up at the gate stop.
+- Teaser live swap dwell-gated (d8845f8; dwell JS itself landed in
+  a953578): the swap fired about a second after the section approached
+  (500px early), replacing the labeled painting with the sparser live
+  island - it read as the teaser vanishing. Now the swap waits until the
+  section is at least 85 percent visible for 4s continuous (timer resets
+  off-screen) and the crossfade is 1200ms. New e2e gate asserts no swap
+  1.5s after the three.js release, then the swap.
+- Lockstep bump v=20260721-5 to -6. Suites at merge: 431 request + 81 e2e.
+
+## Merge 3 + post-merge prod snapshot (2026-07-22)
+
+Fast-forward 285560c..d8845f8 on main, merge run with Josh's explicit
+authorization. Prod (ensurecollege.com) verified after deploy:
+- /health: {"status": "ok", "commit": "d8845f8"}
+- v=20260721-6 serving on /
+- Teaser dwell on prod: teaser-live false at 2.5s, true at 8s
+- journey-paper computed opacity 0.2
+- Gate arch vine-free (verified on the same-commit preview deploy;
+  screenshots in the session scratchpad)
+
+Stage C complete and live. Deferred nits carried (FULL CATALOG eyebrow
+over foliage, catalog-list overflow ~1100px, empty forest beside the
+account pitch after a match).
