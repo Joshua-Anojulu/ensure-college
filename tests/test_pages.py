@@ -407,31 +407,36 @@ class TestStageCohesion:
     @pytest.mark.parametrize("name", ["style.css", "world.css"])
     def test_css_hex_literals_are_tokens_or_allowlisted(self, name):
         text = Path(f"app/static/css/{name}").read_text(encoding="utf-8")
+        # Custom-property hexes are exempt only inside a bare `:root` token
+        # block; a --var defined mid-component or under a scoped selector
+        # like `:root .card` is still an offender. Blocks are resolved as
+        # character spans by brace matching, so same-line and multi-line
+        # `:root` shapes both end exactly where the CSS does.
+        root_spans = []
+        for m in re.finditer(r"(?m)^[ \t]*:root\b", text):
+            brace = text.find("{", m.end())
+            if brace == -1 or text[m.end() : brace].strip():
+                continue  # `:root .scoped {` is not the token block
+            depth = 0
+            for i in range(brace, len(text)):
+                if text[i] == "{":
+                    depth += 1
+                elif text[i] == "}":
+                    depth -= 1
+                    if depth == 0:
+                        root_spans.append((brace, i))
+                        break
         offenders = []
-        in_root = False
-        root_depth = 0
-        for line in text.splitlines():
-            stripped = line.strip()
-            # Custom-property hexes are exempt only inside the bare `:root`
-            # token block; a --var defined mid-component or under a scoped
-            # selector like `:root .card` is still an offender. Brace depth
-            # is tracked so nested rules and same-line closes end the block
-            # exactly where the CSS does.
-            if not in_root and re.match(r"^:root\s*(\{\s*)?$", stripped):
-                in_root = True
-                root_depth = 0
-            if in_root:
-                root_depth += line.count("{") - line.count("}")
-            exempt_token = (
-                in_root
-                and root_depth > 0
-                and re.match(r"^--[\w-]+:", stripped)
-            )
-            if in_root and root_depth <= 0 and ("{" in line or "}" in line):
-                in_root = False
-            if not self.HEX_RE.search(line):
-                continue
-            if exempt_token:
+        for hm in self.HEX_RE.finditer(text):
+            line_start = text.rfind("\n", 0, hm.start()) + 1
+            line_end = text.find("\n", hm.start())
+            if line_end == -1:
+                line_end = len(text)
+            stripped = text[line_start:line_end].strip()
+            in_root = any(s <= hm.start() < e for s, e in root_spans)
+            decl_start = max(text.rfind(c, 0, hm.start()) for c in ";{}\n")
+            decl = text[decl_start + 1 : hm.start()].strip()
+            if in_root and re.match(r"^--[\w-]+:", decl):
                 continue
             if "mask-image" in stripped:
                 continue  # alpha ramps: #000 is the only sensible literal
