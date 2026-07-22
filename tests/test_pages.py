@@ -409,17 +409,29 @@ class TestStageCohesion:
         text = Path(f"app/static/css/{name}").read_text(encoding="utf-8")
         offenders = []
         in_root = False
+        root_depth = 0
         for line in text.splitlines():
             stripped = line.strip()
-            # Custom-property hexes are exempt only inside the :root token
-            # block; a --var defined mid-component is still an offender.
-            if stripped.startswith(":root"):
+            # Custom-property hexes are exempt only inside the bare `:root`
+            # token block; a --var defined mid-component or under a scoped
+            # selector like `:root .card` is still an offender. Brace depth
+            # is tracked so nested rules and same-line closes end the block
+            # exactly where the CSS does.
+            if not in_root and re.match(r"^:root\s*(\{\s*)?$", stripped):
                 in_root = True
-            elif in_root and stripped.startswith("}"):
+                root_depth = 0
+            if in_root:
+                root_depth += line.count("{") - line.count("}")
+            exempt_token = (
+                in_root
+                and root_depth > 0
+                and re.match(r"^--[\w-]+:", stripped)
+            )
+            if in_root and root_depth <= 0 and ("{" in line or "}" in line):
                 in_root = False
             if not self.HEX_RE.search(line):
                 continue
-            if in_root and re.match(r"^--[\w-]+:", stripped):
+            if exempt_token:
                 continue
             if "mask-image" in stripped:
                 continue  # alpha ramps: #000 is the only sensible literal
