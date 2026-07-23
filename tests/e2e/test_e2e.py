@@ -686,25 +686,23 @@ class TestPlan:
 
 # ------------------------------------------------------------ the journey map
 
-def journey_stops(page):
-    """The Journey-map stops as a label -> state dict, read from the live DOM.
+def journey_frontier_at(page, landmark_label):
+    """True when the 'You are here' flag sits on the named landmark's column.
 
-    Reads classes/badges the way the eye would, so a stop that stops lighting
-    or a re-render that never fires shows up as a failing assertion, not a
-    silently-passing selector-existence check.
+    renderJourneyMap places the frontier at the frontier landmark's --mx, so
+    comparing the two custom properties reads the map the way the eye does.
     """
     return page.evaluate(
-        """() => Object.fromEntries(
-            Array.from(document.querySelectorAll('#journey-map .journey-stop')).map(li => [
-                li.querySelector('.journey-stop-label').textContent.trim(),
-                {
-                    badge: li.querySelector('.journey-stop-badge').textContent.trim(),
-                    reached: li.classList.contains('is-reached'),
-                    muted: li.classList.contains('is-muted'),
-                    flag: li.classList.contains('is-flag'),
-                },
-            ])
-        )"""
+        """(label) => {
+            const landmark = Array.from(
+                document.querySelectorAll('#journey-map .journey-landmark')
+            ).find(el => el.textContent.trim() === label);
+            const frontier = document.querySelector('#journey-map .journey-frontier');
+            if (!landmark || !frontier) return false;
+            return landmark.style.getPropertyValue('--mx') ===
+                frontier.style.getPropertyValue('--mx');
+        }""",
+        landmark_label,
     )
 
 
@@ -725,54 +723,34 @@ class TestJourneyMap:
         assert page.locator("#journey-map").get_attribute("hidden") is not None
 
     def test_new_account_sees_inviting_empty_state(self, page):
-        # Fresh account, no match run, nothing saved: the map still draws, the
-        # path invites a start, and Matches honestly reads "not run this session".
+        # Fresh account, nothing saved: the sample trail draws, invites a
+        # start, and the frontier flag waits honestly at the Profile cabin.
         signup(page)
         page.click("#nav-plan-btn")
         page.wait_for_selector("#saved-section:not([hidden])", timeout=15000)
         page.wait_for_selector("#journey-map:not([hidden])", timeout=15000)
         status = page.locator(".journey-map-status").inner_text().lower()
         assert "starts here" in status
-        stops = journey_stops(page)
-        assert stops["Profile"]["reached"] is True
-        assert stops["Matches"]["reached"] is False
-        assert stops["Matches"]["badge"] == "Not run"
-        assert stops["Saved"]["reached"] is False
+        assert page.locator("#journey-map .journey-map-sample-note").count() == 1
+        assert page.locator("#journey-map button.journey-marker").count() == 0
+        assert page.locator("#journey-map .journey-marker-sample").count() >= 1
+        assert journey_frontier_at(page, "Profile")
         assert not page.console_errors, page.console_errors
 
-    def test_saving_lights_profile_and_saved_stops(self, page):
+    def test_saving_draws_a_real_marker_on_the_trail(self, page):
+        # A real save replaces the sample trail with the student's own marker.
         open_plan_with_one_saved(page)
-        stops = journey_stops(page)
-        assert stops["Profile"]["reached"] is True
-        assert stops["Profile"]["badge"] == "Done"
-        assert stops["Matches"]["reached"] is True  # matcher ran this session
-        assert stops["Saved"]["reached"] is True
-        assert stops["Saved"]["badge"] == "1"
-        assert "1 active" in page.locator(".journey-map-status").inner_text()
+        assert page.locator("#journey-map .journey-map-sample-note").count() == 0
+        markers = page.locator("#journey-map button.journey-marker")
+        assert markers.count() == 1
+        assert "interested" in markers.first.get_attribute("aria-label")
+        assert "1 on the trail" in page.locator(".journey-map-status").inner_text()
         assert not page.console_errors, page.console_errors
 
-    def test_status_change_to_submitted_relights_the_map(self, page):
-        open_plan_with_one_saved(page)
-        assert journey_stops(page)["Submitted"]["reached"] is False
-        page.locator("#saved-container select").first.select_option("submitted")
-        # The map must re-render off the status change, not just the saved card.
-        page.wait_for_function(
-            """() => {
-                const s = Array.from(document.querySelectorAll('#journey-map .journey-stop'))
-                    .find(li => li.querySelector('.journey-stop-label').textContent.trim() === 'Submitted');
-                return s && s.classList.contains('is-reached');
-            }""",
-            timeout=10000,
-        )
-        stops = journey_stops(page)
-        assert stops["Submitted"]["reached"] is True
-        assert stops["Submitted"]["badge"] == "1"
-        assert "1 submitted" in page.locator(".journey-map-status").inner_text()
-        assert not page.console_errors, page.console_errors
-
-    def test_rejected_is_a_muted_side_count_not_progress(self, page):
+    def test_rejected_is_a_quiet_side_note_not_progress(self, page):
         open_plan_with_one_saved(page)
         page.locator("#saved-container select").first.select_option("rejected")
+        # The map must re-render off the status change, not just the saved card.
         page.wait_for_function(
             """() => {
                 const el = document.querySelector('#journey-map .journey-map-rejected');
@@ -780,23 +758,29 @@ class TestJourneyMap:
             }""",
             timeout=10000,
         )
-        stops = journey_stops(page)
-        # The sole item is rejected -> zero active saved, so Saved is NOT progress.
-        assert stops["Saved"]["reached"] is False
-        assert stops["Saved"]["badge"] == "0"
+        # The sole item is rejected -> zero on the trail, frontier back at the
+        # cabin, and the rejection stays visible as a side note, never hidden.
+        marker = page.locator("#journey-map button.journey-marker")
+        assert marker.count() == 1
+        assert "rejected" in marker.first.get_attribute("aria-label")
         assert page.locator(".journey-map-rejected").count() == 1
-        assert "starts here" in page.locator(".journey-map-status").inner_text().lower()
+        assert "0 on the trail" in page.locator(".journey-map-status").inner_text()
+        assert journey_frontier_at(page, "Profile")
         assert not page.console_errors, page.console_errors
 
     def test_map_draws_fully_under_reduced_motion(self, page):
         # The static fallback must be fully drawn, not animation-dependent.
         page.emulate_media(reduced_motion="reduce")
         open_plan_with_one_saved(page)
-        stops = journey_stops(page)
-        assert set(stops) == {
-            "Profile", "Matches", "Saved", "Drafting", "Submitted", "Awarded"
+        landmarks = page.locator("#journey-map .journey-landmark")
+        assert landmarks.count() == 4
+        # inner_text is rendered text: the chips are CSS-uppercased.
+        assert {t.lower() for t in landmarks.all_inner_texts()} == {
+            "profile", "essays", "deadlines", "award"
         }
-        assert stops["Awarded"]["flag"] is True
+        assert page.locator("#journey-map img.journey-terrain").count() == 1
+        assert page.locator("#journey-map button.journey-marker").count() == 1
+        assert page.locator("#journey-map .journey-frontier").count() == 1
         assert not page.console_errors, page.console_errors
 
 

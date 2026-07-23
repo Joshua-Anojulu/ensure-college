@@ -3177,8 +3177,10 @@ body::after {
   }
 }
 
-/* Journey map: illustrated scene as backdrop; the fog lifts as milestones are
-   reached, stop annotations sit under their landmarks. */
+/* Journey map (Stage 2): four fixed landmarks over the painted terrain;
+   saved opportunities ride the trail as paper markers positioned by
+   Status. JS attaches the terrain raster only outside Save-Data; without
+   it the scene rests on a vector trail over the token ground. */
 .journey-map {
   padding: clamp(1rem, 2.4vw, 1.6rem) clamp(1rem, 2.4vw, 1.8rem) clamp(0.9rem, 1.6vw, 1.3rem);
   border-color: var(--brand-tint-2);
@@ -3194,106 +3196,119 @@ body::after {
 
 .journey-map-scene {
   position: relative;
-  aspect-ratio: 1760 / 600;
-  min-height: 190px;
+  aspect-ratio: 1376 / 786;
+  min-height: 220px;
   border-radius: 14px;
   overflow: hidden;
-  background:
-    url("/static/img/journey-map.webp") center 40% / 108% no-repeat,
-    var(--surface-inset);
+  background: linear-gradient(180deg,
+    color-mix(in srgb, var(--brand-tint-2) 46%, var(--canvas)),
+    var(--surface-inset));
+}
+.journey-terrain {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.journey-trail-vector {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.journey-trail-vector path {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1.1;
+  stroke-linecap: round;
+  stroke-dasharray: 0.8 3.2;
 }
 
-/* Fog: everything to the right of the furthest reached stop is still unfolding. */
-.journey-map-fog {
+.journey-landmark {
   position: absolute;
-  top: 0; bottom: 0; right: 0;
-  left: var(--fog-start, 101%);
-  background: linear-gradient(90deg,
-    transparent 0,
-    color-mix(in srgb, var(--canvas) 74%, transparent) 12%,
-    color-mix(in srgb, var(--canvas) 90%, transparent) 46%,
-    var(--canvas) 100%);
-  transition: left 700ms var(--ease-out);
+  left: var(--mx);
+  top: var(--my);
+  transform: translate(-50%, -135%);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: color-mix(in srgb, var(--canvas) 86%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent-deep) 32%, transparent);
+  padding: 0.08rem 0.4rem;
+  border-radius: 999px;
   pointer-events: none;
-  z-index: 1;
+  /* Geography labels stay legible above item markers; only the frontier
+     flag outranks them. */
+  z-index: 4;
 }
 
-.journey-map-stops { position: absolute; inset: 0; margin: 0; padding: 0; list-style: none; }
-.journey-stop {
+.journey-marker {
   position: absolute;
-  left: var(--x);
-  bottom: 7%;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.2rem;
-  text-align: center;
+  left: var(--mx);
+  top: var(--my);
+  transform: translate(-50%, -50%);
+  max-width: 9.5rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font: inherit;
+  font-size: 0.72rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--ink);
+  background: color-mix(in srgb, var(--canvas) 58%, var(--accent-tint));
+  border: 1px solid color-mix(in srgb, var(--accent-deep) 36%, var(--line));
+  border-radius: 4px;
+  padding: 0.14rem 0.42rem;
+  box-shadow: 0 2px 6px color-mix(in srgb, var(--ink) 14%, transparent);
+  cursor: pointer;
+  z-index: 3;
+  transition: border-color var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease);
+}
+.journey-marker:hover { border-color: var(--accent-deep); background: var(--canvas); }
+.journey-marker:focus-visible {
+  outline: 2px solid var(--accent-deep);
+  outline-offset: 2px;
+}
+.journey-marker-sample { pointer-events: none; cursor: default; }
+.journey-marker-tombstone {
+  opacity: 0.6;
+  cursor: default;
+  box-shadow: none;
+  max-width: 15rem;
   z-index: 2;
 }
-.journey-stop-dot {
-  width: 0.72rem; height: 0.72rem; border-radius: 50%;
-  background: var(--accent);
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 26%, transparent);
-}
-.journey-stop-badge {
-  font-family: var(--font-mono);
-  font-size: 0.7rem; font-weight: 700; line-height: 1.5;
-  color: var(--accent-ink); background: var(--accent);
-  padding: 0.04rem 0.42rem; border-radius: 999px;
-  order: -1;
-}
-.journey-stop-label {
-  font-size: 0.8rem; font-weight: 600; color: var(--ink);
-  background: color-mix(in srgb, var(--canvas) 84%, transparent);
-  padding: 0.05rem 0.4rem; border-radius: 6px;
-  white-space: nowrap;
-}
-.journey-stop.is-ahead { opacity: 0.55; }
-.journey-stop.is-ahead .journey-stop-dot { background: var(--muted-2); box-shadow: none; }
-.journey-stop.is-ahead .journey-stop-badge,
-.journey-stop.is-muted .journey-stop-badge {
-  color: var(--muted); background: var(--surface-3);
-}
-.journey-stop.is-flag.is-reached .journey-stop-dot { width: 0.92rem; height: 0.92rem; }
 
+.journey-frontier {
+  position: absolute;
+  left: var(--mx);
+  top: var(--my);
+  transform: translate(-50%, -100%);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent-ink);
+  background: var(--accent);
+  padding: 0.12rem 0.45rem;
+  border-radius: 999px;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.journey-map-sample-note,
 .journey-map-rejected { margin: 0.65rem 0 0; color: var(--muted); font-size: 0.85rem; }
 
-@media (prefers-reduced-motion: reduce) {
-  .journey-map-fog { transition: none; }
-}
-@media (max-width: 768px) {
-  .journey-map-scene {
-    background-image: url("/static/img/journey-map-mobile.webp");
-    aspect-ratio: 900 / 520;
-  }
-  /* The desktop landmark percentages cluster the middle stops, so nowrap labels
-     collide on a narrow screen. Below 768px, distribute the six stops evenly in a
-     flex row pinned to the scene bottom: equal room per label, no overlap or
-     edge-clip. Exact landmark alignment is a desktop nicety; the mobile art is a
-     compressed scene where an even progress row reads cleaner. */
-  .journey-map-stops {
-    position: absolute;
-    inset: auto 0 0 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    gap: 0.15rem;
-    padding: 0 3% 4%;
-  }
-  .journey-stop {
-    position: static;
-    left: auto;
-    bottom: auto;
-    transform: none;
-    flex: 0 1 auto;
-    min-width: 0;
-  }
-  .journey-stop-label {
-    font-size: 0.6rem;
-    padding: 0.03rem 0.28rem;
-  }
-  .journey-stop-badge { font-size: 0.56rem; }
+@media (max-width: 767px) {
+  .journey-map-scene { aspect-ratio: 640 / 869; }
+  .journey-marker { max-width: 7.5rem; font-size: 0.64rem; }
+  .journey-marker-tombstone { max-width: 13.5rem; }
+  .journey-landmark { font-size: 0.56rem; }
 }
 
 .ec-paper-card,

@@ -74,7 +74,7 @@
       return;
     }
     const s = document.createElement("script");
-    s.src = "/static/js/vendor/three.min.js?v=20260723-1";
+    s.src = "/static/js/vendor/three.min.js?v=20260723-2";
     s.onload = cb;
     document.head.appendChild(s);
   }

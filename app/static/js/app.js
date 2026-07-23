@@ -2521,90 +2521,284 @@ function buildRecLetterNeedRow({ item, kind, requirement }) {
   return row;
 }
 
-/* ---------- Journey map ----------
-   The 2D illustrated progress map on the saved view. One state function reads
-   the real saved data (all three lanes, via trackerItems) plus the session's
-   lastResults; the illustrated scene's fog lifts as milestones are reached.
-   Milestones read independent sources so a stale/unrun session never lies. */
+/* ---------- Journey map (Stage 2) ----------
+   Four fixed landmarks over the painted terrain; saved opportunities ride
+   the trail as paper markers positioned by Status. computeJourneyMapState
+   is pure (contract table in DESIGN.md); the caller derives its inputs.
+   The terrain raster attaches only outside Save-Data; the scene is
+   vector-safe without it. */
 
-// x-positions (percent) of the six landmarks in journey-map.webp, in order.
-const JOURNEY_STOP_X = [6, 21, 40, 57, 74, 92];
+const JOURNEY_STATUS_SEGMENT = {
+  interested: { from: "cabin", to: "grove" },
+  drafting: { from: "grove", to: "watchtower" },
+  submitted: { from: "watchtower", to: "watchtower" },
+  awarded: { from: "summit", to: "summit" },
+  rejected: { from: "clearing", to: "clearing" },
+};
 
-function computeJourneyMapState() {
-  const items = trackerItems || [];
-  const known = new Set(SAVED_STATUSES.map((s) => s.value));
-  const count = (v) => items.filter((it) => (it.status || "interested") === v).length;
-  for (const it of items) {
-    const s = it.status || "interested";
-    if (!known.has(s)) console.warn(`Journey map: ignoring unknown saved status "${s}"`);
+const JOURNEY_FRONTIER_TARGET = {
+  interested: "grove",
+  drafting: "watchtower",
+  submitted: "summit",
+  awarded: "summit",
+};
+
+const JOURNEY_STATUS_RANK = { interested: 0, drafting: 1, submitted: 2, awarded: 3 };
+
+// Landmark anchors as [x%, y%] of the terrain composition, per orientation.
+const JOURNEY_TERRAIN = {
+  landscape: {
+    src: "/static/img/world/journey-terrain-1376.93088d9b72.webp",
+    smallSrc: "/static/img/world/journey-terrain-760.28d9227d05.webp",
+    aspect: "1376 / 786",
+    landmarks: {
+      cabin: [29, 72],
+      grove: [42, 51],
+      watchtower: [56, 33],
+      summit: [71, 10],
+      clearing: [15, 48],
+    },
+  },
+  portrait: {
+    src: "/static/img/world/journey-terrain-mobile-640.ec2a238698.webp",
+    smallSrc: null,
+    aspect: "640 / 869",
+    portrait: true,
+    landmarks: {
+      cabin: [40, 84],
+      grove: [48, 62],
+      watchtower: [56, 38],
+      summit: [63, 10],
+      clearing: [24, 58],
+    },
+  },
+};
+
+function computeJourneyMapState(items) {
+  const list = Array.isArray(items) ? items : [];
+  if (list.length === 0) {
+    return { sample: true, frontier: "cabin", markers: [], tombstoneCount: 0, rejected: 0 };
   }
-  const rejected = count("rejected");
-  const activeSaved = items.length - rejected; // active = everything not rejected
-  const drafting = count("drafting");
-  const submitted = count("submitted");
-  const awarded = count("awarded");
-  const matchesRun = Boolean(lastResults && lastResults.length);
-  // Reaching the authenticated saved view means a profile exists.
-  const stops = [
-    { key: "profile", label: "Profile", reached: true, badge: "Done" },
-    { key: "matches", label: "Matches", reached: matchesRun,
-      badge: matchesRun ? String(lastResults.length) : "Not run", muted: !matchesRun },
-    { key: "saved", label: "Saved", reached: activeSaved > 0, badge: String(activeSaved) },
-    { key: "drafting", label: "Drafting", reached: drafting > 0, badge: String(drafting) },
-    { key: "submitted", label: "Submitted", reached: submitted > 0, badge: String(submitted) },
-    { key: "awarded", label: "Awarded", reached: awarded > 0, badge: String(awarded), flag: true },
-  ];
-  let reachedIndex = -1;
-  stops.forEach((s, i) => { if (s.reached) reachedIndex = i; });
-  return { stops, reachedIndex, rejected, activeSaved, submitted, awarded };
+  const tombstoneCount = list.filter((it) => !it.hasCatalog).length;
+  const real = list.filter((it) => it.hasCatalog);
+  // Unrecognized statuses are unreachable through the API (SavedStatus
+  // validation), but the DB columns are plain strings: default to
+  // interested rather than crash. Status alone positions a marker;
+  // checklist progress never moves one.
+  const statusOf = (it) =>
+    Object.prototype.hasOwnProperty.call(JOURNEY_STATUS_SEGMENT, it.status) ? it.status : "interested";
+  const markers = real
+    .map((it) => ({
+      kind: it.kind,
+      id: it.id,
+      title: it.title,
+      status: statusOf(it),
+      deadlineSortKey: it.deadlineSortKey,
+    }))
+    .sort((a, b) =>
+      a.deadlineSortKey - b.deadlineSortKey || String(a.title).localeCompare(String(b.title))
+    );
+  const rejected = markers.filter((m) => m.status === "rejected").length;
+  let frontier = "cabin";
+  let best = -1;
+  for (const m of markers) {
+    if (m.status === "rejected") continue;
+    const rank = JOURNEY_STATUS_RANK[m.status];
+    if (rank > best) {
+      best = rank;
+      frontier = JOURNEY_FRONTIER_TARGET[m.status];
+    }
+  }
+  return { sample: false, frontier, markers, tombstoneCount, rejected };
+}
+
+function journeyMapItems() {
+  return (trackerItems || []).map((item) => {
+    const kind = item.competition || item.competition_id != null
+      ? "competition"
+      : item.program || item.program_id != null
+      ? "program"
+      : "scholarship";
+    const id =
+      kind === "competition" ? item.competition_id : kind === "program" ? item.program_id : item.scholarship_id;
+    return {
+      kind,
+      id,
+      title: savedOpportunityName(item),
+      status: item.status || "interested",
+      deadlineSortKey: deadlinePriority(item),
+      hasCatalog: Boolean(savedOpportunity(item)),
+    };
+  });
 }
 
 function journeyStatusLine(state) {
-  if (state.activeSaved === 0) {
+  if (state.sample) {
     return "Your trail starts here. Save opportunities that fit you.";
   }
-  const parts = [`${state.activeSaved} active`];
-  if (state.submitted) parts.push(`${state.submitted} submitted`);
-  if (state.awarded) parts.push(`${state.awarded} awarded`);
+  const active = state.markers.filter((m) => m.status !== "rejected").length;
+  const submitted = state.markers.filter((m) => m.status === "submitted").length;
+  const awarded = state.markers.filter((m) => m.status === "awarded").length;
+  const parts = [`${active} on the trail`];
+  if (submitted) parts.push(`${submitted} submitted`);
+  if (awarded) parts.push(`${awarded} awarded`);
   return parts.join(", ");
 }
 
+function journeyMapOrientation() {
+  return window.matchMedia("(max-width: 767px)").matches ? "portrait" : "landscape";
+}
+
+// Deterministic spot on a segment: markers spread along the middle of the
+// leg with a small alternating perpendicular stagger, ordered by deadline.
+function journeyMarkerSpot(terrain, status, index, count) {
+  const seg = JOURNEY_STATUS_SEGMENT[status];
+  const a = terrain.landmarks[seg.from];
+  const b = terrain.landmarks[seg.to];
+  const spread = Math.max(count - 1, 1);
+  const t = count === 1 ? 0.5 : 0.3 + 0.4 * (index / spread);
+  const x = a[0] + (b[0] - a[0]) * t;
+  const y = a[1] + (b[1] - a[1]) * t;
+  const side = index % 2 === 0 ? 1 : -1;
+  const clamp = ([cx, cy]) => [
+    Math.min(Math.max(cx, 12), 88),
+    Math.min(Math.max(cy, 4), 92),
+  ];
+  // Portrait runs a near-vertical trail on a narrow canvas: markers swing
+  // wide left/right of it, never sideways-nudged into the landmark chips.
+  if (terrain.portrait) {
+    return clamp([x + side * 15, y + 5.5 + (index % 3) * 2.2]);
+  }
+  // At-landmark segments (submitted, awarded, rejected) drop their markers
+  // clearly below the landmark chip; leg segments stagger off the trail.
+  if (seg.from === seg.to) {
+    return clamp([x + side * 3.4, y + 6 + (index % 3) * 2.4]);
+  }
+  return clamp([x + side * 3.2, y + side * 2.4 + (index % 3) * 1.6]);
+}
+
+const JOURNEY_SAMPLE_MARKERS = [
+  { title: "A scholarship you saved", status: "interested" },
+  { title: "An essay in progress", status: "drafting" },
+  { title: "An application submitted", status: "submitted" },
+];
+
 function renderJourneyMap() {
   if (!journeyMap) return;
-  const state = computeJourneyMapState();
-  // Fog covers from just past the furthest reached stop to the end.
-  const ri = state.reachedIndex;
-  const fogStart = ri >= JOURNEY_STOP_X.length - 1
-    ? 101
-    : (JOURNEY_STOP_X[ri] + JOURNEY_STOP_X[ri + 1]) / 2;
-  const stopsHtml = state.stops.map((s, i) => {
-    const cls = ["journey-stop"];
-    cls.push(s.reached ? "is-reached" : "is-ahead");
-    if (s.flag) cls.push("is-flag");
-    if (s.muted) cls.push("is-muted");
-    return (
-      `<li class="${cls.join(" ")}" style="--x:${JOURNEY_STOP_X[i]}%">` +
-      `<span class="journey-stop-dot" aria-hidden="true"></span>` +
-      `<span class="journey-stop-badge">${escapeHtml(s.badge)}</span>` +
-      `<span class="journey-stop-label">${escapeHtml(s.label)}</span>` +
-      `</li>`
-    );
-  }).join("");
-  const rejectedHtml = state.rejected
-    ? `<p class="journey-map-rejected">${state.rejected} not this cycle, and that is part of the path too.</p>`
+  const state = computeJourneyMapState(journeyMapItems());
+  const orientation = journeyMapOrientation();
+  const terrain = JOURNEY_TERRAIN[orientation];
+  const saveData =
+    !!(navigator.connection && navigator.connection.saveData) ||
+    document.documentElement.classList.contains("save-data");
+
+  const landmarksHtml = [
+    ["cabin", "Profile"],
+    ["grove", "Essays"],
+    ["watchtower", "Deadlines"],
+    ["summit", "Award"],
+  ]
+    .map(([key, label]) => {
+      const [x, y] = terrain.landmarks[key];
+      return `<span class="journey-landmark" style="--mx:${x}%;--my:${y}%">${label}</span>`;
+    })
+    .join("");
+
+  const markerSource = state.sample ? JOURNEY_SAMPLE_MARKERS : state.markers;
+  const byStatus = {};
+  for (const m of markerSource) {
+    (byStatus[m.status] = byStatus[m.status] || []).push(m);
+  }
+  const markersHtml = Object.entries(byStatus)
+    .map(([status, group]) =>
+      group
+        .map((m, i) => {
+          const [x, y] = journeyMarkerSpot(terrain, status, i, group.length);
+          const style = `--mx:${x}%;--my:${y}%`;
+          if (state.sample) {
+            return `<span class="journey-marker journey-marker-sample" style="${style}">${escapeHtml(m.title)}</span>`;
+          }
+          const label = `${m.title}, ${m.status}. Open its checklist.`;
+          return (
+            `<button type="button" class="journey-marker" style="${style}"` +
+            ` data-saved-kind="${escapeHtml(m.kind)}" data-saved-id="${escapeHtml(String(m.id))}"` +
+            ` aria-label="${escapeHtml(label)}">${escapeHtml(m.title)}</button>`
+          );
+        })
+        .join("")
+    )
+    .join("");
+
+  const tombstoneHtml = state.tombstoneCount
+    ? (() => {
+        const [x, y] = terrain.landmarks.cabin;
+        const label =
+          state.tombstoneCount === 1
+            ? "1 saved item whose listing was removed"
+            : `${state.tombstoneCount} saved items whose listings were removed`;
+        return (
+          `<span class="journey-marker journey-marker-tombstone" aria-disabled="true"` +
+          ` style="--mx:${Math.max(x - 9, 2)}%;--my:${Math.min(y + 8, 94)}%">${escapeHtml(label)}</span>`
+        );
+      })()
     : "";
+
+  const [fx, fy] = terrain.landmarks[state.frontier];
+  const frontierHtml = `<span class="journey-frontier" style="--mx:${fx}%;--my:${Math.max(fy - 7, 2)}%">You are here</span>`;
+
+  const terrainHtml = saveData
+    ? `<svg class="journey-trail-vector" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">` +
+      `<path d="M ${["cabin", "grove", "watchtower", "summit"]
+        .map((k) => terrain.landmarks[k].join(" "))
+        .join(" L ")}"></path></svg>`
+    : `<img class="journey-terrain" alt="" loading="lazy" decoding="async" src="${terrain.src}"` +
+      (terrain.smallSrc ? ` srcset="${terrain.smallSrc} 760w, ${terrain.src} 1376w" sizes="(max-width: 900px) 94vw, 830px"` : "") +
+      `>`;
+
+  const rejectedHtml = state.rejected
+    ? `<p class="journey-map-rejected">${state.rejected} not this cycle, resting in the side clearing, and that is part of the path too.</p>`
+    : "";
+  const sampleNote = state.sample
+    ? `<p class="journey-map-sample-note">A sample trail. Your saved opportunities will draw the real one.</p>`
+    : "";
+
   journeyMap.innerHTML =
     `<div class="journey-map-head">` +
       `<p class="eyebrow">Your journey</p>` +
       `<h3 id="journey-map-title">Your path to award day</h3>` +
       `<p class="journey-map-status">${escapeHtml(journeyStatusLine(state))}</p>` +
     `</div>` +
-    `<div class="journey-map-scene" style="--fog-start:${fogStart}%">` +
-      `<div class="journey-map-fog" aria-hidden="true"></div>` +
-      `<ol class="journey-map-stops">${stopsHtml}</ol>` +
+    `<div class="journey-map-scene${state.sample ? " journey-map-sample" : ""}">` +
+      terrainHtml +
+      landmarksHtml +
+      markersHtml +
+      tombstoneHtml +
+      frontierHtml +
     `</div>` +
+    sampleNote +
     rejectedHtml;
   journeyMap.hidden = false;
+}
+
+// Marker activation: one delegated listener; markers are plain buttons so
+// Enter/Space arrive as clicks and the tab sequence needs no bookkeeping.
+if (journeyMap) {
+  journeyMap.addEventListener("click", (event) => {
+    const marker = event.target.closest(".journey-marker[data-saved-kind]");
+    if (!marker) return;
+    const card = savedContainer?.querySelector(
+      `[data-saved-kind="${marker.dataset.savedKind}"][data-saved-id="${marker.dataset.savedId}"]`
+    );
+    if (!card) return;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    card.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "center" });
+    const target = card.querySelector(".tracker-checklist") || card;
+    target.setAttribute("tabindex", "-1");
+    target.focus({ preventScroll: true });
+  });
+  window
+    .matchMedia("(max-width: 767px)")
+    .addEventListener("change", () => renderJourneyMap());
 }
 
 function renderSaved(scholarshipItems, programItems = [], competitionItems = []) {
@@ -2636,6 +2830,8 @@ function renderSaved(scholarshipItems, programItems = [], competitionItems = [])
     // it is a strong match.
     const card = buildCard(scholarshipToCard(item.scholarship), "saved");
     card.classList.add(`status-${item.status || "interested"}`);
+    card.dataset.savedKind = "scholarship";
+    card.dataset.savedId = String(item.scholarship_id);
     // Append inside the card-body (the wide grid column), not the card grid
     // itself, or the controls land in the narrow path-bar column.
     const cardBody = card.querySelector(".card-body");
@@ -2649,6 +2845,8 @@ function renderSaved(scholarshipItems, programItems = [], competitionItems = [])
     }
     const card = buildProgramCard(item.program, { savedContext: true });
     card.classList.add(`status-${item.status || "interested"}`);
+    card.dataset.savedKind = "program";
+    card.dataset.savedId = String(item.program_id);
     const cardBody = card.querySelector(".card-body");
     (cardBody || card).appendChild(buildTrackerControls(item, card, "program"));
     savedContainer.appendChild(card);
@@ -2660,6 +2858,8 @@ function renderSaved(scholarshipItems, programItems = [], competitionItems = [])
     }
     const card = buildCompetitionCard(item.competition, { savedContext: true });
     card.classList.add(`status-${item.status || "interested"}`);
+    card.dataset.savedKind = "competition";
+    card.dataset.savedId = String(item.competition_id);
     const cardBody = card.querySelector(".card-body");
     (cardBody || card).appendChild(buildTrackerControls(item, card, "competition"));
     savedContainer.appendChild(card);
@@ -3475,11 +3675,19 @@ function buildTrackerControls(item, card, kind = "scholarship") {
     select.appendChild(option);
   }
   select.addEventListener("change", async () => {
+    // Disable while the PATCH is pending so rapid changes cannot race and
+    // repaint the map from a stale response; the map re-renders only from
+    // the latest confirmed state.
+    select.disabled = true;
     const ok = await patcher(itemId, { status: select.value });
+    select.disabled = false;
     if (ok) {
       item.status = select.value;
       card.className = card.className.replace(/\bstatus-\w+\b/, `status-${select.value}`);
       refreshTrackerSummary();
+      renderJourneyMap();
+    } else {
+      select.value = item.status || "interested";
     }
   });
   statusField.appendChild(statusLabelEl);
@@ -6418,7 +6626,7 @@ async function handleProgramAdvice(programId, button, panel, loading, errorEl) {
     worldStageRequested = true;
     var link = document.createElement("link");
     link.rel = "stylesheet";
-    link.href = "/static/css/world.css?v=20260723-1";
+    link.href = "/static/css/world.css?v=20260723-2";
     link.addEventListener(
       "load",
       function () {

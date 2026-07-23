@@ -36,6 +36,8 @@ PLATES = (
     ("owl", (320,), 40, None),
     ("leaves", (320,), 40, None),
     ("glyph-sheet", (960,), 80, None),
+    ("journey-terrain", (1376, 760), 40, None),
+    ("journey-terrain-mobile", (640,), 36, None),
 )
 
 

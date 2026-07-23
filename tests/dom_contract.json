@@ -182,6 +182,7 @@
     ".opportunity-tab",
     ".plan-guidance",
     ".search-descriptions-toggle",
+    ".tracker-checklist",
     ".world-plate img[data-src], .world-dusk img[data-src], .teaser-painting img[data-src]",
     "input:checked",
     "input[type=checkbox]",
@@ -195,19 +196,44 @@
     ".fit-ring-num strong",
     ".help-dot",
     ".plan-guidance",
+    ".tracker-checklist",
     "input:checked"
   ],
   "element_types": {
-    "#auth-form": { "tag": "form" },
-    "#change-password-form": { "tag": "form" },
-    "#password-reset-confirm-form": { "tag": "form" },
-    "#password-reset-request-form": { "tag": "form" },
-    "#preview-form": { "tag": "form" },
-    "#profile-form": { "tag": "form" },
-    "#resume-import-btn": { "tag": "button", "type": "button" },
-    "#step-back-btn": { "tag": "button", "type": "button" },
-    "#step-next-btn": { "tag": "button", "type": "button" },
-    "#submit-btn": { "tag": "button", "type": "submit" }
+    "#auth-form": {
+      "tag": "form"
+    },
+    "#change-password-form": {
+      "tag": "form"
+    },
+    "#password-reset-confirm-form": {
+      "tag": "form"
+    },
+    "#password-reset-request-form": {
+      "tag": "form"
+    },
+    "#preview-form": {
+      "tag": "form"
+    },
+    "#profile-form": {
+      "tag": "form"
+    },
+    "#resume-import-btn": {
+      "tag": "button",
+      "type": "button"
+    },
+    "#step-back-btn": {
+      "tag": "button",
+      "type": "button"
+    },
+    "#step-next-btn": {
+      "tag": "button",
+      "type": "button"
+    },
+    "#submit-btn": {
+      "tag": "button",
+      "type": "submit"
+    }
   },
   "opportunity_tab_data_view": [
     "scholarships",
@@ -223,13 +249,37 @@
     "competitions"
   ],
   "profile_fields": {
-    "activities": { "tag": "input", "type": "text", "name": "activities" },
-    "citizenship": { "tag": "select", "name": "citizenship" },
-    "financial-need": { "tag": "select", "name": "financial_need_level" },
-    "gpa": { "tag": "input", "type": "number", "name": "gpa" },
-    "grade-level": { "tag": "select", "name": "grade_level" },
-    "state": { "tag": "select", "name": "state" },
-    "target-schools": { "tag": "input", "type": "text", "name": "target_schools" }
+    "activities": {
+      "tag": "input",
+      "type": "text",
+      "name": "activities"
+    },
+    "citizenship": {
+      "tag": "select",
+      "name": "citizenship"
+    },
+    "financial-need": {
+      "tag": "select",
+      "name": "financial_need_level"
+    },
+    "gpa": {
+      "tag": "input",
+      "type": "number",
+      "name": "gpa"
+    },
+    "grade-level": {
+      "tag": "select",
+      "name": "grade_level"
+    },
+    "state": {
+      "tag": "select",
+      "name": "state"
+    },
+    "target-schools": {
+      "tag": "input",
+      "type": "text",
+      "name": "target_schools"
+    }
   },
   "profile_checkbox_groups": {
     "demographic-tags": {
