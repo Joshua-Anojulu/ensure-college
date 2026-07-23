@@ -287,7 +287,7 @@
       {
         "kind": "membership",
         "label": "Tau Beta Pi membership required",
-        "details": "These scholarships are restricted to initiated members of the Tau Beta Pi Association on the date the award is made; candidates for membership may apply if they will be initiated by June 1. Tau Beta Pi is an invitation-based engineering honor society — you cannot simply join, so confirm your standing before counting on this."
+        "details": "These scholarships are restricted to initiated members of the Tau Beta Pi Association on the date the award is made; candidates for membership may apply if they will be initiated by June 1. Tau Beta Pi is an invitation-based engineering honor society - you cannot simply join, so confirm your standing before counting on this."
       }
     ],
     "aacn2-pathway-critical-care-nursing-scholarship": [
@@ -523,7 +523,7 @@
       {
         "kind": "identity_or_status",
         "label": "Disadvantaged-background eligibility",
-        "details": "UGSP is limited to students from a disadvantaged background (as NIH defines it) with exceptional financial need — a status the profile does not capture. Confirm you meet NIH's definition before applying. The post-graduation service payback is a condition of accepting the award, tracked in the checklist, not an eligibility gate."
+        "details": "UGSP is limited to students from a disadvantaged background (as NIH defines it) with exceptional financial need - a status the profile does not capture. Confirm you meet NIH's definition before applying. The post-graduation service payback is a condition of accepting the award, tracked in the checklist, not an eligibility gate."
       }
     ],
     "nhs-scholarship": [
@@ -652,7 +652,7 @@
       {
         "kind": "institution_channel",
         "label": "Current Chick-fil-A Team Member required",
-        "details": "Open only to current Chick-fil-A restaurant Team Members — an employment status the profile does not capture. You must already work at a Chick-fil-A restaurant to apply."
+        "details": "Open only to current Chick-fil-A restaurant Team Members - an employment status the profile does not capture. You must already work at a Chick-fil-A restaurant to apply."
       }
     ],
     "northrop-grumman-hip-program": [

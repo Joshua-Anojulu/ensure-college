@@ -1,7 +1,7 @@
 /* Phase 1 Stage B: the World beyond the landing.
    Loaded as a normal <link> by the template family and legal pages; appended
    by app.js on FIRST SPA-world activation only (never in the landing's
-   critical path — see docs/2026-07-20-phase1-forest-world.md). World images
+   critical path; see docs/2026-07-20-phase1-forest-world.md). World images
    are content-hashed and immutable; this sheet is ?v-lockstep versioned. */
 
 /* ---- Template family + legal pages: quiet scene + canopy/fern frame ---- */
@@ -45,9 +45,6 @@ body.world-frame::after {
 }
 
 
-/* ---- World glyphs (facts panel, comp 08): sprite cells 240x239 on the
-   960x717 sheet, rendered at 22px. Pure ::before, no markup changes. ---- */
-
 .detail-page .stat-label::before {
   content: "";
   display: inline-block;
@@ -55,14 +52,15 @@ body.world-frame::after {
   height: 22px;
   margin-right: 0.45rem;
   vertical-align: -5px;
-  background-image: url("/static/img/world/glyph-sheet-960.f76739b45a.webp");
-  background-size: 88px 65.7px;
-  background-position: -22px 0; /* calendar (deadline default) */
+  background: currentColor;
+  -webkit-mask: var(--ec-mask-deadline) center / contain no-repeat;
+  mask: var(--ec-mask-deadline) center / contain no-repeat;
   mix-blend-mode: multiply;
 }
 
 .detail-page .stat-award .stat-label::before {
-  background-position: -66px 0; /* coin stack */
+  -webkit-mask-image: var(--ec-mask-award);
+  mask-image: var(--ec-mask-award);
 }
 
 .detail-page .special-requirements-heading::before {
@@ -72,9 +70,9 @@ body.world-frame::after {
   height: 22px;
   margin-right: 0.45rem;
   vertical-align: -5px;
-  background-image: url("/static/img/world/glyph-sheet-960.f76739b45a.webp");
-  background-size: 88px 65.7px;
-  background-position: 0 -43.8px; /* wax-seal check */
+  background: currentColor;
+  -webkit-mask: var(--ec-mask-special) center / contain no-repeat;
+  mask: var(--ec-mask-special) center / contain no-repeat;
   mix-blend-mode: multiply;
 }
 
@@ -98,7 +96,7 @@ html.world-ready .results-section::before {
   background-position: center;
   background-repeat: no-repeat;
   opacity: 0;
-  animation: world-stage-in 480ms ease-out forwards;
+  animation: world-stage-in 480ms var(--ease-out) forwards;
 }
 
 @keyframes world-stage-in {

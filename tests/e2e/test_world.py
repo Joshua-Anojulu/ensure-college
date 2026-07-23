@@ -223,9 +223,12 @@ def test_template_page_frame_glyphs_and_request_budget(browser, live_server):
     ferns = page.evaluate("getComputedStyle(document.body, '::after').backgroundImage")
     assert "fern-corner-left" in ferns and "fern-corner-right" in ferns, ferns
     glyph = page.evaluate(
-        "getComputedStyle(document.querySelector('.detail-page .stat-label'), '::before').backgroundImage"
+        """() => {
+          const style = getComputedStyle(document.querySelector('.detail-page .stat-label'), '::before');
+          return style.webkitMaskImage || style.maskImage;
+        }"""
     )
-    assert "glyph-sheet" in glyph, glyph
+    assert "data:image" in glyph, glyph
     world_requests = page.evaluate(
         "performance.getEntriesByType('resource').filter(e => e.name.includes('/static/img/world/')).length"
     )

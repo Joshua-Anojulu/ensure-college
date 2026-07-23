@@ -1184,7 +1184,7 @@
       "selectivity": "Competitive (300+ students; top 20% of recommended applicants)",
       "program_format": "commuter",
       "location": "Eligible U.S. program markets (local nonprofit placement)",
-      "program_dates": "Six weeks mid-June through July 2026, including mandatory 3-day Leadership Summit (June 16–18, 2026)",
+      "program_dates": "Six weeks mid-June through July 2026, including mandatory 3-day Leadership Summit (June 16 - 18, 2026)",
       "deadline": "VERIFY",
       "estimated_deadline": "2027-03-16",
       "eligibility": {
@@ -1201,7 +1201,7 @@
           {
             "kind": "institution_channel",
             "label": "Post-secondary credit-hour window",
-            "details": "Applicants must have earned 12–18 post-secondary credit hours and achieved a high school diploma within the last 24 months."
+            "details": "Applicants must have earned 12 - 18 post-secondary credit hours and achieved a high school diploma within the last 24 months."
           }
         ]
       },
@@ -1233,7 +1233,7 @@
       "verification": {
         "source_url": "https://about.bankofamerica.com/en/making-an-impact/student-leaders-program-faq",
         "last_verified_at": "2026-06-21",
-        "notes": "Official BofA FAQ: 2026 cycle Feb 9–March 16; 12–18 credits; age 18+; paid internship and summit; 2026 deadline passed."
+        "notes": "Official BofA FAQ: 2026 cycle Feb 9 - March 16; 12 - 18 credits; age 18+; paid internship and summit; 2026 deadline passed."
       }
     },
     {
@@ -1421,7 +1421,7 @@
       "verification": {
         "source_url": "https://www.training.nih.gov/research-training/pb/sip/",
         "last_verified_at": "2026-06-21",
-        "notes": "Official NIH SIP page: U.S. citizen or PR; HS seniors and college students; 2026 closed Feb 18; program May 11–Aug 31, 2026."
+        "notes": "Official NIH SIP page: U.S. citizen or PR; HS seniors and college students; 2026 closed Feb 18; program May 11 - Aug 31, 2026."
       }
     },
     {
@@ -1435,7 +1435,7 @@
       "selectivity": "Competitive (admission competitive; all backgrounds considered)",
       "program_format": "residential",
       "location": "Bar Harbor, ME and Farmington, CT",
-      "program_dates": "10 weeks: May 30 – August 7, 2026 (Bar Harbor) or May 30 – August 10, 2026 (Farmington)",
+      "program_dates": "10 weeks: May 30 - August 7, 2026 (Bar Harbor) or May 30 - August 10, 2026 (Farmington)",
       "deadline": "VERIFY",
       "estimated_deadline": "2027-01-26",
       "eligibility": {
@@ -1493,7 +1493,7 @@
       "selectivity": "Highly competitive (20 participants selected nationally)",
       "program_format": "residential",
       "location": "Cambridge, MA",
-      "program_dates": "Four weeks: June 27 – July 25, 2026",
+      "program_dates": "Four weeks: June 27 - July 25, 2026",
       "deadline": "2026-12-15",
       "estimated_deadline": "2026-12-15",
       "eligibility": {
@@ -1546,7 +1546,7 @@
       "selectivity": "Nationally competitive (174 students selected for 2025 cohort per NASA Science)",
       "program_format": "hybrid",
       "location": "Virtual plus optional on-site at UT Austin, TX",
-      "program_dates": "June–July 2026: virtual work June–July 3; on-site July 5–18, 2026; symposium July 20–21, 2026",
+      "program_dates": "June - July 2026: virtual work June - July 3; on-site July 5 - 18, 2026; symposium July 20 - 21, 2026",
       "deadline": "VERIFY",
       "estimated_deadline": "2027-02-22",
       "eligibility": {
@@ -1638,7 +1638,7 @@
       "selectivity": "Highly competitive (selection favors Bay Area students per official FAQ)",
       "program_format": "commuter",
       "location": "Stanford, CA",
-      "program_dates": "Eight weeks: June 8 – July 30, 2026",
+      "program_dates": "Eight weeks: June 8 - July 30, 2026",
       "deadline": "VERIFY",
       "estimated_deadline": "2027-02-21",
       "eligibility": {
@@ -1685,7 +1685,7 @@
       "verification": {
         "source_url": "https://simr.stanford.edu/",
         "last_verified_at": "2026-06-21",
-        "notes": "Official SIMR pages: juniors/seniors; U.S. citizen/PR; 16+; June 8–July 30, 2026; Feb 21, 2026 deadline passed; $50 application fee."
+        "notes": "Official SIMR pages: juniors/seniors; U.S. citizen/PR; 16+; June 8 - July 30, 2026; Feb 21, 2026 deadline passed; $50 application fee."
       }
     },
     {
@@ -1801,7 +1801,7 @@
       "selectivity": "Highly competitive",
       "program_format": "hybrid",
       "location": "Cambridge, MA (in-person courses) or virtual",
-      "program_dates": "July 6 – August 2, 2026 (2026 schedule on FAQ)",
+      "program_dates": "July 6 - August 2, 2026 (2026 schedule on FAQ)",
       "deadline": "VERIFY",
       "estimated_deadline": "2027-03-01",
       "eligibility": {
@@ -2133,7 +2133,7 @@
       "selectivity": "Competitive (enthusiasm-weighted)",
       "program_format": "virtual",
       "location": "Online",
-      "program_dates": "Summer 2026: June 14 – July 26, 2026",
+      "program_dates": "Summer 2026: June 14 - July 26, 2026",
       "deadline": "VERIFY",
       "estimated_deadline": "2027-04-20",
       "eligibility": {
@@ -2323,7 +2323,7 @@
       "verification": {
         "source_url": "https://www.cshl.edu/education/partners-for-the-future/",
         "last_verified_at": "2026-06-21",
-        "notes": "Official CSHL page: Long Island seniors, school science chair nomination, Sep–Mar research year."
+        "notes": "Official CSHL page: Long Island seniors, school science chair nomination, Sep - Mar research year."
       }
     },
     {
@@ -2407,7 +2407,7 @@
           }
         ]
       },
-      "description": "Day and residential summer courses for grades 2–12 at multiple campuses. Many courses require qualifying test scores or CTY eligibility assessments.",
+      "description": "Day and residential summer courses for grades 2 - 12 at multiple campuses. Many courses require qualifying test scores or CTY eligibility assessments.",
       "application_requirements": [
         {
           "id": "cty-eligibility",
@@ -2428,7 +2428,7 @@
       "verification": {
         "source_url": "https://cty.jhu.edu/programs/on-campus",
         "last_verified_at": "2026-06-21",
-        "notes": "Official CTY page: grades 2–12 day/residential, test-score eligibility for many courses."
+        "notes": "Official CTY page: grades 2 - 12 day/residential, test-score eligibility for many courses."
       }
     },
     {
@@ -2459,7 +2459,7 @@
         "essay_required": false,
         "citizenship_requirement": "any"
       },
-      "description": "PreK–12 summer enrichment with day, residential, and online options through Northwestern CTD. Course eligibility varies by grade and assessment pathway.",
+      "description": "PreK - 12 summer enrichment with day, residential, and online options through Northwestern CTD. Course eligibility varies by grade and assessment pathway.",
       "application_requirements": [
         {
           "id": "ctd-application",
@@ -2473,7 +2473,7 @@
       "verification": {
         "source_url": "https://www.ctd.northwestern.edu/summer",
         "last_verified_at": "2026-06-21",
-        "notes": "Official Northwestern CTD page: grades preK–12 day/residential/online summer programs."
+        "notes": "Official Northwestern CTD page: grades preK - 12 day/residential/online summer programs."
       }
     },
     {
@@ -2482,7 +2482,7 @@
       "host": "Georgia Tech CEISMC",
       "subject": "STEM enrichment",
       "url": "https://expandedlearning.ceismc.gatech.edu/",
-      "cost": "$400–$550",
+      "cost": "$400 - $550",
       "cost_category": "paid",
       "selectivity": "Open enrollment (course-dependent)",
       "program_format": "commuter",
@@ -2508,7 +2508,7 @@
         "essay_required": false,
         "citizenship_requirement": "any"
       },
-      "description": "One-week STEM enrichment programs at Georgia Tech for rising high school freshmen through seniors. Tuition is typically $400–$550 per session.",
+      "description": "One-week STEM enrichment programs at Georgia Tech for rising high school freshmen through seniors. Tuition is typically $400 - $550 per session.",
       "application_requirements": [
         {
           "id": "peaks-registration",
@@ -2522,7 +2522,7 @@
       "verification": {
         "source_url": "https://expandedlearning.ceismc.gatech.edu/",
         "last_verified_at": "2026-06-21",
-        "notes": "Official CEISMC page: rising grades 9–12, $400–$550 per session."
+        "notes": "Official CEISMC page: rising grades 9 - 12, $400 - $550 per session."
       }
     },
     {
@@ -2536,7 +2536,7 @@
       "selectivity": "Highly selective; nomination-style admission",
       "program_format": "residential",
       "location": "Atlanta, GA",
-      "program_dates": "June 22–26, 2026 (example session)",
+      "program_dates": "June 22 - 26, 2026 (example session)",
       "deadline": "VERIFY",
       "eligibility": {
         "min_gpa": null,
@@ -2563,7 +2563,7 @@
           }
         ]
       },
-      "description": "Selective residential STEM institute for rising Georgia 11th graders who qualify through free/reduced lunch status, top 10% class standing, and precalculus readiness. Example 2026 session runs June 22–26.",
+      "description": "Selective residential STEM institute for rising Georgia 11th graders who qualify through free/reduced lunch status, top 10% class standing, and precalculus readiness. Example 2026 session runs June 22 - 26.",
       "application_requirements": [
         {
           "id": "school-selection-process",
@@ -2577,7 +2577,7 @@
       "verification": {
         "source_url": "https://expandedlearning.ceismc.gatech.edu/summer-institute",
         "last_verified_at": "2026-06-21",
-        "notes": "Official CEISMC Summer Institute page: rising 11th, residential June 22–26 2026, free/reduced lunch + top 10% + precalc, nomination-style selective admission."
+        "notes": "Official CEISMC Summer Institute page: rising 11th, residential June 22 - 26 2026, free/reduced lunch + top 10% + precalc, nomination-style selective admission."
       }
     },
     {
@@ -2610,7 +2610,7 @@
         "essay_required": true,
         "citizenship_requirement": "any"
       },
-      "description": "Three-week residential data science program at Wharton for grades 10–11. Priority deadline was January 28, 2026; next cycle estimated January 28, 2027.",
+      "description": "Three-week residential data science program at Wharton for grades 10 - 11. Priority deadline was January 28, 2026; next cycle estimated January 28, 2027.",
       "application_requirements": [
         {
           "id": "wharton-dsa-application",
@@ -2624,7 +2624,7 @@
       "verification": {
         "source_url": "https://globalyouth.wharton.upenn.edu/programs-services/data-science-academy/",
         "last_verified_at": "2026-06-21",
-        "notes": "Official Wharton Global Youth page: grades 10–11, 3 weeks, priority Jan 28 2026; est 2027-01-28 next cycle."
+        "notes": "Official Wharton Global Youth page: grades 10 - 11, 3 weeks, priority Jan 28 2026; est 2027-01-28 next cycle."
       }
     },
     {
@@ -2657,7 +2657,7 @@
         "essay_required": true,
         "citizenship_requirement": "any"
       },
-      "description": "Two-week residential finance program at Wharton for grades 9–11. 2026 applications were closed at verification; next cycle estimated January 28, 2027.",
+      "description": "Two-week residential finance program at Wharton for grades 9 - 11. 2026 applications were closed at verification; next cycle estimated January 28, 2027.",
       "application_requirements": [
         {
           "id": "wharton-eof-application",
@@ -2671,7 +2671,7 @@
       "verification": {
         "source_url": "https://globalyouth.wharton.upenn.edu/programs-services/essentials-of-finance/",
         "last_verified_at": "2026-06-21",
-        "notes": "Official Wharton Global Youth page: grades 9–11, 2 weeks, 2026 apps closed; est 2027-01-28 next cycle."
+        "notes": "Official Wharton Global Youth page: grades 9 - 11, 2 weeks, 2026 apps closed; est 2027-01-28 next cycle."
       }
     },
     {
@@ -2727,7 +2727,7 @@
       "selectivity": "Selective admission",
       "program_format": "residential",
       "location": "Cambridge, MA",
-      "program_dates": "Two-week sessions: June 21–July 2, July 5–17, or July 19–31, 2026",
+      "program_dates": "Two-week sessions: June 21 - July 2, July 5 - 17, or July 19 - 31, 2026",
       "deadline": "VERIFY",
       "eligibility": {
         "min_gpa": null,
@@ -2755,7 +2755,7 @@
       "verification": {
         "source_url": "https://summer.harvard.edu/programs/pre-college-program/",
         "last_verified_at": "2026-06-21",
-        "notes": "Official Harvard Pre-College page: 2 weeks, $6,100, rising juniors/seniors; early deadline Jan 7 / regular Feb 11 2026 — est. 2027-01-07 next early deadline."
+        "notes": "Official Harvard Pre-College page: 2 weeks, $6,100, rising juniors/seniors; early deadline Jan 7 / regular Feb 11 2026 - est. 2027-01-07 next early deadline."
       },
       "estimated_deadline": "2027-04-01"
     },
@@ -2770,7 +2770,7 @@
       "selectivity": "Selective admission",
       "program_format": "hybrid",
       "location": "Stanford, CA",
-      "program_dates": "Eight-week session: June 20–August 16, 2026",
+      "program_dates": "Eight-week session: June 20 - August 16, 2026",
       "deadline": "VERIFY",
       "eligibility": {
         "min_gpa": null,
@@ -2785,7 +2785,7 @@
         "essay_required": true,
         "citizenship_requirement": "any"
       },
-      "description": "Stanford Summer Session allows qualified high school students in grades 10–12 to take Stanford courses for credit alongside college students. Participants must be ages 16–19 by the start of the program.",
+      "description": "Stanford Summer Session allows qualified high school students in grades 10 - 12 to take Stanford courses for credit alongside college students. Participants must be ages 16 - 19 by the start of the program.",
       "application_requirements": [
         {
           "id": "stanford-application",
@@ -2799,7 +2799,7 @@
       "verification": {
         "source_url": "https://summer.stanford.edu/students/high-school",
         "last_verified_at": "2026-06-21",
-        "notes": "Official Stanford Summer Session high school page: grades 10–12, 8 weeks Jun 20–Aug 16 2026, ages 16–19."
+        "notes": "Official Stanford Summer Session high school page: grades 10 - 12, 8 weeks Jun 20 - Aug 16 2026, ages 16 - 19."
       }
     },
     {
@@ -2813,7 +2813,7 @@
       "selectivity": "Limited slots",
       "program_format": "commuter",
       "location": "Bar Harbor, ME",
-      "program_dates": "June 29–July 3, 2026",
+      "program_dates": "June 29 - July 3, 2026",
       "deadline": "VERIFY",
       "eligibility": {
         "min_gpa": null,
@@ -2845,7 +2845,7 @@
       "verification": {
         "source_url": "https://mdibl.org/course/biomedical-bootcamp-2026/",
         "last_verified_at": "2026-06-21",
-        "notes": "Official MDIBL Biomedical Bootcamp 2026 page: 1 week commuter, grades 11–12, $1,000, deadline June 5 2026 — est. 2027-06-05."
+        "notes": "Official MDIBL Biomedical Bootcamp 2026 page: 1 week commuter, grades 11 - 12, $1,000, deadline June 5 2026 - est. 2027-06-05."
       },
       "estimated_deadline": "2027-06-05"
     },
@@ -2860,7 +2860,7 @@
       "selectivity": "Highly selective",
       "program_format": "residential",
       "location": "Chicago, IL",
-      "program_dates": "Four weeks: June 15–July 10, 2026",
+      "program_dates": "Four weeks: June 15 - July 10, 2026",
       "deadline": "VERIFY",
       "eligibility": {
         "min_gpa": null,
@@ -2881,11 +2881,11 @@
           {
             "kind": "institution_channel",
             "label": "Residential requirement for Chicago residents",
-            "details": "All participants must live in campus housing; students who live in Chicago are not eligible to commute. Program is limited to grades 10–11."
+            "details": "All participants must live in campus housing; students who live in Chicago are not eligible to commute. Program is limited to grades 10 - 11."
           }
         ]
       },
-      "description": "Four-week intensive residential practicum introducing molecular, microbiological, and cellular biology research techniques. High school biology required; advanced biology recommended. Chicago residents must live on campus — commuting is not permitted.",
+      "description": "Four-week intensive residential practicum introducing molecular, microbiological, and cellular biology research techniques. High school biology required; advanced biology recommended. Chicago residents must live on campus - commuting is not permitted.",
       "application_requirements": [
         {
           "id": "uchicago-application",
@@ -2899,7 +2899,7 @@
       "verification": {
         "source_url": "https://summer.uchicago.edu/courses/research-in-the-biological-sciences/",
         "last_verified_at": "2026-06-21",
-        "notes": "Official UChicago RIBS course page: 4 weeks residential, grades 10–11, $15,200; application deadline Feb 11 2026 — est. 2027-02-11; Chicago residents cannot commute."
+        "notes": "Official UChicago RIBS course page: 4 weeks residential, grades 10 - 11, $15,200; application deadline Feb 11 2026 - est. 2027-02-11; Chicago residents cannot commute."
       },
       "estimated_deadline": "2027-02-11"
     },
@@ -2930,7 +2930,7 @@
         "essay_required": true,
         "citizenship_requirement": "any"
       },
-      "description": "Non-credit pre-college courses at Brown for students ages 14–18 in grades 9–12. Residential, commuter, and online formats are available across multiple summer sessions.",
+      "description": "Non-credit pre-college courses at Brown for students ages 14 - 18 in grades 9 - 12. Residential, commuter, and online formats are available across multiple summer sessions.",
       "application_requirements": [
         {
           "id": "brown-application",
@@ -2944,7 +2944,7 @@
       "verification": {
         "source_url": "https://precollege.brown.edu/apply",
         "last_verified_at": "2026-07-03",
-        "notes": "Official Brown Pre-College apply page: Summer 2026 applications opened Jan 14, 2026 and closed May 15, 2026. Summer@Brown remains grades 9–12, ages 14–18, non-credit; est. 2027-05-15."
+        "notes": "Official Brown Pre-College apply page: Summer 2026 applications opened Jan 14, 2026 and closed May 15, 2026. Summer@Brown remains grades 9 - 12, ages 14 - 18, non-credit; est. 2027-05-15."
       },
       "estimated_deadline": "2027-05-15"
     },
@@ -3041,7 +3041,7 @@
       "host": "Cold Spring Harbor Laboratory (DNA Learning Center)",
       "subject": "Molecular biology and genetics",
       "url": "https://summercamps.dnalc.org/",
-      "cost": "$600–$700 per camp (varies by program)",
+      "cost": "$600 - $700 per camp (varies by program)",
       "cost_category": "paid",
       "selectivity": "Open enrollment (space limited)",
       "program_format": "commuter",
@@ -3066,7 +3066,7 @@
         "essay_required": false,
         "citizenship_requirement": "any"
       },
-      "description": "Paid one-week day camps in molecular biology and genetics for students in grades 6–12 at Cold Spring Harbor Laboratory's DNA Learning Center and partner sites.",
+      "description": "Paid one-week day camps in molecular biology and genetics for students in grades 6 - 12 at Cold Spring Harbor Laboratory's DNA Learning Center and partner sites.",
       "application_requirements": [
         {
           "id": "dnalc-application",
@@ -3080,7 +3080,7 @@
       "verification": {
         "source_url": "https://summercamps.dnalc.org/",
         "last_verified_at": "2026-06-21",
-        "notes": "Official DNALC summer camps page: grades 6–12, paid camps typically $600–$700 per session."
+        "notes": "Official DNALC summer camps page: grades 6 - 12, paid camps typically $600 - $700 per session."
       }
     },
     {
@@ -3109,7 +3109,7 @@
         "essay_required": true,
         "citizenship_requirement": "any"
       },
-      "description": "Residential pre-college academies at Penn for high school students in grades 9–11, offering intensive two- to three-week subject immersion experiences.",
+      "description": "Residential pre-college academies at Penn for high school students in grades 9 - 11, offering intensive two- to three-week subject immersion experiences.",
       "application_requirements": [
         {
           "id": "penn-application",
@@ -3123,7 +3123,7 @@
       "verification": {
         "source_url": "https://hs.sas.upenn.edu/summer-programs/application-information",
         "last_verified_at": "2026-07-03",
-        "notes": "Official Penn Summer Academies and application-information pages: current grades 9–11, residential 2–3 weeks, international students welcome, applications rolling until full, and minimum 3.5 high-school GPA. No dated final deadline is published."
+        "notes": "Official Penn Summer Academies and application-information pages: current grades 9 - 11, residential 2 - 3 weeks, international students welcome, applications rolling until full, and minimum 3.5 high-school GPA. No dated final deadline is published."
       },
       "estimated_deadline": "2027-05-01"
     },

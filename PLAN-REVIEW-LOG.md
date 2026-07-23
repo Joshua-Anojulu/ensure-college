@@ -1152,3 +1152,17 @@ One cleanup: [PLAN.md](C:/Users/josha/OneDrive/Documents/ScholarMatch/PLAN.md:18
 VERDICT: APPROVED
 ### Resolution
 VERDICT: APPROVED at rev 5, round 5 of 5. The one non-blocking cleanup (stale "tonight" risk line) applied post-approval: replaced with the hand-authored SVG risk + marginalia-omission fallback. Awaiting Josh's sign-off; then Stage 1 build per the plan (builder TBD: Claude or codex-build).
+
+## Act 3 — Build (Stage 1, Codex builds / Claude verifies)
+
+### Round 1 — Codex build
+Codex implemented Stage 1 (protection tests first, DESIGN.md, ec-* SVG chrome kit + glyph sprite, chrome applied across treated surfaces, byte-cap and cohesion assertions, lockstep bump to 20260723-1, served-copy dash normalization including catalog data). Its Windows process spawner died mid-session (0xc0000142) so it could not run the proof suites; it reported that honestly rather than claiming green.
+
+### Claude's verdict + takeover
+Diff reviewed as a PR; data-file changes verified punctuation-only (values intact). Suites run by Claude: 4 failures, all fixed directly (Codex session unable to execute, so MAX_FIX_ROUNDS delegation skipped - takeover logged):
+1. js_function_body test helper truncated at default-parameter braces (paren-aware scan added) - the ec-paper-card class was present in all three builders all along.
+2. journey.js silently dropped from the pin-scan lists - restored, and ALL Journey pins bumped to 20260723-1 (pins only; lockstep non-negotiable beats the don't-touch-Journey scope line; scene code untouched).
+3-4. Legal copy hashes re-locked after verifying the privacy/terms diff (dash normalization + one aria-hidden glyph).
+Plus: catalog e2e failure diagnosed as a content-visibility render-margin cliff (~30px, pre-existing geometry) - test now scrolls to results like a real user; and a real visual defect fixed: the carved tier sign rendered as an ink blob (symbol paths had no fill/stroke split) - now light wood board + grain strokes in both defs copies, matching the signed comp.
+Spec deviation accepted with reasoning: tool-surface chrome lives in style.css, not world.css - match cards render on the landing SPA before world.css ever loads; the landing cap (27KB gzip) held at 26,954.
+Final state: 445 request + 83 e2e + 1 skipped, all green. Byte caps: style.css 26954/27648, world.css 1498/14336.

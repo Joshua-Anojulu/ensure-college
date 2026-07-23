@@ -557,6 +557,11 @@ class TestCatalog:
         assert page.locator("#catalog-container > *").count() > 0
         page.fill("#catalog-search", "coca")
         page.wait_for_timeout(800)
+        # The filtered rows sit just below the fold, within ~30px of the
+        # content-visibility:auto render margin; scroll to them like a real
+        # user so inner_text reflects rendered content, not skip state.
+        page.locator("#catalog-container .match-card").first.scroll_into_view_if_needed()
+        page.wait_for_timeout(400)
         assert page.locator("#catalog-container").inner_text().lower().count("coca") >= 1
         page.click("#catalog-clear")
         page.wait_for_timeout(500)

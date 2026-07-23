@@ -9,6 +9,7 @@
 
 const AI_ENABLED =
   document.querySelector('meta[name="ai-features-enabled"]')?.content === "true";
+const SVG_NS = "http://www.w3.org/2000/svg";
 
 let vocabulary = null;
 let lastSubmittedProfile = null;
@@ -77,6 +78,30 @@ function resetAllLaneWindows() {
   resetLaneWindow("scholarships");
   resetLaneWindow("programs");
   resetLaneWindow("competitions");
+}
+
+function buildChromeUse(symbolId, className) {
+  const svg = document.createElementNS(SVG_NS, "svg");
+  svg.setAttribute("class", className);
+  svg.setAttribute("aria-hidden", "true");
+  svg.setAttribute("focusable", "false");
+  const use = document.createElementNS(SVG_NS, "use");
+  use.setAttribute("href", `#${symbolId}`);
+  svg.appendChild(use);
+  return svg;
+}
+
+function setTierHeadingChrome(heading, title, count) {
+  heading.textContent = "";
+  heading.appendChild(buildChromeUse("ec-chrome-carved-sign", "ec-tier-sign"));
+  const label = document.createElement("span");
+  label.className = "tier-heading-label";
+  label.textContent = title;
+  const countEl = document.createElement("span");
+  countEl.className = "tier-count";
+  countEl.textContent = count;
+  heading.appendChild(label);
+  heading.appendChild(countEl);
 }
 
 // Same batching pattern, applied to the Quick applies panel (Application Plan
@@ -4507,7 +4532,7 @@ function buildTierSection(title, matches, tierClass, description = "") {
   heading.className = `tier-heading ${
     tierClass === "possible" || tierClass === "special" ? tierClass : ""
   }`;
-  heading.innerHTML = `${escapeHtml(title)} <span class="tier-count">${matches.length}</span>`;
+  setTierHeadingChrome(heading, title, String(matches.length));
   section.appendChild(heading);
 
   if (description) {
@@ -5102,7 +5127,7 @@ function buildCompetitionTierSection(title, competitions, tierClass, description
   heading.className = `tier-heading ${
     tierClass === "possible" || tierClass === "special" ? tierClass : ""
   }`;
-  heading.innerHTML = `${escapeHtml(title)} <span class="tier-count">${competitions.length}</span>`;
+  setTierHeadingChrome(heading, title, String(competitions.length));
   section.appendChild(heading);
 
   if (description) {
@@ -5129,7 +5154,7 @@ function buildProgramTierSection(title, programs, tierClass, description = "") {
   heading.className = `tier-heading ${
     tierClass === "possible" || tierClass === "special" ? tierClass : ""
   }`;
-  heading.innerHTML = `${escapeHtml(title)} <span class="tier-count">${programs.length}</span>`;
+  setTierHeadingChrome(heading, title, String(programs.length));
   section.appendChild(heading);
 
   if (description) {
@@ -5274,7 +5299,7 @@ function buildCompetitionCard(competition, options = {}) {
     ? "possible"
     : "strong";
   const article = document.createElement("article");
-  article.className = `match-card ${tierClass}`;
+  article.className = `match-card ec-paper-card ${tierClass}`;
 
   const pathBar = document.createElement("div");
   pathBar.className = "path-bar";
@@ -5436,7 +5461,7 @@ function buildProgramCard(program, options = {}) {
     ? "possible"
     : "strong";
   const article = document.createElement("article");
-  article.className = `match-card ${tierClass}`;
+  article.className = `match-card ec-paper-card ${tierClass}`;
 
   const pathBar = document.createElement("div");
   pathBar.className = "path-bar";
@@ -5821,7 +5846,7 @@ function buildSpecialRequirements(requirements) {
 
 function buildCard(card, tierClass) {
   const article = document.createElement("article");
-  article.className = `match-card ${tierClass}`;
+  article.className = `match-card ec-paper-card ${tierClass}`;
 
   const pathBar = document.createElement("div");
   pathBar.className = "path-bar";
@@ -6393,7 +6418,7 @@ async function handleProgramAdvice(programId, button, panel, loading, errorEl) {
     worldStageRequested = true;
     var link = document.createElement("link");
     link.rel = "stylesheet";
-    link.href = "/static/css/world.css?v=20260721-6";
+    link.href = "/static/css/world.css?v=20260723-1";
     link.addEventListener(
       "load",
       function () {

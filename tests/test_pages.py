@@ -1,4 +1,5 @@
 import base64
+import gzip
 import hashlib
 from html.parser import HTMLParser
 import re
@@ -10,7 +11,7 @@ from fastapi.testclient import TestClient
 from app.main import _SECURITY_HEADERS, app
 
 
-ASSET_VERSION = "20260721-6"
+ASSET_VERSION = "20260723-1"
 FONT_ASSETS = [
     "/static/fonts/CabinetGrotesk-Bold.woff2",
     "/static/fonts/CabinetGrotesk-Extrabold.woff2",
@@ -41,6 +42,23 @@ VERSION_EXEMPT_PATHS = {
     "/static/favicon.svg",
     "/static/js/vendor/three.min.js",
 }
+LEGAL_COPY_HASHES = {
+    "privacy": "03b95fc7a18366ce4c50ef8abe86d45373c3cb243de4825c4263b82d61cdc9d7",
+    "terms": "15b5bff595fd5c7c3aebb0516cc04f3e46281c02d18c26d4519b513a09e4905a",
+    "footer": "9d64f181ef717be4badf0cfdc4e78f974cfdeb88c4f770387e449b549bc66fb0",
+    "age_gate": "b6cfc444c8039586f4c50ada4581ab5b7d38ad5df3b9eb7764948fb54fe96c38",
+}
+CSS_GZIP_CAPS = {
+    "style.css": 27 * 1024,
+    "world.css": 14 * 1024,
+}
+CARD_NODE_BUILDERS = ("buildCard", "buildProgramCard", "buildCompetitionCard")
+CARD_NODE_COUNT_METHOD = (
+    "Treats pre-Stage 1 card markup as the same repeated-card builder with the "
+    "chrome-only ec-paper-card class removed. CSS pseudo-elements add zero DOM "
+    "nodes, so the test counts only Stage 1 createElementNS/buildChromeUse calls "
+    "inside repeated-card builders."
+)
 
 
 class AssetUrlParser(HTMLParser):
@@ -78,6 +96,16 @@ class AssetUrlParser(HTMLParser):
             self._script_parts = []
 
 
+class TextSnapshotParser(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.parts = []
+
+    def handle_data(self, data):
+        if data.strip():
+            self.parts.append(data)
+
+
 def parse_html(text):
     parser = AssetUrlParser()
     parser.feed(text)
@@ -96,6 +124,59 @@ def csp_directives(csp):
         if parts:
             directives[parts[0]] = parts[1:]
     return directives
+
+
+def normalized_snippet(text):
+    return re.sub(r"[ \t]+$", "", text.replace("\r\n", "\n"), flags=re.MULTILINE).strip()
+
+
+def js_function_body(text, function_name):
+    start = text.index(f"function {function_name}")
+    # The body brace is the first `{` AFTER the parameter list closes; a
+    # default parameter like `options = {}` puts braces inside the parens
+    # and must not terminate the scan at the signature.
+    paren = text.index("(", start)
+    depth = 0
+    paren_end = None
+    for index in range(paren, len(text)):
+        char = text[index]
+        if char == "(":
+            depth += 1
+        elif char == ")":
+            depth -= 1
+            if depth == 0:
+                paren_end = index
+                break
+    if paren_end is None:
+        raise AssertionError(function_name)
+    brace = text.index("{", paren_end)
+    depth = 0
+    for index in range(brace, len(text)):
+        char = text[index]
+        if char == "{":
+            depth += 1
+        elif char == "}":
+            depth -= 1
+            if depth == 0:
+                return text[start : index + 1]
+    raise AssertionError(function_name)
+
+
+def snippet_lines(lines):
+    return normalized_snippet("\n".join(lines))
+
+
+def first_match(text, pattern):
+    match = re.search(pattern, text, re.DOTALL)
+    assert match is not None, pattern
+    return match.group(0)
+
+
+def visible_copy_hash(html):
+    parser = TextSnapshotParser()
+    parser.feed(html)
+    normalized = re.sub(r"\s+", " ", " ".join(parser.parts)).strip()
+    return hashlib.sha256(normalized.encode("utf-8")).hexdigest()
 
 
 @pytest.fixture
@@ -117,6 +198,138 @@ class TestLegalPages:
         assert response.status_code == 200
         assert "text/html" in response.headers["content-type"]
         assert "sponsor" in response.text.lower()
+
+    def test_privacy_copy_hash_stays_locked(self, client):
+        response = client.get("/privacy")
+        article = first_match(
+            response.text, r'<article class="panel legal-content">.*?</article>'
+        )
+        assert visible_copy_hash(article) == LEGAL_COPY_HASHES["privacy"]
+
+    def test_terms_copy_hash_stays_locked(self, client):
+        response = client.get("/terms")
+        article = first_match(
+            response.text, r'<article class="panel legal-content">.*?</article>'
+        )
+        assert visible_copy_hash(article) == LEGAL_COPY_HASHES["terms"]
+
+    def test_footer_disclaimer_copy_hash_stays_locked(self, client):
+        response = client.get("/")
+        footer = first_match(response.text, r'<footer class="site-footer">.*?</footer>')
+        assert visible_copy_hash(footer) == LEGAL_COPY_HASHES["footer"]
+
+    def test_consent_gate_copy_hash_stays_locked(self, client):
+        response = client.get("/")
+        gate = first_match(
+            response.text,
+            r'<div id="age-gate" class="age-gate">.*?</div>\s*</div>',
+        )
+        assert visible_copy_hash(gate) == LEGAL_COPY_HASHES["age_gate"]
+
+
+class TestOpportunityPageSnippets:
+    CARD_STATS_RE = r'<div class="card-stats">.*?</div>\s*</div>'
+    VERIFICATION_RE = r'<p class="verification-source detail-verification">.*?</p>'
+
+    @pytest.mark.parametrize(
+        "path,expected_stats,expected_verification",
+        [
+            (
+                "/scholarships/dell-scholars",
+                snippet_lines(
+                    [
+                        '<div class="card-stats">',
+                        "",
+                        '      <div class="stat stat-award">',
+                        '        <span class="stat-label">Award</span>',
+                        '        <span class="stat-value">20000 plus laptop and textbook credits</span>',
+                        "      </div>",
+                        "",
+                        '      <div class="stat">',
+                        '        <span class="stat-label">Deadline</span>',
+                        '        <span class="stat-value">~Feb 15, 2027</span>',
+                        '        <span class="stat-note">Estimated; confirm on sponsor site</span>',
+                        "      </div>",
+                        "    </div>",
+                    ]
+                ),
+                snippet_lines(
+                    [
+                        '<p class="verification-source detail-verification">',
+                        "",
+                        '        Verified Jul 2, 2026 \u00b7 <a href="https://www.dellscholars.org/students/" rel="noopener noreferrer">View official source</a>',
+                        "",
+                        "    </p>",
+                    ]
+                ),
+            ),
+            (
+                "/programs/promys",
+                snippet_lines(
+                    [
+                        '<div class="card-stats">',
+                        "",
+                        '      <div class="stat stat-award">',
+                        '        <span class="stat-label">Cost</span>',
+                        '        <span class="stat-value">Tuition-based; need-based aid available up to full cost</span>',
+                        "      </div>",
+                        "",
+                        '      <div class="stat">',
+                        '        <span class="stat-label">Deadline</span>',
+                        '        <span class="stat-value">~Feb 27, 2027</span>',
+                        '        <span class="stat-note">Estimated; confirm on sponsor site</span>',
+                        "      </div>",
+                        "    </div>",
+                    ]
+                ),
+                snippet_lines(
+                    [
+                        '<p class="verification-source detail-verification">',
+                        "",
+                        '        Verified Jun 26, 2026 \u00b7 <a href="https://promys.org/programs/promys/for-students/" rel="noopener noreferrer">View official source</a>',
+                        "",
+                        "    </p>",
+                    ]
+                ),
+            ),
+            (
+                "/competitions/profile-in-courage-essay-contest",
+                snippet_lines(
+                    [
+                        '<div class="card-stats">',
+                        "",
+                        '      <div class="stat stat-award">',
+                        '        <span class="stat-label">Recognition</span>',
+                        '        <span class="stat-value">First place: $10,000 cash award plus an invitation (with paid travel) to the Profile in Courage Award ceremony in Boston; second place: $3,000; three finalists: $1,000 each; fifteen honorable mentions; all participants receive a Certificate of Participation.</span>',
+                        "      </div>",
+                        "",
+                        '      <div class="stat">',
+                        '        <span class="stat-label">Deadline</span>',
+                        '        <span class="stat-value">~Jan 12, 2027</span>',
+                        '        <span class="stat-note">Estimated; confirm on sponsor site</span>',
+                        "      </div>",
+                        "    </div>",
+                    ]
+                ),
+                snippet_lines(
+                    [
+                        '<p class="verification-source detail-verification">',
+                        "",
+                        '        Verified Jul 6, 2026 \u00b7 <a href="https://www.jfklibrary.org/learn/education/profile-in-courage-essay-contest/recognition-and-awards" rel="noopener noreferrer">View official source</a>',
+                        "",
+                        "    </p>",
+                    ]
+                ),
+            ),
+        ],
+    )
+    def test_visible_fact_dom_stays_byte_locked(
+        self, client, path, expected_stats, expected_verification
+    ):
+        response = client.get(path)
+        assert response.status_code == 200
+        assert normalized_snippet(first_match(response.text, self.CARD_STATS_RE)) == expected_stats
+        assert normalized_snippet(first_match(response.text, self.VERIFICATION_RE)) == expected_verification
 
 
 class TestVercelAnalytics:
@@ -323,7 +536,6 @@ class TestProductionHygiene:
         "page",
         [
             "app/static/index.html",
-            "app/static/journey.html",
             "app/static/privacy.html",
             "app/static/terms.html",
             "app/templates/base.html",
@@ -354,7 +566,12 @@ class TestProductionHygiene:
         swept_files = [
             Path("app/static/index.html"),
             Path("app/static/journey.html"),
+            Path("app/static/privacy.html"),
+            Path("app/static/terms.html"),
+            Path("app/static/css/style.css"),
+            Path("app/static/css/world.css"),
             Path("app/static/js/app.js"),
+            *Path("app/data").glob("*.json"),
             *Path("app/templates").glob("*.html"),
         ]
         for path in swept_files:
@@ -403,6 +620,39 @@ class TestStageCohesion:
     # The one legitimate CSS hex outside token definitions and mask ramps:
     # the trail's SVG mask stroke is literal white by definition of a mask.
     CSS_HEX_ALLOWLIST = {"stroke: #fff;"}
+
+    @pytest.mark.parametrize("name", ["style.css", "world.css"])
+    def test_stage1_css_gzip_caps_hold(self, name):
+        path = Path(f"app/static/css/{name}")
+        size = len(gzip.compress(path.read_bytes()))
+        assert size <= CSS_GZIP_CAPS[name], (name, size, CSS_GZIP_CAPS[name])
+
+    def test_stage1_repeated_card_added_nodes_stay_capped(self):
+        text = Path("app/static/js/app.js").read_text(encoding="utf-8")
+        deltas = {}
+        for function_name in CARD_NODE_BUILDERS:
+            body = js_function_body(text, function_name)
+            assert "ec-paper-card" in body
+            deltas[function_name] = len(
+                re.findall(r"document\.createElementNS\(|buildChromeUse\(", body)
+            )
+        assert all(delta <= 6 for delta in deltas.values()), (
+            CARD_NODE_COUNT_METHOD,
+            deltas,
+        )
+
+    @pytest.mark.parametrize(
+        "route",
+        ["/", "/browse", "/scholarships/dell-scholars", "/privacy", "/terms"],
+    )
+    def test_stage1_svg_defs_emit_once_and_are_namespaced(self, client, route):
+        response = client.get(route)
+        assert response.status_code == 200
+        assert response.text.count('id="ec-chrome-defs"') == 1
+        symbol_ids = re.findall(r'<symbol id="([^"]+)"', response.text)
+        assert symbol_ids
+        assert len(symbol_ids) == len(set(symbol_ids))
+        assert all(symbol_id.startswith("ec-") for symbol_id in symbol_ids)
 
     @pytest.mark.parametrize("name", ["style.css", "world.css"])
     def test_css_hex_literals_are_tokens_or_allowlisted(self, name):

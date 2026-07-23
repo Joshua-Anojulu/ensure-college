@@ -48,3 +48,4 @@ graphify-out/
 tmp/
 .omc/
 .omo/
+.handoff/phase2-qa/
