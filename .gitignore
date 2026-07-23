@@ -47,3 +47,4 @@ graphify-out/
 # Local scratch (debug scripts, Lighthouse runs, screenshots, agent prompts)
 tmp/
 .omc/
+.omo/

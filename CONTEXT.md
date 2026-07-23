@@ -105,7 +105,7 @@ The valley-overlook promo docked on the landing page, linking to the Journey: a 
 _Avoid_: Widget, preview (that word means the three-question matcher demo)
 
 **Journey map**:
-The 2D illustrated dotted-path progress map. On the saved-applications view it is personalized — its milestone landmarks (profile, matches, saved, drafting, submitted, awarded) light up from the student's real [[Saved opportunity]] [[Status]] data, never fabricated. A generic sample version may appear on marketing surfaces. Distinct from the [[Journey]] (the 3D scroll flight) and the [[Teaser]] (the landing promo for it).
+The 2D illustrated progress map on the saved-applications view. Its geography is fixed — the world's established landmarks along the [[Trail]] — and it is personalized by the student's real [[Saved opportunity]] [[Status]] data, never fabricated: saved items appear as markers at the stage they are in, with the student's current frontier flagged. With nothing saved (or signed out) it shows a labeled generic sample path as an invitation. Distinct from the [[Journey]] (the 3D scroll flight) and the [[Teaser]] (the landing promo for it).
 _Avoid_: Journey (that is the 3D flight), progress bar, roadmap
 
 **Forest Light**:
@@ -121,5 +121,5 @@ The marigold dotted path — the one persistent world element. It connects secti
 _Avoid_: Path, line, connector
 
 **World glyph**:
-A hand-inked pictogram used inside illustrated moments (waypoint chips, facts panels). Distinct from the functional icon family used by working controls; the two never mix within one tier.
-_Avoid_: Icon (reserved for the functional family), illustration
+A hand-inked pictogram in the Forest style. Since Phase 2 there is one drawn glyph language across the whole site — illustrated moments and working controls alike — replacing the earlier split between world glyphs and a separate functional icon family. A purely decorative glyph still never poses as a control: anything clickable is a labeled control that carries a glyph, not a glyph acting alone.
+_Avoid_: Icon set (there is only one), illustration

@@ -1048,3 +1048,107 @@ VERDICT: APPROVED at rev 5, round 5 of 5. Awaiting Josh's sign-off; build pipeli
 ## Stage A build review — Codex (thread 019f8137-aef5-7860-9c17-026f4b2c6b29, 3 rounds)
 
 Round 1 (REVISE, 7): accepted stacking isolation, dead teaser connector, unused leaves asset, Save-Data JS-channel e2e, wider+mobile hit-testing, focus-ring check; rejected picture-wrapper (+4 nodes vs 40 cap, srcset-on-img equivalent) and single-path trail (dash pattern IS the dots; mask shares one d) — both logged in the Stage A ledger. Round 2 (REVISE, 3): accepted all — nth-child layout regression from inserted decorative nodes (real bug: stat staggering silently dead), explicit display:none hydration guard for creatures, stale ledger counts. Round 3: APPROVED. Outstanding pre-merge gates: preview harness (cold + pre-consented, median-of-5) and Josh's visual sign-off.
+
+# Plan Review Log: Phase 2 — Forest-world integration
+Act 1 (grill-with-docs) complete 2026-07-22 — plan locked in PLAN.md, CONTEXT.md updated (Journey map sharpened to landmark geography; World glyph unified to one drawn language), ADR 0002 (Level 2 diegesis) created. MAX_ROUNDS=5. Codex model gpt-5.5 (config's gpt-5.6-sol 400s on installed CLI), read-only every round.
+
+## Round 1 — Codex
+Findings:
+
+- [PLAN.md](</c/Users/josha/OneDrive/Documents/ScholarMatch/PLAN.md:80>) treats the Journey map as new, but the repo already has `#journey-map`, JS logic, CSS, and e2e tests with six stops, not the proposed four-landmark model. Fix: make Stage 2 an explicit migration/replacement plan and update `app.js`, CSS, DOM contract, and e2e expectations deliberately.
+
+- [PLAN.md](</c/Users/josha/OneDrive/Documents/ScholarMatch/PLAN.md:25>) says four landmarks, while existing tests pin `Profile`, `Matches`, `Saved`, `Drafting`, `Submitted`, `Awarded`. Fix: define whether those six statuses become per-item markers on four landmarks or remain first-class stops.
+
+- Marker click-to-checklist is underspecified: current checklist DOM only exists after `renderSaved()` builds saved cards, and cards lack stable saved-item anchors. Fix: add stable `data-saved-kind/id` checklist targets and specify scroll/focus/expand behavior plus keyboard tests.
+
+- Saved rows can legally point to catalog items that no longer exist (`scholarship/program/competition: null`), and `renderSaved()` skips those cards while the map still counts them. Fix: define and test a tombstone marker/state for saved opportunities whose catalog record is missing.
+
+- The map algorithm is ambiguous for mixed state: `Status` and checklist completion can disagree, and “current frontier” is undefined for awarded-only, all-rejected, completed checklist but `interested`, or unknown DB statuses. Fix: write a pure `computeJourneyMapState(items)` contract table before implementation.
+
+- [PLAN.md](</c/Users/josha/OneDrive/Documents/ScholarMatch/PLAN.md:38>) routes comps/assets through Higgsfield without a privacy rule, while the product explicitly forbids student data reaching AI providers unless enabled. Fix: require synthetic-only prompts/screenshots and no real profile, saved opportunity, notes, or checklist data in external tools.
+
+- “Comps are the visual contract” is not enough; the repo has no `DESIGN.md`, and the Phase 2 primitives/tokens/states will otherwise live only in screenshots. Fix: create/update a design-system contract for chrome primitives, glyph states, accessibility constraints, and token usage before code.
+
+- [PLAN.md](</c/Users/josha/OneDrive/Documents/ScholarMatch/PLAN.md:47>) says byte caps are “measured and fixed in Stage 1,” which lets the cap be set after scope is already chosen. Fix: set hard gzip/byte/node caps before Stage 1 for `style.css`, `world.css`, inline SVG, map rasters, and JS.
+
+- The biggest perf risk is missed: `/` inlines the whole `style.css`, currently ~119 KB, so any chrome added there hits landing LCP. Fix: require post-LCP SPA chrome in deferred `world.css`, with only explicitly budgeted landing-critical CSS in `style.css`.
+
+- Save-Data fallback is not concrete enough: current Journey map raster is a CSS background in `style.css`, not a lazy JS asset. Fix: add `html.save-data`/`prefers-reduced-data` CSS that removes `journey-map.webp` and an e2e request test proving zero map raster fetches after saved-view activation.
+
+- New map base assets are not covered by the existing hashed world manifest if they stay under `/static/img/journey-map*.webp`. Fix: either move them into `/static/img/world/` with manifest hash/immutable cache tests or add them to the `?v=` lockstep tests.
+
+- Replacing every icon with a world glyph risks turning controls into unlabeled pictograms, violating CONTEXT’s “clickable is a labeled control that carries a glyph” rule. Fix: pre-inventory every replaced icon and test accessible names, focus states, and decorative `aria-hidden` behavior.
+
+- SVG chrome with shared defs/border images can introduce duplicate IDs, pointer-event overlays, or per-card DOM bloat on 30+ catalog cards. Fix: namespace defs, cap added nodes per repeated card, and add `elementFromPoint` hit tests for filters, save buttons, status selects, checklist labels, and card links.
+
+- The plan says Opportunity pages keep SEO-critical blocks byte-identical, but the existing tests mostly cover JSON-LD and honesty labels, not the full visible verification/source/deadline DOM. Fix: snapshot exact verification/source/estimated-deadline snippets for one scholarship, program, and competition.
+
+- Legal pages are in scope for glyph/light chrome, but current legal tests still only assert weak substrings like `13` and `sponsor`. Fix: add snapshot-hash tests for privacy, terms, footer disclaimer, and age-gate copy before touching legal surfaces.
+
+- Status changes can race today: the select sends async PATCH requests without disabling or sequencing, so rapid changes can render the Journey map from an older response. Fix: disable while pending or use per-row request sequencing and add a rapid-status-change e2e.
+
+- Observability is too vague: “post-merge snapshot + prod harness delta” does not say what will be recorded for the new chrome/map. Fix: log resource URLs/bytes, LCP element selector/resource, CLS contributors, long tasks, console errors, map marker count, and Save-Data request inventory per stage.
+
+VERDICT: REVISE
+### Claude's response (rev 2)
+Accepted all 17 findings. Headline changes: Stage 2 rewritten as an explicit migration of the EXISTING six-stop #journey-map (per-item markers on four fixed landmarks; old milestone chips retire; deliberate app.js/CSS/contract/test updates in one diff; rasters move into the hashed world manifest and old journey-map*.webp are removed); computeJourneyMapState(items) pure-function contract table required before implementation (frontier, awarded-only, all-rejected, checklist-vs-status disagreement, unknown statuses, tombstones for null catalog refs matching renderSaved skip behavior); stable data-saved-kind/id checklist anchors + scroll/focus/expand + keyboard e2e; binding synthetic-data-only rule for external AI tools; DESIGN.md as the written chrome/glyph/accessibility contract; byte caps fixed pre-Stage-1 from tonight's measurements (style.css inline <=27KB gzip, world.css <=14KB gzip, app.js +6KB gzip, <=6 nodes/card, namespaced ec-* defs, rasters 90/35KB) with test_pages cap assertions; Save-Data vector-only map + zero-raster e2e on both channels; icon inventory with accessible-name/aria-hidden/focus tests; exact-snippet SEO snapshots (one per lane) and legal snapshot-hash tests BEFORE chrome touches those surfaces; status-select disable-while-pending + rapid-change e2e; observability section enumerating per-stage recorded metrics.
+
+## Round 2 — Codex
+Prior findings are mostly addressed: existing map migration, DESIGN.md, privacy, byte caps, tombstones, marker focus behavior, Save-Data map suppression, legal/SEO snapshots, glyph accessibility, and status-select client races are now in the plan.
+
+Remaining blockers:
+
+- [PLAN.md](C:/Users/josha/OneDrive/Documents/ScholarMatch/PLAN.md:75) says unknown/future DB statuses fall back to `interested` in the Journey map, but [app/models/auth.py](C:/Users/josha/OneDrive/Documents/ScholarMatch/app/models/auth.py:71) makes `status` a strict `Literal`, and [account_routes.py](C:/Users/josha/OneDrive/Documents/ScholarMatch/app/api/account_routes.py:118) constructs that model before the frontend sees it. Fix: either remove this edge case from the frontend contract or include a backend normalization step/test despite “backend out of scope.”
+
+- Prior save-race finding is still unaddressed: [account_routes.py](C:/Users/josha/OneDrive/Documents/ScholarMatch/app/api/account_routes.py:172) does check-then-insert for saves without `IntegrityError` handling, so concurrent double-saves can 500 under the unique constraint. Fix: add backend idempotency via `IntegrityError` rollback + re-select, or explicitly defer this known existing race outside Phase 2.
+
+- [PLAN.md](C:/Users/josha/OneDrive/Documents/ScholarMatch/PLAN.md:42) calls `world.css` deferred, but template/legal pages load it as a normal render-blocking stylesheet in [base.html](C:/Users/josha/OneDrive/Documents/ScholarMatch/app/templates/base.html:18), privacy, and terms. Fix: add representative non-landing perf gates for `/browse`, one Opportunity page, one Guide page, legal/404, or stop calling `world.css` deferred globally.
+
+- Visual acceptance is still under-specified for responsive failures: the plan has desktop/mobile hit-testing and Josh comp review, but no required screenshot/visual QA matrix at 375/768/1280 across treated surfaces. Fix: require Playwright screenshots and visual review at those breakpoints for each chromed surface, including reduced-motion and Save-Data variants where relevant.
+
+- [PLAN.md](C:/Users/josha/OneDrive/Documents/ScholarMatch/PLAN.md:67) says “six Status values,” but CONTEXT defines five: interested, drafting, submitted, awarded, rejected. Fix: say “five Status values; the old six milestone chips retire.”
+
+- [PLAN.md](C:/Users/josha/OneDrive/Documents/ScholarMatch/PLAN.md:115) still says “directory pages,” which is avoided vocabulary; this repo/domain calls them Catalog/browse pages and Opportunity pages. Fix: replace “directory pages” with the exact surfaces: `Browse/Catalog` plus `Opportunity pages`.
+
+VERDICT: REVISE
+### Claude's response (rev 3)
+Accepted: replaced "directory pages" with "Opportunity pages + the Browse hub and its lane listings" per CONTEXT.md vocabulary.
+
+## Round 3 — Codex
+**Findings**
+- [PLAN.md](C:/Users/josha/OneDrive/Documents/ScholarMatch/PLAN.md:75) still requires unknown/future DB statuses to degrade in the frontend, but [auth.py](C:/Users/josha/OneDrive/Documents/ScholarMatch/app/models/auth.py:71) and [account_routes.py](C:/Users/josha/OneDrive/Documents/ScholarMatch/app/api/account_routes.py:117) reject unknown statuses before JS sees them. Fix: either add backend response normalization/tests or remove this edge case from the plan.
+- [PLAN.md](C:/Users/josha/OneDrive/Documents/ScholarMatch/PLAN.md:166) keeps backend/schema out of scope, but the prior duplicate-save race remains in [account_routes.py](C:/Users/josha/OneDrive/Documents/ScholarMatch/app/api/account_routes.py:172), [account_routes.py](C:/Users/josha/OneDrive/Documents/ScholarMatch/app/api/account_routes.py:223), and [account_routes.py](C:/Users/josha/OneDrive/Documents/ScholarMatch/app/api/account_routes.py:274). Fix: add `IntegrityError` rollback/reselect handling for all three save routes or explicitly accept the known race.
+- [PLAN.md](C:/Users/josha/OneDrive/Documents/ScholarMatch/PLAN.md:42) still calls `world.css` deferred, but template/legal pages load it render-blocking via [base.html](C:/Users/josha/OneDrive/Documents/ScholarMatch/app/templates/base.html:19), [privacy.html](C:/Users/josha/OneDrive/Documents/ScholarMatch/app/static/privacy.html:12), and [terms.html](C:/Users/josha/OneDrive/Documents/ScholarMatch/app/static/terms.html:12). Fix: qualify deferred as landing-SPA-only and add route perf gates for `/browse`, Opportunity pages, guides, legal, and 404.
+- [PLAN.md](C:/Users/josha/OneDrive/Documents/ScholarMatch/PLAN.md:124) adds hit-testing but still lacks the required visual screenshot matrix at 375/768/1280 for treated surfaces and states. Fix: add Playwright visual QA screenshots/diffs for every treated route at 375, 768, and 1280, including hover/focus/active/disabled states.
+- [PLAN.md](C:/Users/josha/OneDrive/Documents/ScholarMatch/PLAN.md:67) says “six Status values,” but the domain has five statuses: `interested`, `drafting`, `submitted`, `awarded`, `rejected`. Fix: change this to five Status values and keep “six” only for the old landmark count.
+- [PLAN.md](C:/Users/josha/OneDrive/Documents/ScholarMatch/PLAN.md:89) says old `journey-map*.webp` `?v=` references will be removed, but current references are raw CSS backgrounds in [style.css](C:/Users/josha/OneDrive/Documents/ScholarMatch/app/static/css/style.css:3148) and [style.css](C:/Users/josha/OneDrive/Documents/ScholarMatch/app/static/css/style.css:3213). Fix: explicitly remove the CSS `url("/static/img/journey-map*.webp")` references and delete the old asset files.
+
+Resolved since the last round: directory vocabulary is fixed to Browse/Opportunity pages, legal/SEO protection is stronger, tombstones and Save-Data map behavior are covered, and the status PATCH race is now planned.
+
+VERDICT: REVISE
+### Claude's response (rev 4)
+Accepted all 6: five Status values (my count error); unknown-status frontend degradation removed as unreachable-by-construction (backend SavedStatus validation + PATCH guard cited in the contract table, computeJourneyMapState asserts exhaustiveness over the five known values); world.css deferral qualified as landing/SPA-only with per-stage harness LCP checks for /browse + one Opportunity page + /privacy against pre-stage baseline; Playwright visual QA matrix added (375/768/1280, hover/focus/active/disabled, per-stage diffs judged against signed comps); old map removal now names the raw CSS url() backgrounds (~3148/~3213) and deletes both webp files; duplicate-save IntegrityError race explicitly accepted as out-of-scope known issue, queued as its own backend follow-up.
+
+## Round 4 — Codex
+**Findings**
+- [PLAN.md](C:/Users/josha/OneDrive/Documents/ScholarMatch/PLAN.md:79) adds tombstone markers, but [PLAN.md](C:/Users/josha/OneDrive/Documents/ScholarMatch/PLAN.md:87) makes markers checklist buttons while tombstone rows have no rendered card/checklist because [app.js](C:/Users/josha/OneDrive/Documents/ScholarMatch/app/static/js/app.js:2605) skips missing catalog records. Fix: define tombstone markers as non-interactive summary markers, or render a tombstone card with a stable anchor.
+- [PLAN.md](C:/Users/josha/OneDrive/Documents/ScholarMatch/PLAN.md:46) says non-landing LCP gets “no regression beyond run noise,” which is not an enforceable gate. Fix: set a numeric 5-run median tolerance, e.g. `<= baseline + 100ms` and `CLS <= 0.1`, for each measured route.
+- [PLAN.md](C:/Users/josha/OneDrive/Documents/ScholarMatch/PLAN.md:82) now treats unknown/future statuses as unreachable, but the DB columns are plain strings with no `CHECK` constraint in [models.py](C:/Users/josha/OneDrive/Documents/ScholarMatch/app/db/models.py:138), [models.py](C:/Users/josha/OneDrive/Documents/ScholarMatch/app/db/models.py:161), and [models.py](C:/Users/josha/OneDrive/Documents/ScholarMatch/app/db/models.py:184). Fix: either scope the claim to “API-written rows only” with a response-validation test, or add a DB/backend constraint despite backend being out of scope.
+- [PLAN.md](C:/Users/josha/OneDrive/Documents/ScholarMatch/PLAN.md:31) and [PLAN.md](C:/Users/josha/OneDrive/Documents/ScholarMatch/PLAN.md:108) still depend on “tonight” for credits expiring on 2026-07-23, which is now today. Fix: replace the relative deadline with a concrete cutoff/status: completed artifact paths, or fallback trigger by exact time/timezone.
+
+Prior blockers mostly resolved: status count, raw map CSS references, visual QA breakpoints, world.css deferral wording, duplicate-save race scoping, and Browse/Opportunity vocabulary are now covered.
+
+VERDICT: REVISE
+### Claude's response (rev 5)
+Accepted all 4: tombstone markers are non-interactive aggregated summary markers (count + accessible label, aria-disabled, out of the tab sequence) since renderSaved renders no card to anchor to; non-landing route gates are numeric (5-run median LCP <= baseline + 100ms, CLS <= 0.1 per route); unknown-status claim scoped to API-written rows with the DB columns acknowledged as unconstrained strings, so computeJourneyMapState keeps a defensive default (unrecognized -> interested position, unit-tested with a synthetic bad row); Stage 0 rewritten from a relative deadline to completed status with artifact paths (MANIFEST.md) and the two ungenerated assets reassigned to hand-authored SVG.
+
+## Round 5 — Codex
+No blocking findings in Rev 5.
+
+Prior blockers are addressed: tombstone markers are now non-interactive, non-landing LCP has a numeric 5-run gate, unknown statuses are defensively handled despite unconstrained DB strings, Stage 0 is marked complete with artifact paths, visual QA breakpoints remain explicit, and the duplicate-save race is accepted out of scope.
+
+One cleanup: [PLAN.md](C:/Users/josha/OneDrive/Documents/ScholarMatch/PLAN.md:180) still says “Higgsfield output quality tonight is a deadline risk,” contradicting the completed Stage 0 status and manifest. Fix: replace that risk with the remaining hand-authored SVG risk for the carved sign and marginalia, or remove it.
+
+VERDICT: APPROVED
+### Resolution
+VERDICT: APPROVED at rev 5, round 5 of 5. The one non-blocking cleanup (stale "tonight" risk line) applied post-approval: replaced with the hand-authored SVG risk + marginalia-omission fallback. Awaiting Josh's sign-off; then Stage 1 build per the plan (builder TBD: Claude or codex-build).
