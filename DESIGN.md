@@ -50,3 +50,38 @@ Every glyph is decorative unless the table names an accessible control. Clickabl
 Level 2 is the maximum for Stage 1 work surfaces. Cards, filters, form frames, tabs, legal panels, and tracker surfaces may look like paper, wood, brass, ink, and trail signs. They may not gain creatures, environmental props that compete with controls, or world geography that implies navigation.
 
 Level 3 remains reserved for immersive surfaces: the existing hero world, the Journey, the Journey map migration in Stage 2, and marginalia creatures in Stage 3. Stage 1 must not change `/journey`, `#journey-map`, or add marginalia.
+
+## Journey Map State Contract (Stage 2)
+
+`computeJourneyMapState(items)` is a pure function. Inputs are pre-derived by
+the caller so the function needs no clock, no DOM, and no fetch: each item is
+`{ kind, id, title, status, deadlineSortKey, hasCatalog }`, where
+`deadlineSortKey` is the existing real -> estimated -> none ordering already
+used by the lanes, and `hasCatalog` is false when the saved row's catalog
+record is gone (renderSaved() skips these). Output:
+`{ sample, frontier, markers, tombstoneCount, rejected }`.
+
+Geography: fixed landmarks along the Trail - Profile cabin, Essays grove,
+Deadlines watchtower, Award summit - over the map-base-A painting; a side
+clearing off the trail holds rejected items.
+
+| # | Input condition | Output |
+|---|---|---|
+| 1 | `items` empty (nothing saved / signed out) | `sample: true` - labeled generic sample path, no personal markers |
+| 2 | `status: "interested"` | marker on the cabin->grove segment |
+| 3 | `status: "drafting"` | marker on the grove->watchtower segment |
+| 4 | `status: "submitted"` | marker at the watchtower |
+| 5 | `status: "awarded"` | marker at the summit |
+| 6 | `status: "rejected"` | marker in the side clearing; excluded from frontier |
+| 7 | unrecognized status string (DB columns are unconstrained; API rejects these, belt-and-suspenders) | treated as `interested`, no crash, no console noise |
+| 8 | `hasCatalog: false` (tombstone) | not an individual marker; folded into ONE aggregated faded marker near the trailhead with `tombstoneCount`, non-interactive, `aria-disabled`, out of the tab sequence, label "N saved items whose listings were removed" |
+| 9 | checklist complete but status still `interested` | Status is authoritative: position does NOT advance; checklist progress never moves markers |
+| 10 | frontier | the landmark the most advanced non-rejected, non-tombstone item is walking toward: interested->grove, drafting->watchtower, submitted->summit, awarded->summit with the flag planted at it |
+| 11 | only rejected items (plus tombstones) | frontier: cabin; side clearing populated; not sample mode |
+| 12 | only tombstones | frontier: cabin; real map (not sample) with only the aggregated tombstone marker |
+| 13 | ordering within a segment | by `deadlineSortKey`, then title; positions staggered deterministically by index (no randomness) |
+| 14 | marker interaction (non-tombstone) | markers are buttons in one tab sequence with visible focus rings; activation scrolls to and expands that item's checklist via its `data-saved-kind`/`data-saved-id` anchor and moves focus to it |
+
+Unit tests cover every row, including a synthetic bad-status row (7) and a
+synthetic tombstone row (8). The function asserts exhaustiveness over the
+five known Status values with row 7 as the only fallback path.
