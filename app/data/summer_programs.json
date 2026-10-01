@@ -82,7 +82,8 @@
         "source_url": "https://mites.mit.edu/discover-mites/mites-summer/",
         "last_verified_at": "2026-06-26",
         "notes": "Official MITES Summer and MITES application pages: entirely free except transportation, residential at MIT, six weeks late June to early August, eligible to high school juniors who are U.S. citizens or permanent residents. Application checklist source confirms online application, transcript, short answers, activities, recommendations, and optional test scores. A dated upcoming-cycle deadline is not published, so the deadline field is left unknown."
-      }
+      },
+      "estimated_deadline": "2026-02-01"
     },
     {
       "id": "summer-science-program",
@@ -177,7 +178,7 @@
       "location": "Boston, MA (Boston University)",
       "program_dates": "About six weeks in summer",
       "deadline": "VERIFY",
-      "estimated_deadline": "2027-02-27",
+      "estimated_deadline": "2026-02-27",
       "eligibility": {
         "min_gpa": null,
         "fields_of_study": [
@@ -312,7 +313,7 @@
       "location": "Lubbock, TX (Texas Tech University)",
       "program_dates": "2026 program dates: June 21 to August 6",
       "deadline": "VERIFY",
-      "estimated_deadline": "2027-02-16",
+      "estimated_deadline": "2026-02-16",
       "eligibility": {
         "min_gpa": null,
         "fields_of_study": [
@@ -565,7 +566,7 @@
       "location": "Stony Brook, NY",
       "program_dates": "2026 program dates: June 29 to August 7",
       "deadline": "VERIFY",
-      "estimated_deadline": "2027-02-05",
+      "estimated_deadline": "2026-02-05",
       "eligibility": {
         "min_gpa": null,
         "fields_of_study": [
@@ -658,8 +659,7 @@
       "program_format": "residential",
       "location": "Multiple University of California campuses",
       "program_dates": "2026 program dates: July 5 to July 31 or August 1, depending on campus",
-      "deadline": "VERIFY",
-      "estimated_deadline": "2027-02-06",
+      "deadline": "2027-02-05",
       "eligibility": {
         "min_gpa": null,
         "fields_of_study": [
@@ -742,8 +742,7 @@
       "program_format": "hybrid",
       "location": "Boston, MA",
       "program_dates": "2026 residential dates: June 28 to August 7; commuter dates: June 29 to August 7",
-      "deadline": "VERIFY",
-      "estimated_deadline": "2027-02-04",
+      "deadline": "2027-02-03",
       "eligibility": {
         "min_gpa": null,
         "fields_of_study": [
@@ -848,7 +847,7 @@
       "location": "Virtual Jumpstart plus Pittsburgh, PA (Carnegie Mellon University)",
       "program_dates": "2026 virtual Jumpstart: June 15-16; in-person program: June 20 to August 1",
       "deadline": "VERIFY",
-      "estimated_deadline": "2027-02-01",
+      "estimated_deadline": "2026-02-01",
       "eligibility": {
         "min_gpa": null,
         "fields_of_study": [
@@ -948,8 +947,7 @@
       "program_format": "residential",
       "location": "Notre Dame, IN",
       "program_dates": "2026 program dates: July 18 to July 29",
-      "deadline": "VERIFY",
-      "estimated_deadline": "2027-01-21",
+      "deadline": "2027-01-20",
       "eligibility": {
         "min_gpa": null,
         "fields_of_study": [
@@ -1025,8 +1023,7 @@
       "program_format": "residential",
       "location": "New Haven, CT (Yale University)",
       "program_dates": "2026 residential sessions: June 21 to July 3, July 5 to July 17, or July 19 to July 31",
-      "deadline": "VERIFY",
-      "estimated_deadline": "2027-01-07",
+      "deadline": "2027-01-06",
       "eligibility": {
         "min_gpa": null,
         "fields_of_study": [
@@ -1114,7 +1111,7 @@
       "program_format": "residential",
       "location": "Cambridge, MA (MIT)",
       "program_dates": "About six weeks in summer (one week coursework plus five-week research internship)",
-      "deadline": "VERIFY",
+      "deadline": "2026-12-11",
       "eligibility": {
         "min_gpa": null,
         "fields_of_study": [
@@ -1186,7 +1183,7 @@
       "location": "Eligible U.S. program markets (local nonprofit placement)",
       "program_dates": "Six weeks mid-June through July 2026, including mandatory 3-day Leadership Summit (June 16–18, 2026)",
       "deadline": "VERIFY",
-      "estimated_deadline": "2027-03-16",
+      "estimated_deadline": "2026-03-16",
       "eligibility": {
         "min_gpa": null,
         "fields_of_study": [],
@@ -1362,8 +1359,7 @@
       "program_format": "commuter",
       "location": "NIH campuses (Bethesda, MD and other sites)",
       "program_dates": "SIP 2026 runs May 11 through August 31, 2026",
-      "deadline": "VERIFY",
-      "estimated_deadline": "2027-02-18",
+      "deadline": "2027-01-26",
       "eligibility": {
         "min_gpa": null,
         "fields_of_study": [
@@ -1436,8 +1432,7 @@
       "program_format": "residential",
       "location": "Bar Harbor, ME and Farmington, CT",
       "program_dates": "10 weeks: May 30 – August 7, 2026 (Bar Harbor) or May 30 – August 10, 2026 (Farmington)",
-      "deadline": "VERIFY",
-      "estimated_deadline": "2027-01-26",
+      "deadline": "2027-01-25",
       "eligibility": {
         "min_gpa": null,
         "fields_of_study": [
@@ -1548,7 +1543,7 @@
       "location": "Virtual plus optional on-site at UT Austin, TX",
       "program_dates": "June–July 2026: virtual work June–July 3; on-site July 5–18, 2026; symposium July 20–21, 2026",
       "deadline": "VERIFY",
-      "estimated_deadline": "2027-02-22",
+      "estimated_deadline": "2026-02-22",
       "eligibility": {
         "min_gpa": null,
         "fields_of_study": [
@@ -1640,7 +1635,7 @@
       "location": "Stanford, CA",
       "program_dates": "Eight weeks: June 8 – July 30, 2026",
       "deadline": "VERIFY",
-      "estimated_deadline": "2027-02-21",
+      "estimated_deadline": "2026-02-21",
       "eligibility": {
         "min_gpa": null,
         "fields_of_study": [
@@ -1701,7 +1696,7 @@
       "location": "Online (U.S. residents only during program)",
       "program_dates": "June through December (summer STEM courses plus fall college prep)",
       "deadline": "VERIFY",
-      "estimated_deadline": "2027-02-01",
+      "estimated_deadline": "2026-02-01",
       "eligibility": {
         "min_gpa": null,
         "fields_of_study": [
@@ -1866,7 +1861,7 @@
       "location": "Philadelphia, PA",
       "program_dates": "Three weeks; multiple sessions June-August 2026",
       "deadline": "VERIFY",
-      "estimated_deadline": "2027-03-18",
+      "estimated_deadline": "2026-03-18",
       "eligibility": {
         "min_gpa": 3.5,
         "fields_of_study": [
@@ -2384,7 +2379,7 @@
       "program_format": "hybrid",
       "location": "Multiple U.S. campuses",
       "program_dates": "Multi-week summer sessions",
-      "deadline": "VERIFY",
+      "deadline": "2027-05-10",
       "eligibility": {
         "min_gpa": null,
         "fields_of_study": [],
@@ -2593,7 +2588,7 @@
       "location": "Philadelphia, PA",
       "program_dates": "Three weeks in summer",
       "deadline": "VERIFY",
-      "estimated_deadline": "2027-03-18",
+      "estimated_deadline": "2026-03-18",
       "eligibility": {
         "min_gpa": null,
         "fields_of_study": [
@@ -2640,7 +2635,7 @@
       "location": "Philadelphia, PA",
       "program_dates": "Two weeks in summer",
       "deadline": "VERIFY",
-      "estimated_deadline": "2027-03-18",
+      "estimated_deadline": "2026-03-18",
       "eligibility": {
         "min_gpa": null,
         "fields_of_study": [
@@ -3558,7 +3553,7 @@
       "location": "Princeton University, Princeton, NJ",
       "program_dates": "5-6 week internships during summer 2026; exact dates set by each research lab/department (weekday daytime only, no evenings/weekends)",
       "deadline": "VERIFY",
-      "estimated_deadline": "2027-03-15",
+      "estimated_deadline": "2026-03-15",
       "eligibility": {
         "min_gpa": "VERIFY",
         "fields_of_study": [
