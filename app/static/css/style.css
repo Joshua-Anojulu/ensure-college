@@ -1580,8 +1580,10 @@ html.motion-ready .saved-count.count-pop { animation: count-pop 360ms var(--ease
 }
 
 @media (max-width: 360px) {
-  .header-inner { padding-inline: 0.75rem; }
+  .header-inner { gap: 0.4rem; padding-inline: 0.75rem; }
   .brand-name { font-size: 1.05rem; }
+  .site-header .brand { gap: 0.5rem; }
+  .site-header .btn-ghost { padding-inline: 0.5rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {

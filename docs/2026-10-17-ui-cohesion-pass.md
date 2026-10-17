@@ -137,4 +137,5 @@ At the branch head:
 - Request suite: 462 passed (EC-01 baseline 457; +5 placeholder-labeling tests).
 - E2E suite: 132 passed, 0 failed, with pages told they have 8 cores (see the last point). The fixes are covered by 47 new test cases (27 tests, some run per page or width) in `tests/e2e/test_cohesion.py`.
 - `scripts/validate_dataset.py`: exit 0, no structural errors. No catalog file changed.
+- GitHub CI caught one case the sandbox runs missed. "load" can fire before Satoshi swaps in, and on the fallback font the privacy and terms headers ran 2 to 4px past a 320px screen. The headers now have room on either font at 320px, and the overflow test checks both states: once after the web fonts load, once with them blocked.
 - In a 2-CPU sandbox, `test_landing_teaser_paints` and `test_teaser_painting_first_and_same_box_swap` fail at the EC-01 baseline too: journey-teaser.js treats the machine as low-end and keeps the static painting. Both pass when the page reports 8 cores.

@@ -72,6 +72,7 @@ TEMPLATE_PAGES = [
     "/guides/essays",
     "/journey",
     "/privacy",
+    "/terms",
     "/scholarships/does-not-exist",
 ]
 
@@ -80,13 +81,28 @@ TEMPLATE_PAGES = [
 def test_template_family_never_scrolls_sideways(browser, live_server, width):
     """The template header's three links wrapped into stacked fragments and
     pushed every Opportunity page 10-80px wide on phones, and directory meta
-    (a competition's whole recognition paragraph, nowrap) ran 3000px wide."""
-    ctx = _context(browser, width, reduced_motion="reduce")
-    page = ctx.new_page()
-    for path in TEMPLATE_PAGES:
-        page.goto(f"{live_server}{path}", wait_until="load")
-        assert page.evaluate(SIDEWAYS) <= 0, f"{path} scrolls sideways at {width}px"
-    ctx.close()
+    (a competition's whole recognition paragraph, nowrap) ran 3000px wide.
+
+    Checked in both font states a phone actually shows. "load" can fire
+    before Satoshi swaps in, so a single check at "load" measured whichever
+    font won the race: on the fallback font the legal pages' "Back to
+    homepage" ran 2-4px past a 320px screen, which passed locally and failed
+    in CI. The web-font pass waits for the fonts; the fallback pass blocks
+    them, the layout a phone shows until they arrive (or if they never do).
+    """
+    for fonts in ("web", "fallback"):
+        ctx = _context(browser, width, reduced_motion="reduce")
+        if fonts == "fallback":
+            ctx.route("**/*.woff2", lambda route: route.abort())
+        page = ctx.new_page()
+        for path in TEMPLATE_PAGES:
+            page.goto(f"{live_server}{path}", wait_until="load")
+            if fonts == "web":
+                page.evaluate("() => document.fonts.ready.then(() => true)")
+            assert page.evaluate(SIDEWAYS) <= 0, (
+                f"{path} scrolls sideways at {width}px on the {fonts} font"
+            )
+        ctx.close()
 
 
 @pytest.mark.parametrize("width", [390, 1440])
