@@ -678,9 +678,11 @@ def test_unknown_award_is_labeled_never_shown_raw(page):
     card = page.locator("#catalog-container .match-card", has_text="Golden Door")
     card.first.scroll_into_view_if_needed()
     award = card.first.locator(".stat-award")
-    assert award.locator(".stat-value").inner_text().strip() == "Not listed"
-    assert award.locator(".stat-note").inner_text().strip() == "Confirm on sponsor site"
-    assert "VERIFY" not in award.inner_text()
+    # textContent: cards are content-visibility: auto, so an offscreen
+    # card's innerText can be empty.
+    assert award.locator(".stat-value").text_content().strip() == "Not listed"
+    assert award.locator(".stat-note").text_content().strip() == "Confirm on sponsor site"
+    assert "VERIFY" not in award.text_content()
 
 
 def test_tracker_controls_have_accessible_names(page):
