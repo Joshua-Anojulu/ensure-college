@@ -12,11 +12,11 @@
   <meta property="og:url" content="https://ensurecollege.com/journey">
   <meta property="og:image" content="/static/og-image.png">
   <meta name="twitter:card" content="summary_large_image">
-  <link rel="icon" href="/static/favicon.svg?v=20260713-3" type="image/svg+xml">
+  <link rel="icon" href="/static/favicon.svg?v=20260715-3" type="image/svg+xml">
   <meta name="theme-color" content="#f1f2ee">
   <link rel="preload" href="/static/fonts/CabinetGrotesk-Extrabold.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/static/fonts/Satoshi-Regular.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/static/css/style.css?v=20260721-6">
+  <link rel="stylesheet" href="/static/css/style.css?v=20261017-2">
   <style>
     .journey-page { overflow-x: hidden; }
 
@@ -117,14 +117,15 @@
       padding: 0.35rem 0.5rem;
       border: 0;
       border-radius: var(--radius-pill);
-      background: transparent;
+      /* Stops not yet reached recede by color on a light pill, not by
+         opacity: at 0.55 over the scene their labels read 2.2:1. */
+      background: color-mix(in srgb, var(--surface) 72%, transparent);
       color: var(--muted);
       font: inherit;
       font-size: 0.72rem;
       font-weight: 700;
       letter-spacing: 0.02em;
       cursor: pointer;
-      opacity: 0.55;
       transition: opacity 200ms var(--ease), color 200ms var(--ease), background 200ms var(--ease);
     }
 
@@ -141,7 +142,7 @@
     .journey-rail button:focus-visible {
       opacity: 1;
       color: var(--ink);
-      background: color-mix(in srgb, var(--surface) 80%, transparent);
+      background: color-mix(in srgb, var(--surface) 94%, transparent);
     }
 
     .journey-rail button.is-active {
@@ -165,9 +166,16 @@
       text-align: left;
     }
 
+    /* The intro rides the scene's sky and, on phones, the first island:
+       muted grey there measured 2.4-4.0:1. A paper chip, like the landing's
+       other copy-over-art, keeps it legible. */
     .journey-head p {
+      width: fit-content;
       max-width: 40ch;
-      color: var(--muted);
+      border-radius: var(--radius-sm);
+      color: var(--ink-soft);
+      background: color-mix(in srgb, var(--canvas) 84%, transparent);
+      box-shadow: 0 0 0 0.45rem color-mix(in srgb, var(--canvas) 84%, transparent);
       font-size: 0.95rem;
     }
 
@@ -270,6 +278,6 @@
     </p>
   </footer>
 
-  <script src="/static/js/journey.js?v=20260721-6"></script>
+  <script src="/static/js/journey.js?v=20261017-2"></script>
 </body>
 </html>

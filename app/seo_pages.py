@@ -91,28 +91,56 @@ def _format_date(iso: str) -> str:
         return iso
 
 
+# The label every surface shows for a VERIFY placeholder ("we do not know"),
+# matching the app's cards. A placeholder is never shown raw: some carry a
+# curator's research note after the token, which is not a sponsor fact.
+UNKNOWN_LABEL = "Not listed"
+UNKNOWN_NOTE = "Confirm on sponsor site"
+
+
+def _is_placeholder(value) -> bool:
+    return isinstance(value, str) and value.strip().upper().startswith("VERIFY")
+
+
 def _award_text(kind_key: str, entry) -> str:
+    """The award, cost, or recognition as published; "" when it is unknown."""
     if kind_key == "scholarships":
         amount = entry.award_amount
-        if isinstance(amount, (int, float)):
-            return f"${amount:,.0f}"
-        return str(amount)
-    if kind_key == "programs":
-        return str(entry.cost) if entry.cost else ""
-    return str(entry.recognition) if getattr(entry, "recognition", None) else ""
+    elif kind_key == "programs":
+        amount = entry.cost
+    else:
+        amount = getattr(entry, "recognition", None)
+    if isinstance(amount, (int, float)) and not isinstance(amount, bool):
+        return f"${amount:,.0f}"
+    if not amount or _is_placeholder(amount):
+        return ""
+    return str(amount)
 
 
 def _deadline_parts(entry) -> tuple[str, str]:
-    """Return (value, note). Estimated/unverified deadlines carry the site's labeling."""
+    """Return (value, note), labeled exactly as the app's cards label them.
+
+    An estimate is shown as one; an estimate whose date has passed is last
+    cycle's date, so it says so rather than posing as the upcoming deadline;
+    an unknown deadline is labeled, never described as "not yet published"
+    (we do not know that).
+    """
     deadline = getattr(entry, "deadline", None)
     estimated = getattr(entry, "estimated_deadline", None)
-    if deadline and deadline not in ("VERIFY", "rolling"):
+    if deadline and not _is_placeholder(deadline) and deadline != "rolling":
         return _format_date(deadline), ""
     if deadline == "rolling":
-        return "Rolling", ""
+        return "Rolling", "Applications accepted anytime"
     if estimated:
+        try:
+            past = date.fromisoformat(estimated) < date.today()
+        except ValueError:
+            past = False
+        if past:
+            last = date.fromisoformat(estimated).strftime("%B %Y")
+            return "Not yet announced", f"Last cycle closed {last}; check sponsor site"
         return f"~{_format_date(estimated)}", "Estimated; confirm on sponsor site"
-    return "See sponsor site", "Not yet published; confirm on sponsor site"
+    return UNKNOWN_LABEL, UNKNOWN_NOTE
 
 
 _HUMANIZE_WORD_MAP = {
@@ -203,6 +231,11 @@ def detail_context(kind_key: str, entry, request: Request) -> dict:
     canonical = f"{base}/{kind_key}/{entry.id}"
     award = _award_text(kind_key, entry)
     deadline_text, deadline_note = _deadline_parts(entry)
+    # The facts panel labels an unknown award; the title and meta only ever
+    # carry a real one.
+    award_display, award_note = award, ""
+    if not award:
+        award_display, award_note = UNKNOWN_LABEL, UNKNOWN_NOTE
     verification = getattr(entry, "verification", None)
     verified_line = ""
     source_url = ""
@@ -223,7 +256,8 @@ def detail_context(kind_key: str, entry, request: Request) -> dict:
         "kind": kind,
         "entry": entry,
         "org": getattr(entry, kind["org_attr"]),
-        "award_text": award,
+        "award_text": award_display,
+        "award_note": award_note,
         "deadline_text": deadline_text,
         "deadline_note": deadline_note,
         "eligibility_rows": _eligibility_rows(entry),
@@ -288,6 +322,9 @@ def browse_directory(kind_key: str, request: Request) -> HTMLResponse:
     for entry in entries:
         deadline_text, _note = _deadline_parts(entry)
         award = _award_text(kind_key, entry)
+        # Labels read as words mid-line ("deadline rolling"); dates stay as dates.
+        if deadline_text in ("Rolling", UNKNOWN_LABEL, "Not yet announced"):
+            deadline_text = deadline_text.lower()
         meta = " · ".join(part for part in (award, f"deadline {deadline_text}") if part)
         rows.append({"href": f"/{kind_key}/{entry.id}", "name": entry.name, "meta": meta})
     rows.sort(key=lambda r: r["name"].lower())

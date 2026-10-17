@@ -658,39 +658,53 @@ async def resume_extract(
         ) from None
 
 
-def _unsubscribe_confirmation_page(token: str) -> str:
-    escaped_token = html.escape(token, quote=True)
+def _reminder_page(title: str, body: str) -> str:
+    """Wrap a reminder-settings page in the site's Forest Light chrome.
+
+    These pages answer emailed links, so they stand alone (no app.js). The
+    stylesheet link is unversioned on purpose: static files revalidate on
+    every load (max-age=0) and the edge cache is keyed per deployment, so it
+    cannot go stale, and it adds no new ?v= lockstep location.
+    """
     return (
         "<!DOCTYPE html><html lang='en'><head><meta charset='utf-8'>"
         "<meta name='viewport' content='width=device-width, initial-scale=1'>"
-        "<title>Turn off reminders</title>"
-        "<style>body{font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:#eae8e1;"
-        "color:#17181c;display:grid;place-items:center;min-height:100vh;margin:0}"
-        ".c{max-width:30rem;padding:2rem;background:#fbfaf7;border:1px solid #ddd9cd;border-radius:14px;text-align:center}"
-        "button{border:0;border-radius:10px;background:#1b2430;color:#fbfaf7;padding:.8rem 1.1rem;font-weight:700;cursor:pointer}"
-        "a{color:#1b2430}</style></head><body><div class='c'>"
+        f"<title>{title} | EnsureCollege</title>"
+        "<meta name='robots' content='noindex'>"
+        "<link rel='icon' href='/static/favicon.svg?v=20260715-3' type='image/svg+xml'>"
+        "<link rel='stylesheet' href='/static/css/style.css'>"
+        "</head><body class='page-static'>"
+        "<header class='site-header'><div class='header-inner'>"
+        "<a class='brand brand-link' href='/' aria-label='EnsureCollege home'>"
+        "<span class='brand-mark' aria-hidden='true'></span>"
+        "<div><p class='brand-name'>EnsureCollege</p><p class='brand-tag'>Reminder emails</p></div>"
+        "</a></div></header>"
+        "<main id='main' class='main legal'><section class='panel legal-content'>"
+        f"{body}"
+        "</section></main></body></html>"
+    )
+
+
+def _unsubscribe_confirmation_page(token: str) -> str:
+    escaped_token = html.escape(token, quote=True)
+    return _reminder_page(
+        "Turn off reminders",
         "<h1>Turn off reminders?</h1>"
         "<p>Confirm that you want to stop deadline reminder and new-match emails.</p>"
         "<form method='post' action='/reminders/unsubscribe'>"
         f"<input type='hidden' name='token' value='{escaped_token}'>"
-        "<button type='submit'>Turn off reminders</button>"
-        "</form><p><a href='/'>Back to EnsureCollege</a></p></div></body></html>"
+        "<button type='submit' class='btn-primary'>Turn off reminders</button>"
+        "</form><p><a href='/'>Back to EnsureCollege</a></p>",
     )
 
 
 def _unsubscribe_complete_page() -> str:
-    return (
-        "<!DOCTYPE html><html lang='en'><head><meta charset='utf-8'>"
-        "<meta name='viewport' content='width=device-width, initial-scale=1'>"
-        "<title>Reminders off</title>"
-        "<style>body{font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:#eae8e1;"
-        "color:#17181c;display:grid;place-items:center;min-height:100vh;margin:0}"
-        ".c{max-width:30rem;padding:2rem;background:#fbfaf7;border:1px solid #ddd9cd;border-radius:14px;text-align:center}"
-        "a{color:#1b2430}</style></head><body><div class='c'>"
+    return _reminder_page(
+        "Reminders off",
         "<h1>Reminders turned off</h1>"
         "<p>You won't get deadline reminder or new-match emails anymore. You can turn them back on "
         "anytime under Account settings.</p>"
-        "<p><a href='/'>Back to EnsureCollege</a></p></div></body></html>"
+        "<p><a href='/'>Back to EnsureCollege</a></p>",
     )
 
 
@@ -760,13 +774,40 @@ def reminders_run(
     }
 
 
+# Vercel's CDN caches a function response only when Cache-Control carries
+# s-maxage, strips that directive before the browser sees it, and keys its
+# cache per deployment, so every deploy starts empty. max-age=0 keeps browsers
+# revalidating exactly as before; the edge answers instead of a function that
+# may be cold. Only for bytes that are identical for every visitor.
+_EDGE_CACHE_CONTROL = "public, max-age=0, s-maxage=86400"
+
+
+def _edge_cacheable(request: StarletteRequest, response: Response) -> bool:
+    """The option vocabulary and static assets: never HTML (including the raw
+    templates StaticFiles can serve), never an error, never a per-user reply."""
+    path = request.url.path
+    if request.method not in {"GET", "HEAD"} or response.status_code not in {200, 304}:
+        return False
+    if path != "/vocabulary" and not path.startswith("/static/"):
+        return False
+    if path.lower().endswith(".html") or response.headers.get("content-type", "").startswith("text/html"):
+        return False
+    # A cookie or a Vary on Cookie marks the reply as per-user. Vercel would
+    # refuse to cache either, but the header must not claim otherwise.
+    if "set-cookie" in response.headers:
+        return False
+    return "cookie" not in response.headers.get("vary", "").lower()
+
+
 @app.middleware("http")
-async def _world_asset_cache_headers(request: Request, call_next):
+async def _cache_headers(request: Request, call_next):
     # World art ships content-hashed (see scripts/generate_world_assets.py),
     # so these responses — and only these — are safe to cache forever.
     response = await call_next(request)
     if request.url.path.startswith("/static/img/world/"):
         response.headers["Cache-Control"] = "public, max-age=31536000, immutable"
+    elif _edge_cacheable(request, response):
+        response.headers["Cache-Control"] = _EDGE_CACHE_CONTROL
     return response
 
 

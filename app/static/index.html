@@ -28,7 +28,7 @@
        the .hero-stage <source> srcset (unversioned) or the preload
        double-fetches instead of deduping. -->
   <link rel="preload" href="/static/img/hero-forest-mobile.webp" as="image" media="(max-width: 768px)" fetchpriority="high">
-  <link rel="prefetch" href="/static/css/style.css?v=20260721-6" as="style">
+  <link rel="prefetch" href="/static/css/style.css?v=20261017-2" as="style">
   <script id="site-consent-boot">
 (() => {
   const CONSENT_KEY = "site_consent_v1";
@@ -477,8 +477,8 @@
       </div>
       <div class="proof-photo photo">
         <picture>
-          <source type="image/webp" srcset="/static/img/campus-quad-380.webp?v=20260721-6 380w, /static/img/campus-quad-760.webp?v=20260721-6 760w" sizes="(max-width: 760px) calc(100vw - 2rem), 48vw">
-          <img src="/static/img/campus-quad.jpg?v=20260721-6" alt="Students walking across a college campus between classes" loading="lazy" decoding="async" width="1200" height="800" sizes="(max-width: 760px) calc(100vw - 2rem), 48vw">
+          <source type="image/webp" srcset="/static/img/campus-quad-380.webp?v=20261017-2 380w, /static/img/campus-quad-760.webp?v=20261017-2 760w" sizes="(max-width: 760px) calc(100vw - 2rem), 48vw">
+          <img src="/static/img/campus-quad.jpg?v=20261017-2" alt="Students walking across a college campus between classes" loading="lazy" decoding="async" width="1200" height="800" sizes="(max-width: 760px) calc(100vw - 2rem), 48vw">
         </picture>
       </div>
       <div class="proof-copy">
@@ -1062,6 +1062,18 @@
         </p>
       </div>
 
+      <div id="saved-signed-out" class="results-empty panel" hidden>
+        <h3>Log in to keep an application plan</h3>
+        <p>
+          Saving needs a free account. Save scholarships, summer programs, and competitions, then track
+          their checklists, statuses, and recommendation letters here.
+        </p>
+        <div class="saved-signed-out-actions">
+          <button type="button" class="btn-primary" id="saved-signup-btn">Create a free account</button>
+          <button type="button" class="btn-secondary" id="saved-login-btn">Log in</button>
+        </div>
+      </div>
+
       <div id="saved-container"></div>
 
       <div id="rec-letters-panel" class="rec-letters panel" hidden>
@@ -1116,10 +1128,10 @@
     </div>
   </div>
 
-  <script defer src="/static/js/vendor/gsap.min.js?v=20260721-6"></script>
-  <script defer src="/static/js/vendor/ScrollTrigger.min.js?v=20260721-6"></script>
-  <script defer src="/static/js/landing-motion.js?v=20260721-6"></script>
-  <script defer src="/static/js/journey-teaser.js?v=20260721-6"></script>
-  <script src="/static/js/app.js?v=20260721-6"></script>
+  <script defer src="/static/js/vendor/gsap.min.js?v=20261017-2"></script>
+  <script defer src="/static/js/vendor/ScrollTrigger.min.js?v=20261017-2"></script>
+  <script defer src="/static/js/landing-motion.js?v=20261017-2"></script>
+  <script defer src="/static/js/journey-teaser.js?v=20261017-2"></script>
+  <script src="/static/js/app.js?v=20261017-2"></script>
 </body>
 </html>

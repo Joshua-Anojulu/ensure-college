@@ -44,6 +44,22 @@ body.world-frame::after {
   mix-blend-mode: multiply;
 }
 
+/* Legibility (ADR 0001: pass/fail, more mist, never smaller type). Page
+   text starts inside the frame band, and breadcrumbs, eyebrows, and lane
+   summaries measured 1.4-3.9:1 over the art. The canopy fades out down the
+   band, and the fern corners are sized to the gutter so they never sit
+   under content (they step aside entirely below about 1200px). */
+body.world-frame::before {
+  -webkit-mask-image: linear-gradient(to bottom, #000 30%, rgba(0, 0, 0, 0.18) 56%, transparent 80%);
+  mask-image: linear-gradient(to bottom, #000 30%, rgba(0, 0, 0, 0.18) 56%, transparent 80%);
+}
+
+body.world-frame::after {
+  background-size:
+    max(0px, calc((100vw - 1200px) / 2)) auto,
+    max(0px, calc((100vw - 1200px) / 2)) auto;
+}
+
 
 /* ---- World glyphs (facts panel, comp 08): sprite cells 240x239 on the
    960x717 sheet, rendered at 22px. Pure ::before, no markup changes. ---- */
@@ -105,6 +121,25 @@ html.world-ready .results-section::before {
   to { opacity: 1; }
 }
 
+/* On a short lane (an empty search, no matches) the cover-scaled stage
+   brings its edge trees in under the header: the summary measured 2.4:1.
+   A mist over the top of every lane keeps header copy on paper while the
+   world rises below it. */
+html.world-ready .results-section::after {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 15rem;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--canvas) 92%, transparent) 0%,
+    color-mix(in srgb, var(--canvas) 86%, transparent) 60%,
+    transparent 100%
+  );
+}
+
 @media (prefers-reduced-motion: reduce) {
   html.world-ready .results-section::before { animation-duration: 0ms; }
 }
@@ -119,7 +154,8 @@ html.save-data body.world-frame::before,
 html.save-data body.world-frame::after,
 html.save-data .detail-page .stat-label::before,
 html.save-data .detail-page .special-requirements-heading::before,
-html.save-data.world-ready .results-section::before { content: none; }
+html.save-data.world-ready .results-section::before,
+html.save-data.world-ready .results-section::after { content: none; }
 
 @media (prefers-reduced-data: reduce) {
   body.world-frame { background-image: none; }
@@ -127,7 +163,8 @@ html.save-data.world-ready .results-section::before { content: none; }
   body.world-frame::after,
   .detail-page .stat-label::before,
   .detail-page .special-requirements-heading::before,
-  html.world-ready .results-section::before { content: none; }
+  html.world-ready .results-section::before,
+  html.world-ready .results-section::after { content: none; }
 }
 
 /* ---- Forced colors: decorative imagery and blending yield entirely to the
@@ -139,5 +176,6 @@ html.save-data.world-ready .results-section::before { content: none; }
   body.world-frame::after,
   .detail-page .stat-label::before,
   .detail-page .special-requirements-heading::before,
-  html.world-ready .results-section::before { content: none; }
+  html.world-ready .results-section::before,
+  html.world-ready .results-section::after { content: none; }
 }
