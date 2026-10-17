@@ -381,20 +381,28 @@ class TestProfileAndMatches:
         fill_profile_and_submit(page)
         page.select_option("#filter-sort", "deadline")
         page.wait_for_timeout(900)
-        # The card's deadline stat prefixes an estimate with "~".
-        values = page.eval_on_selector_all(
-            "#results-container .stat-deadline .stat-value",
-            "els => els.map(e => e.textContent.trim())",
+        # The card's deadline stat prefixes an estimate with "~". Results stay
+        # grouped by match quality (Strong, Possible, Special check), so the
+        # sort order holds within each tier section.
+        tiers = page.eval_on_selector_all(
+            "#results-container .tier-section",
+            "secs => secs.map(s => Array.from(s.querySelectorAll('.stat-deadline .stat-value'))"
+            ".map(e => e.textContent.trim()))",
         )
-        assert values, "no deadlines rendered"
-        seen_estimate = False
-        for v in values:
-            if v.startswith("~"):
-                seen_estimate = True
-            elif seen_estimate and v.lower() not in ("rolling", "see sponsor site"):
-                raise AssertionError(
-                    f"a confirmed deadline ({v}) sorted BELOW an estimate; order: {values[:8]}"
-                )
+        assert any(tiers), "no deadlines rendered"
+        any_estimate = False
+        for values in tiers:
+            seen_estimate = False
+            for v in values:
+                if v.startswith("~"):
+                    seen_estimate = any_estimate = True
+                elif seen_estimate and v.lower() not in ("rolling", "not listed", "not yet announced"):
+                    raise AssertionError(
+                        f"a confirmed deadline ({v}) sorted BELOW an estimate; order: {values[:8]}"
+                    )
+        # Without this the loops above pass vacuously: the cards once dropped
+        # the "~" and this test kept passing without checking anything.
+        assert any_estimate, f"no estimated deadline carried its '~' mark: {tiers}"
 
     def test_free_competitions_say_free_not_a_paragraph(self, page):
         fill_profile_and_submit(page)

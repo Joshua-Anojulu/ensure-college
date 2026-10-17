@@ -621,3 +621,42 @@ def test_guide_body_panel_has_inner_padding(page, live_server):
         }"""
     )
     assert min(inset) >= 16, f"guide content sits on the panel border: {inset}"
+
+
+# ------------------------------------------------- copy and terminology
+
+
+def test_unknown_award_is_labeled_never_shown_raw(page):
+    """Two scholarships carry a VERIFY award; the card showed the raw token
+    in display type where the other unknown stats read "Not listed"."""
+    page.click("#nav-browse-btn")
+    page.wait_for_selector("#catalog-section:not([hidden]) .match-card", timeout=20000)
+    page.click(".catalog-kind-tab[data-kind=scholarships]")
+    page.fill("#catalog-search", "Golden Door Scholars")
+    page.wait_for_timeout(900)
+    card = page.locator("#catalog-container .match-card", has_text="Golden Door")
+    card.first.scroll_into_view_if_needed()
+    award = card.first.locator(".stat-award")
+    assert award.locator(".stat-value").inner_text().strip() == "Not listed"
+    assert award.locator(".stat-note").inner_text().strip() == "Confirm on sponsor site"
+    assert "VERIFY" not in award.inner_text()
+
+
+def test_tracker_controls_have_accessible_names(page):
+    """The plan's Status select and Notes box had no programmatic label
+    (their captions are spans), so assistive tech announced bare controls."""
+    _sign_up(page)
+    fill_profile_and_submit(page)
+    page.locator("#results-container .btn-save").first.click()
+    page.wait_for_selector("#results-container button:text-is('Saved')", timeout=15000)
+    page.click("#tab-saved")
+    page.wait_for_selector("#saved-container .tracker-status", timeout=15000)
+    # textContent: cards are content-visibility: auto, so innerText of an
+    # offscreen card can be empty.
+    name = page.locator("#saved-container .card-title").first.text_content().strip()
+    status = page.locator("#saved-container .tracker-status").first
+    notes = page.locator("#saved-container .tracker-notes").first
+    assert status.get_attribute("aria-label") == f"Status: {name}"
+    assert notes.get_attribute("aria-label") == f"Notes: {name}"
+    ring = page.locator("#results-container .fit-ring").first.get_attribute("aria-label") or ""
+    assert "\u2014" not in ring

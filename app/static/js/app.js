@@ -3353,7 +3353,7 @@ function buildPlanGuidance(items) {
       makePlanCard(
         "Do this next",
         nextRequired.requirement.label,
-        `${savedOpportunityKind(nextRequired.item)} - ${savedOpportunityName(nextRequired.item)}`,
+        `${savedOpportunityKind(nextRequired.item)} · ${savedOpportunityName(nextRequired.item)}`,
         "primary"
       )
     );
@@ -3449,6 +3449,10 @@ function buildTrackerControls(item, card, kind = "scholarship") {
   statusLabelEl.textContent = "Status";
   const select = document.createElement("select");
   select.className = "tracker-status";
+  // The visible "Status" / "Notes" captions are spans, not labels: name the
+  // controls, per card, so a screen reader hears which plan item they edit.
+  const itemName = savedOpportunityName(item);
+  select.setAttribute("aria-label", `Status: ${itemName}`);
   for (const opt of SAVED_STATUSES) {
     const option = document.createElement("option");
     option.value = opt.value;
@@ -3476,6 +3480,7 @@ function buildTrackerControls(item, card, kind = "scholarship") {
   notesLabelEl.textContent = "Notes";
   const notes = document.createElement("textarea");
   notes.className = "tracker-notes";
+  notes.setAttribute("aria-label", `Notes: ${itemName}`);
   notes.rows = 2;
   notes.maxLength = 2000;
   notes.value = item.notes || "";
@@ -5754,7 +5759,9 @@ function deadlineParts(deadline, estimated) {
           note: `Last cycle closed ${formatMonthYear(estimated)}; check sponsor site`,
         };
       }
-      return { value: formatVerifiedDate(estimated), note: "Estimated; confirm on sponsor site" };
+      // CONTEXT.md: an estimate is always shown as one ("~Feb 15, 2027 ·
+      // Estimated; confirm on sponsor site"), on every surface.
+      return { value: `~${formatVerifiedDate(estimated)}`, note: "Estimated; confirm on sponsor site" };
     }
     return { value: "Not listed", note: "Confirm on sponsor site" };
   }
@@ -5800,7 +5807,7 @@ function buildFitRing(score, tierClass) {
   const wrap = document.createElement("div");
   wrap.className = "fit-ring";
   wrap.setAttribute("role", "img");
-  wrap.setAttribute("aria-label", `Fit score ${pct} out of 100 \u2014 ${label}`);
+  wrap.setAttribute("aria-label", `Fit score ${pct} out of 100: ${label}`);
   wrap.innerHTML =
     '<div class="fit-ring-dial">' +
     '<svg class="fit-ring-svg" viewBox="0 0 64 64" aria-hidden="true">' +
@@ -5834,9 +5841,13 @@ function buildStatRow(card) {
 
   const award = document.createElement("div");
   award.className = "stat stat-award";
+  // A VERIFY award is "we do not know": labeled like every other unknown
+  // stat, never shown as the raw placeholder.
+  const awardUnknown = programStatValue(card.award_amount) === "Not listed";
   award.innerHTML =
     '<span class="stat-label">Award</span>' +
-    `<span class="stat-value">${escapeHtml(formatAward(card.award_amount))}</span>`;
+    `<span class="stat-value">${escapeHtml(awardUnknown ? "Not listed" : formatAward(card.award_amount))}</span>` +
+    (awardUnknown ? '<span class="stat-note">Confirm on sponsor site</span>' : "");
   row.appendChild(award);
 
   const dl = deadlineParts(card.deadline, card.estimated_deadline);
