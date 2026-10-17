@@ -1,13 +1,17 @@
 import base64
 import hashlib
 from html.parser import HTMLParser
+import json
 import re
+import uuid
 from pathlib import Path
 
 import pytest
 from fastapi.testclient import TestClient
+from starlette.requests import Request
+from starlette.responses import Response
 
-from app.main import _SECURITY_HEADERS, app
+from app.main import _SECURITY_HEADERS, _edge_cacheable, app
 
 
 ASSET_VERSION = "20261017-1"
@@ -467,3 +471,102 @@ class TestStageCohesion:
     def test_three_palette_literals_stay_in_journey_scenes(self):
         text = Path("app/static/js/app.js").read_text(encoding="utf-8")
         assert not re.search(r"0x[0-9a-fA-F]{6}", text)
+
+
+EDGE_CACHE_CONTROL = "public, max-age=0, s-maxage=86400"
+EDGE_CACHED_ASSETS = [
+    "/static/css/style.css",
+    f"/static/css/world.css?v={ASSET_VERSION}",
+    f"/static/js/app.js?v={ASSET_VERSION}",
+    "/static/js/vendor/three.min.js",
+    "/static/fonts/Satoshi-Regular.woff2",
+    "/static/img/hero-forest-mobile.webp",
+    f"/static/img/campus-quad.jpg?v={ASSET_VERSION}",
+    "/static/favicon.svg",
+]
+
+
+def _scope_request(path):
+    return Request({"type": "http", "method": "GET", "path": path, "headers": [], "query_string": b""})
+
+
+class TestEdgeCacheHeaders:
+    """vercel.json sends every path, /static included, to the function, so an
+    uncached asset or /vocabulary request can wait on a cold start (EC-01).
+    Shared, cookie-free responses carry s-maxage so Vercel's CDN answers them;
+    browsers still revalidate (max-age=0) and each deploy starts empty."""
+
+    def test_vocabulary_is_edge_cacheable(self, client):
+        response = client.get("/vocabulary")
+        assert response.status_code == 200
+        assert response.headers["cache-control"] == EDGE_CACHE_CONTROL
+        assert "set-cookie" not in response.headers
+
+    @pytest.mark.parametrize("asset", EDGE_CACHED_ASSETS)
+    def test_static_assets_are_edge_cacheable(self, client, asset):
+        response = client.get(asset)
+        assert response.status_code == 200, asset
+        assert response.headers["cache-control"] == EDGE_CACHE_CONTROL
+        assert "set-cookie" not in response.headers
+
+    def test_revalidation_keeps_the_same_policy(self, client):
+        etag = client.get("/static/css/style.css").headers["etag"]
+        response = client.get("/static/css/style.css", headers={"If-None-Match": etag})
+        assert response.status_code == 304
+        assert response.headers["cache-control"] == EDGE_CACHE_CONTROL
+
+    def test_world_art_keeps_its_immutable_policy(self, client):
+        manifest = json.loads(Path("app/static/img/world/manifest.json").read_text(encoding="utf-8"))
+        for path in (f"/static/img/world/{next(iter(manifest))}", "/static/img/world/manifest.json"):
+            response = client.get(path)
+            assert response.status_code == 200, path
+            assert response.headers["cache-control"] == "public, max-age=31536000, immutable"
+
+    @pytest.mark.parametrize(
+        "path",
+        ["/", "/journey", "/privacy", "/terms", "/static/index.html", "/static/journey.html"],
+    )
+    def test_html_pages_never_gain_s_maxage(self, client, path):
+        response = client.get(path)
+        assert response.status_code == 200, path
+        assert "s-maxage" not in response.headers.get("cache-control", "")
+
+    @pytest.mark.parametrize(
+        "path",
+        ["/scholarships", "/programs", "/competitions", "/health", "/auth/me", "/static/missing.css"],
+    )
+    def test_api_auth_and_missing_responses_never_gain_s_maxage(self, client, path):
+        response = client.get(path)
+        assert "s-maxage" not in response.headers.get("cache-control", ""), path
+
+    def test_preview_match_post_never_gains_s_maxage(self, client):
+        response = client.post(
+            "/match/preview",
+            json={"gpa": 3.7, "grade_level": "high_school_junior", "intended_majors": ["engineering"]},
+        )
+        assert response.status_code == 200
+        assert "s-maxage" not in response.headers.get("cache-control", "")
+
+    def test_signed_in_requests_set_no_cookie_and_account_routes_stay_private(self, client):
+        email = f"edge-cache-{uuid.uuid4().hex[:12]}@example.com"
+        signup = client.post("/auth/signup", json={"email": email, "password": "password123"})
+        assert signup.status_code == 201
+        for path in ("/vocabulary", "/static/css/style.css"):
+            response = client.get(path)
+            assert response.headers["cache-control"] == EDGE_CACHE_CONTROL, path
+            assert "set-cookie" not in response.headers, path
+        for path in ("/auth/me", "/account/profile", "/account/saved", "/"):
+            response = client.get(path)
+            assert response.status_code == 200, path
+            assert "s-maxage" not in response.headers.get("cache-control", ""), path
+
+    def test_cookie_setting_or_cookie_varying_replies_are_never_marked_shared(self):
+        # Older Starlette releases re-sign the session cookie on every response
+        # for a signed-in visitor, static files included. Such a reply must not
+        # carry the edge header (Vercel would refuse to cache it anyway).
+        response = Response(b"body{}", media_type="text/css")
+        assert _edge_cacheable(_scope_request("/static/css/style.css"), response)
+        response.set_cookie("session", "signed-value")
+        assert not _edge_cacheable(_scope_request("/static/css/style.css"), response)
+        varying = Response(b"{}", media_type="application/json", headers={"Vary": "Cookie"})
+        assert not _edge_cacheable(_scope_request("/vocabulary"), varying)

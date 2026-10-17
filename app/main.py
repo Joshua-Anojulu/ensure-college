@@ -760,13 +760,40 @@ def reminders_run(
     }
 
 
+# Vercel's CDN caches a function response only when Cache-Control carries
+# s-maxage, strips that directive before the browser sees it, and keys its
+# cache per deployment, so every deploy starts empty. max-age=0 keeps browsers
+# revalidating exactly as before; the edge answers instead of a function that
+# may be cold. Only for bytes that are identical for every visitor.
+_EDGE_CACHE_CONTROL = "public, max-age=0, s-maxage=86400"
+
+
+def _edge_cacheable(request: StarletteRequest, response: Response) -> bool:
+    """The option vocabulary and static assets: never HTML (including the raw
+    templates StaticFiles can serve), never an error, never a per-user reply."""
+    path = request.url.path
+    if request.method not in {"GET", "HEAD"} or response.status_code not in {200, 304}:
+        return False
+    if path != "/vocabulary" and not path.startswith("/static/"):
+        return False
+    if path.lower().endswith(".html") or response.headers.get("content-type", "").startswith("text/html"):
+        return False
+    # A cookie or a Vary on Cookie marks the reply as per-user. Vercel would
+    # refuse to cache either, but the header must not claim otherwise.
+    if "set-cookie" in response.headers:
+        return False
+    return "cookie" not in response.headers.get("vary", "").lower()
+
+
 @app.middleware("http")
-async def _world_asset_cache_headers(request: Request, call_next):
+async def _cache_headers(request: Request, call_next):
     # World art ships content-hashed (see scripts/generate_world_assets.py),
     # so these responses — and only these — are safe to cache forever.
     response = await call_next(request)
     if request.url.path.startswith("/static/img/world/"):
         response.headers["Cache-Control"] = "public, max-age=31536000, immutable"
+    elif _edge_cacheable(request, response):
+        response.headers["Cache-Control"] = _EDGE_CACHE_CONTROL
     return response
 
 
