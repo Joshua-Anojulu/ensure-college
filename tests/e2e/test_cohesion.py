@@ -759,3 +759,25 @@ def test_preview_error_and_phone_filters_keep_the_rhythm(browser, live_server):
     )
     assert widths and max(widths) - min(widths) <= 1, f"filter fields stop at uneven widths: {widths}"
     ctx.close()
+
+
+def test_social_card_mark_matches_the_site_mark():
+    """og-image.png drew the brand mark as a white block with a clipped E in
+    its corner; the site's mark (header, favicon) is a forest tile with a
+    white E. Sample the card's tile: mostly forest green, some white E."""
+    from pathlib import Path
+
+    width, height, bpp, rows = _decode_png(Path("app/static/og-image.png").read_bytes())
+    assert (width, height) == (1200, 630)
+    dark = light = 0
+    for y in range(92, 156, 2):  # inside the 76px tile at (82, 86)
+        row = rows[y]
+        for x in range(88, 152, 2):
+            r, g, b = row[x * bpp], row[x * bpp + 1], row[x * bpp + 2]
+            if g > 200 and r > 200:
+                light += 1
+            elif g < 90:
+                dark += 1
+    total = dark + light
+    assert dark / total > 0.5, f"mark tile is not forest: {dark} dark of {total} samples"
+    assert light / total > 0.15, f"mark tile lost its white E: {light} light of {total} samples"
