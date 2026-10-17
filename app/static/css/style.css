@@ -108,7 +108,7 @@
   --ink: #16211b;
   --ink-soft: #2f4037;
   --muted: #59675f;
-  --muted-2: #78857d; /* non-text only: 3.7:1 on --surface */
+  --muted-2: #78857d; /* non-text only */
 
   --line: #d9dfd6;
   --line-strong: #c3cdc0;
@@ -181,8 +181,6 @@ h1, h2, h3, h4, h5 {
   font-family: var(--font-display);
   font-weight: 600;
   letter-spacing: 0;
-  /* Display type sets tight everywhere; headings without their own rule
-     inherited the body's 1.6 and wrapped with a paragraph's leading. */
   line-height: 1.15;
   font-optical-sizing: auto;
 }
@@ -344,8 +342,7 @@ a { color: var(--brand); }
   box-shadow: var(--shadow-md);
 }
 
-/* A trailing arrow glyph (an aria-hidden span) is its own flex item; the
-   space before it collapsed, so only the hero CTA had one ("Next→"). */
+/* Space before a trailing arrow glyph. */
 .btn-primary, .btn-secondary { gap: 0.45rem; }
 
 /* Click feedback: a brief inset press instead of any lift. */
@@ -1011,8 +1008,7 @@ html.motion-ready .fit-ring-value { stroke-dashoffset: var(--circ); animation: r
 }
 .score-chip { border: 1px solid var(--line); color: var(--ink-soft); background: var(--surface-2); }
 .badge { border: 1px solid var(--line); color: var(--ink-soft); background: transparent; }
-/* Text on the amber tints takes --amber-strong: --accent-deep there is
-   4.49:1, a hair under AA for these small mono labels. */
+/* Amber-tint labels: --amber-strong (accent-deep is 4.49:1 here). */
 .badge-closing {
   display: inline-flex;
   align-items: center;
@@ -1341,7 +1337,6 @@ html.has-site-consent .age-gate {
 .legal-content ul { margin: 0.3rem 0 0; padding-left: 1.2rem; }
 .legal-content li { margin-bottom: 0.35rem; }
 .legal-content a { color: var(--brand); }
-/* The legal paragraph rule outranked .eyebrow: LEGAL rendered ink at body size. */
 .legal-content .eyebrow { color: var(--accent-deep); font-size: 0.7rem; line-height: 1.6; }
 .legal-updated { margin: 0 0 1.3rem; color: var(--muted); font-size: 0.84rem; }
 .legal-note { margin: 0 0 0.5rem; padding: 0.9rem 1rem; border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--surface-inset); }
@@ -1513,16 +1508,13 @@ html.motion-ready .saved-count.count-pop { animation: count-pop 360ms var(--ease
 .browse-row a { color: var(--ink); font-weight: 600; text-decoration: none; }
 .browse-row a:hover, .browse-row a:focus-visible { color: var(--brand); text-decoration: underline; }
 .browse-row-meta { color: var(--muted); font-size: 0.78rem; font-variant-numeric: tabular-nums; }
-/* Directory meta can run to a sentence (a program's cost, a competition's
-   recognition): it wraps beside the name instead of pushing the row, and the
-   whole page, sideways. */
+/* Long meta wraps beside the name, never sideways. */
 .browse-row > a { min-width: 0; }
 .browse-row > .browse-row-meta { flex: 0 1 auto; max-width: 52%; text-align: right; }
 @media (max-width: 760px) {
   .browse-kind-list { grid-template-columns: 1fr; }
   .browse-row { flex-direction: column; gap: 0.1rem; }
   .browse-row > .browse-row-meta { max-width: none; text-align: left; }
-  /* Stacked rows read down one left edge; centering staggered every row. */
   .browse-row.quick-apply-row, .browse-row.near-miss-row { align-items: flex-start; }
 }
 .card-title-link { color: inherit; text-decoration: none; }
@@ -1555,14 +1547,10 @@ html.motion-ready .saved-count.count-pop { animation: count-pop 360ms var(--ease
   .essay-clusters, .special-check-list { grid-template-columns: 1fr; }
   .card-title { font-size: 1.25rem; }
   .results-filters .filter-clear { margin-left: 0; }
-  /* Stacked on a phone, every filter field spans the panel like the search
-     box above it, instead of selects stopping at their natural width. */
   .results-filters .filter-group { flex: 1 1 100%; }
 }
 
-/* Phones: like the landing, which drops its section nav below 860px, the
-   template family and the Journey keep only the primary action in the
-   header; Browse stays one tap away in the breadcrumbs and the footer. */
+/* Phones: template headers keep only the primary action (Browse stays in breadcrumbs and footer). */
 @media (max-width: 560px) {
   .page-static .account-nav .btn-ghost:not(.btn-ghost-solid) { display: none; }
 }
@@ -1580,8 +1568,7 @@ html.motion-ready .saved-count.count-pop { animation: count-pop 360ms var(--ease
 }
 
 @media (max-width: 420px) {
-  /* Signed in, Saved + Settings + Log out need the wordmark's room on a
-     phone: the mark stays, and the link keeps its accessible name. */
+  /* Signed in on a phone, the account buttons take the wordmark's room. */
   .site-header:has(#auth-logged-in:not([hidden])) .brand-name {
     position: absolute;
     width: 1px;
@@ -1781,7 +1768,6 @@ input:user-invalid, select:user-invalid, textarea:user-invalid { border-color: v
 .form-step-tab.is-done { color: var(--ink-soft); }
 .form-step-tab.is-done span { background: var(--accent-tint); color: var(--accent-strong); }
 .form-error ul { margin: 0.35rem 0 0; padding-left: 1.2rem; }
-/* The preview's error sits outside its form's gap: it touched the button. */
 .hero-demo > .form-error { margin-top: 0.75rem; }
 .form-error .btn-secondary { display: flex; width: fit-content; margin-top: 0.6rem; }
 
@@ -1849,8 +1835,6 @@ input:user-invalid, select:user-invalid, textarea:user-invalid { border-color: v
 /* Post-preview account pitch: shown below the "Finish my full profile" CTA
    when the preview demo renders results and no one is logged in. */
 .preview-account-pitch { margin-top: 1.1rem; padding-top: 1rem; border-top: 1px solid var(--line); }
-/* The one eyebrow that had its own voice (body font, brand green): it
-   takes the system eyebrow's mono, amber, rule-led form. */
 .preview-account-pitch-eyebrow {
   margin: 0 0 0.45rem;
   color: var(--accent-deep);
@@ -1889,8 +1873,6 @@ input:user-invalid, select:user-invalid, textarea:user-invalid { border-color: v
 .essay-cluster-start { font-size: 0.74rem; font-weight: 600; color: var(--amber-strong); }
 
 /* Essay guide pages */
-/* The guide body is a panel like every other: unpadded, its headings and
-   lists sat on the border, with default margins stacking into gaps. */
 .guide-body { display: grid; gap: 0.85rem; padding: clamp(1.4rem, 3vw, 2.2rem); }
 .guide-body > *, .guide-dos-donts :is(h3, h4, ul) { margin-block: 0; }
 .guide-body > :is(h2, h3) { margin-top: 0.75rem; font-size: 1.25rem; }
@@ -2535,8 +2517,6 @@ body.has-scrolled .site-header {
   color: var(--danger);
 }
 
-/* The stale strip is a tinted box like every other: it had a border color
-   and no border, padding, or radius, so it read as a highlighter bar. */
 .verification-source.verification-stale {
   padding: 0.4rem 0.6rem;
   border: 1px solid var(--amber-line);
@@ -2557,9 +2537,7 @@ body.has-scrolled .site-header {
   padding-top: 0.7rem;
 }
 
-/* Application steps are requirements, not reasons: they take a neutral
-   bullet, not the success check (a green check beside an unstarted step
-   read as done). */
+/* Application steps are requirements: a neutral bullet, never the done check. */
 .program-steps .reason-list li::before { background: var(--surface-2); }
 .program-steps .reason-list li::after {
   top: 0.54rem;
@@ -2693,11 +2671,8 @@ body.has-scrolled .site-header {
   border-radius: calc(var(--radius-lg) - 6px);
 }
 
-/* The photo fills the paper frame: as an inline <picture> its img could not
-   resolve height: 100%, so a bare band showed under the photo. A one-cell
-   grid stretches the picture and gives the img a definite height, and
-   phones keep the photo's natural size. The warm wash and grain stay on
-   the photo, off the paper border. */
+/* The photo fills its paper frame (a stretched grid item gives the img a
+   definite height); wash and grain stay on the photo. */
 .proof-photo { display: grid; }
 .proof-photo picture { display: block; min-height: 0; overflow: hidden; border-radius: calc(var(--radius-lg) - 6px); }
 .proof-photo::before,
@@ -2730,10 +2705,7 @@ body.has-scrolled .site-header {
   transform: rotate(-0.85deg) translate(-11px, 13px);
 }
 
-/* The form's own background paints beneath its negative-z children (it is
-   the stacking context), so the stacked sheet tinted the whole face and
-   cut tilted seams across it. The face and its inner bezel are this layer,
-   painted after the sheet and under the content. */
+/* Face + bezel layer: the form's own background paints under the stacked sheet. */
 .profile-form::after {
   content: "";
   position: absolute;
@@ -2795,8 +2767,7 @@ body.has-scrolled .site-header {
   text-transform: uppercase;
 }
 
-/* Focus on the dark bands: the brand ring vanished into the brand footer
-   and the dusk teaser, so keyboard focus there was invisible. */
+/* Focus ring on the dark bands. */
 .site-footer :focus-visible,
 .journey-teaser :focus-visible {
   outline-color: var(--brand-ink);
@@ -2898,9 +2869,7 @@ body.has-scrolled .site-header {
 
 /* The copy column was styled for the dark brand wash; over the pale
    painting it needs a dusk scrim. Lives inside the painting layer so the
-   live swap fades it out with the plate. The scrim holds past the end of
-   the copy column: stopping at 56% left the paragraph's line ends on bare
-   painting (3.98:1 at 1440px). */
+   live swap fades it out with the plate. It holds past the copy column. */
 .teaser-painting::after {
   content: "";
   position: absolute;
@@ -3010,12 +2979,8 @@ body.has-scrolled .site-header {
   }
 }
 
-/* Below 1024px the copy column is most of the box, so no scrim can sit
-   behind it without hiding the painting: the copy rides its own dusk panel
-   (panel-over-stage, ADR 0001). On phones the painting becomes a band
-   above the panel, so its landmarks stay in view instead of behind the
-   copy. Both layers keep the section's box: the live swap still changes
-   pixels, never layout. */
+/* Below 1024px the copy rides its own dusk panel; on phones the painting is
+   a band above it. Same box for the live swap. */
 @media (max-width: 1023px) {
   .journey-teaser { align-items: flex-end; }
   .journey-teaser-copy {
@@ -3259,8 +3224,7 @@ body::after {
   padding: 0.05rem 0.4rem; border-radius: 6px;
   white-space: nowrap;
 }
-/* Stops ahead recede by color, not opacity: at 0.55 their labels and
-   badges fell to 3.65:1 and 2.13:1. */
+/* Stops ahead recede by color, not opacity (legibility). */
 .journey-stop.is-ahead .journey-stop-dot { background: var(--muted-2); box-shadow: none; }
 .journey-stop.is-ahead .journey-stop-label { color: var(--muted); }
 .journey-stop.is-ahead .journey-stop-badge,
@@ -3340,8 +3304,7 @@ body::after {
 .proof-band { background: transparent; }
 
 /* Stat labels go ink over the clearing: amber-on-amber-trail was illegible.
-   Where a fern runs under a label (COMPETITIONS on phones, 3.4:1) the label
-   rides a small paper wash; the spread shadow pads it without moving it. */
+   A small paper wash keeps them legible over the ferns. */
 .catalog-number span {
   width: fit-content;
   border-radius: var(--radius-xs);
@@ -3417,8 +3380,6 @@ body::after {
   background: color-mix(in srgb, var(--canvas) 86%, transparent);
 }
 
-/* Muted grey through the 86% wash measured 3.97-4.41:1 over the grove; the
-   intro takes the ink-soft every other copy-over-art paragraph uses. */
 .difference-copy p:last-child { color: var(--ink-soft); }
 
 .world-dusk {
