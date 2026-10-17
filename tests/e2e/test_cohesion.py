@@ -781,3 +781,20 @@ def test_social_card_mark_matches_the_site_mark():
     total = dark + light
     assert dark / total > 0.5, f"mark tile is not forest: {dark} dark of {total} samples"
     assert light / total > 0.15, f"mark tile lost its white E: {light} light of {total} samples"
+
+
+def test_static_stats_do_not_pose_as_controls_and_eyebrows_share_a_voice(page):
+    """The catalog numbers stopped being cards in Phase 1 but kept a 4px
+    hover lift, a control affordance on plain text; the account pitch's
+    eyebrow spoke in body type and brand green instead of the eyebrow voice."""
+    page.locator(".catalog-number").first.scroll_into_view_if_needed()
+    page.locator(".catalog-number").first.hover()
+    page.wait_for_timeout(400)
+    assert page.evaluate("getComputedStyle(document.querySelector('.catalog-number')).transform") == "none"
+    voice = page.evaluate(
+        """() => ['.eyebrow', '.preview-account-pitch-eyebrow'].map((s) => {
+          const el = document.querySelector(s); const st = getComputedStyle(el);
+          return [st.fontFamily, st.color, st.letterSpacing, st.fontSize];
+        })"""
+    )
+    assert voice[0] == voice[1], voice
