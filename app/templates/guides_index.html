@@ -5,14 +5,14 @@
 {% block content %}
   <section class="results-header guides-header">
     <p class="eyebrow">Essay guides</p>
-    <h2>Write once, tailor carefully</h2>
+    <h1>Write once, tailor carefully</h1>
     <p class="results-summary">Five short guides for the kinds of writing scholarships, summer programs, and competitions actually ask for.</p>
   </section>
   <div class="guide-cards">
     {% for theme in themes %}
     <a class="guide-card" href="/guides/essays/{{ theme.key }}">
       <span class="guide-card-num" aria-hidden="true">{{ "%02d"|format(loop.index) }}</span>
-      <h3>{{ theme.title }}</h3>
+      <h2>{{ theme.title }}</h2>
       <p>{{ theme.intro }}</p>
       <span class="guide-card-cta">Read the guide</span>
     </a>

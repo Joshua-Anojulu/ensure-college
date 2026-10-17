@@ -343,6 +343,10 @@ a { color: var(--brand); }
   box-shadow: var(--shadow-md);
 }
 
+/* A trailing arrow glyph (an aria-hidden span) is its own flex item; the
+   space before it collapsed, so only the hero CTA had one ("Next→"). */
+.btn-primary, .btn-secondary { gap: 0.45rem; }
+
 /* Click feedback: a brief inset press instead of any lift. */
 .btn-ghost:active, .btn-primary:active, .btn-secondary:active, .btn-save:active,
 .btn-danger:active, .card-link:active {
@@ -505,7 +509,6 @@ a { color: var(--brand); }
   background: var(--accent-strong);
   box-shadow: var(--shadow-md);
 }
-.hero-cta span { margin-left: 0.45rem; }
 .hero-secondary { min-height: 3rem; padding: 0.85rem 1.15rem; font-size: 0.95rem; }
 .hero-note {
   flex-basis: 100%;
@@ -618,7 +621,7 @@ a { color: var(--brand); }
 .resume-import { border-style: dashed; border-color: var(--line-strong); background: var(--surface); }
 .resume-intro { max-width: 52rem; }
 
-.resume-import-title, .form-heading h2, .results-header h2, .modal-head h2, .results-empty h3 {
+.resume-import-title, .form-heading h2, .results-header :is(h1, h2), .modal-head h2, .results-empty :is(h1, h3) {
   margin: 0;
   font-family: var(--font-display);
   font-weight: 700;
@@ -920,7 +923,7 @@ input:focus, select:focus, textarea:focus {
 .results-section { display: flex; padding-top: 0.6rem; flex-direction: column; gap: 1.1rem; }
 .results-header { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 0.4rem 1rem; }
 .results-header .eyebrow { width: 100%; margin-bottom: -0.2rem; }
-.results-header h2 { font-size: clamp(1.9rem, 4vw, 2.6rem); }
+.results-header :is(h1, h2) { font-size: clamp(1.9rem, 4vw, 2.6rem); }
 .results-summary { margin: 0 0 0.25rem; color: var(--muted); font-size: 0.88rem; }
 
 .results-filters {
@@ -1174,7 +1177,7 @@ html.motion-ready .fit-ring-value { stroke-dashoffset: var(--circ); animation: r
 .loading p { margin: 0; font-size: 0.88rem; }
 .loading-spinner { width: 1.1rem; height: 1.1rem; border: 2px solid var(--surface-3); border-top-color: var(--brand); border-radius: 50%; animation: spin 700ms linear infinite; }
 @keyframes spin { to { transform: rotate(1turn); } }
-.results-empty h3 { font-size: 1.4rem; }
+.results-empty :is(h1, h3) { font-size: 1.4rem; }
 .results-empty p { max-width: 67ch; margin: 0.45rem 0 0; color: var(--muted); font-size: 0.88rem; line-height: 1.6; }
 
 /* =========================================================================
@@ -1397,6 +1400,8 @@ html.has-site-consent .age-gate {
 .legal-content ul { margin: 0.3rem 0 0; padding-left: 1.2rem; }
 .legal-content li { margin-bottom: 0.35rem; }
 .legal-content a { color: var(--brand); }
+/* The legal paragraph rule outranked .eyebrow: LEGAL rendered ink at body size. */
+.legal-content .eyebrow { color: var(--accent-deep); font-size: 0.7rem; line-height: 1.6; }
 .legal-updated { margin: 0 0 1.3rem; color: var(--muted); font-size: 0.84rem; }
 .legal-note { margin: 0 0 0.5rem; padding: 0.9rem 1rem; border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--surface-inset); }
 .legal-footnote { margin-top: 1.8rem; padding-top: 1rem; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.84rem; }
@@ -1571,7 +1576,7 @@ html.motion-ready .saved-count.count-pop { animation: count-pop 360ms var(--ease
 .browse-kind-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.85rem; }
 .browse-kind-card { padding: 1.2rem; text-decoration: none; color: inherit; transition: border-color var(--dur-fast) var(--ease); }
 .browse-kind-card:hover, .browse-kind-card:focus-visible { border-color: var(--line-strong); }
-.browse-kind-card h3 { margin: 0 0 0.3rem; font-family: var(--font-display); font-size: 1.2rem; }
+.browse-kind-card :is(h2, h3) { margin: 0 0 0.3rem; font-family: var(--font-display); font-size: 1.2rem; }
 .browse-kind-card p { margin: 0; color: var(--muted); font-size: 0.85rem; }
 .browse-kind-card strong { color: var(--ink); font-family: var(--font-mono); }
 .browse-list { display: grid; margin: 0; padding: 0.4rem 1.1rem; list-style: none; }
@@ -1643,7 +1648,7 @@ html.motion-ready .saved-count.count-pop { animation: count-pop 360ms var(--ease
   .checkbox-grid { grid-template-columns: 1fr; }
   .card-header { flex-direction: column; }
   .card-body { padding: 1.1rem; }
-  .results-header h2 { font-size: 2rem; }
+  .results-header :is(h1, h2) { font-size: 2rem; }
 }
 
 @media (max-width: 420px) {
@@ -1942,10 +1947,17 @@ input:user-invalid, select:user-invalid, textarea:user-invalid { border-color: v
 .essay-cluster-start { font-size: 0.74rem; font-weight: 600; color: var(--amber-strong); }
 
 /* Essay guide pages */
-.guide-body { display: grid; gap: 1rem; }
-.guide-steps { margin-left: 1.1rem; display: grid; gap: 0.5rem; color: var(--ink-soft); }
+/* The guide body is a panel like every other: unpadded, its headings and
+   lists sat on the border, with default margins stacking into gaps. */
+.guide-body { display: grid; gap: 0.85rem; padding: clamp(1.4rem, 3vw, 2.2rem); }
+.guide-body > *, .guide-dos-donts :is(h3, h4, ul) { margin-block: 0; }
+.guide-body > :is(h2, h3) { margin-top: 0.75rem; font-size: 1.25rem; }
+.guide-body > :is(h2, h3):first-child { margin-top: 0; }
+.guide-dos-donts :is(h3, h4) { margin-bottom: 0.45rem; font-size: 1rem; }
+.guide-steps { display: grid; gap: 0.5rem; padding-left: 1.3rem; color: var(--ink-soft); }
 .guide-dos-donts { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
-.guide-dos-donts ul { margin-left: 1.1rem; display: grid; gap: 0.3rem; color: var(--ink-soft); }
+.guide-dos-donts ul { display: grid; gap: 0.3rem; padding-left: 1.2rem; color: var(--ink-soft); }
+.guide-links { padding-left: 1.2rem; }
 .guide-links { display: grid; gap: 0.45rem; }
 .guide-links-note { color: var(--muted); font-size: 0.85rem; }
 .essay-guide-link { display: inline-block; margin-top: 0.5rem; font-size: 0.78rem; font-weight: 600; }
@@ -1953,7 +1965,7 @@ input:user-invalid, select:user-invalid, textarea:user-invalid { border-color: v
 /* Essay guides index: five whole-card links in a staggered bento. Cards rest
    at a slight tilt (the site's panel language) and straighten on hover. */
 .guides-header { max-width: 46rem; }
-.guides-header h2 { font-size: clamp(2.2rem, 4.6vw, 3.5rem); line-height: 0.98; letter-spacing: -0.015em; }
+.guides-header :is(h1, h2) { font-size: clamp(2.2rem, 4.6vw, 3.5rem); line-height: 0.98; letter-spacing: -0.015em; }
 .guide-cards {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
@@ -1981,7 +1993,7 @@ input:user-invalid, select:user-invalid, textarea:user-invalid { border-color: v
 .guide-card:nth-child(1), .guide-card:nth-child(4) { grid-column: span 7; }
 .guide-card:nth-child(2), .guide-card:nth-child(3) { grid-column: span 5; }
 .guide-card:nth-child(5) { grid-column: span 12; }
-.guide-card h3 {
+.guide-card :is(h2, h3) {
   margin: 0;
   max-width: 22ch;
   padding-right: 3.5rem;
@@ -2581,8 +2593,12 @@ body.has-scrolled .site-header {
   color: var(--danger);
 }
 
+/* The stale strip is a tinted box like every other: it had a border color
+   and no border, padding, or radius, so it read as a highlighter bar. */
 .verification-source.verification-stale {
-  border-color: var(--amber-line);
+  padding: 0.4rem 0.6rem;
+  border: 1px solid var(--amber-line);
+  border-radius: var(--radius-sm);
   background: var(--amber-tint);
 }
 
@@ -2597,6 +2613,21 @@ body.has-scrolled .site-header {
 .program-steps {
   border-top: 1px solid var(--line);
   padding-top: 0.7rem;
+}
+
+/* Application steps are requirements, not reasons: they take a neutral
+   bullet, not the success check (a green check beside an unstarted step
+   read as done). */
+.program-steps .reason-list li::before { background: var(--surface-2); }
+.program-steps .reason-list li::after {
+  top: 0.54rem;
+  left: 0.42rem;
+  width: 0.36rem;
+  height: 0.36rem;
+  border-radius: 50%;
+  background: var(--muted);
+  -webkit-mask: none;
+  mask: none;
 }
 
 .quick-apply-row,
@@ -2726,6 +2757,19 @@ body.has-scrolled .site-header {
   border-radius: calc(var(--radius-lg) - 6px);
 }
 
+/* The photo fills the paper frame: as an inline <picture> its img could not
+   resolve height: 100%, so a bare band showed under the photo. A one-cell
+   grid stretches the picture and gives the img a definite height, and
+   phones keep the photo's natural size. The warm wash and grain stay on
+   the photo, off the paper border. */
+.proof-photo { display: grid; }
+.proof-photo picture { display: block; min-height: 0; overflow: hidden; border-radius: calc(var(--radius-lg) - 6px); }
+.proof-photo::before,
+.proof-photo::after {
+  inset: clamp(0.5rem, 1vw, 0.8rem);
+  border-radius: calc(var(--radius-lg) - 6px);
+}
+
 /* Profile form: stacked-paper depth behind the panel, double bezel inside,
    mono step numerals. */
 .profile-form {
@@ -2750,12 +2794,20 @@ body.has-scrolled .site-header {
   transform: rotate(-0.85deg) translate(-11px, 13px);
 }
 
+/* The form's own background paints beneath its negative-z children (it is
+   the stacking context), so the stacked sheet tinted the whole face and
+   cut tilted seams across it. The face and its inner bezel are this layer,
+   painted after the sheet and under the content. */
 .profile-form::after {
   content: "";
   position: absolute;
-  inset: 0.55rem;
-  border: 1px solid var(--line);
-  border-radius: calc(var(--radius-lg) - 4px);
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: var(--surface);
+  box-shadow:
+    inset 0 0 0 0.55rem var(--surface),
+    inset 0 0 0 calc(0.55rem + 1px) var(--line);
   pointer-events: none;
 }
 
@@ -2796,6 +2848,7 @@ body.has-scrolled .site-header {
 .footer-links {
   display: flex;
   flex-wrap: wrap;
+  justify-content: flex-start;
   gap: 0.5rem 1.4rem;
 }
 

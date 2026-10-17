@@ -84,7 +84,7 @@ def test_template_family_never_scrolls_sideways(browser, live_server, width):
     ctx = _context(browser, width, reduced_motion="reduce")
     page = ctx.new_page()
     for path in TEMPLATE_PAGES:
-        page.goto(f"{live_server}{path}", wait_until="domcontentloaded")
+        page.goto(f"{live_server}{path}", wait_until="load")
         assert page.evaluate(SIDEWAYS) <= 0, f"{path} scrolls sideways at {width}px"
     ctx.close()
 
@@ -94,7 +94,7 @@ def test_directory_meta_wraps_inside_the_list(browser, live_server, width):
     ctx = _context(browser, width)
     page = ctx.new_page()
     for kind in ("competitions", "programs"):
-        page.goto(f"{live_server}/browse/{kind}", wait_until="domcontentloaded")
+        page.goto(f"{live_server}/browse/{kind}", wait_until="load")
         escaped = page.evaluate(
             """() => {
               const list = document.querySelector('.browse-list').getBoundingClientRect();
@@ -425,3 +425,199 @@ def test_journey_map_stops_ahead_stay_legible(page):
     page.wait_for_selector("#journey-map:not([hidden]) .journey-stop.is-ahead", timeout=15000)
     _assert_effective_contrast(page, ".journey-stop.is-ahead .journey-stop-label")
     _assert_effective_contrast(page, ".journey-stop.is-ahead .journey-stop-badge")
+
+
+# ------------------------------------------------- components back on system
+
+
+@pytest.mark.parametrize(
+    "path",
+    [
+        "/browse",
+        "/browse/scholarships",
+        "/guides/essays",
+        "/guides/essays/identity",
+        "/scholarships/coca-cola-scholars",
+        "/scholarships/does-not-exist",
+        "/privacy",
+        "/terms",
+    ],
+)
+def test_server_pages_have_one_h1_and_no_skipped_levels(page, live_server, path):
+    """Browse, guide, and 404 pages had no h1 (their titles were h2/h3) and
+    the guide jumped from its title to h3/h4."""
+    page.goto(f"{live_server}{path}", wait_until="domcontentloaded")
+    levels = page.eval_on_selector_all(
+        "main h1, main h2, main h3, main h4, main h5, main h6",
+        "els => els.filter((h) => h.getClientRects().length).map((h) => Number(h.tagName[1]))",
+    )
+    assert levels.count(1) == 1, f"{path}: h1 count {levels.count(1)} in {levels}"
+    assert levels[0] == 1, f"{path}: first heading is h{levels[0]}"
+    skips = [(a, b) for a, b in zip(levels, levels[1:]) if b > a + 1]
+    assert not skips, f"{path}: heading levels skip {skips} in {levels}"
+
+
+@pytest.mark.parametrize("path", ["/privacy", "/terms"])
+def test_legal_pages_carry_the_site_chrome(page, live_server, path):
+    """Legal pages had no skip link, no favicon, and a footer without the
+    wordmark that strung its links on stray middots."""
+    page.goto(f"{live_server}{path}", wait_until="load")
+    assert page.locator('link[rel="icon"][href^="/static/favicon.svg"]').count() == 1
+    assert page.locator(".site-footer .footer-mark").count() == 1
+    assert page.locator(".footer-links span").count() == 0
+    page.keyboard.press("Tab")
+    assert page.evaluate("document.activeElement.className") == "skip-link"
+    page.keyboard.press("Enter")
+    assert page.evaluate("location.hash") == "#main"
+    assert page.locator("main#main").count() == 1
+    eyebrow = page.evaluate(
+        "(() => { const s = getComputedStyle(document.querySelector('.legal-content .eyebrow'));"
+        " return [s.color, s.fontSize]; })()"
+    )
+    accent = page.evaluate(
+        "(() => { const d = document.createElement('div'); d.style.color = 'var(--accent-deep)';"
+        " document.body.appendChild(d); const c = getComputedStyle(d).color; d.remove(); return c; })()"
+    )
+    assert eyebrow == [accent, "11.2px"], f"legal eyebrow renders as body text: {eyebrow}"
+
+
+@pytest.mark.parametrize("width", [390, 1440])
+def test_footer_links_start_on_the_footer_text_edge(browser, live_server, width):
+    """Footer links were centered inside a 52ch box beneath left-aligned
+    footer text, so every row started at a different edge."""
+    ctx = _context(browser, width)
+    page = ctx.new_page()
+    for path in ("/", "/browse", "/privacy"):
+        page.goto(f"{live_server}{path}", wait_until="load")
+        edges = page.evaluate(
+            """() => {
+              const text = document.querySelector('.site-footer > p:not(.footer-links)');
+              const links = Array.from(document.querySelectorAll('.footer-links a'));
+              const rows = new Map();
+              for (const a of links) {
+                const r = a.getBoundingClientRect();
+                const key = Math.round(r.top);
+                rows.set(key, Math.min(rows.get(key) ?? Infinity, r.left));
+              }
+              return {text: text.getBoundingClientRect().left, rows: Array.from(rows.values())};
+            }"""
+        )
+        off = [round(left - edges["text"]) for left in edges["rows"]]
+        assert all(abs(o) <= 1 for o in off), f"{path} at {width}px: link rows start {off}px off the text edge"
+    ctx.close()
+
+
+def _png_mean(page, clip):
+    width, height, bpp, rows = _decode_png(page.screenshot(clip=clip))
+    total = [0, 0, 0]
+    count = 0
+    for row in rows:
+        for x in range(0, width * bpp, bpp * 3):
+            total[0] += row[x]
+            total[1] += row[x + 1]
+            total[2] += row[x + 2]
+            count += 1
+    return tuple(v / count for v in total)
+
+
+def test_profile_form_face_is_plain_paper(page):
+    """The stacked sheet behind the form painted over the form's own face
+    (the form is its own stacking context), tinting it green with tilted
+    seams. The face reads as --surface now."""
+    page.evaluate(
+        "window.scrollTo({top: document.querySelector('#profile-form').getBoundingClientRect().top"
+        " + scrollY - 80, behavior: 'instant'})"
+    )
+    page.wait_for_timeout(500)
+    box = page.evaluate(
+        """() => {
+          const actions = document.querySelector('#profile-form .form-actions').getBoundingClientRect();
+          const form = document.querySelector('#profile-form').getBoundingClientRect();
+          // Empty face: right of the action row's note, inside the bezel.
+          return {x: actions.right - 220, y: actions.top + 4, width: 180, height: actions.height - 8,
+                  formRight: form.right};
+        }"""
+    )
+    mean = _png_mean(page, {k: box[k] for k in ("x", "y", "width", "height")})
+    surface = page.evaluate(
+        "(() => { const d = document.createElement('div'); d.style.color = 'var(--surface)';"
+        " document.body.appendChild(d); const c = getComputedStyle(d).color; d.remove(); return c; })()"
+    )
+    target = _rgb(surface)
+    distance = max(abs(mean[i] - target[i]) for i in range(3))
+    # The film grain overlay keeps pixels within a few levels of the token.
+    assert distance < 8, f"form face {tuple(round(v) for v in mean)} vs --surface {target[:3]}"
+
+
+@pytest.mark.parametrize("width", [390, 1440])
+def test_proof_photo_fills_its_paper_frame(browser, live_server, width):
+    ctx = _context(browser, width, reduced_motion="reduce")
+    page = ctx.new_page()
+    page.goto(live_server, wait_until="domcontentloaded")
+    page.evaluate("document.querySelector('.proof-band').scrollIntoView({block: 'center'})")
+    page.wait_for_function("document.querySelector('.proof-photo img').complete")
+    gap = page.evaluate(
+        """() => {
+          const frame = document.querySelector('.proof-photo');
+          // Layout sizes, not bounding boxes: the frame rests rotated.
+          const img = frame.querySelector('img');
+          const pad = parseFloat(getComputedStyle(frame).paddingTop);
+          return Math.round((frame.clientHeight - 2 * pad) - img.offsetHeight);
+        }"""
+    )
+    assert abs(gap) <= 2, f"photo stops {gap}px short of its frame at {width}px"
+    ctx.close()
+
+
+def test_card_details_follow_the_system(page):
+    """Application steps wore the success check (an unstarted step read as
+    done); the stale-verification strip had color but no box; buttons with
+    a trailing arrow glyph ran it into the label ("Next→")."""
+    gap = page.evaluate(
+        """() => {
+          const btn = document.querySelector('#step-next-btn');
+          const arrow = btn.querySelector('span[aria-hidden="true"]').getBoundingClientRect();
+          const range = document.createRange();
+          range.selectNodeContents(btn.firstChild);
+          return arrow.left - range.getBoundingClientRect().right;
+        }"""
+    )
+    assert gap >= 4, f"arrow glyph sits {gap:.1f}px from the label"
+    fill_profile_and_submit(page)
+    page.click("#tab-programs")
+    page.wait_for_selector("#programs-container .program-steps li", timeout=20000)
+    marks = page.evaluate(
+        """() => {
+          const step = getComputedStyle(document.querySelector('.program-steps .reason-list li'), '::after');
+          const reason = document.querySelector('#programs-container .reasons:not(.program-steps) .reason-list li');
+          return {step: step.maskImage || step.webkitMaskImage,
+                  reason: reason ? (getComputedStyle(reason, '::after').maskImage || getComputedStyle(reason, '::after').webkitMaskImage) : null};
+        }"""
+    )
+    assert marks["step"] == "none", f"application step still wears the check mark: {marks['step'][:60]}"
+    if marks["reason"] is not None:
+        assert marks["reason"] != "none", "match reasons lost their check mark"
+    stale = page.evaluate(
+        """() => {
+          const el = document.querySelector('.verification-source.verification-stale');
+          if (!el) return null;
+          const s = getComputedStyle(el);
+          return [parseFloat(s.paddingLeft), parseFloat(s.borderTopWidth), parseFloat(s.borderTopLeftRadius)];
+        }"""
+    )
+    if stale is not None:
+        assert all(v > 0 for v in stale), f"stale strip has no box: padding/border/radius {stale}"
+
+
+def test_guide_body_panel_has_inner_padding(page, live_server):
+    # "load", not DOMContentLoaded: template pages carry no script, so DCL can
+    # fire before their stylesheet applies.
+    page.goto(f"{live_server}/guides/essays/identity", wait_until="load")
+    inset = page.evaluate(
+        """() => {
+          const panel = document.querySelector('.guide-body').getBoundingClientRect();
+          const first = document.querySelector('.guide-body > h2').getBoundingClientRect();
+          return [first.left - panel.left, first.top - panel.top];
+        }"""
+    )
+    assert min(inset) >= 16, f"guide content sits on the panel border: {inset}"
