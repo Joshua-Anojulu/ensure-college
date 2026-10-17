@@ -1812,6 +1812,7 @@ input:user-invalid, select:user-invalid, textarea:user-invalid { border-color: v
 .form-step-tab.is-done { color: var(--ink-soft); }
 .form-step-tab.is-done span { background: var(--accent-tint); color: var(--accent-strong); }
 .form-error ul { margin: 0.35rem 0 0; padding-left: 1.2rem; }
+.form-error .btn-secondary { display: flex; width: fit-content; margin-top: 0.6rem; }
 
 /* Recommendation-letters rollup (auto-derived, in the Application Plan). */
 .rec-letters { margin-top: 1rem; padding: clamp(1.2rem, 3vw, 1.8rem); }
