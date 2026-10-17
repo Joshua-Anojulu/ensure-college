@@ -367,13 +367,20 @@ def test_short_lane_header_reads_over_the_stage(page):
     _assert_legible(results, "empty catalog lane")
 
 
-def test_journey_rail_stops_read_before_they_are_reached(page, live_server):
-    """Unreached rail stops sat at 0.55 opacity over the scene: 2.2:1."""
+@pytest.mark.parametrize("width", [390, 1440])
+def test_journey_rail_and_intro_read_over_the_flight(browser, live_server, width):
+    """Unreached rail stops sat at 0.55 opacity over the scene (2.2:1) and the
+    intro line rode the sky and the first island in muted grey (2.4-4.0:1)."""
+    ctx = _context(browser, width, height=844)
+    page = ctx.new_page()
     page.goto(f"{live_server}/journey", wait_until="load")
     page.wait_for_selector("html.journey-live", state="attached", timeout=15000)
-    page.wait_for_timeout(1200)
-    results = text_over_art(page, [".journey-rail button:not(.is-active)"])
-    _assert_legible(results, "journey rail")
+    page.wait_for_timeout(1500)
+    selectors = [".journey-head p"]
+    if width > 760:  # the rail is dots only on phones
+        selectors.append(".journey-rail button:not(.is-active)")
+    _assert_legible(text_over_art(page, selectors), f"/journey at {width}px")
+    ctx.close()
 
 
 EFFECTIVE_COLORS = """(selector) => Array.from(document.querySelectorAll(selector)).slice(0, 6).map((el) => {
@@ -701,3 +708,54 @@ def test_scrims_and_pressed_buttons_use_forest_tints(page):
     ink = _rgb(_token(page, "--ink"))
     got = _rgb(backdrop)
     assert max(abs(got[i] - ink[i]) for i in range(3)) <= 1 and abs(got[3] - 0.6) < 0.01, backdrop
+
+
+# ------------------------------------------------- missing states and spacing
+
+
+def test_signed_out_plan_offers_a_way_in(page):
+    """Signed out, the Plan view said both "Log in to save..." and "You have
+    not saved anything yet", with no way to act on either."""
+    page.click("#nav-plan-btn")
+    page.wait_for_selector("#saved-section:not([hidden])")
+    assert page.locator("#saved-empty").is_hidden()
+    panel = page.locator("#saved-signed-out")
+    assert panel.is_visible()
+    page.click("#saved-login-btn")
+    page.wait_for_selector("#auth-modal[open]")
+    assert page.locator("#auth-modal-title").inner_text().strip() == "Log in"
+    page.keyboard.press("Escape")
+    page.wait_for_selector("#auth-modal:not([open])", state="attached")
+    page.click("#saved-signup-btn")
+    page.wait_for_selector("#auth-modal[open]")
+    page.fill("#auth-email", f"plan-{int(time.time() * 1000)}@example.com")
+    page.fill("#auth-password", "cohesion-password-123")
+    page.click("#auth-submit")
+    page.wait_for_selector("#auth-logged-in:not([hidden])", timeout=15000)
+    page.click("#nav-plan-btn")
+    page.wait_for_selector("#journey-map:not([hidden])", timeout=15000)
+    assert panel.is_hidden(), "signed-in plan still shows the signed-out invitation"
+    assert page.locator("#saved-empty").is_visible()
+
+
+def test_preview_error_and_phone_filters_keep_the_rhythm(browser, live_server):
+    ctx = _context(browser, 390)
+    page = ctx.new_page()
+    page.goto(live_server, wait_until="domcontentloaded")
+    page.wait_for_selector("#preview-grade option:nth-child(2)", state="attached", timeout=20000)
+    page.click("#preview-submit")
+    gap = page.evaluate(
+        "document.querySelector('#preview-error').getBoundingClientRect().top"
+        " - document.querySelector('#preview-submit').getBoundingClientRect().bottom"
+    )
+    assert gap >= 8, f"preview error touches the submit button ({gap:.1f}px)"
+    fill_profile_and_submit(page)
+    widths = page.evaluate(
+        """() => {
+          const panel = document.querySelector('#results-filters').getBoundingClientRect();
+          return Array.from(document.querySelectorAll('#results-filters .filter-group'))
+            .map((g) => Math.round(panel.width - g.getBoundingClientRect().width));
+        }"""
+    )
+    assert widths and max(widths) - min(widths) <= 1, f"filter fields stop at uneven widths: {widths}"
+    ctx.close()

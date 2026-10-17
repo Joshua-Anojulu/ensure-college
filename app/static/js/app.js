@@ -230,6 +230,7 @@ const passwordResetBack = document.getElementById("password-reset-back");
 const savedSection = document.getElementById("saved-section");
 const savedSummary = document.getElementById("saved-summary");
 const savedEmpty = document.getElementById("saved-empty");
+const savedSignedOut = document.getElementById("saved-signed-out");
 const savedContainer = document.getElementById("saved-container");
 const journeyMap = document.getElementById("journey-map");
 const recLettersPanel = document.getElementById("rec-letters-panel");
@@ -603,7 +604,10 @@ async function activateOpportunityView(view, options = {}) {
     } else {
       savedSection.hidden = false;
       savedContainer.innerHTML = "";
-      savedEmpty.hidden = false;
+      // Signed out there is nothing to be empty of: the plan view says how
+      // to start one instead of "You have not saved anything yet".
+      savedEmpty.hidden = true;
+      if (savedSignedOut) savedSignedOut.hidden = false;
       savedSummary.textContent = "Log in to save scholarships, summer programs, and competitions to your application plan.";
       if (recLettersPanel) recLettersPanel.hidden = true;
     }
@@ -2598,6 +2602,7 @@ function renderSaved(scholarshipItems, programItems = [], competitionItems = [])
     ...(competitionItems || []),
   ];
   trackerItems = items;
+  if (savedSignedOut) savedSignedOut.hidden = true;
   renderJourneyMap();
   savedContainer.innerHTML = "";
   renderRecLettersRollup(items);
@@ -3814,6 +3819,8 @@ function wirePreviewForm() {
   form.addEventListener("submit", handlePreviewSubmit);
   document.getElementById("preview-complete-btn")?.addEventListener("click", prefillFromPreview);
   document.getElementById("preview-account-pitch-btn")?.addEventListener("click", () => openAuthModal("signup"));
+  document.getElementById("saved-signup-btn")?.addEventListener("click", () => openAuthModal("signup"));
+  document.getElementById("saved-login-btn")?.addEventListener("click", () => openAuthModal("login"));
 }
 
 function updatePreviewAccountPitch() {

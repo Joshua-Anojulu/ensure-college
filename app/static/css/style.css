@@ -181,6 +181,9 @@ h1, h2, h3, h4, h5 {
   font-family: var(--font-display);
   font-weight: 600;
   letter-spacing: 0;
+  /* Display type sets tight everywhere; headings without their own rule
+     inherited the body's 1.6 and wrapped with a paragraph's leading. */
+  line-height: 1.15;
   font-optical-sizing: auto;
 }
 
@@ -1115,6 +1118,7 @@ html.motion-ready .fit-ring-value { stroke-dashoffset: var(--circ); animation: r
 .loading-spinner { width: 1.1rem; height: 1.1rem; border: 2px solid var(--surface-3); border-top-color: var(--brand); border-radius: 50%; animation: spin 700ms linear infinite; }
 @keyframes spin { to { transform: rotate(1turn); } }
 .results-empty :is(h1, h3) { font-size: 1.4rem; }
+.saved-signed-out-actions { display: flex; margin-top: 1rem; flex-wrap: wrap; gap: 0.65rem; }
 .results-empty p { max-width: 67ch; margin: 0.45rem 0 0; color: var(--muted); font-size: 0.88rem; line-height: 1.6; }
 
 /* =========================================================================
@@ -1551,6 +1555,9 @@ html.motion-ready .saved-count.count-pop { animation: count-pop 360ms var(--ease
   .essay-clusters, .special-check-list { grid-template-columns: 1fr; }
   .card-title { font-size: 1.25rem; }
   .results-filters .filter-clear { margin-left: 0; }
+  /* Stacked on a phone, every filter field spans the panel like the search
+     box above it, instead of selects stopping at their natural width. */
+  .results-filters .filter-group { flex: 1 1 100%; }
 }
 
 /* Phones: like the landing, which drops its section nav below 860px, the
@@ -1774,6 +1781,8 @@ input:user-invalid, select:user-invalid, textarea:user-invalid { border-color: v
 .form-step-tab.is-done { color: var(--ink-soft); }
 .form-step-tab.is-done span { background: var(--accent-tint); color: var(--accent-strong); }
 .form-error ul { margin: 0.35rem 0 0; padding-left: 1.2rem; }
+/* The preview's error sits outside its form's gap: it touched the button. */
+.hero-demo > .form-error { margin-top: 0.75rem; }
 .form-error .btn-secondary { display: flex; width: fit-content; margin-top: 0.6rem; }
 
 /* Recommendation-letters rollup (auto-derived, in the Application Plan). */
