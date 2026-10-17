@@ -333,6 +333,40 @@ def test_teaser_copy_reads_over_the_painting(browser, live_server, width):
     ctx.close()
 
 
+@pytest.mark.parametrize("width", [1100, 1440])
+def test_teaser_landmark_labels_ride_above_the_scrim(browser, live_server, width):
+    """The dusk scrim is for the painting, but it painted over the landmark
+    chips: the Profile label measured 3.1:1 once the scrim held past the copy
+    column. SVG text paints with fill, so the gate hides fill, not color."""
+    ctx = _context(browser, width, height=900, reduced_motion="reduce")
+    page = ctx.new_page()
+    page.goto(live_server, wait_until="domcontentloaded")
+    page.evaluate("document.querySelector('.journey-teaser').scrollIntoView({block: 'center'})")
+    page.wait_for_selector(".teaser-painting img.world-loaded", state="attached", timeout=15000)
+    page.wait_for_timeout(1000)
+    labels = page.evaluate(
+        "() => [...document.querySelectorAll('.teaser-landmark text')].map((t) => {"
+        " const r = t.getBoundingClientRect();"
+        " return [t.textContent, getComputedStyle(t).fill, r.left, r.top, r.width, r.height]; })"
+    )
+    assert len(labels) == 4, labels
+    page.add_style_tag(content=".teaser-landmark text { fill: transparent !important; }")
+    page.wait_for_timeout(150)
+    worst = {}
+    for name, fill, x, y, w, h in labels:
+        png = page.screenshot(clip={"x": x, "y": y, "width": w, "height": h})
+        cols, _rows, bpp, rows = _decode_png(png)
+        fg = _rgb(fill)
+        ratios = sorted(
+            contrast(fg, (row[k], row[k + 1], row[k + 2], 1.0))
+            for row in rows
+            for k in range(0, cols * bpp, bpp)
+        )
+        worst[name] = round(ratios[len(ratios) // 10], 2)
+    assert all(r >= 4.5 for r in worst.values()), f"landmark labels at {width}px: {worst}"
+    ctx.close()
+
+
 @pytest.mark.parametrize("width", [820, 1440])
 def test_template_page_text_reads_over_the_frame(browser, live_server, width):
     """Breadcrumbs, eyebrows, and lane summaries start inside the canopy and
