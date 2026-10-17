@@ -318,6 +318,7 @@ a { color: var(--brand); }
   border: 1px solid transparent;
   color: var(--ink-soft);
   background: transparent;
+  white-space: nowrap;
 }
 .btn-ghost:hover { background: var(--surface-2); }
 
@@ -1576,10 +1577,18 @@ html.motion-ready .saved-count.count-pop { animation: count-pop 360ms var(--ease
 .browse-row:last-child { border-bottom: 0; }
 .browse-row a { color: var(--ink); font-weight: 600; text-decoration: none; }
 .browse-row a:hover, .browse-row a:focus-visible { color: var(--brand); text-decoration: underline; }
-.browse-row-meta { color: var(--muted); font-size: 0.78rem; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.browse-row-meta { color: var(--muted); font-size: 0.78rem; font-variant-numeric: tabular-nums; }
+/* Directory meta can run to a sentence (a program's cost, a competition's
+   recognition): it wraps beside the name instead of pushing the row, and the
+   whole page, sideways. */
+.browse-row > a { min-width: 0; }
+.browse-row > .browse-row-meta { flex: 0 1 auto; max-width: 52%; text-align: right; }
 @media (max-width: 760px) {
   .browse-kind-list { grid-template-columns: 1fr; }
   .browse-row { flex-direction: column; gap: 0.1rem; }
+  .browse-row > .browse-row-meta { max-width: none; text-align: left; }
+  /* Stacked rows read down one left edge; centering staggered every row. */
+  .browse-row.quick-apply-row, .browse-row.near-miss-row { align-items: flex-start; }
 }
 .card-title-link { color: inherit; text-decoration: none; }
 .card-title-link:hover, .card-title-link:focus-visible { color: var(--brand); text-decoration: underline; text-underline-offset: 3px; }
@@ -1616,6 +1625,13 @@ html.motion-ready .saved-count.count-pop { animation: count-pop 360ms var(--ease
   .results-filters .filter-clear { margin-left: 0; }
 }
 
+/* Phones: like the landing, which drops its section nav below 860px, the
+   template family and the Journey keep only the primary action in the
+   header; Browse stays one tap away in the breadcrumbs and the footer. */
+@media (max-width: 560px) {
+  .page-static .account-nav .btn-ghost:not(.btn-ghost-solid) { display: none; }
+}
+
 @media (max-width: 470px) {
   .header-inner { gap: 0.5rem; }
   .brand-name { font-size: 1.15rem; }
@@ -1626,6 +1642,24 @@ html.motion-ready .saved-count.count-pop { animation: count-pop 360ms var(--ease
   .card-header { flex-direction: column; }
   .card-body { padding: 1.1rem; }
   .results-header h2 { font-size: 2rem; }
+}
+
+@media (max-width: 420px) {
+  /* Signed in, Saved + Settings + Log out need the wordmark's room on a
+     phone: the mark stays, and the link keeps its accessible name. */
+  .site-header:has(#auth-logged-in:not([hidden])) .brand-name {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 360px) {
+  .header-inner { padding-inline: 0.75rem; }
+  .brand-name { font-size: 1.05rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {
