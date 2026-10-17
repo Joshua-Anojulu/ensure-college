@@ -117,14 +117,15 @@
       padding: 0.35rem 0.5rem;
       border: 0;
       border-radius: var(--radius-pill);
-      background: transparent;
+      /* Stops not yet reached recede by color on a light pill, not by
+         opacity: at 0.55 over the scene their labels read 2.2:1. */
+      background: color-mix(in srgb, var(--surface) 72%, transparent);
       color: var(--muted);
       font: inherit;
       font-size: 0.72rem;
       font-weight: 700;
       letter-spacing: 0.02em;
       cursor: pointer;
-      opacity: 0.55;
       transition: opacity 200ms var(--ease), color 200ms var(--ease), background 200ms var(--ease);
     }
 
@@ -141,7 +142,7 @@
     .journey-rail button:focus-visible {
       opacity: 1;
       color: var(--ink);
-      background: color-mix(in srgb, var(--surface) 80%, transparent);
+      background: color-mix(in srgb, var(--surface) 94%, transparent);
     }
 
     .journey-rail button.is-active {

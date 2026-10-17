@@ -5,7 +5,9 @@ sideways on phones, focus rings that vanished on dark surfaces, text that
 rode illustrated art below WCAG contrast, and components that drifted from
 the Forest Light system.
 """
+import struct
 import time
+import zlib
 
 import pytest
 
@@ -190,3 +192,236 @@ def test_focus_ring_reads_on_dark_bands(page, selector, band):
         backdrop = page.evaluate(f"getComputedStyle(document.querySelector('{band}')).backgroundColor")
     ratio = contrast(ring["color"], backdrop)
     assert ratio >= 3, f"{selector} focus ring {ring['color']} on {backdrop}: {ratio:.2f}:1"
+
+
+# ------------------------------------------------- text over world art
+#
+# Text over illustrated art cannot be checked from computed styles alone,
+# so these gates measure pixels: record each text line box and its color,
+# hide all text, screenshot the backdrop, and composite the text color over
+# every backdrop pixel inside its line boxes. The 10th percentile (where
+# glyphs land on the busiest art) must meet WCAG: 4.5:1, or 3:1 for large.
+
+
+def _decode_png(data):
+    """Minimal PNG decoder (8-bit RGB/RGBA, non-interlaced): Playwright's
+    screenshots, without adding an image library to the test deps."""
+    assert data[:8] == b"\x89PNG\r\n\x1a\n"
+    pos, idat = 8, []
+    width = height = bpp = None
+    while pos < len(data):
+        (length,) = struct.unpack(">I", data[pos : pos + 4])
+        kind, chunk = data[pos + 4 : pos + 8], data[pos + 8 : pos + 8 + length]
+        pos += 12 + length
+        if kind == b"IHDR":
+            width, height, depth, color_type, _c, _f, interlace = struct.unpack(">IIBBBBB", chunk)
+            assert depth == 8 and interlace == 0 and color_type in (2, 6), (depth, color_type)
+            bpp = 3 if color_type == 2 else 4
+        elif kind == b"IDAT":
+            idat.append(chunk)
+        elif kind == b"IEND":
+            break
+    raw = zlib.decompress(b"".join(idat))
+    stride = width * bpp
+    rows, prev, i = [], bytearray(stride), 0
+    for _ in range(height):
+        kind = raw[i]
+        line = bytearray(raw[i + 1 : i + 1 + stride])
+        i += 1 + stride
+        if kind == 1:
+            for x in range(bpp, stride):
+                line[x] = (line[x] + line[x - bpp]) & 255
+        elif kind == 2:
+            for x in range(stride):
+                line[x] = (line[x] + prev[x]) & 255
+        elif kind == 3:
+            for x in range(stride):
+                left = line[x - bpp] if x >= bpp else 0
+                line[x] = (line[x] + ((left + prev[x]) >> 1)) & 255
+        elif kind == 4:
+            for x in range(stride):
+                a = line[x - bpp] if x >= bpp else 0
+                b, c = prev[x], (prev[x - bpp] if x >= bpp else 0)
+                p_ = a + b - c
+                pa, pb, pc = abs(p_ - a), abs(p_ - b), abs(p_ - c)
+                line[x] = (line[x] + (a if pa <= pb and pa <= pc else b if pb <= pc else c)) & 255
+        rows.append(line)
+        prev = line
+    return width, height, bpp, rows
+
+
+TEXT_BOXES = """(selector) => {
+  const out = [];
+  for (const el of document.querySelectorAll(selector)) {
+    const cs = getComputedStyle(el);
+    let op = 1;
+    for (let n = el; n && n.nodeType === 1; n = n.parentElement) op *= Number(getComputedStyle(n).opacity || 1);
+    const rects = [];
+    const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+    while (walker.nextNode()) {
+      const node = walker.currentNode;
+      if (!node.textContent.trim() || getComputedStyle(node.parentElement).color !== cs.color) continue;
+      const range = document.createRange();
+      range.selectNodeContents(node);
+      for (const r of range.getClientRects()) {
+        if (r.width > 1 && r.height > 1 && r.top >= 0 && r.bottom <= innerHeight) {
+          rects.push([r.left, r.top, r.width, r.height]);
+        }
+      }
+    }
+    const size = parseFloat(cs.fontSize);
+    const large = size >= 24 || (size >= 18.66 && Number(cs.fontWeight) >= 700);
+    if (rects.length) out.push({color: cs.color, op, rects, need: large ? 3 : 4.5});
+  }
+  return out;
+}"""
+
+HIDE_TEXT = (
+    "*, *::before, *::after { color: transparent !important;"
+    " text-shadow: none !important; caret-color: transparent !important; }"
+)
+
+
+def text_over_art(page, selectors):
+    """Worst-10% contrast per selector: {selector: (p10, need)}."""
+    boxes = {s: page.evaluate(TEXT_BOXES, s) for s in selectors}
+    assert all(boxes.values()), f"no visible text for {[s for s, b in boxes.items() if not b]}"
+    every = [r for items in boxes.values() for item in items for r in item["rects"]]
+    x0 = max(0, int(min(r[0] for r in every)))
+    y0 = max(0, int(min(r[1] for r in every)))
+    x1 = int(max(r[0] + r[2] for r in every)) + 1
+    y1 = int(max(r[1] + r[3] for r in every)) + 1
+    page.add_style_tag(content=HIDE_TEXT)
+    page.wait_for_timeout(150)
+    png = page.screenshot(clip={"x": x0, "y": y0, "width": x1 - x0, "height": y1 - y0})
+    width, height, bpp, rows = _decode_png(png)
+    results = {}
+    for selector, items in boxes.items():
+        ratios, need = [], 3
+        for item in items:
+            fg = _rgb(item["color"])
+            fg = (fg[0], fg[1], fg[2], fg[3] * item["op"])
+            need = max(need, item["need"])
+            for rx, ry, rw, rh in item["rects"]:
+                for y in range(max(0, int(ry) - y0), min(height, int(ry + rh) - y0), 2):
+                    row = rows[y]
+                    for x in range(max(0, int(rx) - x0), min(width, int(rx + rw) - x0), 2):
+                        k = x * bpp
+                        ratios.append(contrast(fg, (row[k], row[k + 1], row[k + 2], 1.0)))
+        ratios.sort()
+        results[selector] = (round(ratios[len(ratios) // 10], 2), need)
+    return results
+
+
+def _assert_legible(results, where):
+    failing = {s: r for s, r in results.items() if r[0] < r[1]}
+    assert not failing, f"{where}: worst-10% contrast below WCAG: {failing}"
+
+
+@pytest.mark.parametrize("width", [390, 820, 1440])
+def test_teaser_copy_reads_over_the_painting(browser, live_server, width):
+    """Mobile measured 1.1:1 (white copy on the pale overlook), tablet 2.8:1,
+    desktop's paragraph 4.0:1. Static painting mode (reduced motion)."""
+    ctx = _context(browser, width, height=900, reduced_motion="reduce")
+    page = ctx.new_page()
+    page.goto(live_server, wait_until="domcontentloaded")
+    page.evaluate("document.querySelector('.journey-teaser').scrollIntoView({block: 'center'})")
+    page.wait_for_selector(".teaser-painting img.world-loaded", state="attached", timeout=15000)
+    page.wait_for_timeout(700)
+    results = text_over_art(page, ["#journey-teaser-title", ".journey-teaser-copy p"])
+    _assert_legible(results, f"teaser at {width}px")
+    ctx.close()
+
+
+@pytest.mark.parametrize("width", [820, 1440])
+def test_template_page_text_reads_over_the_frame(browser, live_server, width):
+    """Breadcrumbs, eyebrows, and lane summaries start inside the canopy and
+    fern band: 1.4-3.9:1 before the frame learned to recede."""
+    ctx = _context(browser, width, height=900)
+    page = ctx.new_page()
+    for path, selectors in (
+        ("/browse/competitions", [".detail-breadcrumb", ".results-header .eyebrow", ".results-summary"]),
+        ("/guides/essays", [".results-header .eyebrow", ".results-summary"]),
+    ):
+        page.goto(f"{live_server}{path}", wait_until="load")
+        page.wait_for_timeout(300)
+        _assert_legible(text_over_art(page, selectors), f"{path} at {width}px")
+    ctx.close()
+
+
+def test_short_lane_header_reads_over_the_stage(page):
+    """An empty catalog search left the lane summary on the stage's edge
+    trees (2.4:1); the lane mist keeps header copy on paper."""
+    page.click("#nav-browse-btn")
+    page.wait_for_selector("#catalog-section:not([hidden]) .match-card", timeout=20000)
+    page.click(".catalog-kind-tab[data-kind=programs]")
+    page.fill("#catalog-search", "zzzzqqqq")
+    page.wait_for_selector("#catalog-empty:not([hidden]), #catalog-container .results-empty", timeout=10000)
+    page.wait_for_selector("html.world-ready", state="attached", timeout=10000)
+    page.evaluate(
+        "window.scrollTo({top: document.querySelector('#catalog-section').getBoundingClientRect().top"
+        " + scrollY - 76, behavior: 'instant'})"
+    )
+    page.wait_for_timeout(900)
+    results = text_over_art(page, ["#catalog-section .results-header .eyebrow", "#catalog-summary"])
+    _assert_legible(results, "empty catalog lane")
+
+
+def test_journey_rail_stops_read_before_they_are_reached(page, live_server):
+    """Unreached rail stops sat at 0.55 opacity over the scene: 2.2:1."""
+    page.goto(f"{live_server}/journey", wait_until="load")
+    page.wait_for_selector("html.journey-live", state="attached", timeout=15000)
+    page.wait_for_timeout(1200)
+    results = text_over_art(page, [".journey-rail button:not(.is-active)"])
+    _assert_legible(results, "journey rail")
+
+
+EFFECTIVE_COLORS = """(selector) => Array.from(document.querySelectorAll(selector)).slice(0, 6).map((el) => {
+  const parse = (c) => {
+    const m = c.match(/[\\d.]+/g).map(Number);
+    const k = c.startsWith('color(srgb') ? 255 : 1;
+    return [m[0] * k, m[1] * k, m[2] * k, m.length > 3 ? m[3] : 1];
+  };
+  let op = 1;
+  for (let n = el; n && n.nodeType === 1; n = n.parentElement) op *= Number(getComputedStyle(n).opacity || 1);
+  const layers = [];
+  for (let n = el; n && n.nodeType === 1; n = n.parentElement) {
+    const bg = parse(getComputedStyle(n).backgroundColor);
+    if (bg[3] > 0) { layers.push(bg); if (bg[3] >= 1) break; }
+  }
+  let base = parse(getComputedStyle(document.body).backgroundColor);
+  for (const l of layers.reverse()) base = base.map((v, i) => i < 3 ? l[i] * l[3] + v * (1 - l[3]) : 1);
+  return {color: getComputedStyle(el).color, op, bg: 'rgb(' + base.slice(0, 3).map(Math.round).join(', ') + ')'};
+})"""
+
+
+def _assert_effective_contrast(page, selector, need=4.5):
+    found = page.evaluate(EFFECTIVE_COLORS, selector)
+    assert found, f"nothing rendered for {selector}"
+    for item in found:
+        fg = _rgb(item["color"])
+        ratio = contrast((fg[0], fg[1], fg[2], fg[3] * item["op"]), item["bg"])
+        assert ratio >= need, f"{selector}: {item['color']} at opacity {item['op']} on {item['bg']} = {ratio:.2f}:1"
+
+
+def test_small_labels_on_cards_and_tints_pass_contrast(page):
+    """--muted-2 text measured 3.4-3.7:1 and --accent-deep on the amber tints
+    4.49:1; small labels now use --muted and --amber-strong."""
+    fill_profile_and_submit(page)
+    page.wait_for_timeout(1500)  # let the cards' arrival animation settle
+    for selector in (".fit-ring-num span", ".verification-stale-flag", ".badge-closing, .badge-special, .badge-school"):
+        _assert_effective_contrast(page, f"#results-container {selector}")
+    page.click("#tab-programs")
+    page.wait_for_selector("#programs-container .match-card", timeout=20000)
+    page.wait_for_timeout(1500)
+    _assert_effective_contrast(page, "#programs-container .card-program-meta")
+
+
+def test_journey_map_stops_ahead_stay_legible(page):
+    """A new plan's stops ahead were dimmed to 0.55 opacity: labels 3.65:1,
+    badges 2.13:1. They now recede by color."""
+    _sign_up(page)
+    page.click("#nav-plan-btn")
+    page.wait_for_selector("#journey-map:not([hidden]) .journey-stop.is-ahead", timeout=15000)
+    _assert_effective_contrast(page, ".journey-stop.is-ahead .journey-stop-label")
+    _assert_effective_contrast(page, ".journey-stop.is-ahead .journey-stop-badge")

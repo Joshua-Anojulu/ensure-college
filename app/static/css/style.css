@@ -108,7 +108,7 @@
   --ink: #16211b;
   --ink-soft: #2f4037;
   --muted: #59675f;
-  --muted-2: #78857d;
+  --muted-2: #78857d; /* non-text only: 3.7:1 on --surface */
 
   --line: #d9dfd6;
   --line-strong: #c3cdc0;
@@ -1027,7 +1027,7 @@ input:focus, select:focus, textarea:focus {
   text-wrap: balance;
 }
 .card-sponsor { margin: 0.32rem 0 0; color: var(--muted); font-size: 0.85rem; font-weight: 500; }
-.card-program-meta { margin: 0.28rem 0 0; color: var(--muted-2); font-size: 0.78rem; line-height: 1.4; }
+.card-program-meta { margin: 0.28rem 0 0; color: var(--muted); font-size: 0.78rem; line-height: 1.4; }
 
 /* Fit gauge */
 .fit-ring { display: grid; flex: 0 0 auto; justify-items: center; gap: 0.3rem; }
@@ -1037,7 +1037,7 @@ input:focus, select:focus, textarea:focus {
 .fit-ring-value { fill: none; stroke: var(--brand); stroke-width: 6; stroke-linecap: round; stroke-dasharray: var(--circ); stroke-dashoffset: calc(var(--circ) - var(--dash)); }
 .fit-ring-num { position: absolute; inset: 0; display: grid; place-content: center; gap: 0.04rem; text-align: center; line-height: 1; }
 .fit-ring-num strong { font-family: var(--font-display); font-size: 1.25rem; font-weight: 700; color: var(--ink); font-variant-numeric: tabular-nums; }
-.fit-ring-num span { font-size: 0.52rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted-2); }
+.fit-ring-num span { font-size: 0.52rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
 .fit-ring-label { font-family: var(--font-mono); font-size: 0.62rem; font-weight: 400; letter-spacing: 0.08em; text-transform: uppercase; white-space: nowrap; color: var(--ink-soft); }
 html.motion-ready .fit-ring-value { stroke-dashoffset: var(--circ); animation: ring-draw 900ms 140ms var(--ease) forwards; }
 @keyframes ring-draw { to { stroke-dashoffset: calc(var(--circ) - var(--dash)); } }
@@ -1068,12 +1068,14 @@ html.motion-ready .fit-ring-value { stroke-dashoffset: var(--circ); animation: r
 }
 .score-chip { border: 1px solid var(--line); color: var(--ink-soft); background: var(--surface-2); }
 .badge { border: 1px solid var(--line); color: var(--ink-soft); background: transparent; }
+/* Text on the amber tints takes --amber-strong: --accent-deep there is
+   4.49:1, a hair under AA for these small mono labels. */
 .badge-closing {
   display: inline-flex;
   align-items: center;
   gap: 0.34rem;
   border-color: var(--accent-line);
-  color: var(--accent-strong);
+  color: var(--amber-strong);
   background: var(--accent-tint);
 }
 .badge-closing::before { content: ""; width: 0.42rem; height: 0.42rem; border-radius: 50%; background: var(--accent); }
@@ -1099,7 +1101,7 @@ html.motion-ready .fit-ring-value { stroke-dashoffset: var(--circ); animation: r
   border: 1px solid var(--accent-line);
   border-radius: var(--radius-xs);
   background: var(--accent-tint);
-  color: var(--accent-strong);
+  color: var(--amber-strong);
   font-family: var(--font-mono);
   font-size: 0.62rem;
   font-weight: 400;
@@ -1805,7 +1807,7 @@ input:user-invalid, select:user-invalid, textarea:user-invalid { border-color: v
 .preview-card-reason { margin: 0.45rem 0 0; color: var(--ink-soft); font-size: 0.82rem; line-height: 1.5; }
 .preview-cta { margin-top: 1.1rem; padding-top: 1rem; border-top: 1px solid var(--line); }
 .preview-total { margin: 0 0 0.7rem; max-width: 70ch; font-size: 0.92rem; line-height: 1.55; color: var(--ink-soft); }
-.preview-note { margin: 0.6rem 0 0; color: var(--muted-2); font-size: 0.8rem; }
+.preview-note { margin: 0.6rem 0 0; color: var(--muted); font-size: 0.8rem; }
 
 /* Multi-step profile form: numbered step tabs + one visible step at a time. */
 .form-step-indicator {
@@ -1922,7 +1924,7 @@ input:user-invalid, select:user-invalid, textarea:user-invalid { border-color: v
 }
 .preview-account-pitch h3 { margin: 0 0 0.6rem; font-family: var(--font-display); font-size: 1.05rem; }
 .preview-account-pitch-list { display: grid; margin: 0 0 0.7rem; padding-left: 1.1rem; gap: 0.4rem; color: var(--ink-soft); font-size: 0.88rem; line-height: 1.5; }
-.preview-account-pitch-note { margin: 0 0 0.8rem; color: var(--muted-2); font-size: 0.8rem; }
+.preview-account-pitch-note { margin: 0 0 0.8rem; color: var(--muted); font-size: 0.8rem; }
 
 /* "Not yet eligible" near-miss group: informational, never a ranked match. */
 .near-miss-group { margin-top: 1rem; padding: 0.9rem 1.1rem; border: 1px dashed var(--line-strong); border-radius: var(--radius); background: var(--surface-inset); }
@@ -2564,7 +2566,7 @@ body.has-scrolled .site-header {
 .badge-special,
 .badge-school {
   border-color: var(--amber-line);
-  color: var(--accent-deep);
+  color: var(--amber-strong);
   background: var(--amber-tint);
 }
 
@@ -2907,16 +2909,19 @@ body.has-scrolled .site-header {
 
 /* The copy column was styled for the dark brand wash; over the pale
    painting it needs a dusk scrim. Lives inside the painting layer so the
-   live swap fades it out with the plate. */
+   live swap fades it out with the plate. The scrim holds past the end of
+   the copy column: stopping at 56% left the paragraph's line ends on bare
+   painting (3.98:1 at 1440px). */
 .teaser-painting::after {
   content: "";
   position: absolute;
   inset: 0;
   background: linear-gradient(
     100deg,
-    color-mix(in srgb, var(--brand-strong) 84%, transparent) 0%,
-    color-mix(in srgb, var(--brand-strong) 52%, transparent) 28%,
-    transparent 56%
+    color-mix(in srgb, var(--brand-strong) 88%, transparent) 0%,
+    color-mix(in srgb, var(--brand-strong) 76%, transparent) 34%,
+    color-mix(in srgb, var(--brand-strong) 38%, transparent) 52%,
+    transparent 68%
   );
 }
 
@@ -3014,6 +3019,33 @@ body.has-scrolled .site-header {
   .profile-form::before {
     transform: rotate(-0.5deg) translate(-6px, 8px);
   }
+}
+
+/* Below 1024px the copy column is most of the box, so no scrim can sit
+   behind it without hiding the painting: the copy rides its own dusk panel
+   (panel-over-stage, ADR 0001). On phones the painting becomes a band
+   above the panel, so its landmarks stay in view instead of behind the
+   copy. Both layers keep the section's box: the live swap still changes
+   pixels, never layout. */
+@media (max-width: 1023px) {
+  .journey-teaser { align-items: flex-end; }
+  .journey-teaser-copy {
+    margin: clamp(0.75rem, 3vw, 1.25rem);
+    padding: clamp(1.2rem, 4vw, 1.8rem);
+    border-radius: var(--radius-lg);
+    background: color-mix(in srgb, var(--brand-strong) 86%, transparent);
+  }
+}
+
+@media (max-width: 767px) {
+  .journey-teaser { min-height: 33rem; }
+  .teaser-painting {
+    bottom: auto;
+    height: 60%;
+    -webkit-mask-image: linear-gradient(to bottom, #000 70%, transparent);
+    mask-image: linear-gradient(to bottom, #000 70%, transparent);
+  }
+  .teaser-painting::after { content: none; }
 }
 
 @media (max-width: 760px) {
@@ -3238,8 +3270,10 @@ body::after {
   padding: 0.05rem 0.4rem; border-radius: 6px;
   white-space: nowrap;
 }
-.journey-stop.is-ahead { opacity: 0.55; }
+/* Stops ahead recede by color, not opacity: at 0.55 their labels and
+   badges fell to 3.65:1 and 2.13:1. */
 .journey-stop.is-ahead .journey-stop-dot { background: var(--muted-2); box-shadow: none; }
+.journey-stop.is-ahead .journey-stop-label { color: var(--muted); }
 .journey-stop.is-ahead .journey-stop-badge,
 .journey-stop.is-muted .journey-stop-badge {
   color: var(--muted); background: var(--surface-3);
@@ -3316,8 +3350,16 @@ body::after {
 /* The stage replaces the proof band's tint: the panel keeps its own surface. */
 .proof-band { background: transparent; }
 
-/* Stat labels go ink over the clearing: amber-on-amber-trail was illegible. */
-.catalog-number span { color: var(--ink-soft); }
+/* Stat labels go ink over the clearing: amber-on-amber-trail was illegible.
+   Where a fern runs under a label (COMPETITIONS on phones, 3.4:1) the label
+   rides a small paper wash; the spread shadow pads it without moving it. */
+.catalog-number span {
+  width: fit-content;
+  border-radius: var(--radius-xs);
+  color: var(--ink-soft);
+  background: color-mix(in srgb, var(--canvas) 84%, transparent);
+  box-shadow: 0 0 0 0.3rem color-mix(in srgb, var(--canvas) 84%, transparent);
+}
 
 /* Stats ride openly on the clearing (comp 02): no cards on this section.
    The :nth-child variants outrank a bare class, so name them explicitly. */
@@ -3385,6 +3427,10 @@ body::after {
   border-radius: var(--radius-lg);
   background: color-mix(in srgb, var(--canvas) 86%, transparent);
 }
+
+/* Muted grey through the 86% wash measured 3.97-4.41:1 over the grove; the
+   intro takes the ink-soft every other copy-over-art paragraph uses. */
+.difference-copy p:last-child { color: var(--ink-soft); }
 
 .world-dusk {
   position: relative;
