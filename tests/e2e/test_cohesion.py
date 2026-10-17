@@ -21,6 +21,35 @@ def _context(browser, width, height=844, **kwargs):
     return ctx
 
 
+def _rgb(css):
+    """'rgb(1, 2, 3)' / 'rgba(1, 2, 3, 0.5)' / 'color(srgb r g b / a)' -> (r, g, b, a)."""
+    css = css.strip()
+    if css.startswith("color(srgb"):
+        parts = css[len("color(srgb") : -1].replace("/", " ").split()
+        vals = [float(v) for v in parts]
+        return (vals[0] * 255, vals[1] * 255, vals[2] * 255, vals[3] if len(vals) > 3 else 1.0)
+    parts = css[css.index("(") + 1 : -1].replace("/", " ").replace(",", " ").split()
+    vals = [float(v) for v in parts]
+    return (vals[0], vals[1], vals[2], vals[3] if len(vals) > 3 else 1.0)
+
+
+def _luminance(rgb):
+    def channel(v):
+        v /= 255
+        return v / 12.92 if v <= 0.03928 else ((v + 0.055) / 1.055) ** 2.4
+
+    return 0.2126 * channel(rgb[0]) + 0.7152 * channel(rgb[1]) + 0.0722 * channel(rgb[2])
+
+
+def contrast(a, b):
+    """WCAG contrast ratio of two opaque colors (alpha composited onto b first)."""
+    a, b = _rgb(a) if isinstance(a, str) else a, _rgb(b) if isinstance(b, str) else b
+    alpha = a[3]
+    a = tuple(a[i] * alpha + b[i] * (1 - alpha) for i in range(3))
+    la, lb = _luminance(a), _luminance(b)
+    return (max(la, lb) + 0.05) / (min(la, lb) + 0.05)
+
+
 def _sign_up(page):
     page.wait_for_selector("#auth-logged-out:not([hidden])")
     page.click("#open-signup")
@@ -112,3 +141,52 @@ def test_stacked_quick_apply_rows_share_one_left_edge(browser, live_server):
     )
     assert offsets and max(offsets) <= 1, f"row parts start at different edges: {offsets}"
     ctx.close()
+
+
+# ------------------------------------------------- focus on dark bands
+
+
+def _keyboard_focus(page, selector):
+    """Focus via the keyboard so :focus-visible applies (a programmatic
+    focus() after the consent click does not match it in Chromium)."""
+    page.evaluate(
+        "(s) => { const el = document.querySelector(s); el.scrollIntoView({block: 'center'}); el.focus(); }",
+        selector,
+    )
+    page.keyboard.press("Shift+Tab")
+    page.keyboard.press("Tab")
+    return page.evaluate(
+        """(s) => {
+          const el = document.querySelector(s);
+          const st = getComputedStyle(el);
+          return {visible: el === document.activeElement && el.matches(':focus-visible'),
+                  style: st.outlineStyle, color: st.outlineColor};
+        }""",
+        selector,
+    )
+
+
+@pytest.mark.parametrize(
+    "selector,band",
+    [
+        (".site-footer .footer-links a", ".site-footer"),
+        (".journey-teaser-cta", ".teaser-painting::after"),
+    ],
+)
+def test_focus_ring_reads_on_dark_bands(page, selector, band):
+    """The brand-colored ring sat on the brand footer and the dusk teaser:
+    keyboard focus there was invisible (1.0:1 against the footer)."""
+    ring = _keyboard_focus(page, selector)
+    assert ring["visible"] and ring["style"] != "none", ring
+    if band.endswith("::after"):
+        # The teaser CTA rides the dusk scrim, whose darkest stop is brand-strong.
+        backdrop = page.evaluate("getComputedStyle(document.documentElement).getPropertyValue('--brand-strong')")
+        backdrop = page.evaluate(
+            "(hex) => { const d = document.createElement('div'); d.style.color = hex;"
+            " document.body.appendChild(d); const c = getComputedStyle(d).color; d.remove(); return c; }",
+            backdrop.strip(),
+        )
+    else:
+        backdrop = page.evaluate(f"getComputedStyle(document.querySelector('{band}')).backgroundColor")
+    ratio = contrast(ring["color"], backdrop)
+    assert ratio >= 3, f"{selector} focus ring {ring['color']} on {backdrop}: {ratio:.2f}:1"

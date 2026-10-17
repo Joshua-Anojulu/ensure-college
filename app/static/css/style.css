@@ -2804,6 +2804,14 @@ body.has-scrolled .site-header {
   text-transform: uppercase;
 }
 
+/* Focus on the dark bands: the brand ring vanished into the brand footer
+   and the dusk teaser, so keyboard focus there was invisible. */
+.site-footer :focus-visible,
+.journey-teaser :focus-visible {
+  outline-color: var(--brand-ink);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--brand-ink) 30%, transparent);
+}
+
 /* Journey teaser: a live miniature of the flight, docked on the landing.
    The canvas paints the island against a dark forest vignette; copy rides
    above it. If motion or WebGL is unavailable the panel stands on copy. */
