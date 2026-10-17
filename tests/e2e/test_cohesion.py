@@ -660,3 +660,44 @@ def test_tracker_controls_have_accessible_names(page):
     assert notes.get_attribute("aria-label") == f"Notes: {name}"
     ring = page.locator("#results-container .fit-ring").first.get_attribute("aria-label") or ""
     assert "\u2014" not in ring
+
+
+# ------------------------------------------------- old-brand leftovers
+
+
+def _token(page, name):
+    return page.evaluate(
+        "(n) => { const d = document.createElement('div'); d.style.color = `var(${n})`;"
+        " document.body.appendChild(d); const c = getComputedStyle(d).color; d.remove(); return c; }",
+        name,
+    )
+
+
+@pytest.mark.parametrize("width", [390, 1440])
+def test_reminder_pages_wear_forest_light(browser, live_server, width):
+    """The unsubscribe pages (linked from every digest email) still wore the
+    retired Highlighter palette: cream canvas, slate button, system font."""
+    ctx = browser.new_context(viewport={"width": width, "height": 844})
+    page = ctx.new_page()
+    page.goto(f"{live_server}/reminders/unsubscribe?token=preview", wait_until="load")
+    assert page.locator("h1").inner_text() == "Turn off reminders?"
+    assert page.locator(".site-header .brand-link").count() == 1
+    body = page.evaluate("(() => { const s = getComputedStyle(document.body); return [s.backgroundColor, s.fontFamily]; })()")
+    assert body[0] == _token(page, "--canvas"), body
+    assert body[1].startswith('"Satoshi"') or body[1].startswith("Satoshi"), body
+    button = page.locator("button[type=submit]")
+    assert button.evaluate("b => getComputedStyle(b).backgroundColor") == _token(page, "--brand")
+    assert page.evaluate(SIDEWAYS) <= 0
+    ctx.close()
+
+
+def test_scrims_and_pressed_buttons_use_forest_tints(page):
+    """Dialog and consent scrims were slate (23, 24, 28) and pressed buttons a
+    warm brown inset, both from the retired palettes."""
+    page.click("#open-login")
+    page.wait_for_selector("#auth-modal[open]")
+    page.wait_for_timeout(400)
+    backdrop = page.evaluate("getComputedStyle(document.querySelector('#auth-modal'), '::backdrop').backgroundColor")
+    ink = _rgb(_token(page, "--ink"))
+    got = _rgb(backdrop)
+    assert max(abs(got[i] - ink[i]) for i in range(3)) <= 1 and abs(got[3] - 0.6) < 0.01, backdrop

@@ -265,8 +265,6 @@ a { color: var(--brand); }
   border-radius: var(--radius-pill);
   background: var(--accent);
 }
-.brand-name { font-weight: 600; }
-
 .brand-name {
   margin: 0;
   font-family: var(--font-display);
@@ -350,7 +348,7 @@ a { color: var(--brand); }
 /* Click feedback: a brief inset press instead of any lift. */
 .btn-ghost:active, .btn-primary:active, .btn-secondary:active, .btn-save:active,
 .btn-danger:active, .card-link:active {
-  box-shadow: inset 0 1px 3px rgba(28, 26, 18, 0.22);
+  box-shadow: inset 0 1px 3px rgba(18, 42, 33, 0.22);
 }
 
 .btn-secondary {
@@ -467,9 +465,7 @@ a { color: var(--brand); }
   border-color: var(--line-strong);
   box-shadow: var(--shadow-lg);
 }
-.hero-demo .eyebrow { margin-bottom: 0.55rem; }
 .hero-demo h2 { margin: 0 0 0.25rem; font-size: 1.45rem; letter-spacing: 0; }
-.hero-demo-note { margin: 0 0 0.2rem; color: var(--muted); font-size: 0.88rem; }
 
 .hero h1 {
   max-width: 15ch;
@@ -510,64 +506,6 @@ a { color: var(--brand); }
   box-shadow: var(--shadow-md);
 }
 .hero-secondary { min-height: 3rem; padding: 0.85rem 1.15rem; font-size: 0.95rem; }
-.hero-note {
-  flex-basis: 100%;
-  max-width: 40ch;
-  margin: 0.35rem 0 0;
-  color: var(--muted);
-  font-size: 0.82rem;
-}
-
-/* Real numbers instead of a fabricated UI card: the catalog, stated plainly. */
-.hero-stats {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem 1.6rem;
-  margin-top: 1.7rem;
-  padding-top: 1.05rem;
-  border-top: 1px solid var(--line);
-}
-.hero-stat { display: flex; align-items: baseline; gap: 0.45rem; margin: 0; }
-.hero-stat strong {
-  color: var(--ink);
-  font-family: var(--font-mono);
-  font-size: 1.02rem;
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-}
-.hero-stat span {
-  color: var(--muted);
-  font-family: var(--font-mono);
-  font-size: 0.66rem;
-  font-weight: 400;
-  letter-spacing: 0.13em;
-  text-transform: uppercase;
-}
-
-/* =========================================================================
-   Trust strip
-   ========================================================================= */
-.trust-strip {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  overflow: hidden;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: var(--surface);
-  box-shadow: var(--shadow-sm);
-}
-.trust-item {
-  display: flex;
-  min-height: 74px;
-  padding: 1.05rem 1.25rem;
-  border-right: 1px solid var(--line);
-  align-items: center;
-  gap: 0.75rem;
-  color: var(--ink-soft);
-  font-size: 0.86rem;
-  font-weight: 500;
-}
-.trust-item:last-child { border-right: 0; }
 
 /* =========================================================================
    "Why different" panel
@@ -600,7 +538,6 @@ a { color: var(--brand); }
   font-size: 0.95rem;
   line-height: 1.65;
 }
-.difference-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.85rem; }
 /* Informational cards: no hover theater, type and spacing carry them. */
 .difference-card {
   position: relative;
@@ -1201,7 +1138,7 @@ html.motion-ready .fit-ring-value { stroke-dashoffset: var(--circ); animation: r
 }
 .modal-overlay[open] { display: flex; }
 .modal-overlay::backdrop {
-  background: rgba(23, 24, 28, 0.6);
+  background: color-mix(in srgb, var(--ink) 60%, transparent);
 }
 
 /* Age/consent gate: a blocking overlay (not a dismissible dialog), so it keeps
@@ -1214,7 +1151,7 @@ html.motion-ready .fit-ring-value { stroke-dashoffset: var(--circ); animation: r
   padding: 1.25rem;
   align-items: center;
   justify-content: center;
-  background: rgba(23, 24, 28, 0.6);
+  background: color-mix(in srgb, var(--ink) 60%, transparent);
 }
 
 html.has-site-consent .age-gate {
@@ -1423,7 +1360,7 @@ html.has-site-consent .age-gate {
 .site-footer {
   margin-top: 2.6rem;
   padding: 2.1rem 1.5rem 2.5rem;
-  border-top: 1px solid rgba(251, 250, 247, 0.16);
+  border-top: 1px solid color-mix(in srgb, var(--brand-ink) 16%, transparent);
   color: color-mix(in srgb, var(--brand-ink) 74%, transparent);
   background: var(--brand);
   font-size: 0.8rem;
@@ -1475,8 +1412,8 @@ html.motion-ready .saved-count.count-pop { animation: count-pop 360ms var(--ease
   z-index: 1;
   pointer-events: none;
   background:
-    linear-gradient(175deg, rgba(232, 162, 0, 0.12) 0%, transparent 34%),
-    linear-gradient(0deg, rgba(20, 18, 12, 0.55) 0%, rgba(20, 18, 12, 0.08) 42%, transparent 66%);
+    linear-gradient(175deg, color-mix(in srgb, var(--accent) 12%, transparent) 0%, transparent 34%),
+    linear-gradient(0deg, color-mix(in srgb, var(--ink) 55%, transparent) 0%, color-mix(in srgb, var(--ink) 8%, transparent) 42%, transparent 66%);
 }
 /* Fine film grain so disparate photos share one texture. */
 .photo::before {
@@ -1488,19 +1425,6 @@ html.motion-ready .saved-count.count-pop { animation: count-pop 360ms var(--ease
   opacity: 0.5;
   mix-blend-mode: overlay;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-}
-.photo-caption {
-  position: absolute;
-  z-index: 3;
-  left: 1rem;
-  bottom: 0.85rem;
-  margin: 0;
-  color: rgba(255, 250, 238, 0.92);
-  font-family: var(--font-mono);
-  font-size: 0.64rem;
-  font-weight: 400;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
 }
 
 /* Proof band: a real campus scene stands in for empty claims. */
@@ -1610,9 +1534,6 @@ html.motion-ready .saved-count.count-pop { animation: count-pop 360ms var(--ease
   .main { padding: 1.25rem 1rem 3rem; }
   .hero { grid-template-columns: 1fr; padding: 1.25rem 0 0.5rem; }
   .hero-headline { font-size: clamp(2.3rem, 10vw, 3.2rem); }
-  .trust-strip { grid-template-columns: 1fr; }
-  .trust-item { min-height: 56px; padding: 0.8rem 1rem; border-right: 0; border-bottom: 1px solid var(--line); }
-  .trust-item:last-child { border-bottom: 0; }
   .difference-copy h2 { max-width: 14ch; }
   .stack-card { position: static; min-height: auto; }
   .opportunity-tabs { grid-template-columns: 1fr; }
@@ -3597,7 +3518,6 @@ body::after {
 
 @media (prefers-reduced-motion: reduce) {
   .world-plate img.world-loaded,
-  .world-owl img.world-loaded,
   .world-dusk img.world-loaded { transition: none; }
   .fireflies-live .firefly { animation: none; }
 }
