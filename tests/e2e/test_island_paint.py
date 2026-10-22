@@ -185,8 +185,11 @@ def test_journey_flight_is_painted_from_the_plates(browser, live_server):
 
 
 def test_journey_static_fallback_paints_no_sky(browser, live_server):
-    """Reduced motion keeps the static page: no sky layer, and neither the
-    dusk plate nor three.js is fetched."""
+    """Reduced motion keeps the static page: no sky layer and no three.js.
+
+    The static page still wears the shared chrome: the forest stage behind
+    it and the footer's dusk band (the same dusk-treeline file the sky would
+    crossfade to). Those are the only World images it may fetch."""
     context = browser.new_context(viewport={"width": 1440, "height": 900}, reduced_motion="reduce")
     context.add_init_script(CONSENT)
     page = context.new_page()
@@ -199,7 +202,22 @@ def test_journey_static_fallback_paints_no_sky(browser, live_server):
     page.wait_for_timeout(600)
     assert page.evaluate("document.documentElement.classList.contains('journey-static')")
     assert page.evaluate("getComputedStyle(document.querySelector('.journey-sky')).display") == "none"
-    assert fetched == [], fetched
+    assert not any("three.min.js" in url for url in fetched), fetched
+    chrome = page.evaluate(
+        """(() => {
+          const urls = [];
+          const stage = document.querySelector('.journey-page > .world-stage');
+          for (const pseudo of [null, '::before', '::after']) {
+            const bg = stage ? getComputedStyle(stage, pseudo).backgroundImage : 'none';
+            for (const m of bg.matchAll(/url\\("?([^")]+)"?\\)/g)) urls.push(new URL(m[1], location.href).href);
+          }
+          const dusk = document.querySelector('.world-dusk img');
+          if (dusk && dusk.currentSrc) urls.push(dusk.currentSrc);
+          return urls;
+        })()"""
+    )
+    plates = [url for url in fetched if "/static/img/world/" in url]
+    assert all(url in chrome for url in plates), (plates, chrome)
     context.close()
 
 
