@@ -712,10 +712,11 @@ _SITE_FOOTER = (
 def _reminder_page(title: str, body: str) -> str:
     """Wrap a reminder-settings page in the site's Forest Light chrome.
 
-    These pages answer emailed links, so they stand alone (no app.js). The
-    stylesheet link is unversioned on purpose: static files revalidate on
-    every load (max-age=0) and the edge cache is keyed per deployment, so it
-    cannot go stale, and it adds no new ?v= lockstep location.
+    These pages answer emailed links, so they stand alone (no app.js) but
+    wear the shared header, stage and footer. The stylesheet links are
+    unversioned on purpose: static files revalidate on every load
+    (max-age=0) and the edge cache is keyed per deployment, so they cannot
+    go stale, and they add no new ?v= lockstep location.
     """
     return (
         "<!DOCTYPE html><html lang='en'><head><meta charset='utf-8'>"
@@ -724,7 +725,9 @@ def _reminder_page(title: str, body: str) -> str:
         "<meta name='robots' content='noindex'>"
         "<link rel='icon' href='/static/favicon.svg?v=20260715-3' type='image/svg+xml'>"
         "<link rel='stylesheet' href='/static/css/style.css'>"
+        "<link rel='stylesheet' href='/static/css/world.css'>"
         "</head><body class='page-static'>"
+        "<div class='world-stage' aria-hidden='true'></div>"
         "<a class='skip-link' href='#main'>Skip to content</a>"
         f"{_SITE_HEADER}"
         "<main id='main' class='main legal'><section class='panel legal-content'>"

@@ -6541,6 +6541,20 @@ async function handleProgramAdvice(programId, button, panel, loading, errorEl) {
     );
     document.head.appendChild(link);
   };
+  // The tool views (profile form onward) sit on the stage: request it as they
+  // come near, so scrolling down the landing finds the scene already there.
+  var toolStage = document.querySelector(".tool-stage");
+  if (toolStage && !saveData && "IntersectionObserver" in window) {
+    var stageObserver = new IntersectionObserver(
+      function (entries) {
+        if (!entries.some(function (entry) { return entry.isIntersecting; })) return;
+        stageObserver.disconnect();
+        window.__ensureWorldStage();
+      },
+      { rootMargin: "600px 0px" }
+    );
+    stageObserver.observe(toolStage);
+  }
   if (!saveData) {
     var plates = document.querySelectorAll(
       ".world-plate img[data-src], .world-dusk img[data-src], .teaser-painting img[data-src]"

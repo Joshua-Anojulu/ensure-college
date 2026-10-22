@@ -34,13 +34,22 @@ lazily, not simultaneously in practice).
 | Plate | Cost class | Format / crops | Byte target | Load | Reduced-motion |
 |---|---|---|---|---|---|
 | `stage-tools` (one quiet-center full scene reused behind all SPA views) | img + script (`world.css` on first activation, `.world-ready` fade) | WebP q32, 1600w + 760w | ≤ 55 KB / ≤ 22 KB | on first SPA-world activation only | fade off; static |
-| `canopy-edge` (template top strip, on-canvas bg) | img | WebP q32, 1600w shallow band | ≤ 25 KB | lazy | static |
-| `fern-corner-left` / `fern-corner-right` | img | WebP q32, 640w | ≤ 18 KB each | lazy | static |
+| `canopy-edge` (template top strip, on-canvas bg; retired 2026-10-22) | img | WebP q32, 1600w shallow band | ≤ 25 KB | lazy | static |
+| `fern-corner-left` / `fern-corner-right` (retired 2026-10-22) | img | WebP q32, 640w | ≤ 18 KB each | lazy | static |
 | `glyph-sheet` (world-glyph sprite, one inked sheet, 12 glyphs on 4×3 grid) | img | WebP lossless-ish q80, 960w | ≤ 40 KB | lazy (facts panels only) | static |
 
 **Stage B aggregates:** template family adds ≤ 4 requests / ≤ 105 KB per page,
 identical URLs on all 322 pages (immutable-cached after first page). SPA adds
 ≤ 2 requests (`world.css` + `stage-tools`) after activation, never pre-LCP.
+
+**2026-10-22 (painted forest everywhere):** the botanical frame is retired;
+its three files are deleted from the manifest and the generator. Every
+non-landing surface now shows `stage-tools` as one stage fixed to the
+viewport, plus the lazy `dusk-treeline` footer band (see
+docs/2026-10-22-painted-forest-unification.md). Template pages drop to
+≤ 3 world requests (stage, glyph sheet on Opportunity pages, dusk band when
+scrolled near). The app requests `world.css` when its tool views come within
+600px of the viewport or on first activation, whichever is first.
 
 ## Stage C — Journey + Teaser
 

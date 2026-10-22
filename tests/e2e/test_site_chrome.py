@@ -2,9 +2,14 @@
 
 The owner's complaint was that the site did not feel like one thing: the app,
 the template family, the Journey, the legal pages and the unsubscribe pages
-each wore their own header. These gates drive every surface in a real browser
-and require the header to be the same thing everywhere: same labels in the
-same order, same computed style, same position, at desktop and phone widths.
+each wore their own header, footer and backdrop. These gates drive every
+surface in a real browser and require:
+- one header (labels, order, computed style, position) at desktop and phone
+  widths, and one footer with the painted dusk band;
+- one paper panel recipe for the app's tool panels and the template cards;
+- one fixed stage-tools scene behind every non-landing surface, the retired
+  botanical frame never requested, and the art yielding to Save-Data and
+  forced colors.
 """
 import pytest
 
@@ -175,10 +180,11 @@ def test_server_nav_deep_links_open_the_app_views(page, live_server):
     page.goto(f"{live_server}/guides/essays", wait_until="load")
     page.click('.site-nav a[href="/#matches"]')
     page.wait_for_url(f"{live_server}/")
-    page.wait_for_function(
-        "() => { const t = document.getElementById('profile-form').getBoundingClientRect().top;"
-        " return t > 0 && t < 260; }",
-        timeout=15000,
+    _wait_until(
+        page,
+        "(() => { const t = document.getElementById('profile-form').getBoundingClientRect().top;"
+        " return t > 0 && t < 260; })()",
+        15000,
     )
     assert page.evaluate("location.hash") == ""
 
@@ -383,3 +389,162 @@ def test_app_panels_and_template_cards_share_one_paper(page, live_server):
     eyebrows = {name: probe["eyebrow"] for name, probe in found.items() if probe["eyebrow"]}
     assert len(eyebrows) >= 8, eyebrows
     assert len(set(eyebrows.values())) == 1, eyebrows
+
+
+# --------------------------------------------------------------- one frame
+
+STAGE_PROBE = """() => {
+  const win = Array.from(document.querySelectorAll('.world-stage')).find((el) => el.getClientRects().length);
+  if (!win) return null;
+  const scene = getComputedStyle(win, '::before');
+  return {
+    content: scene.content,
+    position: scene.position,
+    image: scene.backgroundImage.replace(/^.*\\/static\\/img\\/world\\//, '').replace(/["')]+$/, ''),
+    size: scene.backgroundSize,
+    place: scene.backgroundPosition,
+    shown: getComputedStyle(win).opacity,
+  };
+}"""
+
+STAGE_SURFACES = [
+    ("opportunity", "/scholarships/coca-cola-scholars"),
+    ("browse", "/browse/scholarships"),
+    ("guide", "/guides/essays/identity"),
+    ("privacy", "/privacy"),
+    ("terms", "/terms"),
+    ("404", "/scholarships/does-not-exist"),
+    ("unsubscribe", "/reminders/unsubscribe?token=e2e-stage"),
+]
+
+
+def _scene_has_forest(page, clip):
+    """The stage is painted, not just declared: a strip of backdrop beside
+    the panels holds the scene's greens, not one flat paper tone."""
+    from tests.e2e.test_cohesion import _decode_png
+
+    width, height, bpp, rows = _decode_png(page.screenshot(clip=clip))
+    lum = sorted(
+        0.2126 * row[x] + 0.7152 * row[x + 1] + 0.0722 * row[x + 2]
+        for row in rows
+        for x in range(0, width * bpp, bpp * 2)
+    )
+    return lum[len(lum) // 2] - lum[len(lum) // 20]
+
+
+@pytest.mark.parametrize("width,height,scene", [(1440, 900, "stage-tools-1376"), (390, 844, "stage-tools-760")])
+def test_one_stage_behind_template_pages_and_the_app_tool_views(browser, live_server, width, height, scene):
+    ctx = browser.new_context(viewport={"width": width, "height": height})
+    ctx.add_init_script(CONSENT)
+    page = ctx.new_page()
+    found = {}
+    for name, path in STAGE_SURFACES:
+        page.goto(f"{live_server}{path}", wait_until="networkidle")
+        found[name] = page.evaluate(STAGE_PROBE)
+
+    # The app: scrolling down to the profile form brings the stage in.
+    page.goto(live_server, wait_until="load")
+    page.wait_for_selector("#auth-logged-out:not([hidden])")
+    page.evaluate("document.getElementById('profile-form').scrollIntoView({block: 'start', behavior: 'instant'})")
+    _wait_until(page, "document.documentElement.classList.contains('world-ready')")
+    _wait_until(page, "getComputedStyle(document.querySelector('.tool-stage > .world-stage')).opacity === '1'")
+    found["form"] = page.evaluate(STAGE_PROBE)
+    fill_profile_and_submit(page)
+    found["results"] = page.evaluate(STAGE_PROBE)
+    page.click("#tab-saved")
+    page.wait_for_selector("#saved-section:not([hidden])")
+    found["plan"] = page.evaluate(STAGE_PROBE)
+    if width >= 1024:
+        page.wait_for_timeout(600)
+        assert _scene_has_forest(page, {"x": 0, "y": 200, "width": 120, "height": 500}) > 25, "app stage not painted"
+    ctx.close()
+
+    expected = {"content": '""', "position": "fixed", "image": f"{scene}", "size": "cover", "place": "25% 100%", "shown": "1"}
+    for name, probe in found.items():
+        assert probe is not None, f"{name}: no stage window"
+        probe = dict(probe, image=probe["image"].rsplit(".", 2)[0])
+        assert probe == expected, f"{width}px {name}: {probe}"
+
+
+def test_template_stage_is_painted_beside_the_panels(browser, live_server):
+    ctx = browser.new_context(viewport={"width": 1440, "height": 900})
+    page = ctx.new_page()
+    page.goto(f"{live_server}/scholarships/coca-cola-scholars", wait_until="networkidle")
+    page.wait_for_timeout(400)
+    assert _scene_has_forest(page, {"x": 0, "y": 200, "width": 120, "height": 500}) > 25
+    ctx.close()
+
+
+def test_no_surface_loads_the_retired_frame(browser, live_server):
+    """The canopy strip and fern corners are gone everywhere."""
+    ctx = browser.new_context(viewport={"width": 1440, "height": 900})
+    ctx.add_init_script(CONSENT)
+    page = ctx.new_page()
+    seen = []
+    page.on("request", lambda r: seen.append(r.url) if "/static/img/world/" in r.url else None)
+    paths = ["/"] + [path for _name, path in SERVER_SURFACES] + ["/browse", "/guides/essays"]
+    for path in paths:
+        page.goto(f"{live_server}{path}", wait_until="load")
+        page.evaluate("window.scrollTo({top: document.documentElement.scrollHeight, behavior: 'instant'})")
+        page.wait_for_timeout(500)
+    page.goto(live_server, wait_until="load")
+    page.click("#nav-browse-btn")
+    page.wait_for_selector("#catalog-section:not([hidden])")
+    page.wait_for_timeout(800)
+    retired = [url for url in seen if "canopy-edge" in url or "fern-corner" in url]
+    assert retired == [], retired
+    assert any("stage-tools" in url for url in seen), seen
+    ctx.close()
+
+
+def test_journey_rests_on_the_stage_only_when_it_is_a_static_page(browser, live_server):
+    """The live flight paints its own sky over the whole viewport, so the
+    stage is never fetched there; the static page (reduced motion) sits on
+    it like every other page."""
+    ctx = browser.new_context(viewport={"width": 1440, "height": 900}, reduced_motion="reduce")
+    page = ctx.new_page()
+    page.goto(f"{live_server}/journey", wait_until="networkidle")
+    assert page.evaluate("document.documentElement.classList.contains('journey-static')")
+    probe = page.evaluate(STAGE_PROBE)
+    assert probe and probe["image"].startswith("stage-tools-1376"), probe
+    ctx.close()
+
+    ctx = browser.new_context(viewport={"width": 1440, "height": 900})
+    page = ctx.new_page()
+    stage = []
+    page.on("request", lambda r: stage.append(r.url) if "stage-tools" in r.url else None)
+    page.goto(f"{live_server}/journey", wait_until="load")
+    _wait_until(page, "document.documentElement.classList.contains('journey-live')", 15000)
+    page.wait_for_timeout(500)
+    assert page.evaluate(STAGE_PROBE) is None
+    assert stage == [], stage
+    ctx.close()
+
+
+@pytest.mark.parametrize(
+    "kwargs,paths",
+    [
+        ({"extra_http_headers": {"Save-Data": "on"}}, ["/privacy", "/terms", "/reminders/unsubscribe?token=x"]),
+        ({"forced_colors": "active"}, ["/scholarships/coca-cola-scholars", "/browse/scholarships", "/privacy"]),
+    ],
+    ids=["save-data", "forced-colors"],
+)
+def test_stage_yields_to_save_data_and_forced_colors(browser, live_server, kwargs, paths):
+    ctx = browser.new_context(viewport={"width": 1440, "height": 900}, **kwargs)
+    ctx.add_init_script(CONSENT)
+    page = ctx.new_page()
+    stage = []
+    page.on("request", lambda r: stage.append(r.url) if "stage-tools" in r.url else None)
+    for path in paths:
+        page.goto(f"{live_server}{path}", wait_until="networkidle")
+        assert page.evaluate(STAGE_PROBE)["content"] in ("none", "normal"), path
+    if "forced_colors" in kwargs:
+        # The app loads world.css (forced colors is not Save-Data), and the
+        # scene still yields.
+        page.goto(live_server, wait_until="load")
+        page.evaluate("document.getElementById('profile-form').scrollIntoView({block: 'start', behavior: 'instant'})")
+        _wait_until(page, "document.documentElement.classList.contains('world-ready')")
+        page.wait_for_timeout(500)
+        assert page.evaluate(STAGE_PROBE)["content"] in ("none", "normal")
+    assert stage == [], stage
+    ctx.close()

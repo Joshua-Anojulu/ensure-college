@@ -1479,7 +1479,7 @@ html.motion-ready .saved-count.count-pop { animation: count-pop 360ms var(--ease
    SEO detail + browse pages (server-rendered, no JS)
    ========================================================================= */
 /* Short static pages: keep the ink footer pinned to the viewport bottom. */
-.page-static { display: flex; min-height: 100vh; flex-direction: column; }
+.page-static { position: relative; display: flex; min-height: 100vh; flex-direction: column; }
 .page-static .main { flex: 1 1 auto; width: 100%; }
 .page-static .site-footer { margin-top: auto; }
 .detail-breadcrumb { margin: 0.4rem 0 0; color: var(--muted); font-size: 0.8rem; }
@@ -3116,6 +3116,10 @@ body::after {
    working while the horizontal bleed is contained. */
 .bleed-clip { overflow-x: clip; }
 
+/* The stage window (the World sheet paints the scene): the whole page on server pages, the tool views here. */
+.tool-stage { position: relative; isolation: isolate; display: flex; flex-direction: column; gap: inherit; }
+.world-stage { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
+
 .hero { position: relative; isolation: isolate; }
 
 /* Illustrated forest stage: full-bleed, behind the hero content. A real
@@ -3422,6 +3426,8 @@ body::after {
   object-fit: cover;
   object-position: bottom;
   opacity: 0;
+  -webkit-mask-image: linear-gradient(transparent, #000 32%);
+  mask-image: linear-gradient(transparent, #000 32%);
 }
 
 .world-dusk img.world-loaded {

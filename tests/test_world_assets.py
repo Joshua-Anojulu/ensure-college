@@ -82,10 +82,11 @@ def test_save_data_header_stamps_html_class():
         assert '<html lang="en" class="save-data">' in saving.text
 
 
-def test_template_family_and_legal_pages_carry_the_world_frame():
-    """Stage B: every template-family + legal page links world.css and marks
-    the body world-frame; the landing never links it (SPA appends it only on
-    first tool-view activation)."""
+def test_server_pages_carry_the_world_stage():
+    """Every server-rendered page links world.css and carries the stage
+    window (2026-10-22: one stage replaces the canopy/fern frame); the
+    landing never links it (the app appends it when its tool views come
+    near or are activated)."""
     with TestClient(app) as client:
         for path in (
             "/scholarships/coca-cola-scholars",
@@ -93,14 +94,38 @@ def test_template_family_and_legal_pages_carry_the_world_frame():
             "/guides/essays",
             "/privacy",
             "/terms",
+            "/journey",
             "/scholarships/definitely-not-a-real-slug",
         ):
             response = client.get(path)
             assert response.status_code in (200, 404), path
             assert "world.css?v=" in response.text, path
-            assert "world-frame" in response.text, path
+            assert '<div class="world-stage" aria-hidden="true"></div>' in response.text, path
+            assert "world-frame" not in response.text, path
+        unsubscribe = client.get("/reminders/unsubscribe?token=x")
+        assert "<link rel='stylesheet' href='/static/css/world.css'>" in unsubscribe.text
+        assert "<div class='world-stage' aria-hidden='true'></div>" in unsubscribe.text
         landing = client.get("/")
         assert "world.css" not in landing.text
+        assert '<div class="world-stage" aria-hidden="true"></div>' in landing.text
+
+
+def test_the_botanical_frame_is_retired():
+    """No page, stylesheet or script references the canopy strip or the fern
+    corners any more, and their files are gone."""
+    root = Path(__file__).resolve().parents[1]
+    sources = (
+        list((root / "app" / "static").glob("*.html"))
+        + list((root / "app" / "templates").glob("*.html"))
+        + list((root / "app" / "static" / "css").glob("*.css"))
+        + list((root / "app" / "static" / "js").glob("*.js"))
+        + [root / "app" / "main.py"]
+    )
+    for source in sources:
+        text = source.read_text(encoding="utf-8")
+        for retired in ("canopy-edge", "fern-corner", "world-frame"):
+            assert retired not in text, f"{source.name} still references {retired}"
+    assert not list(WORLD_DIR.glob("canopy-edge-*")) and not list(WORLD_DIR.glob("fern-corner-*"))
 
 
 def test_reskin_leaves_verification_blocks_and_jsonld_untouched():

@@ -567,7 +567,9 @@ class TestCatalog:
         assert page.locator("#catalog-container > *").count() > 0
         page.fill("#catalog-search", "coca")
         page.wait_for_timeout(800)
-        assert page.locator("#catalog-container").inner_text().lower().count("coca") >= 1
+        # textContent: cards are content-visibility: auto, so an offscreen
+        # card's innerText is empty (the Browse scroll can land short of it).
+        assert page.locator("#catalog-container").text_content().lower().count("coca") >= 1
         page.click("#catalog-clear")
         page.wait_for_timeout(500)
 

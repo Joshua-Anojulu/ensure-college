@@ -68,6 +68,10 @@ def test_primary_controls_clickable_on_mobile(browser, live_server):
     page.goto(live_server, wait_until="domcontentloaded")
     page.wait_for_timeout(600)
     for selector in ("#preview-form button", ".hero-actions a, .hero-actions button"):
+        # Hit-test where the control is on screen: the two-row phone header
+        # (2026-10-22) puts the preview's submit just below an 823px fold.
+        page.locator(selector).first.scroll_into_view_if_needed()
+        page.wait_for_timeout(200)
         result = _hit_is_inside(page, selector)
         assert result is True, f"[mobile] {selector} intercepted by: {result}"
     page.locator(".journey-teaser-cta").scroll_into_view_if_needed()
@@ -195,9 +199,9 @@ def test_reduced_motion_keeps_fireflies_static_and_trail_drawn(browser, live_ser
 
 
 def test_world_css_loads_only_on_spa_activation(page):
-    """Stage B waterfall gate: world.css must never load before a tool view
-    is activated; activating one loads it, sets .world-ready in its load
-    callback, and the quiet-center stage appears behind the catalog."""
+    """Stage B waterfall gate: world.css must never load at the top of the
+    landing; activating a tool view loads it once, sets .world-ready in its
+    load callback, and the quiet-center stage appears behind the tool views."""
     loaded_before = page.evaluate(
         "performance.getEntriesByType('resource').filter(e => e.name.includes('world.css')).length"
     )
@@ -210,26 +214,30 @@ def test_world_css_loads_only_on_spa_activation(page):
     assert loaded_after == 1
     wait_until(
         page,
-        "parseFloat(getComputedStyle(document.querySelector('#catalog-section'), '::before').opacity) > 0",
+        "parseFloat(getComputedStyle(document.querySelector('.tool-stage > .world-stage')).opacity) > 0",
     )
+    scene = page.evaluate(
+        "getComputedStyle(document.querySelector('.tool-stage > .world-stage'), '::before').backgroundImage"
+    )
+    assert "stage-tools" in scene, scene
 
 
-def test_template_page_frame_glyphs_and_request_budget(browser, live_server):
+def test_template_page_stage_glyphs_and_request_budget(browser, live_server):
     context = browser.new_context(viewport={"width": 1440, "height": 900})
     page = context.new_page()
     page.goto(live_server + "/scholarships/coca-cola-scholars", wait_until="networkidle")
-    canopy = page.evaluate("getComputedStyle(document.body, '::before').backgroundImage")
-    assert "canopy-edge" in canopy, canopy
-    ferns = page.evaluate("getComputedStyle(document.body, '::after').backgroundImage")
-    assert "fern-corner-left" in ferns and "fern-corner-right" in ferns, ferns
+    scene = page.evaluate("getComputedStyle(document.querySelector('.world-stage'), '::before').backgroundImage")
+    assert "stage-tools" in scene, scene
     glyph = page.evaluate(
         "getComputedStyle(document.querySelector('.detail-page .stat-label'), '::before').backgroundImage"
     )
     assert "glyph-sheet" in glyph, glyph
-    world_requests = page.evaluate(
-        "performance.getEntriesByType('resource').filter(e => e.name.includes('/static/img/world/')).length"
+    world = page.evaluate(
+        "performance.getEntriesByType('resource').map(e => e.name).filter(n => n.includes('/static/img/world/'))"
     )
-    assert world_requests <= 5, world_requests
+    # The stage, the glyph sheet, and the dusk band once it is near.
+    assert len(world) <= 3, world
+    assert not [n for n in world if "canopy-edge" in n or "fern-corner" in n], world
     context.close()
 
 
@@ -241,8 +249,12 @@ def test_forced_colors_suppresses_world_decoration(browser, live_server):
     page.goto(live_server + "/scholarships/coca-cola-scholars", wait_until="networkidle")
     body_bg = page.evaluate("getComputedStyle(document.body).backgroundImage")
     assert "world" not in body_bg, body_bg
-    canopy = page.evaluate("getComputedStyle(document.body, '::before').content")
-    assert canopy in ("none", "normal"), canopy
+    scene = page.evaluate("getComputedStyle(document.querySelector('.world-stage'), '::before').content")
+    assert scene in ("none", "normal"), scene
+    world = page.evaluate(
+        "performance.getEntriesByType('resource').filter(e => e.name.includes('/static/img/world/')).length"
+    )
+    assert world == 0, world
     # The primary action stays rendered and clickable under forced colors.
     assert page.locator(".card-link").first.is_visible()
     page.locator(".card-link").first.scroll_into_view_if_needed()

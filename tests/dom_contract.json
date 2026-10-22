@@ -185,6 +185,7 @@
     ".opportunity-tab",
     ".plan-guidance",
     ".search-descriptions-toggle",
+    ".tool-stage",
     ".world-plate img[data-src], .world-dusk img[data-src], .teaser-painting img[data-src]",
     "input:checked",
     "input[type=checkbox]",

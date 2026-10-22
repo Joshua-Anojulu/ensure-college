@@ -1,63 +1,72 @@
-/* Phase 1 Stage B: the World beyond the landing.
-   Loaded as a normal <link> by the template family and legal pages; appended
-   by app.js on FIRST SPA-world activation only (never in the landing's
-   critical path — see docs/2026-07-20-phase1-forest-world.md). World images
-   are content-hashed and immutable; this sheet is ?v-lockstep versioned. */
+/* The World beyond the landing: one stage behind every working surface.
+   Loaded as a normal <link> by the server-rendered pages; appended by app.js
+   when the app's tool views first come near (never in the landing's critical
+   path, see docs/2026-07-20-phase1-forest-world.md). World images are
+   content-hashed and immutable; this sheet is ?v-lockstep versioned. */
 
-/* ---- Template family + legal pages: quiet scene + canopy/fern frame ---- */
+/* ---- The stage (2026-10-22: replaces the canopy strip and fern corners) ----
+   A .world-stage window (positioned in style.css) marks where the scene may
+   show: the whole page on server pages, the tool views in the app. The
+   scene inside is fixed to the viewport, so every page frames it the same
+   way at any length, and working content rides in panels over it. */
 
-body.world-frame {
-  position: relative;
-  isolation: isolate;
-  background-image: url("/static/img/world/stage-tools-1376.ebed5d00bf.webp");
-  background-size: cover;
-  background-position: center top;
-  background-repeat: no-repeat;
+.world-stage { clip-path: inset(0); }
+
+.world-stage::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: url("/static/img/world/stage-tools-1376.ebed5d00bf.webp") 25% 100% / cover no-repeat;
 }
 
-body.world-frame::before,
-body.world-frame::after {
+@media (max-width: 760px) {
+  .world-stage::before { background-image: url("/static/img/world/stage-tools-760.f8a571bc12.webp"); }
+}
+
+/* In the app the window runs the full width behind the tool views and down
+   through the page's bottom padding. It fades in once this sheet loads;
+   paper mists at its top and bottom edges blend it into the landing above
+   and the dusk below (cheap gradients, not a mask over a tall layer). */
+.tool-stage > .world-stage {
+  inset: 0 calc(50% - 50vw) -3.75rem;
+  z-index: -2;
+  opacity: 0;
+}
+
+html.world-ready .tool-stage > .world-stage {
+  opacity: 1;
+  transition: opacity 480ms ease-out;
+}
+
+html.world-ready .tool-stage::before,
+html.world-ready .tool-stage::after {
   content: "";
   position: absolute;
-  left: 0;
-  right: 0;
-  /* Below ALL body children, including static ones: a blanket
-     position:relative on children would unhide the skip-link. */
+  left: calc(50% - 50vw);
+  right: calc(50% - 50vw);
   z-index: -1;
   pointer-events: none;
 }
 
-body.world-frame::before {
+html.world-ready .tool-stage::before {
   top: 0;
-  height: 170px;
-  background: url("/static/img/world/canopy-edge-1376.a15ba46724.webp") top center / 100% auto no-repeat;
-  opacity: 0.85;
+  height: 10rem;
+  background: linear-gradient(var(--canvas), transparent);
 }
 
-body.world-frame::after {
-  bottom: 0;
-  height: 300px;
-  background:
-    url("/static/img/world/fern-corner-left-640.ac02ba06f1.webp") bottom left / 260px auto no-repeat,
-    url("/static/img/world/fern-corner-right-640.9a7744b591.webp") bottom right / 260px auto no-repeat;
-  opacity: 0.9;
-  mix-blend-mode: multiply;
+html.world-ready .tool-stage::after {
+  bottom: -4rem;
+  height: 8rem;
+  background: linear-gradient(transparent, var(--canvas));
 }
 
-/* Legibility (ADR 0001: pass/fail, more mist, never smaller type). Page
-   text starts inside the frame band, and breadcrumbs, eyebrows, and lane
-   summaries measured 1.4-3.9:1 over the art. The canopy fades out down the
-   band, and the fern corners are sized to the gutter so they never sit
-   under content (they step aside entirely below about 1200px). */
-body.world-frame::before {
-  -webkit-mask-image: linear-gradient(to bottom, #000 30%, rgba(0, 0, 0, 0.18) 56%, transparent 80%);
-  mask-image: linear-gradient(to bottom, #000 30%, rgba(0, 0, 0, 0.18) 56%, transparent 80%);
-}
+/* The Journey's live flight paints its own sky over the whole viewport; the
+   stage shows only on its static page (reduced motion, no WebGL). */
+.journey-page > .world-stage { display: none; }
+html.journey-static .journey-page > .world-stage { display: block; }
 
-body.world-frame::after {
-  background-size:
-    max(0px, calc((100vw - 1200px) / 2)) auto,
-    max(0px, calc((100vw - 1200px) / 2)) auto;
+@media (prefers-reduced-motion: reduce) {
+  html.world-ready .tool-stage > .world-stage { transition: none; }
 }
 
 
@@ -94,88 +103,29 @@ body.world-frame::after {
   mix-blend-mode: multiply;
 }
 
-/* ---- SPA tool views: the quiet-center stage, scoped under .world-ready
-   (set only in the appended stylesheet's load callback). Decorative fade-in;
-   never a layout move; instant/off under reduced motion. ---- */
 
-html.world-ready .results-section {
-  position: relative;
-  isolation: isolate;
-}
-
-html.world-ready .results-section::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background-image: url("/static/img/world/stage-tools-1376.ebed5d00bf.webp");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  opacity: 0;
-  animation: world-stage-in 480ms ease-out forwards;
-}
-
-@keyframes world-stage-in {
-  to { opacity: 1; }
-}
-
-/* On a short lane (an empty search, no matches) the cover-scaled stage
-   brings its edge trees in under the header: the summary measured 2.4:1.
-   A mist over the top of every lane keeps header copy on paper while the
-   world rises below it. */
-html.world-ready .results-section::after {
-  content: "";
-  position: absolute;
-  inset: 0 0 auto 0;
-  height: 15rem;
-  z-index: -1;
-  pointer-events: none;
-  background: linear-gradient(
-    to bottom,
-    color-mix(in srgb, var(--canvas) 92%, transparent) 0%,
-    color-mix(in srgb, var(--canvas) 86%, transparent) 60%,
-    transparent 100%
-  );
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html.world-ready .results-section::before { animation-duration: 0ms; }
-}
-
-/* ---- Save-Data: suppress every decorative world image. Two channels:
+/* ---- Save-Data: suppress every decorative world image (the image itself:
+   Chromium fetches a pseudo-element's background while resolving its style,
+   even when content is none). Two channels:
    html.save-data (server-stamped where responses are per-request; the
    edge-cached template family cannot vary per header, so it relies on the
    standards media query below) and prefers-reduced-data. ---- */
 
-html.save-data body.world-frame { background-image: none; }
-html.save-data body.world-frame::before,
-html.save-data body.world-frame::after,
+html.save-data .world-stage::before,
 html.save-data .detail-page .stat-label::before,
-html.save-data .detail-page .special-requirements-heading::before,
-html.save-data.world-ready .results-section::before,
-html.save-data.world-ready .results-section::after { content: none; }
+html.save-data .detail-page .special-requirements-heading::before { content: none; background-image: none; }
 
 @media (prefers-reduced-data: reduce) {
-  body.world-frame { background-image: none; }
-  body.world-frame::before,
-  body.world-frame::after,
+  .world-stage::before,
   .detail-page .stat-label::before,
-  .detail-page .special-requirements-heading::before,
-  html.world-ready .results-section::before,
-  html.world-ready .results-section::after { content: none; }
+  .detail-page .special-requirements-heading::before { content: none; background-image: none; }
 }
 
-/* ---- Forced colors: decorative imagery and blending yield entirely to the
-   system palette; panels and controls render as the OS dictates. ---- */
+/* ---- Forced colors: decorative imagery yields entirely to the system
+   palette; panels and controls render as the OS dictates. ---- */
 
 @media (forced-colors: active) {
-  body.world-frame { background-image: none; }
-  body.world-frame::before,
-  body.world-frame::after,
+  .world-stage::before,
   .detail-page .stat-label::before,
-  .detail-page .special-requirements-heading::before,
-  html.world-ready .results-section::before,
-  html.world-ready .results-section::after { content: none; }
+  .detail-page .special-requirements-heading::before { content: none; background-image: none; }
 }
