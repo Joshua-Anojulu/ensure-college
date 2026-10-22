@@ -194,7 +194,7 @@
       return;
     }
     const vendor = document.createElement("script");
-    vendor.src = "/static/js/vendor/three.min.js?v=20261022-1";
+    vendor.src = "/static/js/vendor/three.min.js?v=20261022-2";
     vendor.onload = boot;
     vendor.onerror = fallback;
     document.head.appendChild(vendor);
