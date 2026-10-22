@@ -7,7 +7,9 @@
    the tween cannot be silently cancelled. Runs before the motion gate below,
    because it must work even under prefers-reduced-motion (as an instant jump). */
 (() => {
-  const OFFSET = 84; // sticky header + breathing room
+  // Sticky header (one row on desktop, two on phones) + breathing room.
+  const header = document.querySelector(".site-header");
+  const offset = () => (header ? header.offsetHeight : 60) + 24;
   const links = Array.from(document.querySelectorAll('a[href^="#"]:not([href="#"])'));
   if (!links.length) return;
 
@@ -18,7 +20,7 @@
     const goal = () => Math.max(
       0,
       Math.min(
-        el.getBoundingClientRect().top + window.scrollY - OFFSET,
+        el.getBoundingClientRect().top + window.scrollY - offset(),
         document.documentElement.scrollHeight - window.innerHeight
       )
     );

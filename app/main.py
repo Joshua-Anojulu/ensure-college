@@ -658,6 +658,26 @@ async def resume_extract(
         ) from None
 
 
+# The header every page shares (app/templates/base.html, the static pages and
+# index.html carry the same one; tests/test_site_chrome.py keeps them equal).
+_SITE_HEADER = (
+    "<header class='site-header'><div class='header-inner'>"
+    "<a class='brand brand-link' href='/' aria-label='EnsureCollege home'>"
+    "<span class='brand-mark' aria-hidden='true'></span>"
+    "<div><p class='brand-name'>EnsureCollege</p><p class='brand-tag'>Your whole college plan</p></div>"
+    "</a>"
+    "<nav class='site-nav' aria-label='Sections'>"
+    "<a class='btn-ghost' href='/#matches'>Matches</a>"
+    "<a class='btn-ghost' href='/#plan'>Plan</a>"
+    "<a class='btn-ghost' href='/#browse'>Browse</a>"
+    "<a class='btn-ghost' href='/journey'>How it works</a>"
+    "</nav>"
+    "<div class='account-nav'>"
+    "<a class='btn-ghost btn-ghost-solid' href='/#profile-form'>Find my matches</a>"
+    "</div></div></header>"
+)
+
+
 def _reminder_page(title: str, body: str) -> str:
     """Wrap a reminder-settings page in the site's Forest Light chrome.
 
@@ -674,12 +694,10 @@ def _reminder_page(title: str, body: str) -> str:
         "<link rel='icon' href='/static/favicon.svg?v=20260715-3' type='image/svg+xml'>"
         "<link rel='stylesheet' href='/static/css/style.css'>"
         "</head><body class='page-static'>"
-        "<header class='site-header'><div class='header-inner'>"
-        "<a class='brand brand-link' href='/' aria-label='EnsureCollege home'>"
-        "<span class='brand-mark' aria-hidden='true'></span>"
-        "<div><p class='brand-name'>EnsureCollege</p><p class='brand-tag'>Reminder emails</p></div>"
-        "</a></div></header>"
+        "<a class='skip-link' href='#main'>Skip to content</a>"
+        f"{_SITE_HEADER}"
         "<main id='main' class='main legal'><section class='panel legal-content'>"
+        "<p class='eyebrow'>Reminder emails</p>"
         f"{body}"
         "</section></main></body></html>"
     )

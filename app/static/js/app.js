@@ -351,13 +351,28 @@ async function init() {
   wireSiteNav();
   await loadSession();
 
-  // Deep link used by other pages (e.g. /journey) to open the in-app
-  // catalog: /#browse lands here, then the hash is cleared so a refresh
-  // returns to the normal landing view.
-  if (window.location.hash === "#browse") {
-    window.history.replaceState({}, "", window.location.pathname + window.location.search);
-    activateOpportunityView("catalog", { scroll: true });
+  // Every other page's header and footer deep-link into these views
+  // (/#matches, /#plan, /#browse). Honored on load and on in-page hash
+  // changes; the hash is then cleared so a refresh returns to the landing.
+  openViewFromHash();
+  window.addEventListener("hashchange", openViewFromHash);
+}
+
+// A fresh load lands instantly: a long smooth scroll started while the page
+// is still settling gets cancelled and strands the visitor at the top.
+const HASH_VIEWS = {
+  "#matches": () => showMatches("instant"),
+  "#plan": () => activateOpportunityView("saved", { scroll: true }),
+  "#browse": () => activateOpportunityView("catalog", { scroll: true }),
+};
+
+function openViewFromHash() {
+  const open = HASH_VIEWS[window.location.hash];
+  if (!open) {
+    return;
   }
+  window.history.replaceState({}, "", window.location.pathname + window.location.search);
+  open();
 }
 
 /* ---------- Page feedback and motion ---------- */
@@ -435,14 +450,18 @@ function wireOpportunityTabs() {
   updateOpportunityTabCounts();
 }
 
+// Matches: the scholarship lane once a match has run, otherwise the profile
+// form that produces one.
+function showMatches(behavior = "smooth") {
+  if (lastResults || lastPrograms || lastCompetitions) {
+    activateOpportunityView("scholarships", { scroll: true });
+  } else {
+    document.getElementById("profile-form")?.scrollIntoView({ behavior, block: "start" });
+  }
+}
+
 function wireSiteNav() {
-  document.getElementById("nav-matches-btn")?.addEventListener("click", () => {
-    if (lastResults || lastPrograms || lastCompetitions) {
-      activateOpportunityView("scholarships", { scroll: true });
-    } else {
-      document.getElementById("profile-form")?.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-  });
+  document.getElementById("nav-matches-btn")?.addEventListener("click", () => showMatches());
   document.getElementById("nav-plan-btn")?.addEventListener("click", () => {
     activateOpportunityView("saved", { scroll: true });
   });

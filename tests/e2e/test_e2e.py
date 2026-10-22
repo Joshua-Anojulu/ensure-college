@@ -286,11 +286,13 @@ class TestPublicPages:
         assert ok, "landing teaser never initialized"
 
     @pytest.mark.parametrize("path", ["/privacy", "/terms"])
-    def test_legal_pages_link_home_not_app(self, page, live_server, path):
+    def test_legal_pages_carry_the_shared_header(self, page, live_server, path):
+        """The legal pages had their own "Back to homepage" header; they now
+        wear the site's one header, whose brand still leads home."""
         page.goto(f"{live_server}{path}", wait_until="domcontentloaded")
-        back = page.locator("header .btn-ghost")
-        assert back.inner_text().strip() == "Back to homepage"
-        back.click()
+        labels = page.locator(".site-header .site-nav a").all_inner_texts()
+        assert [label.strip() for label in labels] == ["Matches", "Plan", "Browse", "How it works"]
+        page.click(".site-header .brand")
         page.wait_for_url(f"{live_server}/")
 
     def test_brand_returns_to_homepage_from_every_surface(self, page, live_server):
@@ -579,7 +581,7 @@ class TestCatalog:
 
     def test_journey_browse_all_opens_homepage_catalog(self, page, live_server):
         page.goto(f"{live_server}/journey", wait_until="load")
-        page.click('.account-nav a[href="/#browse"]')
+        page.click('.site-nav a[href="/#browse"]')
         page.wait_for_selector("#catalog-section:not([hidden])", timeout=15000)
         page.wait_for_selector("#catalog-container > *", timeout=15000)
         assert page.locator("#catalog-container > *").count() > 0
