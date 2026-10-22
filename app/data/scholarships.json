@@ -9331,7 +9331,7 @@
           {
             "kind": "family_or_affiliation",
             "label": "Restricted to students ineligible for federal aid due to immigration status (undocumented/DACA/TPS)",
-            "details": "The official domain's page title is 'Scholarship for Undocumented Students - Golden Door Scholars' and Road to Hire content describes bridging the financial-aid gap for undocumented students. This restriction does not map to any citizenship_requirement enum value, so that field is set to VERIFY and the restriction is captured here; exact eligibility wording should be confirmed by a reviewer in..."
+            "details": "For undocumented students, who cannot receive federal financial aid. Confirm current eligibility with the sponsor before applying."
           }
         ]
       },
@@ -9368,9 +9368,10 @@
       ],
       "verification": {
         "source_url": "https://www.roadtohire.org/faq/gds",
-        "last_verified_at": "2026-07-08"
+        "last_verified_at": "2026-07-08",
+        "notes": "roadtohire.org/faq/gds returned 'page not found' on 2026-10-22, and Road to Hire's programs page no longer lists Golden Door Scholars. Marked unverified until a current official page is found."
       },
-      "verified": true
+      "verified": false
     },
     {
       "id": "vegetarian-resource-group-college-scholarship",

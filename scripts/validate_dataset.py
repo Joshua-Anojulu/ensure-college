@@ -3,7 +3,7 @@
 Run:  python scripts/validate_dataset.py
 
 Exits non-zero if any structural errors are found (duplicate ids, unparseable
-deadlines, out-of-range GPA). Warnings (such as VERIFY placeholders or tags
+deadlines, out-of-range GPA, a VERIFY note inside student-visible text). Warnings (such as VERIFY placeholders or tags
 outside the canonical vocabulary) are reported but do not fail, because
 unverified data is an expected state for this curated seed set.
 """
@@ -220,6 +220,40 @@ def _duplicate_special_requirement_errors(entry, prefix: str) -> list[str]:
     return errors
 
 
+_PLACEHOLDER_TOKEN = re.compile(r"\bVERIFY\b")
+
+
+def _embedded_placeholder_errors(entry, prefix: str) -> list[str]:
+    """Flag a VERIFY token in the middle of student-visible text.
+
+    A VERIFY placeholder is a whole value: "VERIFY", or "VERIFY" followed by a
+    curator's note, which every surface labels instead of showing. The token
+    later in a value is a research note ("not yet published (VERIFY)"), and the
+    app prints it to students word for word. Verification metadata is never
+    rendered, so it is skipped.
+    """
+
+    def walk(value, path: list[str]):
+        if isinstance(value, dict):
+            for key, item in value.items():
+                if not path and key == "verification":
+                    continue
+                yield from walk(item, [*path, str(key)])
+        elif isinstance(value, list):
+            for index, item in enumerate(value):
+                yield from walk(item, [*path, str(index)])
+        elif isinstance(value, str):
+            text = value.strip()
+            if any(match.start() > 0 for match in _PLACEHOLDER_TOKEN.finditer(text)):
+                yield ".".join(path)
+
+    return [
+        f"{prefix}: {field} has VERIFY inside student-visible text "
+        "(use the bare VERIFY placeholder for an unknown value, or drop the note)"
+        for field in walk(entry.model_dump(mode="json"), [])
+    ]
+
+
 def audit_dataset(scholarships: list[Scholarship], today: date | None = None) -> dict:
     """Return {errors, warnings, stats}. Errors are structural; warnings advisory.
 
@@ -303,6 +337,7 @@ def audit_dataset(scholarships: list[Scholarship], today: date | None = None) ->
                 warnings.append(f"{s.id}: has verification metadata but verified is false")
 
         warnings.extend(_niche_requirement_warnings(s, s.id))
+        errors.extend(_embedded_placeholder_errors(s, s.id))
 
         if elig.min_gpa == "VERIFY":
             verify_counts["min_gpa"] += 1
@@ -436,6 +471,7 @@ def audit_programs(programs: list[SummerProgram], today: date | None = None) -> 
                 warnings.append(f"program {program.id}: has verification metadata but verified is false")
 
         warnings.extend(_niche_requirement_warnings(program, f"program {program.id}"))
+        errors.extend(_embedded_placeholder_errors(program, f"program {program.id}"))
 
         if program.deadline.startswith("VERIFY"):
             verify_counts["deadline"] += 1
@@ -539,6 +575,9 @@ def audit_competitions(competitions: list[Competition], today: date | None = Non
 
         warnings.extend(
             _niche_requirement_warnings(competition, f"competition {competition.id}")
+        )
+        errors.extend(
+            _embedded_placeholder_errors(competition, f"competition {competition.id}")
         )
 
         if competition.deadline.startswith("VERIFY"):
