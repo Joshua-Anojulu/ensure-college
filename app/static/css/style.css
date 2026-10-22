@@ -2552,6 +2552,10 @@ body.has-scrolled .site-header {
   line-height: 1.6;
 }
 
+/* The scroll hint only makes sense where the camera actually flies. */
+.journey-fly-hint { display: none; }
+html.journey-will-fly .journey-fly-hint { display: inline; }
+
 .journey-track { position: relative; margin-top: clamp(0.8rem, 2vw, 1.4rem); }
 .journey-stage { position: relative; }
 .journey-sky,
