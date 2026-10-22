@@ -14,7 +14,7 @@ from starlette.responses import Response
 from app.main import _SECURITY_HEADERS, _edge_cacheable, app
 
 
-ASSET_VERSION = "20261017-2"
+ASSET_VERSION = "20261022-1"
 FONT_ASSETS = [
     "/static/fonts/CabinetGrotesk-Bold.woff2",
     "/static/fonts/CabinetGrotesk-Extrabold.woff2",

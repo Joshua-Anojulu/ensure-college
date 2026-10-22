@@ -6531,7 +6531,7 @@ async function handleProgramAdvice(programId, button, panel, loading, errorEl) {
     worldStageRequested = true;
     var link = document.createElement("link");
     link.rel = "stylesheet";
-    link.href = "/static/css/world.css?v=20261017-2";
+    link.href = "/static/css/world.css?v=20261022-1";
     link.addEventListener(
       "load",
       function () {
