@@ -111,7 +111,7 @@ def build_reminder_email(items: list[DueItem], unsubscribe_token: str) -> tuple[
     text_lines = ["Deadlines coming up on your EnsureCollege plan:", ""]
     for i in items:
         when = "today" if i.days_left == 0 else f"in {i.days_left} day{'s' if i.days_left != 1 else ''}"
-        text_lines.append(f"- {i.name} ({i.kind}) — {_fmt(i.deadline)} ({when})")
+        text_lines.append(f"- {i.name} ({i.kind}): {_fmt(i.deadline)} ({when})")
         if i.url:
             text_lines.append(f"  {i.url}")
     text_lines += [

@@ -372,6 +372,58 @@ class TestProductionHygiene:
         assert "&mdash;" not in response.text
         assert "&ndash;" not in response.text
 
+    @pytest.mark.parametrize("path", ["/privacy", "/terms"])
+    def test_legal_pages_have_no_em_dashes(self, client, path):
+        """Privacy (two) and Terms (one) still punctuated with em dashes."""
+        response = client.get(path)
+        assert response.status_code == 200
+        assert "\u2014" not in response.text, path
+        assert "&mdash;" not in response.text, path
+
+    def test_emails_have_no_em_dashes(self, monkeypatch):
+        """The reminder digest's text body joined each item to its date with
+        an em dash. Every transactional email is checked, text and HTML."""
+        from datetime import date, timedelta
+
+        from app.alerts import MatchRef, build_alert_email
+        from app.auth import email as email_module
+        from app.reminders import DueItem, build_reminder_email
+
+        today = date(2026, 10, 22)
+        items = [
+            DueItem("Alpha Scholarship", "Scholarship", today, 0, "https://example.org/a"),
+            DueItem("Beta Program", "Summer program", today + timedelta(days=3), 3, None),
+        ]
+        _subject, reminder_text, reminder_html = build_reminder_email(items, "tok")
+        refs = [
+            MatchRef("scholarship:a", "Alpha Scholarship", "Scholarship", "https://example.org/a"),
+            MatchRef("program:b", "Beta Program", "Summer program", None),
+        ]
+        _subject, alert_text, alert_html = build_alert_email(refs, "tok")
+
+        sent = {}
+        monkeypatch.setenv("RESEND_API_KEY", "key")
+        monkeypatch.setenv("EMAIL_FROM", "EnsureCollege <noreply@example.com>")
+        monkeypatch.setenv("PUBLIC_APP_URL", "https://ensurecollege.com")
+        monkeypatch.setattr(
+            email_module,
+            "send_email",
+            lambda recipient, subject, text_body, html_body, **_kw: sent.update(text=text_body, html=html_body),
+        )
+        email_module.send_password_reset_email("student@example.com", "tok")
+
+        bodies = {
+            "reminder text": reminder_text,
+            "reminder html": reminder_html,
+            "alert text": alert_text,
+            "alert html": alert_html,
+            "reset text": sent["text"],
+            "reset html": sent["html"],
+        }
+        for name, body in bodies.items():
+            assert "\u2014" not in body, name
+            assert "&mdash;" not in body, name
+
 
 class TestJourneyPage:
     def test_journey_is_served_with_seo_copy(self, client):
