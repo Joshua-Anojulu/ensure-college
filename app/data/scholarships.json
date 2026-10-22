@@ -9332,7 +9332,7 @@
           {
             "kind": "family_or_affiliation",
             "label": "Restricted to students ineligible for federal aid due to immigration status (undocumented/DACA/TPS)",
-            "details": "The official domain's page title is 'Scholarship for Undocumented Students - Golden Door Scholars' and Road to Hire content describes bridging the financial-aid gap for undocumented students. This restriction does not map to any citizenship_requirement enum value, so that field is set to VERIFY and the restriction is captured here; exact eligibility wording should be confirmed by a reviewer in..."
+            "details": "For undocumented students, who cannot receive federal financial aid. Confirm current eligibility with the sponsor before applying."
           }
         ]
       },

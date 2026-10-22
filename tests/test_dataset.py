@@ -422,3 +422,59 @@ def test_audits_go_stale_after_window():
     assert report["stats"]["stale_audit"] >= 5
     # Stale entries are a subset of the actionable re-verification queue.
     assert set(report["stale_audit_ids"]).issubset(set(report["needs_reverification_ids"]))
+
+
+def test_catalog_shows_students_no_verify_notes():
+    """A VERIFY token in the middle of a value is a curator's research note,
+    and the app prints it word for word ("2027 National Finals host location
+    not yet published (VERIFY)."). Only a whole-value placeholder gets labeled."""
+    from app.data.loader import load_competitions, load_summer_programs
+
+    reports = (
+        audit_dataset(load_scholarships()),
+        audit_programs(load_summer_programs()),
+        audit_competitions(load_competitions()),
+    )
+    notes = [error for report in reports for error in report["errors"] if "VERIFY inside" in error]
+    assert notes == [], notes
+
+
+def test_audit_flags_verify_notes_but_allows_placeholders():
+    leaky_competition = _competition(
+        id="leaky-note",
+        location="Finals host not yet published (VERIFY).",
+        recognition="VERIFY",
+    )
+    placeholder_with_note = _competition(
+        id="placeholder-note",
+        recognition="VERIFY (a curator note the app hides behind its label)",
+    )
+    plain_word = _scholarship(
+        id="plain-word",
+        application_requirements=[
+            ApplicationRequirement(id="verify-gpa", label="Verify your GPA with your counselor")
+        ],
+    )
+    leaky_scholarship = _scholarship(
+        id="leaky-special",
+        eligibility=Eligibility(
+            special_requirements=[
+                SpecialRequirement(
+                    kind="identity_or_status",
+                    label="Restricted group",
+                    details="The field is set to VERIFY until a reviewer checks it.",
+                )
+            ]
+        ),
+    )
+
+    competition_errors = audit_competitions([leaky_competition, placeholder_with_note])["errors"]
+    scholarship_errors = audit_dataset([plain_word, leaky_scholarship])["errors"]
+
+    assert any("leaky-note: location has VERIFY inside" in e for e in competition_errors)
+    assert not any("placeholder-note" in e for e in competition_errors)
+    assert not any("plain-word" in e for e in scholarship_errors)
+    assert any(
+        "leaky-special: eligibility.special_requirements.0.details has VERIFY inside" in e
+        for e in scholarship_errors
+    )
