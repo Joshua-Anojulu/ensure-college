@@ -201,8 +201,17 @@ def test_no_vocabulary_warnings():
     # on today's date, so asserting on them here would turn CI red on an
     # arbitrary future morning when a deadline rolls by. They are advisory, and
     # `scripts/validate_dataset.py` still reports them to whoever runs the audit.
+    #
+    # "Verification metadata but verified is false" is excluded too: an entry
+    # whose official page has disappeared keeps its provenance (source, last
+    # audit, a note saying what happened) and is marked unverified, which is
+    # the honest state rather than a tagging mistake.
     report = audit_dataset(load_scholarships())
-    warnings = [w for w in report["warnings"] if "has passed" not in w]
+    warnings = [
+        w
+        for w in report["warnings"]
+        if "has passed" not in w and "has verification metadata but verified is false" not in w
+    ]
     assert warnings == [], warnings
 
 

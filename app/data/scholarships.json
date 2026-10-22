@@ -9369,9 +9369,10 @@
       ],
       "verification": {
         "source_url": "https://www.roadtohire.org/faq/gds",
-        "last_verified_at": "2026-07-08"
+        "last_verified_at": "2026-07-08",
+        "notes": "roadtohire.org/faq/gds returned 'page not found' on 2026-10-22, and Road to Hire's programs page no longer lists Golden Door Scholars. Marked unverified until a current official page is found."
       },
-      "verified": true
+      "verified": false
     },
     {
       "id": "vegetarian-resource-group-college-scholarship",
