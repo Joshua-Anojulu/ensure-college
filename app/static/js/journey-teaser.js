@@ -193,14 +193,34 @@
       m.rotation.set(rnd() * 3, rnd() * 3, rnd() * 3);
       return m;
     };
-    const pool = (r, x, z, opacity) => {
-      const m = new T.Mesh(
-        new T.CircleGeometry(r, 20),
-        new T.MeshBasicMaterial({ color: FOREST, transparent: true, opacity, alphaMap: wash, depthWrite: false })
-      );
-      m.rotation.x = -Math.PI / 2;
-      return place(m, x, 0.03, z);
+    // Repeated props are batched: one instanced draw per batch, with the
+    // tone carried per instance, so the miniature stays as cheap to draw
+    // as the old island.
+    const dummy = new T.Object3D();
+    const tone = new T.Color();
+    const batch = (geometry, material, max) => {
+      const mesh = new T.InstancedMesh(geometry, material, max);
+      mesh.count = 0;
+      mesh.frustumCulled = false;
+      world.add(mesh);
+      return mesh;
     };
+    const instance = (mesh, x, y, z, sx, sy, sz, color) => {
+      dummy.position.set(x, y, z);
+      dummy.scale.set(sx, sy, sz);
+      dummy.updateMatrix();
+      mesh.setMatrixAt(mesh.count, dummy.matrix);
+      if (color !== undefined) mesh.setColorAt(mesh.count, tone.set(color));
+      mesh.count += 1;
+    };
+    const flat = (geometry) => geometry.rotateX(-Math.PI / 2);
+    const pools = batch(
+      flat(new T.CircleGeometry(1, 20)),
+      new T.MeshBasicMaterial({ color: FOREST, transparent: true, opacity: 0.15, alphaMap: wash, depthWrite: false }),
+      24
+    );
+    const pool = (r, x, z) => instance(pools, x, 0.03, z, r, 1, r);
+    const tinted = () => new T.MeshToonMaterial({ color: 0xffffff, gradientMap });
 
     // The island: a noisy coastline plateau over a keel that sinks into the
     // valley mist below.
@@ -258,13 +278,15 @@
 
     // Pines: the overlook's layered washes, dark core to misty tip. Dark
     // ones frame the right edge as in the plate; paler ones stand back.
-    const pine = (x, z, k, tiers) => {
-      const t = tiers || [FOREST_DEEP, FOREST, SAGE];
-      cyl(0.08 * k, 0.12 * k, 0.6 * k, WOOD_DEEP, x, 0.3 * k, z, 6);
-      cone(0.62 * k, 1.1 * k, t[0], x, 1.05 * k, z);
-      cone(0.48 * k, 0.95 * k, t[1], x, 1.6 * k, z);
-      cone(0.32 * k, 0.8 * k, t[2], x, 2.15 * k, z);
-      pool(0.8 * k, x, z, 0.14);
+    const trunks = batch(new T.CylinderGeometry(0.08, 0.12, 0.6, 6), mat(WOOD_DEEP), 16);
+    const tiers = batch(new T.ConeGeometry(1, 1, 7), tinted(), 48);
+    const pine = (x, z, k, washes) => {
+      const t = washes || [FOREST_DEEP, FOREST, SAGE];
+      instance(trunks, x, 0.3 * k, z, k, k, k);
+      instance(tiers, x, 1.05 * k, z, 0.62 * k, 1.1 * k, 0.62 * k, t[0]);
+      instance(tiers, x, 1.6 * k, z, 0.48 * k, 0.95 * k, 0.48 * k, t[1]);
+      instance(tiers, x, 2.15 * k, z, 0.32 * k, 0.8 * k, 0.32 * k, t[2]);
+      pool(0.8 * k, x, z);
     };
     // Props are at the plate's scale, small in a wide valley; only the
     // foreground pines at the right edge stand tall, as in the plate.
@@ -302,7 +324,7 @@
       box(0.22, 0.55, 0.22, STONE_DEEP, 0.45, 1.75, -0.2, 0, g);
       box(0.36, 0.62, 0.05, WOOD_DEEP, 0.2, 0.31, 0.71, 0, g);
       box(0.32, 0.26, 0.05, GLOW, -0.45, 0.62, 0.71, 0, g);
-      pool(0.8, -2.66, 0.75, 0.16);
+      pool(0.8, -2.66, 0.75);
     }
 
     // Essays: the desk and chair under the round tree.
@@ -327,7 +349,7 @@
       crown(0.85, OLIVE, 0.3, 1.85, -0.15, 1.4, 0.75, 1.1);
       crown(0.6, OLIVE_DEEP, -0.25, 1.7, -0.4, 1.3, 0.7, 1.0);
       crown(0.5, SAGE_LIGHT, 0.75, 2.1, 0.0, 1.2, 0.7, 1.0);
-      pool(0.9, 1.0, -0.4, 0.16);
+      pool(0.9, 1.0, -0.4);
     }
 
     // Deadlines: the stone bell tower.
@@ -338,7 +360,7 @@
       box(0.3, 0.42, 0.06, INK, 0.08, 1.55, 0.42, 0, g);
       box(0.24, 0.5, 0.06, INK, 0.08, 0.25, 0.42, 0, g);
       cone(0.68, 0.7, STONE_DEEP, 0, 2.43, 0, 4, Math.PI / 4, g);
-      pool(0.55, 4.4, -1.76, 0.16);
+      pool(0.55, 4.4, -1.76);
     }
 
     // Award: the flag on its hill at the back right, where the light is.
@@ -379,13 +401,13 @@
       new T.Vector3(5.5, 0, -3.3),
     ]);
     const steps = Math.round(trail.getLength() / 0.38);
+    const dots = batch(new T.CylinderGeometry(1, 1.18, 0.04, 8), tinted(), steps + 1);
     const dotPoint = new T.Vector3();
     for (let i = 0; i <= steps; i += 1) {
       trail.getPointAt(i / steps, dotPoint);
       const r = 0.075 + (i % 3) * 0.018;
-      const dot = new T.Mesh(new T.CylinderGeometry(r, r + 0.015, 0.04, 8), mat(i % 4 === 3 ? GOLD_DEEP : GOLD));
       const dx = dotPoint.x + (i % 2 ? 0.08 : -0.06);
-      place(dot, dx, Math.max(0, hillTop(dx, dotPoint.z)) + 0.03, dotPoint.z);
+      instance(dots, dx, Math.max(0, hillTop(dx, dotPoint.z)) + 0.03, dotPoint.z, r, 1, r, i % 4 === 3 ? GOLD_DEEP : GOLD);
     }
 
     // Mist pooling in the valley, soft washes over the meadow as in the
@@ -403,11 +425,13 @@
       g.fillRect(0, 0, 64, 64);
       return new T.CanvasTexture(c);
     })();
-    const mistWash = new T.MeshBasicMaterial({ color: MIST, transparent: true, opacity: 0.36, alphaMap: soft, depthWrite: false });
+    const mists = batch(
+      flat(new T.CircleGeometry(1, 24)),
+      new T.MeshBasicMaterial({ color: MIST, transparent: true, opacity: 0.36, alphaMap: soft, depthWrite: false }),
+      6
+    );
     [[-1.0, 3.4, 3.4], [1.8, 2.2, 2.9], [-3.4, -0.6, 2.6], [3.0, 1.0, 2.3], [0.2, -2.0, 2.9], [-4.6, 3.0, 2.3]].forEach((m) => {
-      const disc = new T.Mesh(new T.CircleGeometry(m[2], 24), mistWash);
-      disc.rotation.x = -Math.PI / 2;
-      place(disc, m[0], 0.05, m[1]);
+      instance(mists, m[0], 0.05, m[1], m[2], 1, m[2]);
     });
 
     // Cliff-edge rocks, bushes and tufts, as at the plate's overlook.
@@ -415,11 +439,11 @@
     blob(0.34, STONE, -3.4, 0.08, 5.7, 1.2, 0.6, 1.0);
     blob(0.28, SAGE, 2.6, 0.14, 2.6, 1.3, 0.7, 1.1);
     blob(0.25, SAGE_LIGHT, -0.9, 0.12, 3.7, 1.3, 0.7, 1.1);
+    const tufts = batch(new T.ConeGeometry(0.06, 0.22, 5), tinted(), 12);
     for (let i = 0; i < 12; i += 1) {
       const a = rnd() * 6.28;
       const d = 2.4 + rnd() * 3.6;
-      const tuft = new T.Mesh(new T.ConeGeometry(0.06, 0.22, 5), mat(MEADOW_TONES[i % MEADOW_TONES.length]));
-      place(tuft, Math.cos(a) * d, 0.1, Math.sin(a) * d);
+      instance(tufts, Math.cos(a) * d, 0.1, Math.sin(a) * d, 1, 1, 1, MEADOW_TONES[i % MEADOW_TONES.length]);
     }
 
     // A few birds over the valley, as in the plate.
