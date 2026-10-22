@@ -32,19 +32,64 @@
       z-index: 0;
     }
 
-    /* Cold-press paper above the canvas: the clay miniature reads as painted
-       on watercolor stock rather than floating in a browser. Sits between
-       the canvas (z 0) and the copy layer (z 2); never intercepts input. */
+    /* ---- Journey and Teaser paint (2026-10-22) ----
+       The flight is painted into the World. The canvas is transparent: the
+       sky behind it is CSS built from the plates' sky tones (paper above, a
+       golden bloom where the islands float, mist below), and over the last
+       stretch it crossfades to the dusk-treeline plate (--dawn is set by
+       journey.js). The shipped grain tile lies over the canvas as paper. The
+       --paint-* tokens are shared with the Teaser in style.css. */
+    .journey-sky {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(58% 26% at 62% 60%, var(--paint-glow-deep), transparent),
+        linear-gradient(180deg, color-mix(in srgb, var(--paint-paper) 55%, white) 0%, var(--paint-paper) 30%, var(--paint-glow) 50%, var(--paint-glow-deep) 61%, var(--paint-glow) 70%, var(--paint-mist) 86%, var(--paint-mist) 100%);
+    }
+
+    .journey-sky::after {
+      content: "";
+      position: absolute;
+      inset: 0 0 -40% 0;
+      opacity: var(--dawn, 0);
+      background: linear-gradient(180deg, var(--paint-dawn-mist), var(--paint-dawn) 62%, var(--paint-dawn-mist));
+    }
+
+    /* The plate is fetched only once the flight runs: static, Save-Data and
+       reduced-motion visitors never request it. */
+    .journey-live .journey-sky::after {
+      background: url("/static/img/world/dusk-treeline-1376.8551cabfa9.webp") center top / cover no-repeat;
+    }
+
+    @media (max-width: 760px) {
+      .journey-live .journey-sky::after {
+        background-image: url("/static/img/world/dusk-treeline-760.d1d890d8bc.webp");
+      }
+    }
+
+    @media (prefers-reduced-data: reduce) {
+      .journey-live .journey-sky::after {
+        background: linear-gradient(180deg, var(--paint-dawn-mist), var(--paint-dawn) 62%, var(--paint-dawn-mist));
+      }
+    }
+
+    /* Paper over the canvas: the grain tile multiplied in, so the miniature
+       reads as painted on the same stock as the plates. Sits between the
+       canvas (z 0) and the copy layer (z 2); never intercepts input. */
     .journey-paper {
       position: fixed;
       inset: 0;
       z-index: 1;
       pointer-events: none;
-      opacity: 0.2;
+      opacity: 0.06;
       mix-blend-mode: multiply;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.58 0 0 0 0 0.60 0 0 0 0 0.55 0 0 0 0.35 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)'/%3E%3C/svg%3E");
-      background-size: 280px 280px;
+      background: url("/static/img/grain.png") 0 0 / 128px 128px;
     }
+
+    .journey-static .journey-sky { display: none; }
+    /* ---- end Journey and Teaser paint ---- */
 
     .journey-copy-layer {
       position: relative;
@@ -239,6 +284,7 @@
     </div>
 
     <div class="journey-track" id="journey-track">
+      <div class="journey-sky" aria-hidden="true"></div>
       <canvas id="journey-canvas" aria-hidden="true"></canvas>
       <div class="journey-paper" aria-hidden="true"></div>
 
