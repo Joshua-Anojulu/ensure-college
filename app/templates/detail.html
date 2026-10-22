@@ -16,14 +16,15 @@
       <p class="card-sponsor">{{ org }}</p>
     </header>
 
+    {# A value over 24 characters reads at body size in a wider box (LONG_STAT_CHARS in app.js). #}
     <div class="card-stats">
       {% if award_text %}
-      <div class="stat stat-award">
+      <div class="stat stat-award{% if award_text | length > 24 %} stat-long{% endif %}">
         <span class="stat-label">{{ kind.award_label }}</span>
         <span class="stat-value">{{ award_text }}</span>{% if award_note %}<span class="stat-note">{{ award_note }}</span>{% endif %}
       </div>
       {% endif %}
-      <div class="stat">
+      <div class="stat{% if deadline_text | length > 24 %} stat-long{% endif %}">
         <span class="stat-label">Deadline</span>
         <span class="stat-value">{{ deadline_text }}</span>
         {% if deadline_note %}<span class="stat-note">{{ deadline_note }}</span>{% endif %}

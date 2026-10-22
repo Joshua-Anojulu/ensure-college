@@ -138,3 +138,116 @@ def test_short_pages_fill_the_screen_and_center_a_lone_panel(browser, live_serve
             assert abs(above - below) <= 24, f"{where}: panel off center ({above:.0f} above, {below:.0f} below)"
     ctx.close()
 
+
+# ------------------------------------------- 3. highlight boxes, long values
+#
+# The award / cost / recognition / dates / deadline boxes assumed a short
+# figure like "$20,000". A long value (Conrad Challenge's prize terms, 319
+# characters) rendered as a 151px-wide, 1203px-tall column of 24px bold gold
+# text on a phone, overflowing its box, and its short neighbour ("Deadline")
+# stretched to the same height and sat empty.
+
+STATS = """(root) => Array.from((root || document).querySelectorAll('.card-stats')).map((row) => ({
+  width: row.getBoundingClientRect().width,
+  stats: Array.from(row.children).map((s) => {
+    const v = s.querySelector('.stat-value');
+    const cs = getComputedStyle(v);
+    const box = s.getBoundingClientRect();
+    const content = Math.max(...Array.from(s.children).map((c) => c.getBoundingClientRect().bottom)) - box.top
+      + parseFloat(getComputedStyle(s).paddingBottom);
+    return {
+      long: s.classList.contains('stat-long'),
+      award: s.classList.contains('stat-award'),
+      len: v.textContent.trim().length,
+      font: parseFloat(cs.fontSize),
+      weight: parseInt(cs.fontWeight, 10),
+      width: box.width,
+      height: box.height,
+      slack: box.height - content,
+      overflow: v.scrollWidth - v.clientWidth,
+    };
+  }),
+}))"""
+
+
+def _assert_long_values_read_calmly(rows, where, phone):
+    seen_long = False
+    for row in rows:
+        stats = row["stats"]
+        has_long = any(s["len"] > 24 for s in stats)
+        for s in stats:
+            assert s["overflow"] <= 1, f"{where}: a value spills out of its box: {s}"
+            if s["len"] > 24:
+                seen_long = True
+                assert s["long"], f"{where}: a {s['len']}-character value is not marked long: {s}"
+                assert s["font"] <= 15 and s["weight"] < 700, f"{where}: long value still set as a headline: {s}"
+                if phone:
+                    assert s["width"] >= 0.9 * row["width"], f"{where}: long value squeezed into a narrow column: {s}"
+            else:
+                assert not s["long"], f"{where}: a short value is marked long: {s}"
+                if has_long:
+                    # A short neighbour keeps its own height.
+                    assert s["slack"] <= 2, f"{where}: short box stretched to a long neighbour: {s}"
+    assert seen_long, f"{where}: no long value on the page"
+
+
+@pytest.mark.parametrize("width,height", [(1440, 900), (390, 844)])
+def test_opportunity_page_long_values_read_calmly(browser, live_server, width, height):
+    ctx = _context(browser, width, height)
+    page = ctx.new_page()
+    for path in ("/competitions/conrad-challenge", "/programs/ala-girls-state"):
+        page.goto(f"{live_server}{path}", wait_until="load")
+        _assert_long_values_read_calmly(page.evaluate(STATS), f"{width}px {path}", width < 760)
+    # A real figure keeps the headline treatment.
+    page.goto(f"{live_server}/scholarships/coca-cola-scholars", wait_until="load")
+    award = page.evaluate(STATS)[0]["stats"][0]
+    assert award["award"] and not award["long"], award
+    assert award["font"] == 24 and award["weight"] == 800, f"the short award lost its headline style: {award}"
+    ctx.close()
+
+
+LONG_AWARD = "Tuition, fees, and books for residents; a non-resident tuition waiver for out-of-state students"
+LONG_RECOGNITION = (
+    "Winning teams receive academic scholarships, an all-expenses-paid trip, free patent support "
+    "from IP lawyers, and honors including scholar titles"
+)
+LONG_DATES = "Registration opens July 15 and closes December 6; qualification flights run through spring"
+
+
+def test_match_cards_long_values_read_calmly(browser, live_server):
+    from tests.e2e.test_e2e import (
+        competition_match,
+        program_match,
+        route_match_fixtures,
+        scholarship_match,
+        submit_profile_form,
+    )
+
+    for width, height in ((390, 844), (1440, 900)):
+        ctx = _context(browser, width, height)
+        page = ctx.new_page()
+        scholarship = dict(scholarship_match("fixture-long-award", "Fixture Long Award"), award_amount=LONG_AWARD)
+        short = scholarship_match("fixture-short-award", "Fixture Short Award")
+        program = dict(program_match("fixture-program", "Fixture Program"), cost=LONG_AWARD, program_dates=LONG_DATES)
+        competition = dict(
+            competition_match("fixture-competition", "Fixture Competition"),
+            recognition=LONG_RECOGNITION,
+            competition_dates=LONG_DATES,
+        )
+        route_match_fixtures(page, scholarships=[scholarship, short], programs=[program], competitions=[competition])
+        page.goto(live_server, wait_until="domcontentloaded")
+        submit_profile_form(page)
+        page.wait_for_selector("#results-container .match-card", timeout=25000)
+        page.wait_for_timeout(400)
+        where = f"{width}px"
+        rows = page.evaluate(STATS, None)
+        _assert_long_values_read_calmly(rows, f"{where} scholarship cards", width < 760)
+        figures = [s for row in rows for s in row["stats"] if s["award"] and not s["long"]]
+        assert figures and all(s["font"] == 24 for s in figures), f"{where}: short award lost its headline: {figures}"
+        for tab, container in (("#tab-programs", "#programs-container"), ("#tab-competitions", "#competitions-container")):
+            page.click(tab)
+            page.wait_for_selector(f"{container} .match-card", timeout=15000)
+            page.wait_for_timeout(300)
+            rows = page.evaluate(STATS.replace("(root || document)", f"document.querySelector('{container}')"), None)
+            _assert_long_values_read_calmly(rows, f"{where} {container}", width < 760)
+        ctx.close()

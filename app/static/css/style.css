@@ -986,12 +986,19 @@ html.motion-ready .fit-ring-value { stroke-dashoffset: var(--circ); animation: r
 .card-stats { display: flex; flex-wrap: wrap; gap: 0.6rem; }
 .stat { flex: 1 1 150px; min-width: 0; padding: 0.72rem 0.9rem; border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--surface-inset); }
 .stat-label { display: block; color: var(--muted); font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
-.stat-value { display: block; margin-top: 0.28rem; color: var(--ink); font-size: 1rem; font-weight: 700; line-height: 1.2; font-variant-numeric: tabular-nums; }
+.stat-value { display: block; margin-top: 0.28rem; color: var(--ink); font-size: 1rem; font-weight: 700; line-height: 1.2; font-variant-numeric: tabular-nums; overflow-wrap: break-word; }
 .stat-note { display: block; margin-top: 0.18rem; color: var(--muted); font-size: 0.72rem; font-weight: 500; line-height: 1.35; }
 .stat-award { border-color: var(--gold-line); background: var(--gold-tint); }
 .stat-award .stat-value { font-family: var(--font-display); font-size: 1.5rem; font-weight: 800; letter-spacing: 0; color: var(--gold); }
 .stat-deadline.stat-urgent { border-color: var(--amber-line); background: var(--amber-tint); }
 .stat-deadline.stat-urgent .stat-note { color: var(--amber-strong); font-weight: 700; }
+/* A stat box is built for a short figure ("$20,000", "Mar 1, 2027"). A value
+   over 24 characters (prize terms, a sentence of dates) is marked .stat-long
+   by app.js and detail.html: it reads at body size in a wider box, and its
+   row stops stretching short neighbours to its height. */
+.stat-long { flex: 3 1 18rem; }
+.stat-long .stat-value, .stat-award.stat-long .stat-value { color: var(--ink-soft); font-family: var(--font-body); font-size: 0.9rem; font-weight: 500; line-height: 1.5; }
+.card-stats:has(> .stat-long) { align-items: flex-start; }
 
 /* Chips + badges */
 .score-breakdown, .badge-row { display: flex; flex-wrap: wrap; gap: 0.38rem; }

@@ -5288,6 +5288,21 @@ function programStatValue(value) {
   return value;
 }
 
+// A stat box is built for a short figure ("$20,000", "Mar 1, 2027"). A
+// longer value (prize terms, a sentence of dates) is marked so it reads at
+// body size in a wider box; detail.html uses the same 24-character line.
+const LONG_STAT_CHARS = 24;
+
+function markLongStats(row) {
+  for (const stat of row.children) {
+    const value = Array.from(stat.children).find((el) => el.classList.contains("stat-value"));
+    if (value && value.textContent.trim().length > LONG_STAT_CHARS) {
+      stat.classList.add("stat-long");
+    }
+  }
+  return row;
+}
+
 function buildProgramStatRow(program) {
   const row = document.createElement("div");
   row.className = "card-stats";
@@ -5325,7 +5340,7 @@ function buildProgramStatRow(program) {
     (dl.note ? `<span class="stat-note">${escapeHtml(dl.note)}</span>` : "");
   row.appendChild(apply);
 
-  return row;
+  return markLongStats(row);
 }
 
 // A free competition just says "Free" on the card. The dataset keeps the full
@@ -5376,7 +5391,7 @@ function buildCompetitionStatRow(competition) {
     (dl.note ? `<span class="stat-note">${escapeHtml(dl.note)}</span>` : "");
   row.appendChild(apply);
 
-  return row;
+  return markLongStats(row);
 }
 
 function makeCardTitle(tag, kindPath, item) {
@@ -5889,7 +5904,7 @@ function buildStatRow(card) {
     (dl.note ? `<span class="stat-note">${escapeHtml(dl.note)}</span>` : "");
   row.appendChild(deadline);
 
-  return row;
+  return markLongStats(row);
 }
 
 // Humanized, scannable reasons. Long lists collapse to the top few with a
