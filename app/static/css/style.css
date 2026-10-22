@@ -2926,6 +2926,21 @@ body.has-scrolled .site-header {
   .journey-teaser { background: Canvas; border: 1px solid CanvasText; }
 }
 
+/* ---- Journey and Teaser paint (2026-10-22) ----
+   The 3D island repainted into the World. These tokens are the plates'
+   atmosphere (sampled from overlook, stage-tools and dusk-treeline): the
+   Journey's CSS sky is built from them, and both scenes read --paint-mist
+   as their fog, so canvas and sky never drift apart. */
+:root {
+  --paint-paper: #f8f7f0;
+  --paint-glow: #fbf0d8;
+  --paint-glow-deep: #f7e2bd;
+  --paint-mist: #eaece2;
+  --paint-dawn: #f3cea0;
+  --paint-dawn-mist: #f5e6cc;
+}
+/* ---- end Journey and Teaser paint ---- */
+
 /* The live island fades in over the painting; the painting and its labels
    yield underneath. Both layers occupy the same absolute box. */
 #journey-teaser-canvas { opacity: 0; }
