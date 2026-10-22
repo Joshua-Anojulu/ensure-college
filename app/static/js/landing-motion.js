@@ -1,8 +1,8 @@
 /* In-page anchor scrolling.
    The native `scroll-behavior: smooth` animation for the hero CTA travels
    ~3800px and gets ABORTED partway (any main-thread block or layout shift
-   during the trip kills it), stranding the visitor at the proof band instead
-   of the profile form. So the landing drives the scroll itself: the target is
+   during the trip kills it), stranding the visitor partway instead of at the
+   profile form. So the landing drives the scroll itself: the target is
    re-measured every frame, so a shift mid-flight cannot leave us short, and
    the tween cannot be silently cancelled. Runs before the motion gate below,
    because it must work even under prefers-reduced-motion (as an instant jump). */
@@ -39,8 +39,9 @@
     const step = (now) => {
       if (startTime === null) startTime = now;
       const p = Math.min(1, (now - startTime) / duration);
-      // Re-measure every frame: lazy images and the 3D teaser can change
-      // layout while we are in flight.
+      // Re-measure every frame: lazy images and the flight's track (which
+      // grows once journey.js decides the device can fly) can change layout
+      // while we are in flight.
       jump(from + (goal() - from) * easeOut(p));
       if (p < 1) window.requestAnimationFrame(step);
     };
@@ -76,8 +77,7 @@
 
   const revealTargets = [
     ".catalog-numbers",
-    ".proof-band",
-    ".difference-copy",
+    ".journey-home-head",
     ".resume-import",
     ".profile-form",
   ]
@@ -214,70 +214,4 @@
   };
 
   fontGate.then(runHeroEntrance);
-
-  const desktopMotion = window.matchMedia("(min-width: 768px)");
-  if (!desktopMotion.matches) {
-    return;
-  }
-
-  const decodeProofImages = () => {
-    const images = Array.from(document.querySelectorAll(".proof-band img"));
-    return Promise.all(
-      images.map((image) => {
-        if (!image.decode) {
-          return Promise.resolve();
-        }
-        return image.decode().catch(() => undefined);
-      })
-    );
-  };
-
-  Promise.all([fontGate, decodeProofImages()]).then(() => {
-    if (!window.gsap || !window.ScrollTrigger) {
-      return;
-    }
-    const gsap = window.gsap;
-    gsap.registerPlugin(window.ScrollTrigger);
-
-    gsap.fromTo(
-      ".proof-photo img",
-      { scale: 1.04 },
-      {
-        scale: 1,
-        ease: "none",
-        scrollTrigger: {
-          trigger: ".proof-band",
-          start: "top bottom",
-          end: "bottom top",
-          scrub: true,
-        },
-      }
-    );
-
-    // The CSS sticky stack does the pinning; GSAP only dims and shrinks a
-    // card while the next one slides over it (storytelling: the covered
-    // step recedes, the active step is the one you read).
-    const stackCards = gsap.utils.toArray(".difference-stack .stack-card");
-    stackCards.forEach((card, index) => {
-      const next = stackCards[index + 1];
-      if (!next) {
-        return;
-      }
-      // Scale only: animating opacity here makes the incoming card's
-      // overlap zone translucent and the two cards' text collides.
-      gsap.to(card, {
-        scale: 0.955,
-        transformOrigin: "center top",
-        ease: "none",
-        scrollTrigger: {
-          trigger: next,
-          start: "top bottom",
-          end: "top center",
-          scrub: true,
-        },
-      });
-    });
-
-    window.requestAnimationFrame(() => window.ScrollTrigger.refresh());
-  });
 })();

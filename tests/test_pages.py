@@ -25,7 +25,6 @@ FONT_ASSETS = [
 ]
 VENDOR_ASSETS = [
     "/static/js/vendor/gsap.min.js",
-    "/static/js/vendor/ScrollTrigger.min.js",
 ]
 VERSIONED_ASSET_PATHS = {
     "/static/css/style.css",
@@ -33,13 +32,8 @@ VERSIONED_ASSET_PATHS = {
     "/static/js/app.js",
     "/static/js/gsap.min.js",
     "/static/js/landing-motion.js",
-    "/static/js/journey-teaser.js",
     "/static/js/journey.js",
     "/static/js/vendor/gsap.min.js",
-    "/static/js/vendor/ScrollTrigger.min.js",
-    "/static/img/campus-quad.jpg",
-    "/static/img/campus-quad-380.webp",
-    "/static/img/campus-quad-760.webp",
 }
 VERSION_EXEMPT_PATHS = {
     "/static/favicon.svg",
@@ -129,7 +123,7 @@ class TestVercelAnalytics:
     dev console."""
 
     ANALYTICS_SRC = "/_vercel/insights/script.js"
-    PAGES = ["/", "/journey", "/privacy", "/terms", "/browse", "/guides/essays", "/scholarships/coca-cola-scholars"]
+    PAGES = ["/", "/privacy", "/terms", "/browse", "/guides/essays", "/scholarships/coca-cola-scholars"]
 
     @pytest.mark.parametrize("page", PAGES)
     def test_tag_absent_locally(self, client, page, monkeypatch):
@@ -284,20 +278,6 @@ class TestProductionHygiene:
         assert 'id="age-gate-continue" disabled' in response.text
         assert "html.has-site-consent .age-gate" in response.text
 
-    def test_landing_campus_quad_uses_responsive_webp_picture(self, client):
-        response = client.get("/")
-        assert response.status_code == 200
-        assert '<picture>' in response.text
-        assert (
-            f'<source type="image/webp" srcset="/static/img/campus-quad-380.webp?v={ASSET_VERSION} 380w, '
-            f'/static/img/campus-quad-760.webp?v={ASSET_VERSION} 760w" '
-            'sizes="(max-width: 760px) calc(100vw - 2rem), 48vw">'
-        ) in response.text
-        assert f'<img src="/static/img/campus-quad.jpg?v={ASSET_VERSION}"' in response.text
-        assert 'alt="Students walking across a college campus between classes"' in response.text
-        assert 'loading="lazy"' in response.text
-        assert 'decoding="async"' in response.text
-
     def test_index_uses_self_hosted_fonts(self, client):
         response = client.get("/")
         assert response.status_code == 200
@@ -312,22 +292,9 @@ class TestProductionHygiene:
         assert response.status_code == 200, asset
 
     @pytest.mark.parametrize(
-        "asset",
-        [
-            "/static/img/campus-quad-380.webp",
-            "/static/img/campus-quad-760.webp",
-            "/static/img/campus-quad.jpg",
-        ],
-    )
-    def test_campus_quad_assets_return_200(self, client, asset):
-        response = client.get(asset)
-        assert response.status_code == 200, asset
-
-    @pytest.mark.parametrize(
         "page",
         [
             "app/static/index.html",
-            "app/static/journey.html",
             "app/static/privacy.html",
             "app/static/terms.html",
             "app/templates/base.html",
@@ -357,7 +324,6 @@ class TestProductionHygiene:
         assert response.status_code == 200
         swept_files = [
             Path("app/static/index.html"),
-            Path("app/static/journey.html"),
             Path("app/static/js/app.js"),
             *Path("app/templates").glob("*.html"),
         ]
@@ -373,22 +339,49 @@ class TestProductionHygiene:
         assert "&ndash;" not in response.text
 
 
-class TestJourneyPage:
-    def test_journey_is_served_with_seo_copy(self, client):
-        response = client.get("/journey")
-        assert response.status_code == 200
-        assert "text/html" in response.headers["content-type"]
-        assert 'rel="canonical" href="https://ensurecollege.com/journey"' in response.text
-        assert "One profile." in response.text
-        assert 'href="/#profile-form"' in response.text
+class TestJourneyOnHomePage:
+    """The Journey is the home page's How it works section (2026-10-22): the
+    separate /journey page and the landing teaser are retired, and every
+    old link lands on the section."""
 
-    def test_journey_in_sitemap(self, client):
+    def test_journey_url_redirects_to_the_home_section(self, client):
+        response = client.get("/journey", follow_redirects=False)
+        assert response.status_code == 301
+        assert response.headers["location"] == "/#how-it-works"
+
+    def test_journey_leaves_the_sitemap(self, client):
         response = client.get("/sitemap.xml")
-        assert "<loc>http://testserver/journey</loc>" in response.text
+        assert "/journey</loc>" not in response.text
 
-    def test_nav_links_to_journey(self, client):
-        response = client.get("/")
-        assert 'href="/journey"' in response.text
+    def test_home_carries_the_four_stops_as_real_markup(self, client):
+        text = client.get("/").text
+        assert '<section id="how-it-works" class="journey-home" aria-labelledby="how-it-works-title">' in text
+        assert '<h2 id="how-it-works-title">' in text
+        for heading in (
+            "One profile. That's the work.",
+            "Three lanes, one search.",
+            "A plan, not a pile of tabs.",
+            "The gate is closer than it looks.",
+        ):
+            assert f"<h3>{heading}</h3>" in text, heading
+        # The flight's data contract: four banded cards and four rail stops.
+        assert len(re.findall(r'class="journey-card" data-band="[\d.]+,[\d.]+"', text)) == 4
+        assert len(re.findall(r'<button type="button" data-stop="[\d.]+">', text)) == 4
+
+    def test_home_loads_the_flight_lazily_and_the_teaser_is_gone(self, client):
+        text = client.get("/").text
+        assert f'<script defer src="/static/js/journey.js?v={ASSET_VERSION}"></script>' in text
+        # three.js is fetched by journey.js on approach, never by the page.
+        assert "three.min.js" not in text
+        for retired in ("journey-teaser", "proof-band", "difference-panel", "stack-card", "ScrollTrigger"):
+            assert retired not in text, retired
+
+    def test_every_how_it_works_link_points_at_the_section(self, client):
+        assert '<a class="btn-ghost" href="#how-it-works">How it works</a>' in client.get("/").text
+        for page in ("/privacy", "/terms", "/browse", "/scholarships/coca-cola-scholars", "/scholarships/no-such-entry"):
+            text = client.get(page).text
+            assert '<a class="btn-ghost" href="/#how-it-works">How it works</a>' in text, page
+            assert 'href="/journey"' not in text, page
 
     @pytest.mark.parametrize(
         "asset",
@@ -450,7 +443,7 @@ class TestStageCohesion:
         assert offenders == [], offenders
 
     @pytest.mark.parametrize(
-        "name", ["app.js", "journey.js", "journey-teaser.js"]
+        "name", ["app.js", "journey.js"]
     )
     def test_js_versioned_urls_match_lockstep(self, name):
         text = Path(f"app/static/js/{name}").read_text(encoding="utf-8")
@@ -462,7 +455,7 @@ class TestStageCohesion:
         assert all(v == ASSET_VERSION for v in pins), (name, pins)
 
     @pytest.mark.parametrize(
-        "name", ["app.js", "journey.js", "journey-teaser.js"]
+        "name", ["app.js", "journey.js"]
     )
     def test_js_never_carries_css_hex_strings(self, name):
         text = Path(f"app/static/js/{name}").read_text(encoding="utf-8")
@@ -481,7 +474,6 @@ EDGE_CACHED_ASSETS = [
     "/static/js/vendor/three.min.js",
     "/static/fonts/Satoshi-Regular.woff2",
     "/static/img/hero-forest-mobile.webp",
-    f"/static/img/campus-quad.jpg?v={ASSET_VERSION}",
     "/static/favicon.svg",
 ]
 
@@ -524,7 +516,7 @@ class TestEdgeCacheHeaders:
 
     @pytest.mark.parametrize(
         "path",
-        ["/", "/journey", "/privacy", "/terms", "/static/index.html", "/static/journey.html"],
+        ["/", "/privacy", "/terms", "/static/index.html"],
     )
     def test_html_pages_never_gain_s_maxage(self, client, path):
         response = client.get(path)

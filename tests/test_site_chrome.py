@@ -20,7 +20,7 @@ SERVER_NAV = [
     ("Matches", "/#matches"),
     ("Plan", "/#plan"),
     ("Browse", "/#browse"),
-    ("How it works", "/journey"),
+    ("How it works", "/#how-it-works"),
 ]
 SERVER_PAGES = [
     "/scholarships/coca-cola-scholars",
@@ -32,7 +32,6 @@ SERVER_PAGES = [
     "/scholarships/does-not-exist",
     "/privacy",
     "/terms",
-    "/journey",
     "/reminders/unsubscribe?token=chrome-check",
 ]
 
@@ -144,11 +143,13 @@ def test_unsubscribe_completion_page_shares_the_header(client):
     assert [item["text"] for item in header.right] == ["Find my matches"]
 
 
-def test_only_the_journey_marks_how_it_works_as_current(client):
+def test_no_server_page_marks_a_section_as_current(client):
+    """How it works is a section of the home page now (2026-10-22), so no
+    server page is any nav item's destination."""
     for path in SERVER_PAGES:
         header = parse_header(client.get(path).text)
         current = [item["text"] for item in header.nav_items if item["aria-current"]]
-        assert current == (["How it works"] if path == "/journey" else []), path
+        assert current == [], path
 
 
 def test_app_header_carries_the_same_brand_and_nav():
@@ -169,7 +170,8 @@ def test_app_header_carries_the_same_brand_and_nav():
         "nav-plan-btn",
         "nav-browse-btn",
     ]
-    assert header.nav_items[3]["href"] == "/journey"
+    # In-page on the home page: landing-motion.js tweens the scroll.
+    assert header.nav_items[3]["href"] == "#how-it-works"
     # Signed out, the solid action sits where the server pages' one does.
     solid = [item for item in header.right if "btn-ghost-solid" in item["class"].split()]
     assert [(item["id"], item["class"]) for item in solid] == [

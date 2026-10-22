@@ -97,15 +97,11 @@ The server-rendered, indexable public page for a single catalog entry (e.g. `/sc
 _Avoid_: Detail page, landing page, SEO page
 
 **Journey**:
-The `/journey` page: one continuous scroll-driven camera flight through four rendered scenes (the profile, the three lanes, the plan, the gate). It explains the product; it is never where a student works. Reached from "How it works".
-_Avoid_: Demo, tour, animation, 3D page
-
-**Teaser**:
-The valley-overlook promo docked on the landing page, linking to the Journey: a painted overlook first, becoming the live miniature island on capable devices after load. A promotion for the Journey, not a second Journey.
-_Avoid_: Widget, preview (that word means the three-question matcher demo)
+The home page's How it works section (`#how-it-works`): one continuous scroll-driven camera flight through four rendered scenes (the profile, the three lanes, the plan, the gate), on a stage that sticks while the camera flies and leaves with the section. It explains the product; it is never where a student works. Painting-first: the overlook painting holds the stage until the island renders, and devices that should not fly (reduced motion, Save-Data, low-end, no WebGL) read the same four stops over that painting. Reached from "How it works" in every header; the retired `/journey` URL redirects to it. (Until 2026-10-22 it was a separate page with a promo, the Teaser, on the landing.)
+_Avoid_: Demo, tour, animation, 3D page, Teaser
 
 **Journey map**:
-The 2D illustrated progress map on the saved-applications view. Its geography is fixed — the world's established landmarks along the [[Trail]] — and it is personalized by the student's real [[Saved opportunity]] [[Status]] data, never fabricated: saved items appear as markers at the stage they are in, with the student's current frontier flagged. With nothing saved (or signed out) it shows a labeled generic sample path as an invitation. Distinct from the [[Journey]] (the 3D scroll flight) and the [[Teaser]] (the landing promo for it).
+The 2D illustrated progress map on the saved-applications view. Its geography is fixed — the world's established landmarks along the [[Trail]] — and it is personalized by the student's real [[Saved opportunity]] [[Status]] data, never fabricated: saved items appear as markers at the stage they are in, with the student's current frontier flagged. With nothing saved (or signed out) it shows a labeled generic sample path as an invitation. Distinct from the [[Journey]] (the 3D scroll flight on the home page).
 _Avoid_: Journey (that is the 3D flight), progress bar, roadmap
 
 **Forest Light**:

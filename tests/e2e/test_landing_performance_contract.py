@@ -193,37 +193,28 @@ class TestLandingClsAndResponsiveImage:
         box = img.bounding_box()
         assert box is not None and box["width"] >= 412
 
-    @pytest.mark.parametrize(
-        "device_scale_factor,expected_candidate",
-        [
-            (1, "campus-quad-380.webp"),
-            (1.75, "campus-quad-760.webp"),
-        ],
-    )
-    def test_campus_quad_responsive_image_contract(
-        self, browser, live_server, device_scale_factor, expected_candidate
-    ):
-        context = browser.new_context(
-            viewport={"width": 412, "height": 823},
-            device_scale_factor=device_scale_factor,
-        )
+    def test_flight_stays_off_the_critical_path(self, browser, live_server):
+        """How it works flies on capable phones, but a visitor who stays at
+        the top never downloads three.js: it waits until the section
+        approaches, and the decision to fly never shifts anything on screen."""
+        context = browser.new_context(viewport={"width": 412, "height": 823}, device_scale_factor=1.75)
         context.add_init_script("window.localStorage.setItem('site_consent_v1', 'yes');")
-        page = context.new_page()
-        page.goto(live_server, wait_until="load")
-        image = page.locator(".proof-photo img")
-        image.scroll_into_view_if_needed()
-        page.wait_for_function(
-            "() => document.querySelector('.proof-photo img')?.complete"
+        context.add_init_script(
+            "try {"
+            " Object.defineProperty(navigator, 'hardwareConcurrency', {get: () => 8, configurable: true});"
+            " Object.defineProperty(navigator, 'deviceMemory', {get: () => 8, configurable: true});"
+            " } catch (e) {}"
         )
-
-        assert page.locator(".proof-photo picture").count() == 1
-        assert page.locator('.proof-photo source[type="image/webp"]').count() == 1
-        assert expected_candidate in image.evaluate("img => img.currentSrc")
-        assert image.get_attribute("alt") == "Students walking across a college campus between classes"
-        assert image.get_attribute("loading") == "lazy"
-        assert image.get_attribute("decoding") == "async"
-        box = image.bounding_box()
-        assert box is not None
-        assert 360 <= box["width"] <= 390
-        assert 235 <= box["height"] <= 270
+        context.add_init_script(CLS_OBSERVER)
+        page = context.new_page()
+        late = []
+        page.on("request", lambda r: late.append(r.url) if "three.min.js" in r.url else None)
+        page.goto(live_server, wait_until="load")
+        page.wait_for_timeout(5000)
+        assert page.evaluate("document.documentElement.classList.contains('journey-will-fly')")
+        assert late == [], late
+        assert cls_value(page) < 0.02, cls_value(page)
+        page.evaluate("document.getElementById('how-it-works').scrollIntoView({block: 'start', behavior: 'instant'})")
+        page.wait_for_timeout(3000)
+        assert any("three.min.js" in url for url in late), late
         context.close()

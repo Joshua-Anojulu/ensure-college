@@ -64,16 +64,21 @@ def main() -> None:
 
         page.locator(".match-card").first.screenshot(path=OUT_DIR / "match-card.png")
 
-        # The journey page renders WebGL; give it time to build the world and
-        # settle the camera at the first island before capturing.
+        # How it works renders WebGL on the home page once its section
+        # approaches; bring it in, give it time to build the world, then
+        # settle the camera over the three lanes before capturing.
         journey = browser.new_page(viewport={"width": 1280, "height": 800})
-        journey.goto(f"{BASE_URL}/journey", wait_until="load", timeout=120_000)
-        journey.wait_for_timeout(4_000)
-        journey.evaluate(
-            "() => { const t = document.getElementById('journey-track');"
-            " const max = t.offsetHeight - window.innerHeight;"
-            " window.scrollTo({ top: t.offsetTop + max * 0.30, behavior: 'instant' }); }"
+        journey.add_init_script("window.localStorage.setItem('site_consent_v1', 'yes');")
+        journey.goto(f"{BASE_URL}/#how-it-works", wait_until="load", timeout=120_000)
+        fly_to = (
+            "(stop) => { const t = document.getElementById('journey-track');"
+            " const stage = t.querySelector('.journey-stage');"
+            " const top = t.getBoundingClientRect().top + window.scrollY;"
+            " window.scrollTo({ top: top + (t.offsetHeight - stage.offsetHeight) * stop, behavior: 'instant' }); }"
         )
+        journey.evaluate(fly_to, 0)
+        journey.wait_for_timeout(6_000)
+        journey.evaluate(fly_to, 0.30)
         journey.wait_for_timeout(3_000)
         journey.screenshot(path=OUT_DIR / "journey.png")
 

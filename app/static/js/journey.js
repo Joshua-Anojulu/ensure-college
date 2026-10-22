@@ -1,18 +1,41 @@
-/* /journey: a real-time scroll-driven camera flight through four dioramas,
-   painted into the World. Every colour is sampled from the watercolor plates
-   (app/static/img/world/); shading is soft and banded, light is paper-toned
-   with a low golden key, fog is the plates' mist, and the sky is painted in
-   CSS behind a transparent canvas (.journey-sky in journey.html). No video:
-   every scene is built from primitives. Scroll position maps to a point on
-   one continuous forward camera spline, so the "seams" between scenes cannot
-   exist. */
+/* How it works: the Journey on the home page (#how-it-works). A real-time,
+   scroll-driven camera flight through four dioramas, painted into the World.
+   Every colour is sampled from the watercolor plates (app/static/img/world/);
+   shading is soft and banded, light is paper-toned with a low golden key, fog
+   is the plates' mist, and the sky is painted in CSS behind a transparent
+   canvas (.journey-sky, style.css "How it works"). No video: every scene is
+   built from primitives. Scroll position within the section maps to a point
+   on one continuous forward camera spline, so the "seams" between scenes
+   cannot exist.
+
+   The section is a tall track whose stage sticks to the viewport while the
+   camera flies, then scrolls away with the page. Devices that should not fly
+   (reduced motion, Save-Data or reduced data, forced colors, two or fewer
+   cores or 2 GB or less memory, no WebGL) keep the static layout: the four
+   stops over the overlook painting. The decision is made when this script
+   runs, before the visitor can reach the section, so nothing below it jumps.
+   three.js loads only on idle once the section approaches, the cards and the
+   rail work before it arrives, and rendering sleeps while the section is off
+   screen. */
 (() => {
   const root = document.documentElement;
   const track = document.getElementById("journey-track");
   const canvas = document.getElementById("journey-canvas");
-  const skyLayer = document.querySelector(".journey-sky");
+  const stage = track ? track.querySelector(".journey-stage") : null;
+  const skyLayer = track ? track.querySelector(".journey-sky") : null;
 
-  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const media = (query) => window.matchMedia(query).matches;
+  const reduceMotion = media("(prefers-reduced-motion: reduce)");
+  const reducedData = media("(prefers-reduced-data: reduce)");
+  const forcedColors = media("(forced-colors: active)");
+  // Dual channel, matching app.js: the JS API and the server-stamped class
+  // (the Save-Data header can arrive without navigator.connection).
+  const saveData =
+    !!(navigator.connection && navigator.connection.saveData) ||
+    root.classList.contains("save-data");
+  const lowEnd =
+    (navigator.hardwareConcurrency || 4) <= 2 ||
+    (navigator.deviceMemory || 4) <= 2;
   const webgl = (() => {
     try {
       const c = document.createElement("canvas");
@@ -22,34 +45,160 @@
     }
   })();
 
-  const saveData =
-    !!(navigator.connection && navigator.connection.saveData) ||
-    root.classList.contains("save-data");
-
-  if (!track || !canvas || reduceMotion || saveData || !webgl) {
+  if (!track || !canvas || !stage || reduceMotion || reducedData || forcedColors || saveData || lowEnd || !webgl) {
     root.classList.add("journey-static");
     return;
   }
+  root.classList.add("journey-will-fly");
 
-  // Three.js loads only after the gates pass: reduced-motion, Save-Data,
-  // and no-WebGL visitors read the static page without paying the vendor
-  // download. Failure to load degrades to the same static mode.
-  const boot = () => {
-    if (!window.THREE) {
-      root.classList.add("journey-static");
+  const clamp01 = (v) => Math.min(1, Math.max(0, v));
+  const dawnSetting = parseFloat(track.dataset.dawnMax || "1");
+  const DAWN_MAX = Number.isFinite(dawnSetting) ? clamp01(dawnSetting) : 1;
+
+  // data-band is when a stop shows; data-hold keeps the last one on screen
+  // past the end of its band, so the runway ends on its button.
+  const cards = Array.from(track.querySelectorAll(".journey-card")).map((el) => {
+    const band = (el.dataset.band || "0,1").split(",").map(Number);
+    return { el, start: band[0], end: band[1], hold: el.hasAttribute("data-hold") };
+  });
+  const dots = Array.from(track.querySelectorAll(".journey-rail button"));
+
+  // The runway is the track minus the stuck stage: progress 0 when the stage
+  // pins, 1 when it lets go.
+  const runway = () => Math.max(0, track.offsetHeight - stage.offsetHeight);
+  const near = (margin) => {
+    const r = track.getBoundingClientRect();
+    return r.top < window.innerHeight + margin && r.bottom > -margin;
+  };
+
+  // Rail stops fly the camera to an island: scroll to the point on the track
+  // whose flight progress matches that stop, and let the damping carry the
+  // camera there as a real move rather than a cut.
+  for (const dot of dots) {
+    dot.addEventListener("click", () => {
+      const stop = parseFloat(dot.dataset.stop || "0");
+      const top = track.getBoundingClientRect().top + window.scrollY;
+      window.scrollTo({ top: top + runway() * stop, behavior: "smooth" });
+    });
+  }
+
+  // Keyboard focus never lands on a stop that is not on screen: tabbing into
+  // one flies there first.
+  track.addEventListener("focusin", (event) => {
+    const el = event.target.closest(".journey-card");
+    const card = el && cards.find((c) => c.el === el);
+    if (!card || el.classList.contains("is-active")) return;
+    const top = track.getBoundingClientRect().top + window.scrollY;
+    const stop = (card.start + Math.min(card.end, 1)) / 2;
+    window.scrollTo({ top: top + runway() * stop, behavior: "instant" });
+    t = target = stop;
+    placeCards(t);
+  });
+
+  // ---- Scroll plumbing: progress read inside rAF (no scroll listeners),
+  // then damped for glide. The loop only runs while the section is near the
+  // viewport; elsewhere it naps on a slow timer. ----
+  let world = null; // set by init() once three.js has built the scene
+  let target = 0;
+  let t = 0;
+  let scheduled = false;
+  let napTimer = 0;
+
+  const wake = () => {
+    if (scheduled) return;
+    scheduled = true;
+    window.requestAnimationFrame(frame);
+  };
+  const nap = () => {
+    window.clearTimeout(napTimer);
+    napTimer = window.setTimeout(wake, 350);
+  };
+
+  function placeCards(progress) {
+    for (let i = 0; i < cards.length; i += 1) {
+      const c = cards[i];
+      const span = c.end - c.start;
+      const fadeIn = clamp01((progress - c.start) / (span * 0.25));
+      const fadeOut = c.hold ? 1 : clamp01((c.end - progress) / (span * 0.25));
+      const o = Math.min(fadeIn, fadeOut);
+      c.el.style.opacity = o.toFixed(3);
+      c.el.style.transform = "translateY(" + ((1 - o) * 18).toFixed(1) + "px)";
+      c.el.classList.toggle("is-active", o > 0.5);
+      if (dots[i]) dots[i].classList.toggle("is-active", progress >= c.start && progress <= c.end);
+    }
+  }
+
+  function frame(nowMs) {
+    scheduled = false;
+    if (document.hidden || !root.classList.contains("journey-will-fly")) return;
+    // Draw only while the stage itself is on screen: past the runway the
+    // stage has scrolled away even though the track still touches the
+    // viewport, and the form below must not pay for a WebGL loop.
+    const s = stage.getBoundingClientRect();
+    if (s.bottom <= 0 || s.top >= window.innerHeight) {
+      nap();
       return;
     }
-    init();
-  };
-  if (window.THREE) {
-    boot();
+    const max = runway();
+    target = max > 0 ? clamp01(-track.getBoundingClientRect().top / max) : 0;
+    t += (target - t) * 0.07;
+    if (Math.abs(target - t) < 0.0004) t = target;
+    placeCards(t);
+    if (world) world.render(t, (nowMs || 0) * 0.001);
+    wake();
+  }
+
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) wake();
+  });
+  wake();
+
+  // Back to the static layout if three.js cannot arrive or the scene fails.
+  function fallback() {
+    world = null;
+    root.classList.remove("journey-will-fly", "journey-live");
+    root.classList.add("journey-static");
+    for (const c of cards) {
+      c.el.style.opacity = "";
+      c.el.style.transform = "";
+      c.el.classList.remove("is-active");
+    }
+  }
+
+  // Three.js loads on idle once the section approaches: it never competes
+  // with load-critical work, and visitors who never scroll this far never
+  // pay the download. A cheap bounded poll, cleared the moment it fires.
+  let idle = false;
+  if ("requestIdleCallback" in window) {
+    window.requestIdleCallback(() => { idle = true; }, { timeout: 4000 });
   } else {
+    window.setTimeout(() => { idle = true; }, 2500);
+  }
+  const boot = () => {
+    if (!window.THREE) {
+      fallback();
+      return;
+    }
+    try {
+      init();
+    } catch (e) {
+      console.error(e);
+      fallback();
+    }
+  };
+  const gate = window.setInterval(() => {
+    if (!idle || !near(Math.max(400, window.innerHeight * 0.6))) return;
+    window.clearInterval(gate);
+    if (window.THREE) {
+      boot();
+      return;
+    }
     const vendor = document.createElement("script");
     vendor.src = "/static/js/vendor/three.min.js?v=20261022-1";
     vendor.onload = boot;
-    vendor.onerror = () => root.classList.add("journey-static");
+    vendor.onerror = fallback;
     document.head.appendChild(vendor);
-  }
+  }, 250);
 
   function init() {
   const T = window.THREE;
@@ -915,65 +1064,31 @@
     new T.Vector3(0.0, 8.0, -240),
   ]);
 
-  // ---- Scroll plumbing: progress read inside rAF (no scroll listeners),
-  // then damped for glide. ----
-  root.classList.add("journey-live");
-  track.style.minHeight = "620vh";
-
-  const cards = Array.from(document.querySelectorAll(".journey-card")).map((el) => {
-    const band = (el.dataset.band || "0,1").split(",").map(Number);
-    return { el, start: band[0], end: band[1] };
-  });
-  const dots = Array.from(document.querySelectorAll(".journey-rail button"));
-
-  // Rail stops fly the camera to an island: scroll to the point on the track
-  // whose flight progress matches that stop, and let the existing damping
-  // carry the camera there as a real move rather than a cut.
-  for (const dot of dots) {
-    dot.addEventListener("click", () => {
-      const stop = parseFloat(dot.dataset.stop || "0");
-      const max = track.offsetHeight - window.innerHeight;
-      window.scrollTo({ top: track.offsetTop + max * stop, behavior: "smooth" });
-    });
-  }
-
-  let target = 0;
-  let t = 0;
-  let skyDawn = -1;
-  let fogHex = -1;
-  let lift = -1;
+  // ---- Rendering: the loop above calls world.render(t, now) every frame
+  // the section is near the viewport. ----
   const camPos = new T.Vector3();
   const lookPos = new T.Vector3();
+  let skyDawn = -1;
+  let fogHex = -1;
+  let painted = false;
 
   function resize() {
-    const w = window.innerWidth;
-    const h = window.innerHeight;
+    const w = stage.clientWidth || window.innerWidth;
+    const h = stage.clientHeight || window.innerHeight;
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
+    // The flight was framed for a landscape window. On a portrait phone a
+    // fixed vertical field of view leaves a sliver of each island, so the
+    // view opens up as the screen narrows (capped well short of fisheye).
+    camera.fov = camera.aspect >= 1 ? 42 : Math.min(68, 42 + (1 - camera.aspect) * 48);
     camera.updateProjectionMatrix();
   }
   window.addEventListener("resize", resize);
   resize();
 
-  function frame(nowMs) {
-    const now = (nowMs || 0) * 0.001;
-    const max = track.offsetHeight - window.innerHeight;
-    target = max > 0 ? Math.min(1, Math.max(0, (window.scrollY - track.offsetTop) / max)) : 0;
-    t += (target - t) * 0.07;
-
-    // Past the end of the track the dusk band and footer scroll in. The
-    // fixed layers (sky, canvas, paper, cards) rise with the page by the
-    // same distance, so the flight's last frame sits on top of the dusk
-    // band instead of the gate card floating over the footer.
-    const trackBottom = track.offsetTop + track.offsetHeight - window.scrollY;
-    const over = Math.max(0, Math.round(window.innerHeight - trackBottom));
-    if (over !== lift) {
-      lift = over;
-      track.style.setProperty("--journey-lift", over + "px");
-    }
-
-    camPath.getPointAt(t, camPos);
-    lookPath.getPointAt(t, lookPos);
+  function render(progress, now) {
+    camPath.getPointAt(progress, camPos);
+    lookPath.getPointAt(progress, lookPos);
     camera.position.copy(camPos);
     camera.lookAt(lookPos);
 
@@ -982,10 +1097,10 @@
     key.position.set(camPos.x + 24, camPos.y + 38, camPos.z + 16);
     key.target.position.set(lookPos.x, 0, lookPos.z);
 
-    // Dawn over the last stretch of the flight: the painted sky crossfades
-    // to the dusk-treeline plate, and the fog warms to its mist so the far
-    // edge of the gate island melts into that sky, not into a day colour.
-    const dawnK = Math.min(1, Math.max(0, (t - 0.72) / 0.23));
+    // Warm light over the last stretch, capped by the section
+    // (data-dawn-max): the home page keeps its dusk for the band at its end,
+    // so the gate gets a golden hour, not a sunset.
+    const dawnK = clamp01((progress - 0.72) / 0.23) * DAWN_MAX;
     scene.fog.color.lerpColors(FOG_DAY, FOG_DAWN, dawnK);
     const hex = scene.fog.color.getHex();
     if (hex !== fogHex) {
@@ -997,10 +1112,10 @@
       skyDawn = skyK;
       skyLayer.style.setProperty("--dawn", String(skyK));
     }
-    // The sun blooms in behind the gate, then hands over to the painted
-    // dusk sky as the camera rises into it, so the flight ends on the plate.
+    // The sun blooms in behind the gate, then hands over to the sky as the
+    // camera rises past it.
     const sunK =
-      Math.min(1, Math.max(0, (t - 0.55) / 0.3)) * (1 - Math.min(1, Math.max(0, (t - 0.94) / 0.045)));
+      clamp01((progress - 0.55) / 0.3) * (1 - clamp01((progress - 0.94) / 0.045)) * Math.max(DAWN_MAX, 0.5);
     for (const f of dawnFaders) f.mesh.material.opacity = f.base * sunK;
 
     // Idle life
@@ -1025,30 +1140,15 @@
       f.right.rotation.z = -w;
     }
 
-    for (let i = 0; i < cards.length; i += 1) {
-      const c = cards[i];
-      const span = c.end - c.start;
-      const fadeIn = Math.min(1, Math.max(0, (t - c.start) / (span * 0.25)));
-      const fadeOut = Math.min(1, Math.max(0, (c.end - t) / (span * 0.25)));
-      const o = Math.min(fadeIn, fadeOut);
-      c.el.style.opacity = o.toFixed(3);
-      c.el.style.transform = "translateY(" + ((1 - o) * 18).toFixed(1) + "px)";
-      c.el.classList.toggle("is-active", o > 0.5);
-      if (dots[i]) dots[i].classList.toggle("is-active", t >= c.start && t <= c.end);
-    }
-
-    // The rail bows out with the flight so it never floats over the footer.
-    const rail = dots.length ? dots[0].parentElement : null;
-    if (rail) rail.style.opacity = t > 0.97 ? String(Math.max(0, (1 - t) / 0.03)) : "1";
-
     renderer.render(scene, camera);
-    if (!document.hidden) window.requestAnimationFrame(frame);
+    if (!painted) {
+      // The painting yields to the island only once a frame exists.
+      painted = true;
+      root.classList.add("journey-live");
+    }
   }
 
-  document.addEventListener("visibilitychange", () => {
-    if (!document.hidden) window.requestAnimationFrame(frame);
-  });
-
-  window.requestAnimationFrame(frame);
+  world = { render };
+  wake();
   }
 })();

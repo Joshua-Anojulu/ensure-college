@@ -508,49 +508,6 @@ a { color: var(--brand); }
 .hero-secondary { min-height: 3rem; padding: 0.85rem 1.15rem; font-size: 0.95rem; }
 
 /* =========================================================================
-   "Why different" panel
-   ========================================================================= */
-.difference-panel {
-  display: grid;
-  padding: clamp(1.3rem, 3vw, 2rem);
-  grid-template-columns: minmax(0, 0.86fr) minmax(0, 1.14fr);
-  align-items: stretch;
-  gap: 1.5rem;
-}
-.difference-copy {
-  display: flex;
-  min-height: 100%;
-  flex-direction: column;
-  justify-content: center;
-}
-.difference-copy h2 {
-  max-width: 12ch;
-  margin: 0.08rem 0 0.7rem;
-  font-size: clamp(1.9rem, 4vw, 2.9rem);
-  font-weight: 800;
-  letter-spacing: 0;
-  line-height: 1.04;
-}
-.difference-copy p:last-child {
-  max-width: 45ch;
-  margin: 0;
-  color: var(--muted);
-  font-size: 0.95rem;
-  line-height: 1.65;
-}
-/* Informational cards: no hover theater, type and spacing carry them. */
-.difference-card {
-  position: relative;
-  padding: 1.2rem;
-  overflow: hidden;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: var(--surface-inset);
-}
-.difference-card h3 { margin: 0 0 0.45rem; color: var(--ink); font-size: 1.02rem; font-weight: 700; }
-.difference-card p { margin: 0; color: var(--muted); font-size: 0.84rem; line-height: 1.55; }
-
-/* =========================================================================
    Intake: resume import + profile form
    ========================================================================= */
 .resume-import, .profile-form { padding: clamp(1.3rem, 3vw, 2rem); }
@@ -1426,55 +1383,6 @@ html.motion-ready .saved-count.count-pop { animation: count-pop 360ms var(--ease
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-/* Proof band: a real campus scene stands in for empty claims. */
-.proof-band {
-  position: relative;
-  display: grid;
-  min-height: 300px;
-  grid-template-columns: 1.05fr 0.95fr;
-  overflow: hidden;
-  border: 1px solid var(--hero-line);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-lg);
-}
-.proof-photo { border-radius: 0; }
-.proof-copy {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 0.7rem;
-  padding: clamp(1.6rem, 3vw, 2.6rem);
-  background: var(--surface);
-}
-.proof-copy h2 {
-  max-width: 18ch;
-  margin: 0;
-  font-size: clamp(1.5rem, 2.8vw, 2.15rem);
-  font-weight: 600;
-  letter-spacing: 0;
-  line-height: 1.12;
-}
-.proof-copy p { max-width: 46ch; margin: 0; color: var(--ink-soft); font-size: 0.95rem; line-height: 1.6; }
-.proof-points { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.3rem; }
-.proof-point {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.4rem 0.75rem;
-  border: 1px solid var(--line-strong);
-  border-radius: var(--radius-pill);
-  background: var(--surface-2);
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.04em;
-}
-.proof-point::before { content: ""; width: 0.45rem; height: 0.45rem; border-radius: 50%; background: var(--accent); }
-
-@media (max-width: 720px) {
-  .proof-band { grid-template-columns: 1fr; }
-  .proof-photo { min-height: 200px; }
-}
-
 /* =========================================================================
    SEO detail + browse pages (server-rendered, no JS)
    ========================================================================= */
@@ -1530,8 +1438,6 @@ html.motion-ready .saved-count.count-pop { animation: count-pop 360ms var(--ease
   .main { padding: 1.25rem 1rem 3rem; }
   .hero { grid-template-columns: 1fr; padding: 1.25rem 0 0.5rem; }
   .hero-headline { font-size: clamp(2.3rem, 10vw, 3.2rem); }
-  .difference-copy h2 { max-width: 14ch; }
-  .stack-card { position: static; min-height: auto; }
   .opportunity-tabs { grid-template-columns: 1fr; }
   .opportunity-tab-list { width: 100%; }
   .opportunity-tab { flex: 1 1 100%; justify-content: space-between; }
@@ -2098,7 +2004,6 @@ body.has-scrolled .site-header {
 .modal-card,
 .match-card,
 .preview-card,
-.difference-card,
 .browse-kind-card,
 .skeleton-card {
   border-color: var(--line);
@@ -2284,166 +2189,6 @@ body.has-scrolled .site-header {
   font-size: 0.7rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-}
-
-.proof-band {
-  width: 100vw;
-  /* Full-bleed via margin math, NOT transform: the scroll-reveal animation
-     owns this element's transform and would override a translateX(-50%). */
-  margin-left: calc(50% - 50vw);
-  display: grid;
-  min-height: 420px;
-  grid-template-columns:
-    minmax(1rem, 1fr)
-    minmax(0, 560px)
-    minmax(0, 520px)
-    minmax(1rem, 1fr);
-  overflow: hidden;
-  border: 0;
-  border-radius: 0;
-  background: color-mix(in srgb, var(--brand) 9%, var(--canvas));
-  box-shadow: none;
-}
-
-.proof-photo {
-  grid-column: 2;
-  min-height: 420px;
-}
-
-.proof-photo img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.proof-copy {
-  grid-column: 3;
-  padding: clamp(2rem, 4vw, 3.8rem);
-  background: var(--surface);
-}
-
-.proof-copy h2 {
-  max-width: 16ch;
-  font-size: clamp(2rem, 4vw, 3.2rem);
-  font-weight: 800;
-}
-
-.proof-point {
-  border-color: var(--line);
-  border-radius: var(--radius-sm);
-  color: var(--ink-soft);
-  background: var(--surface-inset);
-}
-
-.proof-point::before {
-  border-radius: 1px;
-  background: var(--accent);
-}
-
-.difference-panel {
-  display: block;
-  padding: clamp(2.4rem, 6vw, 5.5rem) 0 clamp(1.5rem, 4vw, 3rem);
-}
-
-.difference-copy {
-  max-width: none;
-  margin-bottom: clamp(1.8rem, 4vw, 3.2rem);
-}
-
-.difference-copy h2 {
-  max-width: 13ch;
-  font-size: clamp(2.6rem, 5.6vw, 5rem);
-  font-weight: 800;
-  line-height: 0.96;
-  letter-spacing: -0.015em;
-}
-
-.difference-copy p {
-  max-width: 52ch;
-  font-size: clamp(1rem, 1.4vw, 1.15rem);
-}
-
-/* Sticky stack: each card pins under the header and the next one slides
-   over it. Pure CSS sticky carries the layout; GSAP only scrubs the
-   scale/dim of covered cards on desktop. */
-.difference-stack {
-  display: grid;
-  gap: clamp(1.2rem, 3vw, 2rem);
-}
-
-.stack-card {
-  position: sticky;
-  display: flex;
-  align-items: center;
-  min-height: clamp(20rem, 52vh, 30rem);
-  border-color: var(--line);
-  background: var(--surface);
-  will-change: transform;
-}
-
-.stack-card:nth-child(1) { top: calc(72px + 1.2rem); }
-.stack-card:nth-child(2) { top: calc(72px + 2.4rem); }
-.stack-card:nth-child(3) { top: calc(72px + 3.6rem); }
-
-.stack-card-body {
-  display: grid;
-  width: 100%;
-  max-width: 62rem;
-  margin: 0 auto;
-  padding: clamp(0.6rem, 2vw, 1.6rem);
-  gap: 0.7rem;
-}
-
-.stack-card .stack-card-body h3 {
-  margin: 0;
-  font-family: var(--font-display);
-  font-size: clamp(1.7rem, 3.4vw, 2.8rem);
-  font-weight: 800;
-  line-height: 1;
-}
-
-.stack-card .stack-card-body p {
-  max-width: 56ch;
-  font-size: clamp(0.98rem, 1.3vw, 1.12rem);
-  line-height: 1.6;
-}
-
-.stack-card-forest {
-  border-color: var(--brand-strong);
-  background: var(--brand);
-  color: var(--brand-ink);
-}
-
-.stack-card-forest h3,
-.stack-card-forest p {
-  color: var(--brand-ink);
-}
-
-.stack-card-paper {
-  box-shadow:
-    inset 0 0 0 1px color-mix(in srgb, var(--surface) 80%, white 20%),
-    0 0 0 8px color-mix(in srgb, var(--brand-tint) 55%, transparent),
-    var(--shadow-md);
-}
-
-.stack-card-tint {
-  border-color: var(--line-strong);
-  background: color-mix(in srgb, var(--brand-tint) 62%, var(--surface));
-}
-
-.difference-list {
-  display: grid;
-  margin: 1.2rem 0 0;
-  padding: 0;
-  gap: 0.65rem;
-  list-style: none;
-  color: color-mix(in srgb, var(--brand-ink) 86%, transparent);
-  font-size: 0.92rem;
-}
-
-.difference-list li {
-  padding-top: 0.65rem;
-  border-top: 1px solid color-mix(in srgb, var(--brand-ink) 22%, transparent);
 }
 
 .results-filters,
@@ -2670,42 +2415,6 @@ body.has-scrolled .site-header {
   background: color-mix(in srgb, var(--brand-tint) 45%, var(--surface));
 }
 
-/* Proof band: the photo gets the hero panel's tilted-frame treatment and
-   breaks the band's top and bottom edges. */
-.proof-band {
-  overflow: visible;
-  align-items: center;
-}
-
-.proof-photo {
-  overflow: hidden;
-  margin-block: clamp(-2.6rem, -2.4vw, -1.4rem);
-  padding: clamp(0.5rem, 1vw, 0.8rem);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
-  background: var(--surface);
-  transform: rotate(1.1deg);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.65),
-    0 26px 60px -22px rgba(18, 42, 33, 0.42),
-    var(--shadow-lg);
-  z-index: 2;
-}
-
-.proof-photo img {
-  border-radius: calc(var(--radius-lg) - 6px);
-}
-
-/* The photo fills its paper frame (a stretched grid item gives the img a
-   definite height); wash and grain stay on the photo. */
-.proof-photo { display: grid; }
-.proof-photo picture { display: block; min-height: 0; overflow: hidden; border-radius: calc(var(--radius-lg) - 6px); }
-.proof-photo::before,
-.proof-photo::after {
-  inset: clamp(0.5rem, 1vw, 0.8rem);
-  border-radius: calc(var(--radius-lg) - 6px);
-}
-
 /* Profile form: stacked-paper depth behind the panel, double bezel inside,
    mono step numerals. */
 .profile-form {
@@ -2793,167 +2502,16 @@ body.has-scrolled .site-header {
 }
 
 /* Focus ring on the dark bands. */
-.site-footer :focus-visible,
-.journey-teaser :focus-visible {
+.site-footer :focus-visible {
   outline-color: var(--brand-ink);
   box-shadow: 0 0 0 4px color-mix(in srgb, var(--brand-ink) 30%, transparent);
 }
 
-/* Journey teaser: a live miniature of the flight, docked on the landing.
-   The canvas paints the island against a dark forest vignette; copy rides
-   above it. If motion or WebGL is unavailable the panel stands on copy. */
-.journey-teaser {
-  position: relative;
-  display: flex;
-  align-items: center;
-  overflow: hidden;
-  min-height: clamp(23rem, 52vh, 31rem);
-  margin: clamp(1.6rem, 4vw, 3rem) 0;
-  border: 1px solid var(--brand-strong);
-  border-radius: var(--radius-xl);
-  background: radial-gradient(120% 130% at 72% 24%, var(--brand-lift) 0%, var(--brand) 52%, var(--brand-strong) 100%);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.12),
-    0 30px 70px -28px rgba(18, 42, 33, 0.5),
-    var(--shadow-lg);
-}
-
-#journey-teaser-canvas {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-
-.journey-teaser-copy {
-  position: relative;
-  z-index: 2;
-  max-width: 26rem;
-  padding: clamp(1.6rem, 4vw, 3.2rem);
-}
-
-.journey-teaser-copy h2 {
-  margin: 0 0 0.7rem;
-  color: var(--brand-ink);
-  font-size: clamp(2rem, 3.8vw, 3.1rem);
-  font-weight: 800;
-  line-height: 0.98;
-  letter-spacing: -0.015em;
-}
-
-.journey-teaser-copy p {
-  margin: 0 0 1.3rem;
-  color: color-mix(in srgb, var(--brand-ink) 82%, transparent);
-  font-size: clamp(0.98rem, 1.3vw, 1.1rem);
-  line-height: 1.6;
-  max-width: 40ch;
-}
-
-.journey-teaser-cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.35rem;
-  border-radius: var(--radius-sm);
-  color: var(--accent-ink);
-  background: var(--accent);
-  font-weight: 700;
-  text-decoration: none;
-}
-
-.journey-teaser-cta:hover {
-  background: color-mix(in srgb, var(--accent) 78%, var(--accent-deep));
-  color: var(--accent-ink);
-}
-
-.journey-teaser.teaser-static #journey-teaser-canvas { display: none; }
-
-/* Painting-first teaser: the overlook plate fills the same box the canvas
-   does, so the live swap changes pixels, never layout. */
-.teaser-painting {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.teaser-painting img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: 62% 38%;
-  opacity: 0;
-}
-
-.teaser-painting img.world-loaded {
-  opacity: 1;
-  transition: opacity 480ms var(--ease-out);
-}
-
-/* The copy column was styled for the dark brand wash; over the pale
-   painting it needs a dusk scrim. Lives inside the painting layer so the
-   live swap fades it out with the plate. It holds past the copy column. */
-.teaser-painting::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    100deg,
-    color-mix(in srgb, var(--brand-strong) 88%, transparent) 0%,
-    color-mix(in srgb, var(--brand-strong) 76%, transparent) 34%,
-    color-mix(in srgb, var(--brand-strong) 38%, transparent) 52%,
-    transparent 68%
-  );
-}
-
-/* Labels ride above the dusk scrim, which is for the painting. */
-.teaser-landmarks {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  transition: opacity 480ms var(--ease-out) 240ms;
-}
-
-.teaser-painting img.world-loaded + .teaser-landmarks { opacity: 1; }
-
-.teaser-landmark rect {
-  fill: color-mix(in srgb, var(--surface) 92%, transparent);
-  stroke: var(--brand-strong);
-  stroke-width: 1;
-}
-
-@media (max-width: 767px) {
-  /* viewBox-scaled chips fall under readable size and the slice crop cuts
-     the right-side stations; the painting carries the mobile teaser alone. */
-  .teaser-landmarks { display: none; }
-}
-
-.teaser-landmark text {
-  fill: var(--ink);
-  font-family: var(--font-mono);
-  font-size: 19px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  text-anchor: middle;
-}
-
-@media (forced-colors: active) {
-  .teaser-painting,
-  .teaser-landmarks,
-  #journey-teaser-canvas { display: none; }
-  .journey-teaser { background: Canvas; border: 1px solid CanvasText; }
-}
-
-/* ---- Journey and Teaser paint (2026-10-22) ----
+/* ---- Journey paint (2026-10-22) ----
    The 3D island repainted into the World. These tokens are the plates'
    atmosphere (sampled from overlook, stage-tools and dusk-treeline): the
-   Journey's CSS sky is built from them, and both scenes read --paint-mist
-   as their fog, so canvas and sky never drift apart. */
+   Journey's CSS sky is built from them, and the scene reads --paint-mist
+   as its fog, so canvas and sky never drift apart. */
 :root {
   --paint-paper: #f8f7f0;
   --paint-glow: #fbf0d8;
@@ -2963,89 +2521,306 @@ body.has-scrolled .site-header {
   --paint-dawn-mist: #f5e6cc;
 }
 
-/* The live swap: the painting does not vanish, it recedes into the valley
-   mist (a veil over the plate, under the dusk scrim) while the island comes
-   forward on the canvas, and only the landmark labels yield. The copy keeps
-   its scrim; every layer shares the same absolute box. */
-#journey-teaser-canvas { opacity: 0; }
+/* ---- end Journey paint ---- */
 
-.teaser-painting::before,
-.journey-teaser::after {
-  content: "";
-  position: absolute;
-  inset: 0;
+/* ---- How it works: the Journey on the home page (2026-10-22) ----
+   One section, two layouts. The default (no JS, reduced motion, Save-Data,
+   low-end, no WebGL, forced colors) is the four stops over the overlook
+   painting. html.journey-will-fly (set by journey.js before the visitor can
+   reach the section) turns the track into a tall scroll runway whose stage
+   sticks while the camera flies; html.journey-live crossfades the painting
+   into the live canvas once the first frame has rendered. Every visual layer
+   dissolves into the paper at the stage's top and bottom, the way the
+   plates do, so the 3D sits in the page instead of in a box. */
+.journey-home { position: relative; isolation: isolate; }
+
+.journey-home-head { max-width: 44rem; }
+
+.journey-home-head h2 {
+  margin: 0 0 0.6rem;
+  font-size: clamp(2.2rem, 4.6vw, 3.8rem);
+  font-weight: 800;
+  line-height: 0.98;
+  letter-spacing: -0.015em;
+}
+
+.journey-home-head p:last-child {
+  max-width: 50ch;
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: clamp(1rem, 1.3vw, 1.12rem);
+  line-height: 1.6;
+}
+
+.journey-track { position: relative; margin-top: clamp(0.8rem, 2vw, 1.4rem); }
+.journey-stage { position: relative; }
+.journey-sky,
+#journey-canvas,
+.journey-paper,
+.journey-rail { display: none; }
+
+/* Static layout: the painting as a soft-edged full-bleed band, the stops as
+   paper cards rising out of its lower mist. */
+.journey-painting {
+  position: relative;
+  width: 100vw;
+  height: clamp(15rem, 40vw, 34rem);
+  margin-left: calc(50% - 50vw);
+  overflow: hidden;
   pointer-events: none;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 14%, #000 62%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 14%, #000 62%, transparent 100%);
+}
+
+.journey-painting img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 60% 42%;
   opacity: 0;
 }
 
-/* The plate's own sun glow, where its flag hill stands, sits over the
-   painted flag so only the island's flag shows. */
-.teaser-painting::before {
-  background:
-    radial-gradient(12% 24% at 82% 31%, var(--paint-glow), transparent),
-    radial-gradient(
-      62% 78% at 68% 58%,
-      color-mix(in srgb, var(--paint-mist) 90%, transparent) 0%,
-      color-mix(in srgb, var(--paint-mist) 74%, transparent) 46%,
-      color-mix(in srgb, var(--paint-paper) 34%, transparent) 100%
-    );
+.journey-painting img.world-loaded {
+  opacity: 1;
+  transition: opacity 480ms var(--ease-out);
 }
 
-/* Paper over the live canvas, as on the Journey: the grain tile, multiplied. */
-.journey-teaser::after {
-  z-index: 1;
+.journey-stops {
+  position: relative;
+  z-index: 4;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(0.7rem, 1.4vw, 1rem);
+  margin: clamp(-7rem, -9vw, -3rem) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.journey-card {
+  padding: clamp(1rem, 1.8vw, 1.4rem);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: color-mix(in srgb, var(--surface) 94%, transparent);
+  box-shadow: var(--shadow-md);
+}
+
+.journey-card-step {
+  margin: 0 0 0.4rem;
+  color: var(--accent-deep);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.journey-card h3 {
+  margin: 0 0 0.45rem;
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 1.6vw, 1.45rem);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+}
+
+.journey-card p:not(.journey-card-step) {
+  margin: 0;
+  max-width: 44ch;
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+.journey-card-cta { display: inline-flex; gap: 0.45rem; margin-top: 0.9rem; }
+
+@media (max-width: 1023px) {
+  .journey-stops { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 560px) {
+  .journey-stops { grid-template-columns: 1fr; margin-top: -2.6rem; }
+}
+
+/* No plate under Save-Data or reduced data: the stops stand on their own. */
+html.save-data .journey-painting { display: none; }
+html.save-data .journey-stops { margin-top: 0; }
+@media (prefers-reduced-data: reduce), (forced-colors: active) {
+  .journey-painting { display: none; }
+  .journey-stops { margin-top: 0; }
+}
+
+/* ---- The flight ---- */
+html.journey-will-fly .journey-track { height: 460vh; }
+
+html.journey-will-fly .journey-stage {
+  position: sticky;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100svh;
+  margin-left: calc(50% - 50vw);
+  overflow: hidden;
+}
+
+html.journey-will-fly .journey-sky,
+html.journey-will-fly .journey-painting,
+html.journey-will-fly #journey-canvas,
+html.journey-will-fly .journey-paper {
+  display: block;
+  position: absolute;
+  inset: 0;
+  width: auto;
+  height: auto;
+  margin: 0;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 9%, #000 87%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 9%, #000 87%, transparent 100%);
+}
+
+html.journey-will-fly .journey-sky {
+  z-index: 0;
+  background:
+    radial-gradient(58% 26% at 62% 60%, var(--paint-glow-deep), transparent),
+    linear-gradient(180deg, color-mix(in srgb, var(--paint-paper) 55%, white) 0%, var(--paint-paper) 30%, var(--paint-glow) 50%, var(--paint-glow-deep) 61%, var(--paint-glow) 70%, var(--paint-mist) 86%, var(--paint-mist) 100%);
+}
+
+/* journey.js sets --dawn; the home flight caps it, so the page stays in
+   daylight until the dusk band at its end. */
+html.journey-will-fly .journey-sky::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: var(--dawn, 0);
+  background: linear-gradient(180deg, var(--paint-dawn-mist), var(--paint-dawn) 62%, var(--paint-dawn-mist));
+}
+
+html.journey-will-fly .journey-painting { z-index: 1; }
+html.journey-will-fly .journey-painting img { object-position: 60% 46%; }
+
+html.journey-will-fly #journey-canvas {
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+}
+
+html.journey-will-fly .journey-paper {
+  z-index: 3;
+  opacity: 0.06;
   mix-blend-mode: multiply;
   background: url("/static/img/grain.png") 0 0 / 128px 128px;
 }
 
-.journey-teaser.teaser-live #journey-teaser-canvas,
-.journey-teaser.teaser-live .teaser-painting::before {
+html.journey-live #journey-canvas {
   opacity: 1;
-  transition: opacity 1200ms var(--ease-out);
+  transition: opacity 900ms var(--ease-out);
 }
 
-.journey-teaser.teaser-live::after {
-  opacity: 0.07;
-  transition: opacity 1200ms var(--ease-out);
-}
-
-.journey-teaser.teaser-live .teaser-painting .teaser-landmarks {
+html.journey-live .journey-painting {
   opacity: 0;
   transition: opacity 900ms var(--ease-out);
 }
 
-/* The island sinks into the mist below its rim, and on desktop it melts
-   into the scrim before it can reach the copy column. */
-#journey-teaser-canvas {
-  -webkit-mask-image: linear-gradient(to bottom, #000 74%, transparent 97%);
-  mask-image: linear-gradient(to bottom, #000 74%, transparent 97%);
+html.journey-will-fly .journey-stops {
+  position: absolute;
+  inset: 0;
+  display: block;
+  margin: 0;
+  pointer-events: none;
 }
 
-@media (min-width: 1024px) {
-  #journey-teaser-canvas {
-    -webkit-mask-image: linear-gradient(100deg, transparent 26%, #000 50%), linear-gradient(to bottom, #000 74%, transparent 97%);
-    -webkit-mask-composite: source-in;
-    mask-image: linear-gradient(100deg, transparent 26%, #000 50%), linear-gradient(to bottom, #000 74%, transparent 97%);
-    mask-composite: intersect;
+html.journey-will-fly .journey-card {
+  position: absolute;
+  left: clamp(1.2rem, 6vw, 6rem);
+  bottom: clamp(3rem, 12vh, 7rem);
+  max-width: 30rem;
+  padding: clamp(1.1rem, 2vw, 1.6rem) clamp(1.2rem, 2.2vw, 1.8rem);
+  background: color-mix(in srgb, var(--surface) 88%, transparent);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  box-shadow: var(--shadow-lg);
+  opacity: 0;
+  transform: translateY(18px);
+  pointer-events: none;
+}
+
+html.journey-will-fly .journey-card.is-active { pointer-events: auto; }
+
+html.journey-will-fly .journey-card h3 {
+  margin-bottom: 0.5rem;
+  font-size: clamp(1.7rem, 3.4vw, 2.6rem);
+  line-height: 0.98;
+  letter-spacing: -0.015em;
+}
+
+html.journey-will-fly .journey-card p:not(.journey-card-step) {
+  font-size: clamp(0.95rem, 1.2vw, 1.05rem);
+}
+
+/* The rail is a real control: each stop flies the camera to that island. */
+html.journey-will-fly .journey-rail {
+  position: absolute;
+  top: 50%;
+  right: clamp(0.9rem, 2.5vw, 2rem);
+  z-index: 5;
+  display: grid;
+  gap: 0.55rem;
+  transform: translateY(-50%);
+}
+
+.journey-rail button {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.55rem;
+  padding: 0.35rem 0.5rem;
+  border: 0;
+  border-radius: var(--radius-pill);
+  /* Stops not yet reached recede by color on a light pill, not by opacity:
+     at 0.55 over the scene their labels read 2.2:1. */
+  background: color-mix(in srgb, var(--surface) 72%, transparent);
+  color: var(--muted);
+  font: inherit;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: color 200ms var(--ease), background 200ms var(--ease);
+}
+
+.journey-rail button span {
+  width: 8px;
+  height: 8px;
+  flex: none;
+  border-radius: 2px;
+  background: var(--line-strong);
+  transition: background 200ms var(--ease), transform 200ms var(--ease);
+}
+
+.journey-rail button:hover,
+.journey-rail button:focus-visible {
+  color: var(--ink);
+  background: color-mix(in srgb, var(--surface) 94%, transparent);
+}
+
+.journey-rail button.is-active { color: var(--brand); }
+
+.journey-rail button.is-active span {
+  background: var(--brand);
+  transform: scale(1.35) rotate(45deg);
+}
+
+@media (max-width: 760px) {
+  html.journey-will-fly .journey-track { height: 400vh; }
+  html.journey-will-fly .journey-card {
+    right: 1rem;
+    left: 1rem;
+    bottom: 2.6rem;
+    max-width: none;
   }
+  .journey-rail button { gap: 0; padding: 0.3rem; font-size: 0; }
 }
-
-@media (max-width: 767px) {
-  /* Phones: the painting is a band above the copy; the island takes the
-     same band and fades out the same way. */
-  #journey-teaser-canvas {
-    bottom: auto;
-    height: 60%;
-    -webkit-mask-image: linear-gradient(to bottom, #000 70%, transparent);
-    mask-image: linear-gradient(to bottom, #000 70%, transparent);
-  }
-}
-
-@media (forced-colors: active) {
-  .teaser-painting::before,
-  .journey-teaser::after { display: none; }
-}
-/* ---- end Journey and Teaser paint ---- */
+/* ---- end How it works ---- */
 
 /* Craft details */
 ::selection {
@@ -3077,39 +2852,9 @@ body.has-scrolled .site-header {
     min-height: 6.6rem;
   }
 
-  .proof-photo {
-    margin-block: 0;
-    transform: none;
-  }
-
-  .journey-teaser { min-height: 21rem; }
-
   .profile-form::before {
     transform: rotate(-0.5deg) translate(-6px, 8px);
   }
-}
-
-/* Below 1024px the copy rides its own dusk panel; on phones the painting is
-   a band above it. Same box for the live swap. */
-@media (max-width: 1023px) {
-  .journey-teaser { align-items: flex-end; }
-  .journey-teaser-copy {
-    margin: clamp(0.75rem, 3vw, 1.25rem);
-    padding: clamp(1.2rem, 4vw, 1.8rem);
-    border-radius: var(--radius-lg);
-    background: color-mix(in srgb, var(--brand-strong) 86%, transparent);
-  }
-}
-
-@media (max-width: 767px) {
-  .journey-teaser { min-height: 33rem; }
-  .teaser-painting {
-    bottom: auto;
-    height: 60%;
-    -webkit-mask-image: linear-gradient(to bottom, #000 70%, transparent);
-    mask-image: linear-gradient(to bottom, #000 70%, transparent);
-  }
-  .teaser-painting::after { content: none; }
 }
 
 @media (max-width: 760px) {
@@ -3145,20 +2890,6 @@ body.has-scrolled .site-header {
     min-height: 6.6rem;
   }
 
-  .proof-band {
-    width: auto;
-    margin-left: 0;
-    grid-template-columns: 1fr;
-  }
-
-  .proof-photo,
-  .proof-copy {
-    grid-column: auto;
-  }
-
-  .proof-photo {
-    min-height: 230px;
-  }
 }
 
 /* Film grain over the whole page: fixed and pointer-transparent so it never
@@ -3223,6 +2954,12 @@ body::after {
   height: 100%;
   object-fit: cover;
   object-position: right bottom;
+}
+/* The hero's forest dissolves into the paper at its foot instead of ending
+   on a straight line above the numbers. */
+.hero-stage {
+  -webkit-mask-image: linear-gradient(to bottom, #000 0, #000 76%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 0, #000 76%, transparent 100%);
 }
 
 /* Paper wash so the left headline + copy stay crisp over the art. */
@@ -3390,9 +3127,7 @@ body::after {
 /* Plates are decorative, hydrated by app.js (Save-Data aware); sections
    keep transparent backgrounds so the scene shows through behind panels. */
 
-.catalog-numbers,
-.proof-band,
-.difference-panel {
+.catalog-numbers {
   position: relative;
   /* Contain the z-index:-1 decorative layers inside each staged section so
      they can never interleave with neighboring sections' paint. */
@@ -3413,9 +3148,6 @@ body::after {
   object-fit: cover;
   opacity: 0;
 }
-
-/* The stage replaces the proof band's tint: the panel keeps its own surface. */
-.proof-band { background: transparent; }
 
 /* Stat labels go ink over the clearing: amber-on-amber-trail was illegible.
    A small paper wash keeps them legible over the ferns. */
@@ -3444,30 +3176,21 @@ body::after {
 .catalog-number:first-child strong { color: var(--brand); }
 .catalog-number:first-child span { color: var(--ink-soft); }
 
-/* Tall sections keep the plate at natural aspect anchored top (cover would
-   zoom absurdly) and fade its lower edge into the canvas. */
-.difference-panel .world-plate img { height: auto; }
-.difference-panel .world-plate {
-  -webkit-mask-image: linear-gradient(to bottom, #000 78%, transparent);
-  mask-image: linear-gradient(to bottom, #000 78%, transparent);
-}
-
 .world-plate img.world-loaded {
   opacity: 1;
   transition: opacity 480ms var(--ease-out);
 }
 
-/* The owl lives inside the plate layer so multiply blends against the grove
-   in the same stacking context (its source has a paper background). */
-.world-plate .world-owl-img {
-  display: none;
-  position: absolute;
-  top: 0.6rem;
-  right: 1.2rem;
-  left: auto;
-  width: 108px;
-  height: auto;
-  mix-blend-mode: multiply;
+/* The numbers ride a full-bleed strip of the clearing that dissolves into
+   the paper above and below, the way every plate does: no hard rectangle,
+   and no notch where the hero's art stops short of it. */
+.catalog-numbers > .world-plate {
+  left: calc(50% - 50vw);
+  right: calc(50% - 50vw);
+  top: clamp(-3.2rem, -4vw, -1.6rem);
+  bottom: clamp(-3.2rem, -4vw, -1.6rem);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 28%, #000 72%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 28%, #000 72%, transparent 100%);
 }
 
 .world-plate .world-leaves-img {
@@ -3482,19 +3205,8 @@ body::after {
 }
 
 @media (min-width: 1200px) {
-  .world-plate .world-owl-img,
   .world-plate .world-leaves-img { display: block; }
 }
-
-/* The section heading rides a soft paper wash so copy stays legible over
-   the grove (quiet-center rule: more mist, never smaller type). */
-.difference-copy {
-  padding: 1.1rem 1.4rem;
-  border-radius: var(--radius-lg);
-  background: color-mix(in srgb, var(--canvas) 86%, transparent);
-}
-
-.difference-copy p:last-child { color: var(--ink-soft); }
 
 .world-dusk {
   position: relative;
@@ -3557,8 +3269,6 @@ html.save-data .world-dusk { display: none; }
    stroke; the draw-on comes from a mask whose solid stroke is scrubbed by a
    CSS scroll-driven animation. Without support (or with reduced motion) the
    mask rests fully drawn: the static trail is the baseline, not a fallback. */
-.journey-teaser { position: relative; }
-
 .trail-link {
   display: none;
   position: absolute;
@@ -3568,13 +3278,6 @@ html.save-data .world-dusk { display: none; }
 }
 
 .trail-link-1 { right: 9%; }
-.trail-link-2 { left: 11%; }
-.trail-link-3 { right: 22%; }
-/* Link 4 hangs from the difference panel's bottom edge: the teaser's
-   overflow:hidden + opaque panel would swallow anything placed inside it,
-   and anything hanging into the teaser's box gets painted over, so the
-   tail stays within the gap. */
-.trail-link-4 { top: auto; bottom: -20px; left: 30%; }
 
 .trail-dots {
   fill: none;

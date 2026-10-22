@@ -50,7 +50,7 @@ These are the ways this project has actually been broken before. A plan that vio
 - **Never commit secrets.** `.env` is gitignored; `.env.example` documents names only. Do not put real values in committed docs (including handoff files).
 - **Special checks are not Strong matches.** Niche gates the profile can't verify (nomination, membership, finalist, first-gen-only) surface in the special-check lane. Don't quietly promote them.
 - **The DOM contract is frozen.** `app.js` depends on ~184 selectors, their `data-*` values, element types, form field names, and the class names it emits. `tests/dom_contract.json` is the manifest and `tests/test_dom_contract.py` enforces it. Restructuring markup means updating the manifest deliberately, never silently.
-- **Cache-bust in lockstep.** The asset `?v=` string appears in `app/static/index.html`, `journey.html`, `privacy.html`, `terms.html`, `app/templates/base.html`, and `tests/test_pages.py`. Bump them together, or returning visitors get a stale mix.
+- **Cache-bust in lockstep.** The asset `?v=` string appears in `app/static/index.html`, `privacy.html`, `terms.html`, `app/templates/base.html`, `app/static/js/app.js`, `app/static/js/journey.js`, and `tests/test_pages.py`. Bump them together, or returning visitors get a stale mix.
 - **The landing page inlines its CSS.** `main.py::_inline_css` injects the stylesheet into `/` to keep the render-blocking request off the mobile critical path (LCP 2.46s, gate is 2.5s). Other pages use the cached external file. Don't "tidy" this back into a `<link>` without re-measuring.
 
 ## Commands

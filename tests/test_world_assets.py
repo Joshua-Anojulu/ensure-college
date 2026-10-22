@@ -94,7 +94,6 @@ def test_server_pages_carry_the_world_stage():
             "/guides/essays",
             "/privacy",
             "/terms",
-            "/journey",
             "/scholarships/definitely-not-a-real-slug",
         ):
             response = client.get(path)

@@ -221,7 +221,7 @@
         <button type="button" class="btn-ghost" id="nav-matches-btn">Matches</button>
         <button type="button" class="btn-ghost" id="nav-plan-btn">Plan</button>
         <button type="button" class="btn-ghost" id="nav-browse-btn">Browse</button>
-        <a class="btn-ghost" href="/journey">How it works</a>
+        <a class="btn-ghost" href="#how-it-works">How it works</a>
       </nav>
 
       <nav class="account-nav" aria-label="Account">
@@ -400,7 +400,7 @@
         </p>
         <div class="hero-actions">
           <a class="btn-primary hero-cta" href="#profile-form">Build my profile <span aria-hidden="true">&#8595;</span></a>
-          <a class="btn-secondary hero-secondary" href="/journey">How it works</a>
+          <a class="btn-secondary hero-secondary" href="#how-it-works">How it works</a>
         </div>
       </div>
       <div class="hero-demo panel" aria-labelledby="preview-title">
@@ -470,99 +470,54 @@
       </div>
     </section>
 
-    <section class="proof-band" aria-label="How EnsureCollege works" data-motion-section>
-      <svg class="trail-link trail-link-2" viewBox="0 0 120 160" width="120" height="160" aria-hidden="true"><defs><mask id="trail-mask-2"><path class="trail-reveal" pathLength="1" d="M16 4 C 70 52, 30 104, 96 156"/></mask></defs><path class="trail-dots" d="M16 4 C 70 52, 30 104, 96 156" mask="url(#trail-mask-2)"/></svg>
-      <div class="world-plate" aria-hidden="true">
-        <img data-src="/static/img/world/waypoints-1376.396da9ef19.webp" data-srcset="/static/img/world/waypoints-760.91b1f541c9.webp 760w, /static/img/world/waypoints-1376.396da9ef19.webp 1376w" sizes="100vw" width="1376" height="768" alt="" loading="lazy" decoding="async" fetchpriority="low">
+    <section id="how-it-works" class="journey-home" aria-labelledby="how-it-works-title">
+      <div class="journey-home-head">
+        <p class="eyebrow">How it works</p>
+        <h2 id="how-it-works-title">Fly through the whole plan.</h2>
+        <p>One profile, three lanes of real opportunities, a tracked plan, and the gate at the end. Scroll, and the camera flies the route.</p>
       </div>
-      <div class="proof-photo photo">
-        <picture>
-          <source type="image/webp" srcset="/static/img/campus-quad-380.webp?v=20261022-1 380w, /static/img/campus-quad-760.webp?v=20261022-1 760w" sizes="(max-width: 760px) calc(100vw - 2rem), 48vw">
-          <img src="/static/img/campus-quad.jpg?v=20261022-1" alt="Students walking across a college campus between classes" loading="lazy" decoding="async" width="1200" height="800" sizes="(max-width: 760px) calc(100vw - 2rem), 48vw">
-        </picture>
-      </div>
-      <div class="proof-copy">
-        <h2>Every match traces back to an official source.</h2>
-        <p>No guessed deadlines, no invented requirements. EnsureCollege shows you why each scholarship, program, or competition fits, then links the proof.</p>
-        <div class="proof-points">
-          <span class="proof-point">Transparent fit reasons</span>
-          <span class="proof-point">Source-linked steps</span>
-          <span class="proof-point">Deadlines you can verify</span>
+      <!-- The flight (journey.js). Capable devices get a tall track whose stage
+           sticks while the camera flies; reduced motion, Save-Data, low-end,
+           no-WebGL and no-JS visitors read the same four stops over the
+           overlook painting. The copy is real markup either way. -->
+      <div class="journey-track" id="journey-track" data-dawn-max="0.4">
+        <div class="journey-stage">
+          <div class="journey-sky" aria-hidden="true"></div>
+          <div class="journey-painting" aria-hidden="true">
+            <img data-src="/static/img/world/overlook-1376.f3f9ae6ca3.webp" data-srcset="/static/img/world/overlook-760.2f038b7ddc.webp 760w, /static/img/world/overlook-1376.f3f9ae6ca3.webp 1376w" sizes="100vw" width="1376" height="768" alt="" loading="lazy" decoding="async" fetchpriority="low">
+          </div>
+          <canvas id="journey-canvas" aria-hidden="true"></canvas>
+          <div class="journey-paper" aria-hidden="true"></div>
+          <ol class="journey-stops">
+            <li class="journey-card" data-band="0,0.16">
+              <p class="journey-card-step">Stop 1</p>
+              <h3>One profile. That's the work.</h3>
+              <p>Tell us your GPA, grade, interests, and goals once. Everything else on this flight builds from it.</p>
+            </li>
+            <li class="journey-card" data-band="0.28,0.48">
+              <p class="journey-card-step">Stop 2</p>
+              <h3>Three lanes, one search.</h3>
+              <p>Scholarships, summer programs, and competitions matched together. Every match explains why it fits and links its official source.</p>
+            </li>
+            <li class="journey-card" data-band="0.56,0.76">
+              <p class="journey-card-step">Stop 3</p>
+              <h3>A plan, not a pile of tabs.</h3>
+              <p>Deadlines, checklists, and recommendation letters tracked in one place. Unverified dates are labeled, never guessed.</p>
+            </li>
+            <li class="journey-card" data-band="0.84,0.985" data-hold>
+              <p class="journey-card-step">Stop 4</p>
+              <h3>The gate is closer than it looks.</h3>
+              <p>Preview three real matches in about a minute. Free, no account needed to look.</p>
+              <a class="btn-primary journey-card-cta" href="#profile-form">Build my profile <span aria-hidden="true">&#8595;</span></a>
+            </li>
+          </ol>
+          <nav class="journey-rail" aria-label="Jump to a stop on the flight">
+            <button type="button" data-stop="0.06"><span aria-hidden="true"></span>The profile</button>
+            <button type="button" data-stop="0.36"><span aria-hidden="true"></span>Three lanes</button>
+            <button type="button" data-stop="0.65"><span aria-hidden="true"></span>The plan</button>
+            <button type="button" data-stop="0.93"><span aria-hidden="true"></span>The gate</button>
+          </nav>
         </div>
-      </div>
-    </section>
-
-    <section class="difference-panel" aria-labelledby="difference-title" data-motion-section>
-      <svg class="trail-link trail-link-3" viewBox="0 0 120 160" width="120" height="160" aria-hidden="true"><defs><mask id="trail-mask-3"><path class="trail-reveal" pathLength="1" d="M96 4 C 44 60, 88 104, 24 156"/></mask></defs><path class="trail-dots" d="M96 4 C 44 60, 88 104, 24 156" mask="url(#trail-mask-3)"/></svg>
-      <div class="world-plate" aria-hidden="true">
-        <img data-src="/static/img/world/grove-1376.5c4635b13b.webp" data-srcset="/static/img/world/grove-760.7f6109016f.webp 760w, /static/img/world/grove-1376.5c4635b13b.webp 1376w" sizes="100vw" width="1376" height="768" alt="" loading="lazy" decoding="async" fetchpriority="low">
-        <img class="world-owl-img" data-src="/static/img/world/owl-320.48f7840e9a.webp" width="320" height="320" alt="" loading="lazy" decoding="async" fetchpriority="low">
-      </div>
-      <div class="difference-copy">
-        <h2 id="difference-title">Every match explains itself.</h2>
-        <p>
-          EnsureCollege explains why each opportunity appears, flags eligibility risk, and turns saved
-          opportunities into a source-linked application plan.
-        </p>
-      </div>
-      <div class="difference-stack">
-        <article class="difference-card stack-card stack-card-forest">
-          <div class="stack-card-body">
-            <h3>Transparent fit logic</h3>
-            <p>See whether a match comes from field, grade, school, financial need, special eligibility, or verified program fit.</p>
-            <ul class="difference-list">
-              <li>Scholarships, programs, and competitions in one profile</li>
-              <li>A plan for every save: deadlines, checklists, recommendation letters</li>
-              <li>Every step tied to official sources</li>
-            </ul>
-          </div>
-        </article>
-        <article class="difference-card stack-card stack-card-paper">
-          <div class="stack-card-body">
-            <h3>Source-linked next steps</h3>
-            <p>Checklist steps are tied to official sponsor pages, with unverified deadlines and requirements labeled instead of guessed.</p>
-          </div>
-        </article>
-        <article class="difference-card stack-card stack-card-tint">
-          <div class="stack-card-body">
-            <h3>A real application plan</h3>
-            <p>Saved opportunities become a tracker with deadlines, strict eligibility checks, essay reuse themes, and requirement comparisons.</p>
-          </div>
-        </article>
-      </div>
-      <svg class="trail-link trail-link-4" viewBox="0 0 120 160" width="120" height="160" aria-hidden="true"><defs><mask id="trail-mask-4"><path class="trail-reveal" pathLength="1" d="M32 4 C 84 56, 40 100, 92 156"/></mask></defs><path class="trail-dots" d="M32 4 C 84 56, 40 100, 92 156" mask="url(#trail-mask-4)"/></svg>
-    </section>
-
-    <section class="journey-teaser" aria-labelledby="journey-teaser-title" data-motion-section>
-      <!-- Painting-first: the overlook plate is the guaranteed visual; the
-           live island swaps into this same box on idle. Landmark labels are
-           SVG overlays over the plate, never baked into the art. -->
-      <div class="teaser-painting" aria-hidden="true">
-        <img data-src="/static/img/world/overlook-1376.f3f9ae6ca3.webp" data-srcset="/static/img/world/overlook-760.2f038b7ddc.webp 760w, /static/img/world/overlook-1376.f3f9ae6ca3.webp 1376w" sizes="100vw" width="1376" height="768" alt="" loading="lazy" decoding="async" fetchpriority="low">
-        <svg class="teaser-landmarks" viewBox="0 0 1376 768" preserveAspectRatio="xMidYMid slice" focusable="false">
-          <g class="teaser-landmark" transform="translate(524, 500)">
-            <rect x="-52" y="-17" width="104" height="34" rx="17"></rect>
-            <text x="0" y="6">Profile</text>
-          </g>
-          <g class="teaser-landmark" transform="translate(884, 420)">
-            <rect x="-50" y="-17" width="100" height="34" rx="17"></rect>
-            <text x="0" y="6">Essays</text>
-          </g>
-          <g class="teaser-landmark" transform="translate(1084, 348)">
-            <rect x="-64" y="-17" width="128" height="34" rx="17"></rect>
-            <text x="0" y="6">Deadlines</text>
-          </g>
-          <g class="teaser-landmark" transform="translate(1120, 200)">
-            <rect x="-48" y="-17" width="96" height="34" rx="17"></rect>
-            <text x="0" y="6">Award</text>
-          </g>
-        </svg>
-      </div>
-      <canvas id="journey-teaser-canvas" aria-hidden="true"></canvas>
-      <div class="journey-teaser-copy">
-        <h2 id="journey-teaser-title">Fly through the whole plan.</h2>
-        <p>The journey page turns your college plan into a miniature world: one continuous flight from a single profile to the award letter.</p>
-        <a class="btn-primary journey-teaser-cta" href="/journey">How it works <span aria-hidden="true">&#8594;</span></a>
       </div>
     </section>
 
@@ -1135,9 +1090,8 @@
   </div>
 
   <script defer src="/static/js/vendor/gsap.min.js?v=20261022-1"></script>
-  <script defer src="/static/js/vendor/ScrollTrigger.min.js?v=20261022-1"></script>
   <script defer src="/static/js/landing-motion.js?v=20261022-1"></script>
-  <script defer src="/static/js/journey-teaser.js?v=20261022-1"></script>
+  <script defer src="/static/js/journey.js?v=20261022-1"></script>
   <script src="/static/js/app.js?v=20261022-1"></script>
 </body>
 </html>

@@ -41,8 +41,29 @@ def _hit_is_inside(page, selector):
     )
 
 
+def show_last_stop(page):
+    """Bring How it works' last stop (and its Build my profile button) on
+    screen: the end of the runway when the device flies, the card itself in
+    the static layout."""
+    flying = page.evaluate("document.documentElement.classList.contains('journey-will-fly')")
+    if flying:
+        page.evaluate(
+            """() => {
+              const track = document.getElementById('journey-track');
+              const stage = track.querySelector('.journey-stage');
+              const top = track.getBoundingClientRect().top + window.scrollY;
+              window.scrollTo({ top: top + track.offsetHeight - stage.offsetHeight, behavior: 'instant' });
+            }"""
+        )
+        wait_until(page, "document.querySelectorAll('.journey-card')[3].classList.contains('is-active')", 15000)
+    else:
+        page.locator(".journey-card-cta").scroll_into_view_if_needed()
+    page.wait_for_timeout(400)
+
+
 def test_world_plates_hydrate_and_primary_controls_stay_clickable(page):
-    wait_until(page, "document.querySelectorAll('.world-plate img[src]').length >= 3")
+    # The numbers' clearing and leaves plus How it works' overlook painting.
+    wait_until(page, "document.querySelectorAll('.world-plate img[src], .journey-painting img[src]').length >= 3")
     for selector in (
         "#preview-form button",
         "#preview-form input, #preview-form select",
@@ -52,11 +73,13 @@ def test_world_plates_hydrate_and_primary_controls_stay_clickable(page):
         result = _hit_is_inside(page, selector)
         assert result is True, f"{selector} intercepted by: {result}"
     # Scroll the world sections into view and re-test below-fold controls.
-    for selector in (".journey-teaser-cta", ".footer-links a"):
-        page.locator(selector).first.scroll_into_view_if_needed()
-        page.wait_for_timeout(400)
-        result = _hit_is_inside(page, selector)
-        assert result is True, f"{selector} intercepted by: {result}"
+    show_last_stop(page)
+    result = _hit_is_inside(page, ".journey-card-cta")
+    assert result is True, f".journey-card-cta intercepted by: {result}"
+    page.locator(".footer-links a").first.scroll_into_view_if_needed()
+    page.wait_for_timeout(400)
+    result = _hit_is_inside(page, ".footer-links a")
+    assert result is True, f".footer-links a intercepted by: {result}"
 
 
 def test_primary_controls_clickable_on_mobile(browser, live_server):
@@ -74,10 +97,9 @@ def test_primary_controls_clickable_on_mobile(browser, live_server):
         page.wait_for_timeout(200)
         result = _hit_is_inside(page, selector)
         assert result is True, f"[mobile] {selector} intercepted by: {result}"
-    page.locator(".journey-teaser-cta").scroll_into_view_if_needed()
-    page.wait_for_timeout(400)
-    result = _hit_is_inside(page, ".journey-teaser-cta")
-    assert result is True, f"[mobile] teaser CTA intercepted by: {result}"
+    show_last_stop(page)
+    result = _hit_is_inside(page, ".journey-card-cta")
+    assert result is True, f"[mobile] How it works CTA intercepted by: {result}"
     context.close()
 
 
@@ -102,10 +124,10 @@ def test_save_data_suppresses_every_world_asset_request(browser, live_server):
     page.mouse.wheel(0, 30000)
     page.wait_for_timeout(1500)
     assert world_requests == [], world_requests
-    # Header-only Save-Data (no JS channel) must still keep the teaser
+    # Header-only Save-Data (no JS channel) must still keep How it works
     # static: the dual-channel check reads the server-stamped class.
     assert page.evaluate(
-        "document.querySelector('.journey-teaser').classList.contains('teaser-static')"
+        "document.documentElement.classList.contains('journey-static')"
     )
     assert three_requests == [], three_requests
     context.close()
@@ -140,21 +162,21 @@ def test_connection_savedata_js_channel_suppresses_world_requests(browser, live_
     page.mouse.wheel(0, 30000)
     page.wait_for_timeout(1500)
     assert world_requests == [], world_requests
-    # The teaser rests on its painting mode: static class, no three.js
-    # (tracked in its own list; the world list can never contain it).
+    # How it works rests on its static layout: no three.js (tracked in its
+    # own list; the world list can never contain it).
     assert page.evaluate(
-        "document.querySelector('.journey-teaser').classList.contains('teaser-static')"
+        "document.documentElement.classList.contains('journey-static')"
     )
     assert three_requests == [], three_requests
     context.close()
 
 
 def test_focus_ring_stays_visible_over_world_art(page):
-    page.locator(".journey-teaser-cta").scroll_into_view_if_needed()
-    page.evaluate("document.querySelector('.journey-teaser-cta').focus()")
+    show_last_stop(page)
+    page.evaluate("document.querySelector('.journey-card-cta').focus()")
     outline = page.evaluate(
         """(() => {
-          const el = document.querySelector('.journey-teaser-cta');
+          const el = document.querySelector('.journey-card-cta');
           const s = getComputedStyle(el);
           return { outline: s.outlineStyle, width: s.outlineWidth, shadow: s.boxShadow };
         })()"""
@@ -359,64 +381,20 @@ def test_landing_paints_hero_after_scroll_down_and_back(page):
         assert not hit["coveredByForm"], hits
 
 
-def test_teaser_painting_first_and_same_box_swap(browser, live_server):
-    """Stage C gate: the overlook painting is visible before the live island
-    loads; the swap fades the canvas in inside the same box (zero layout
-    shift); the CTA is clickable before and after."""
-    context = browser.new_context(viewport={"width": 1440, "height": 900})
-    context.add_init_script("window.localStorage.setItem('site_consent_v1', 'yes');")
-    page = context.new_page()
-    held = {}
-    page.route("**/three.min.js*", lambda route: held.setdefault("route", route))
-    page.goto(live_server, wait_until="load")
-    page.locator(".journey-teaser").scroll_into_view_if_needed()
-
-    # Painting hydrates and is the visible layer; no live class yet.
-    wait_until(page, "document.querySelector('.teaser-painting img.world-loaded') !== null")
-    wait_until(page, "getComputedStyle(document.querySelector('.teaser-landmarks')).opacity === '1'")
-    assert not page.evaluate(
-        "document.querySelector('.journey-teaser').classList.contains('teaser-live')"
-    )
-    result = _hit_is_inside(page, ".journey-teaser-cta")
-    assert result is True, f"[pre-swap] CTA intercepted by: {result}"
-    rect_before = page.evaluate(
-        "JSON.stringify(document.querySelector('.journey-teaser').getBoundingClientRect())"
-    )
-
-    # Release three.js: the island initializes but must NOT swap in yet.
-    # The painting keeps the box until the visitor has dwelt on it; a swap
-    # the moment pixels exist reads as the teaser vanishing.
-    elapsed = 0
-    while "route" not in held and elapsed < 8000:
-        page.wait_for_timeout(250)
-        elapsed += 250
-    assert "route" in held, "three.min.js was never requested on the live path"
-    held["route"].continue_()
-    page.wait_for_timeout(1500)
-    assert not page.evaluate(
-        "document.querySelector('.journey-teaser').classList.contains('teaser-live')"
-    ), "swap fired before the dwell elapsed"
-    wait_until(
-        page,
-        "document.querySelector('.journey-teaser').classList.contains('teaser-live')",
-    )
-    rect_after = page.evaluate(
-        "JSON.stringify(document.querySelector('.journey-teaser').getBoundingClientRect())"
-    )
-    assert rect_before == rect_after, (rect_before, rect_after)
-    page.wait_for_timeout(700)
-    result = _hit_is_inside(page, ".journey-teaser-cta")
-    assert result is True, f"[post-swap] CTA intercepted by: {result}"
-    context.close()
-
-
-def test_teaser_reduced_motion_keeps_painting_no_three(browser, live_server):
-    """Reduced motion never loads three.js; the painting and its landmark
-    labels are the whole experience."""
+def test_reduced_motion_keeps_the_static_section_and_never_downloads_three(browser, live_server):
+    """Reduced motion keeps How it works static: the overlook painting and
+    the four stops are the whole section, three.js is never requested, and
+    the last stop's Build my profile button is on the page and clickable."""
     context = browser.new_context(
         viewport={"width": 1440, "height": 900}, reduced_motion="reduce"
     )
     context.add_init_script("window.localStorage.setItem('site_consent_v1', 'yes');")
+    context.add_init_script(
+        "try {"
+        " Object.defineProperty(navigator, 'hardwareConcurrency', {get: () => 8, configurable: true});"
+        " Object.defineProperty(navigator, 'deviceMemory', {get: () => 8, configurable: true});"
+        " } catch (e) {}"
+    )
     page = context.new_page()
     three_requests = []
     page.on(
@@ -424,35 +402,12 @@ def test_teaser_reduced_motion_keeps_painting_no_three(browser, live_server):
         lambda r: three_requests.append(r.url) if "three.min.js" in r.url else None,
     )
     page.goto(live_server, wait_until="networkidle")
-    assert page.evaluate(
-        "document.querySelector('.journey-teaser').classList.contains('teaser-static')"
-    )
-    page.locator(".journey-teaser").scroll_into_view_if_needed()
-    wait_until(page, "document.querySelector('.teaser-painting img.world-loaded') !== null")
-    page.wait_for_timeout(2600)
+    assert page.evaluate("document.documentElement.classList.contains('journey-static')")
+    page.locator(".journey-painting").scroll_into_view_if_needed()
+    wait_until(page, "document.querySelector('.journey-painting img.world-loaded') !== null")
+    show_last_stop(page)
+    page.wait_for_timeout(2200)
     assert three_requests == [], three_requests
-    result = _hit_is_inside(page, ".journey-teaser-cta")
-    assert result is True, f"[reduced-motion] CTA intercepted by: {result}"
-    context.close()
-
-
-def test_journey_reduced_motion_never_downloads_three(browser, live_server):
-    """/journey loads three.js dynamically behind its gates: reduced-motion
-    visitors read the static page without the vendor download."""
-    context = browser.new_context(
-        viewport={"width": 1440, "height": 900}, reduced_motion="reduce"
-    )
-    context.add_init_script("window.localStorage.setItem('site_consent_v1', 'yes');")
-    page = context.new_page()
-    three_requests = []
-    page.on(
-        "request",
-        lambda r: three_requests.append(r.url) if "three.min.js" in r.url else None,
-    )
-    page.goto(live_server + "/journey", wait_until="networkidle")
-    page.wait_for_timeout(800)
-    assert page.evaluate(
-        "document.documentElement.classList.contains('journey-static')"
-    )
-    assert three_requests == [], three_requests
+    result = _hit_is_inside(page, ".journey-card-cta")
+    assert result is True, f"[reduced-motion] How it works CTA intercepted by: {result}"
     context.close()

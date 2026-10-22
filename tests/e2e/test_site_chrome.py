@@ -24,7 +24,6 @@ SERVER_SURFACES = [
     ("guide", "/guides/essays/identity"),
     ("privacy", "/privacy"),
     ("terms", "/terms"),
-    ("journey", "/journey"),
     ("404", "/scholarships/does-not-exist"),
     ("unsubscribe", "/reminders/unsubscribe?token=e2e-chrome"),
 ]
@@ -160,7 +159,7 @@ def test_header_fits_320_on_the_fallback_font(browser, live_server):
     ctx.add_init_script(CONSENT)
     ctx.route("**/*.woff2", lambda route: route.abort())
     page = ctx.new_page()
-    for path in ["/", "/privacy", "/scholarships/coca-cola-scholars", "/journey"]:
+    for path in ["/", "/privacy", "/scholarships/coca-cola-scholars"]:
         page.goto(f"{live_server}{path}", wait_until="load")
         probe = page.evaluate(HEADER_PROBE)
         assert probe["labels"] == NAV, path
@@ -303,7 +302,7 @@ def test_server_dusk_band_is_lazy(browser, live_server):
     "kwargs,paths",
     [
         # Per-request pages reflect the Save-Data header as html.save-data.
-        ({"extra_http_headers": {"Save-Data": "on"}}, ["/", "/privacy", "/journey", "/reminders/unsubscribe?token=x"]),
+        ({"extra_http_headers": {"Save-Data": "on"}}, ["/", "/privacy", "/reminders/unsubscribe?token=x"]),
         ({"forced_colors": "active"}, ["/", "/scholarships/coca-cola-scholars", "/terms"]),
     ],
     ids=["save-data", "forced-colors"],
@@ -494,30 +493,6 @@ def test_no_surface_loads_the_retired_frame(browser, live_server):
     retired = [url for url in seen if "canopy-edge" in url or "fern-corner" in url]
     assert retired == [], retired
     assert any("stage-tools" in url for url in seen), seen
-    ctx.close()
-
-
-def test_journey_rests_on_the_stage_only_when_it_is_a_static_page(browser, live_server):
-    """The live flight paints its own sky over the whole viewport, so the
-    stage is never fetched there; the static page (reduced motion) sits on
-    it like every other page."""
-    ctx = browser.new_context(viewport={"width": 1440, "height": 900}, reduced_motion="reduce")
-    page = ctx.new_page()
-    page.goto(f"{live_server}/journey", wait_until="networkidle")
-    assert page.evaluate("document.documentElement.classList.contains('journey-static')")
-    probe = page.evaluate(STAGE_PROBE)
-    assert probe and probe["image"].startswith("stage-tools-1376"), probe
-    ctx.close()
-
-    ctx = browser.new_context(viewport={"width": 1440, "height": 900})
-    page = ctx.new_page()
-    stage = []
-    page.on("request", lambda r: stage.append(r.url) if "stage-tools" in r.url else None)
-    page.goto(f"{live_server}/journey", wait_until="load")
-    _wait_until(page, "document.documentElement.classList.contains('journey-live')", 15000)
-    page.wait_for_timeout(500)
-    assert page.evaluate(STAGE_PROBE) is None
-    assert stage == [], stage
     ctx.close()
 
 

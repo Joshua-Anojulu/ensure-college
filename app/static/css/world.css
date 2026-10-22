@@ -60,11 +60,6 @@ html.world-ready .tool-stage::after {
   background: linear-gradient(transparent, var(--canvas));
 }
 
-/* The Journey's live flight paints its own sky over the whole viewport; the
-   stage shows only on its static page (reduced motion, no WebGL). */
-.journey-page > .world-stage { display: none; }
-html.journey-static .journey-page > .world-stage { display: block; }
-
 @media (prefers-reduced-motion: reduce) {
   html.world-ready .tool-stage > .world-stage { transition: none; }
 }

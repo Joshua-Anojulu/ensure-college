@@ -12,9 +12,9 @@ EnsureCollege is a **college-planning web app** for U.S. high-school students. O
 | --- | --- | --- |
 | ![Homepage hero and three-question preview](docs/screenshots/hero.png) | ![Ranked scholarship matches](docs/screenshots/match-results.png) | ![Match card with scoring reasons](docs/screenshots/match-card.png) |
 
-[**`/journey`**](https://ensurecollege.com/journey) — scroll drives a camera through four low-poly dioramas, from one profile to the award letter. Rendered live in the browser (Three.js), not video.
+[**How it works**](https://ensurecollege.com/#how-it-works), on the home page: scroll drives a camera through four low-poly dioramas painted in the site's watercolor palette, from one profile to the award letter. Rendered live in the browser (Three.js), not video.
 
-![The journey page: a miniature world of three opportunity lanes](docs/screenshots/journey.png)
+![How it works: a miniature world of three opportunity lanes](docs/screenshots/journey.png)
 
 Screenshots are captured from the live site with `scripts/capture_readme_screenshots.py`.
 
@@ -34,7 +34,7 @@ Every match shows human-readable reasons plus score-component chips, and each la
 
 **The planning layer.** With a free account (email/password or Google sign-in), saved opportunities become an application plan: per-item status (interested, drafting, submitted, awarded, rejected), notes, persistent source-linked application checklists, a deadline timeline, essay-reuse themes, requirement comparisons, and a recommendation-letters rollup auto-derived from each saved item's checklist. An opt-in weekly email digest covers saved items closing within 14 days, plus an alert when newly added opportunities are a strong match for the saved profile.
 
-**The journey page.** [`/journey`](https://ensurecollege.com/journey) explains the product as a continuous camera flight through four miniature scenes: the profile desk, the three lanes as three districts, the plan war-room, and the campus gate at dawn. Scroll position maps to a point on a single camera spline, so the flight is seamless by construction and scrubs identically in both directions. Every scene is built procedurally from primitives in the site's palette (no image or video assets), the copy ships as real markup for crawlers, and the page falls back to a static article under `prefers-reduced-motion` or without WebGL. A live miniature of the first island is docked on the landing page; Three.js loads only when that panel nears the viewport, so it stays off the critical path.
+**How it works.** The home page explains the product as a continuous camera flight through four miniature scenes: the profile desk, the three lanes as three districts, the plan war-room, and the campus gate. The section is a tall scroll runway whose stage sticks to the viewport while the camera flies, then scrolls away with the page; scroll position maps to a point on a single camera spline, so the flight is seamless by construction and scrubs identically in both directions. Every scene is built procedurally from primitives in colors sampled from the watercolor plates, the four stops ship as real markup for crawlers, and the overlook painting holds the stage until the island has rendered a frame. Three.js loads only on idle as the section approaches and rendering sleeps while it is off screen, so the flight stays off the critical path. Reduced motion, Save-Data, low-end devices, and browsers without WebGL read the same four stops over the painting. The old `/journey` URL redirects to the section.
 
 **Accounts and privacy.** Accounts are optional; without one, nothing is retained between visits. Passwords are stored as bcrypt hashes; sessions use signed, httponly cookies; Google OAuth is supported. Account deletion removes the profile and every tracked opportunity.
 
@@ -44,8 +44,8 @@ Every match shows human-readable reasons plus score-component chips, and each la
 
 - **Backend:** Python, FastAPI; Jinja2 for the server-rendered opportunity/browse pages
 - **Frontend:** Vanilla HTML, CSS, and JavaScript served by FastAPI (no build step). "Forest Light" design system: light-only, fully token-driven, self-hosted Cabinet Grotesk / Satoshi / JetBrains Mono (subset, ~78KB total), with the landing page's stylesheet inlined server-side to keep it off the mobile critical path
-- **Motion:** self-hosted GSAP + ScrollTrigger on the landing (hero entrance, scroll-scrubbed proof band, CSS sticky-stack), IntersectionObserver reveals elsewhere, and a self-driven anchor scroller; everything collapses under `prefers-reduced-motion`
-- **3D:** self-hosted Three.js for `/journey` (a scroll-driven camera spline through four procedurally built dioramas) and the landing teaser, lazy-loaded on approach
+- **Motion:** self-hosted GSAP on the landing (hero entrance, catalog count-up), IntersectionObserver reveals elsewhere, and a self-driven anchor scroller; everything collapses under `prefers-reduced-motion`
+- **3D:** self-hosted Three.js for the home page's How it works flight (a scroll-driven camera spline through four procedurally built dioramas), lazy-loaded on approach
 - **Curated data:** Pydantic models over local JSON files (scholarships, summer programs, competitions) loaded at startup
 - **Accounts and saved data:** SQLAlchemy ORM, SQLite locally and Neon Postgres (pooled) in production, bcrypt hashing, signed session cookies, Google OAuth via Authlib
 - **Schema migrations:** Alembic (build-time on Vercel; automatic at startup elsewhere)
@@ -103,7 +103,7 @@ Production runs on **Vercel** (`@vercel/python`, `api/index.py` + `vercel.json`)
 | Method | Path | Description |
 |--------|------|-------------|
 | `GET` | `/` | Web app |
-| `GET` | `/journey` | The 3D scroll-flight explainer ("How it works") |
+| `GET` | `/journey` | Redirects (301) to the home page's How it works section |
 | `GET` | `/health`, `/robots.txt`, `/sitemap.xml` | Health check and crawler surfaces (sitemap covers every opportunity page) |
 | `GET` | `/scholarships/{slug}`, `/programs/{slug}`, `/competitions/{slug}` | Server-rendered opportunity pages |
 | `GET` | `/browse`, `/browse/{kind}` | Crawlable catalog directories |
@@ -130,7 +130,7 @@ python -m pytest tests/e2e                      # 39 browser tests, ~2 min
 
 **Request-level (369).** Matchers, gates and scoring, accounts and sessions, the digest cron, SEO pages, dataset integrity, security headers, and a manifest-backed **DOM contract** (`tests/dom_contract.json`) that fails if markup drifts from the selectors and emitted class names `app.js` depends on. All external calls are mocked; no paid API usage. GitHub Actions runs these plus the dataset validator on every push.
 
-**Browser (39, Playwright).** Boots the app in-process on a throwaway SQLite database and drives the real UI in Chromium: public pages, the 3D journey world and landing teaser (including the reduced-motion fallback), the preview flow, the full three-step profile into matches, every lane and filter, the catalog, signup/login/logout/reset/settings, saving an opportunity into a tracked plan, plus hygiene checks for console errors and mobile horizontal overflow. First run needs `playwright install chromium`.
+**Browser (39, Playwright).** Boots the app in-process on a throwaway SQLite database and drives the real UI in Chromium: public pages, the How it works flight (live, painting-first, off-screen idle, and the reduced-motion fallback), the preview flow, the full three-step profile into matches, every lane and filter, the catalog, signup/login/logout/reset/settings, saving an opportunity into a tracked plan, plus hygiene checks for console errors and mobile horizontal overflow. First run needs `playwright install chromium`.
 
 Smoke-test the live deployment with `python scripts/smoke_test_live.py`.
 
@@ -168,16 +168,14 @@ ScholarMatch/
     ├── alerts.py / reminders.py
     ├── data/           (scholarships, summer_programs, competitions, special_requirements)
     └── static/
-        ├── index.html          (the app)
-        ├── journey.html        (the 3D flight)
+        ├── index.html          (the app, with How it works)
         ├── css/style.css       (Forest Light design system)
         ├── fonts/              (self-hosted, subset woff2)
         └── js/
             ├── app.js              (the app: matcher UI, accounts, the plan)
             ├── landing-motion.js   (GSAP/IO motion + anchor scrolling)
-            ├── journey.js          (the four-scene world + camera spline)
-            ├── journey-teaser.js   (the landing's live miniature island)
-            └── vendor/             (three.min.js, gsap, ScrollTrigger)
+            ├── journey.js          (How it works: the four-scene world + camera spline)
+            └── vendor/             (three.min.js, gsap)
 ```
 
 ## Limitations

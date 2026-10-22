@@ -10,6 +10,9 @@ import re
 import pytest
 
 from tests.e2e.conftest import unique_email
+from tests.e2e.flight import CAPABLE, FLY_TO, fly_live
+
+CONSENT_SCRIPT = "window.localStorage.setItem('site_consent_v1', 'yes');"
 
 
 def submit_profile_form(page):
@@ -228,7 +231,8 @@ class TestPublicPages:
         "path,expect",
         [
             ("/", "Find opportunities"),
-            ("/journey", "Fly through"),
+            # The old /journey URL lands on the home page's How it works.
+            ("/journey", "Fly through the whole plan"),
             ("/browse", "Browse"),
             ("/privacy", "Privacy"),
             ("/terms", "Terms"),
@@ -253,37 +257,47 @@ class TestPublicPages:
         page.wait_for_url("**/guides/essays/identity")
         assert page.locator(".guide-body").count() == 1
 
-    def test_nav_and_journey_links_reachable(self, page, live_server):
-        page.click('.site-nav a[href="/journey"]')
-        page.wait_for_url("**/journey")
-        assert page.locator("#journey-canvas").count() == 1
-
-    def test_journey_world_renders(self, page, live_server):
-        page.goto(f"{live_server}/journey", wait_until="load")
-        page.wait_for_timeout(2500)
-        drew = page.evaluate(
-            "() => { const c = document.getElementById('journey-canvas');"
-            " return !!(c && c.width > 0 && document.documentElement.classList.contains('journey-live')); }"
+    def test_how_it_works_links_land_on_the_home_section(self, page, live_server):
+        in_view = (
+            "() => { const r = document.getElementById('how-it-works-title').getBoundingClientRect();"
+            " return r.top >= 0 && r.bottom <= window.innerHeight; }"
         )
-        assert drew, "journey canvas never initialized"
+        page.click('.site-nav a[href="#how-it-works"]')
+        page.wait_for_timeout(1600)
+        assert page.evaluate(in_view), "the header link did not bring How it works into view"
+        page.goto(f"{live_server}/privacy", wait_until="domcontentloaded")
+        page.click('.site-nav a[href="/#how-it-works"]')
+        page.wait_for_url(f"{live_server}/#how-it-works")
+        page.wait_for_timeout(1200)
+        assert page.evaluate(in_view), "a server page's link did not land on How it works"
 
-    def test_journey_static_fallback_under_reduced_motion(self, browser, live_server):
-        ctx = browser.new_context(reduced_motion="reduce")
+    def test_home_flight_renders(self, browser, live_server):
+        ctx = browser.new_context(viewport={"width": 1440, "height": 900})
+        ctx.add_init_script(CONSENT_SCRIPT)
+        ctx.add_init_script(CAPABLE)
         p = ctx.new_page()
-        p.goto(f"{live_server}/journey", wait_until="load")
+        p.goto(live_server, wait_until="load")
+        fly_live(p)
+        drew = p.evaluate(
+            "() => { const c = document.getElementById('journey-canvas');"
+            " return !!(window.THREE && c && c.width > 0); }"
+        )
+        assert drew, "the home flight never initialized"
+        ctx.close()
+
+    def test_home_flight_static_under_reduced_motion(self, browser, live_server):
+        ctx = browser.new_context(reduced_motion="reduce")
+        ctx.add_init_script(CONSENT_SCRIPT)
+        ctx.add_init_script(CAPABLE)
+        p = ctx.new_page()
+        p.goto(live_server, wait_until="load")
         p.wait_for_timeout(800)
         assert p.locator("html.journey-static").count() == 1
         assert p.locator("#journey-canvas").is_hidden()
+        assert p.locator(".journey-card").count() == 4
+        p.locator(".journey-card").nth(3).scroll_into_view_if_needed()
+        assert p.locator(".journey-card").nth(3).is_visible()
         ctx.close()
-
-    def test_landing_teaser_paints(self, page):
-        page.locator(".journey-teaser").scroll_into_view_if_needed()
-        page.wait_for_timeout(3000)
-        ok = page.evaluate(
-            "() => { const c = document.getElementById('journey-teaser-canvas');"
-            " return !!(window.THREE && c && c.width > 0); }"
-        )
-        assert ok, "landing teaser never initialized"
 
     @pytest.mark.parametrize("path", ["/privacy", "/terms"])
     def test_legal_pages_carry_the_shared_header(self, page, live_server, path):
@@ -311,15 +325,21 @@ class TestPublicPages:
         )
         assert set(fills) == {"#4285F4", "#34A853", "#FBBC05", "#EA4335"}
 
-    def test_journey_rail_stops_are_clickable(self, page, live_server):
-        page.goto(f"{live_server}/journey", wait_until="load")
-        page.wait_for_timeout(1500)
-        stops = page.locator(".journey-rail button")
+    def test_journey_rail_stops_are_clickable(self, browser, live_server):
+        ctx = browser.new_context(viewport={"width": 1440, "height": 900})
+        ctx.add_init_script(CONSENT_SCRIPT)
+        ctx.add_init_script(CAPABLE)
+        p = ctx.new_page()
+        p.goto(live_server, wait_until="load")
+        p.evaluate(FLY_TO, 0)
+        p.wait_for_timeout(600)
+        stops = p.locator(".journey-rail button")
         assert stops.count() == 4
-        before = page.evaluate("() => window.scrollY")
+        before = p.evaluate("() => window.scrollY")
         stops.nth(3).click()
-        page.wait_for_timeout(1800)
-        assert page.evaluate("() => window.scrollY") > before + 500
+        p.wait_for_timeout(1800)
+        assert p.evaluate("() => window.scrollY") > before + 500
+        ctx.close()
 
     def test_hero_cta_scrolls_to_profile_form(self, page):
         page.click(".hero-cta")
@@ -581,8 +601,8 @@ class TestCatalog:
             page.wait_for_timeout(400)
         assert not page.console_errors, page.console_errors
 
-    def test_journey_browse_all_opens_homepage_catalog(self, page, live_server):
-        page.goto(f"{live_server}/journey", wait_until="load")
+    def test_server_page_browse_opens_homepage_catalog(self, page, live_server):
+        page.goto(f"{live_server}/privacy", wait_until="load")
         page.click('.site-nav a[href="/#browse"]')
         page.wait_for_selector("#catalog-section:not([hidden])", timeout=15000)
         page.wait_for_selector("#catalog-container > *", timeout=15000)
@@ -814,10 +834,21 @@ class TestHygiene:
         page.wait_for_timeout(2500)
         assert not page.console_errors, page.console_errors
 
-    def test_no_console_errors_on_journey(self, page, live_server):
-        page.goto(f"{live_server}/journey", wait_until="load")
-        page.wait_for_timeout(2500)
-        assert not page.console_errors, page.console_errors
+    def test_no_console_errors_while_flying(self, browser, live_server):
+        ctx = browser.new_context(viewport={"width": 1440, "height": 900})
+        ctx.add_init_script(CONSENT_SCRIPT)
+        ctx.add_init_script(CAPABLE)
+        p = ctx.new_page()
+        errors = []
+        p.on("pageerror", lambda e: errors.append(str(e)))
+        p.on("console", lambda m: errors.append(m.text) if m.type == "error" and "401 (Unauthorized)" not in m.text else None)
+        p.goto(live_server, wait_until="load")
+        fly_live(p)
+        for stop in (0.36, 0.65, 1.0):
+            p.evaluate(FLY_TO, stop)
+            p.wait_for_timeout(600)
+        assert not errors, errors
+        ctx.close()
 
     def test_mobile_viewport_landing_has_no_horizontal_overflow(self, browser, live_server):
         ctx = browser.new_context(viewport={"width": 375, "height": 780})

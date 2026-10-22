@@ -1,32 +1,27 @@
-"""The 3D island, repainted into the World (2026-10-22 plan, scope D).
+"""The 3D island, painted into the World, flying on the home page.
 
-The Journey flight and the Teaser's live island must read as the same
-painted world as the watercolor plates. These gates measure rendered pixels
-against a palette sampled from the plates themselves (never from the scene
-code): almost every pixel must sit near a plate colour, saturated orange
-(the old roofs, desk and autumn trees) and vivid green (the old grass) must
-be gone, the shipped grain tile must lie over the canvas as multiplied
-paper, and the fog must be the mist token the CSS sky is painted with. The
-Teaser's live island must sit close to its own painting in colour, so the
-painting-to-live swap is not jarring, and its copy must stay legible over
-the live picture. The safety paths still never fetch the dusk plate.
+The Journey is the home page's How it works section (2026-10-22). Its flight
+must read as the same painted world as the watercolor plates. These gates
+measure rendered pixels against a palette sampled from the plates themselves
+(never from the scene code): almost every pixel must sit near a plate colour,
+saturated orange (the old roofs, desk and autumn trees) and vivid green (the
+old grass) must be gone, the shipped grain tile must lie over the canvas as
+multiplied paper, and the fog must be the mist token the CSS sky is painted
+with. The home flight keeps its dusk for the band at the page's end, so its
+golden hour is capped and it never fetches the dusk plate for its sky.
+
+The section is painting-first: the overlook painting holds the stage until
+the island has rendered a frame, then hands over in the same box. Devices
+that should not fly keep the static layout and never download three.js.
 
 Pixel analysis reuses the cohesion suite's PNG decoder, so the test deps
 stay image-library free.
 """
 import math
 
-import pytest
-
-from tests.e2e.test_cohesion import CONSENT, _assert_legible, _decode_png, text_over_art
+from tests.e2e.flight import CAPABLE, CONSENT, FLY_TO, WAIT_FRAMES, capable_home, fly_live
+from tests.e2e.test_cohesion import _assert_legible, _decode_png, text_over_art
 from tests.e2e.test_world import wait_until
-
-# The Teaser keeps its painting on low-end devices (2 cores or 2 GB); these
-# gates are about the live island, so they run as a capable device would.
-CAPABLE = (
-    "Object.defineProperty(navigator, 'hardwareConcurrency', {get: () => 8});"
-    "Object.defineProperty(navigator, 'deviceMemory', {get: () => 8});"
-)
 
 # Dominant tones of the shipped plates (k-means clusters per plate), plus the
 # overlook's landmark accents: trail gold, cabin and desk wood, tower stone.
@@ -41,16 +36,9 @@ c4a24f d7af5c af923f 827557 8e886d 53482f a7a68e 76735d
 """.split()
 
 HIDE_CHROME = (
-    ".site-header, .journey-head, .journey-copy-layer, .journey-rail"
+    ".site-header, .journey-home-head, .journey-stops, .journey-rail"
     " { visibility: hidden !important; }"
 )
-
-WAIT_FRAMES = """(n) => new Promise((resolve) => {
-  let k = 0;
-  const step = () => { k += 1; if (k >= n) resolve(); else requestAnimationFrame(step); };
-  requestAnimationFrame(step);
-})"""
-
 
 def _lab(rgb):
     def lin(c):
@@ -127,29 +115,18 @@ def _token(page, name):
 
 
 def _fly_to(page, stop, frames=80):
-    page.evaluate(
-        """(stop) => {
-          const track = document.getElementById('journey-track');
-          const max = track.offsetHeight - window.innerHeight;
-          window.scrollTo({ top: stop ? track.offsetTop + max * stop : 0, behavior: 'instant' });
-        }""",
-        stop,
-    )
+    page.evaluate(FLY_TO, stop)
     page.evaluate(WAIT_FRAMES, frames)
 
 
-def test_journey_flight_is_painted_from_the_plates(browser, live_server):
+def test_home_flight_is_painted_from_the_plates(browser, live_server):
     """Start, lanes and gate: every stop is made of plate tones, with no
-    saturated orange or vivid green; the grain tile lies over the canvas;
-    the fog is the mist token by day and the dawn mist past the gate, where
-    the painted sky has crossfaded to the dusk-treeline plate."""
-    context = browser.new_context(viewport={"width": 720, "height": 450})
-    context.add_init_script(CONSENT)
-    page = context.new_page()
-    plates = []
-    page.on("request", lambda r: plates.append(r.url) if "/static/img/world/" in r.url else None)
-    page.goto(f"{live_server}/journey", wait_until="load")
-    page.wait_for_selector("html.journey-live", state="attached", timeout=30000)
+    saturated orange or vivid green; the grain tile lies over the canvas; the
+    fog is the mist token by day. Past the gate the golden hour is capped by
+    the section (data-dawn-max), and the home sky never uses the dusk plate."""
+    context, page = capable_home(browser, live_server, 720, 450)
+    assert page.evaluate("document.documentElement.classList.contains('journey-will-fly')")
+    fly_live(page)
 
     paper = page.evaluate(
         """(() => { const s = getComputedStyle(document.querySelector('.journey-paper'));
@@ -160,7 +137,7 @@ def test_journey_flight_is_painted_from_the_plates(browser, live_server):
     assert 0 < paper["opacity"] <= 0.2, paper
 
     page.add_style_tag(content=HIDE_CHROME)
-    _fly_to(page, 0, frames=12)
+    _fly_to(page, 0, frames=20)
     assert page.evaluate("document.getElementById('journey-canvas').dataset.fog") == _token(page, "--paint-mist")
     _assert_painted(_paint_report(_pixels(page.screenshot())), "journey start")
 
@@ -170,155 +147,122 @@ def test_journey_flight_is_painted_from_the_plates(browser, live_server):
     _fly_to(page, 0.93, frames=110)
     _assert_painted(_paint_report(_pixels(page.screenshot())), "the gate")
 
-    # Past the gate the dawn is complete: the fog is the dawn mist and the
-    # sky is the dusk-treeline plate, fetched only now that the flight runs.
-    _fly_to(page, 1.0, frames=90)
-    assert page.evaluate("document.getElementById('journey-canvas').dataset.fog") == _token(page, "--paint-dawn-mist")
-    dawn = page.evaluate(
-        """(() => { const s = getComputedStyle(document.querySelector('.journey-sky'), '::after');
-          return { opacity: parseFloat(s.opacity), image: s.backgroundImage }; })()"""
+    _fly_to(page, 1.0, frames=120)
+    cap = float(page.evaluate("document.getElementById('journey-track').dataset.dawnMax"))
+    assert 0 < cap < 1, cap
+    sky = page.evaluate(
+        """(() => { const sky = document.querySelector('.journey-sky');
+          const s = getComputedStyle(sky, '::after');
+          return { dawn: parseFloat(sky.style.getPropertyValue('--dawn')), opacity: parseFloat(s.opacity), image: s.backgroundImage }; })()"""
     )
-    assert dawn["opacity"] == 1, dawn
-    assert "dusk-treeline" in dawn["image"], dawn
-    assert any("dusk-treeline" in url for url in plates), plates
+    assert abs(sky["dawn"] - cap) <= 0.02, sky
+    assert abs(sky["opacity"] - cap) <= 0.02, sky
+    assert "url(" not in sky["image"], sky
+    fog = page.evaluate("document.getElementById('journey-canvas').dataset.fog")
+    assert fog not in (_token(page, "--paint-mist"), _token(page, "--paint-dawn-mist")), fog
     context.close()
 
 
-def test_journey_static_fallback_paints_no_sky(browser, live_server):
-    """Reduced motion keeps the static page: no sky layer and no three.js.
-
-    The static page still wears the shared chrome: the forest stage behind
-    it and the footer's dusk band (the same dusk-treeline file the sky would
-    crossfade to). Those are the only World images it may fetch."""
+def test_home_static_section_paints_no_sky_and_skips_three(browser, live_server):
+    """Reduced motion keeps the static layout: the four stops over the
+    overlook painting, no sky layer, no canvas, no runway, and no three.js."""
     context = browser.new_context(viewport={"width": 1440, "height": 900}, reduced_motion="reduce")
-    context.add_init_script(CONSENT)
-    page = context.new_page()
-    fetched = []
-    page.on(
-        "request",
-        lambda r: fetched.append(r.url) if ("/static/img/world/" in r.url or "three.min.js" in r.url) else None,
-    )
-    page.goto(f"{live_server}/journey", wait_until="networkidle")
-    page.wait_for_timeout(600)
-    assert page.evaluate("document.documentElement.classList.contains('journey-static')")
-    assert page.evaluate("getComputedStyle(document.querySelector('.journey-sky')).display") == "none"
-    assert not any("three.min.js" in url for url in fetched), fetched
-    chrome = page.evaluate(
-        """(() => {
-          const urls = [];
-          const stage = document.querySelector('.journey-page > .world-stage');
-          for (const pseudo of [null, '::before', '::after']) {
-            const bg = stage ? getComputedStyle(stage, pseudo).backgroundImage : 'none';
-            for (const m of bg.matchAll(/url\\("?([^")]+)"?\\)/g)) urls.push(new URL(m[1], location.href).href);
-          }
-          const dusk = document.querySelector('.world-dusk img');
-          if (dusk && dusk.currentSrc) urls.push(dusk.currentSrc);
-          return urls;
-        })()"""
-    )
-    plates = [url for url in fetched if "/static/img/world/" in url]
-    assert all(url in chrome for url in plates), (plates, chrome)
-    context.close()
-
-
-def _teaser_page(browser, live_server, width, height, held=None):
-    """A capable device on the landing with the Teaser in view. With held
-    (a dict), three.js is held back until the test releases held['route']."""
-    context = browser.new_context(viewport={"width": width, "height": height})
     context.add_init_script(CONSENT)
     context.add_init_script(CAPABLE)
     page = context.new_page()
-    if held is not None:
-        page.route("**/three.min.js*", lambda route: held.setdefault("route", route))
-    page.goto(live_server, wait_until="load")
-    page.evaluate("document.querySelector('.journey-teaser').scrollIntoView({block: 'center', behavior: 'instant'})")
-    return context, page
+    three = []
+    page.on("request", lambda r: three.append(r.url) if "three.min.js" in r.url else None)
+    page.goto(live_server, wait_until="networkidle")
+    page.evaluate("document.getElementById('how-it-works').scrollIntoView({block: 'start', behavior: 'instant'})")
+    wait_until(page, "document.querySelector('.journey-painting img.world-loaded') !== null", 15000)
+    page.wait_for_timeout(600)
+    state = page.evaluate(
+        """(() => {
+          const track = document.getElementById('journey-track');
+          const stage = track.querySelector('.journey-stage');
+          return {
+            cls: document.documentElement.className,
+            sky: getComputedStyle(document.querySelector('.journey-sky')).display,
+            canvas: getComputedStyle(document.getElementById('journey-canvas')).display,
+            rail: getComputedStyle(document.querySelector('.journey-rail')).display,
+            runway: track.offsetHeight - stage.offsetHeight,
+            painting: getComputedStyle(document.querySelector('.journey-painting img')).opacity,
+            cards: [...document.querySelectorAll('.journey-card')].map((c) => getComputedStyle(c).opacity),
+          };
+        })()"""
+    )
+    assert "journey-static" in state["cls"] and "journey-will-fly" not in state["cls"], state
+    assert state["sky"] == state["canvas"] == state["rail"] == "none", state
+    assert state["runway"] == 0, state
+    assert state["painting"] == "1", state
+    assert state["cards"] == ["1", "1", "1", "1"], state
+    assert three == [], three
+    context.close()
 
 
-LIVE_SETTLED = """(() => {
-  const s = document.querySelector('.journey-teaser');
-  if (!s.classList.contains('teaser-live')) return false;
-  const veil = getComputedStyle(document.querySelector('.teaser-painting'), '::before').opacity;
-  const canvas = getComputedStyle(document.getElementById('journey-teaser-canvas')).opacity;
-  const labels = getComputedStyle(document.querySelector('.teaser-landmarks')).opacity;
-  return veil === '1' && canvas === '1' && labels === '0';
-})()"""
-
-KEEP_IN_VIEW = """(() => {
-  const s = document.querySelector('.journey-teaser');
-  const r = s.getBoundingClientRect();
-  if (r.top < 0 || r.bottom > innerHeight) s.scrollIntoView({block: 'center', behavior: 'instant'});
-})()"""
-
-
-def _wait_live(page, timeout_ms=40000):
-    """The swap needs the section in view for a 4s dwell after three.js
-    loads; hold it there (the landing can nudge scroll while it boots)."""
-    elapsed = 0
-    while elapsed <= timeout_ms:
-        if page.evaluate(LIVE_SETTLED):
-            return
-        page.evaluate(KEEP_IN_VIEW)
-        page.wait_for_timeout(250)
-        elapsed += 250
-    raise AssertionError(f"teaser never settled live within {timeout_ms}ms")
-
-
-def test_teaser_live_island_reads_as_its_painting(browser, live_server):
-    """The swap keeps the picture: the live island sits within a small Lab
-    distance of the overlook painting it replaces (the old live island on
-    the dark wash measured 41.6), is made of plate tones, wears the grain
-    as multiplied paper, fogs to the mist token, and the copy stays legible
-    over the live picture."""
+def test_painting_holds_the_stage_until_the_island_renders(browser, live_server):
+    """Painting-first, in the same box: while three.js is in flight the
+    stage shows the overlook painting and the stops already work; once the
+    island has rendered a frame the canvas takes over the stage without
+    moving it, the live frame is made of plate tones, and the stop copy
+    stays legible over the island."""
     held = {}
-    context, page = _teaser_page(browser, live_server, 1440, 900, held)
-    page.wait_for_selector(".teaser-painting img.world-loaded", state="attached", timeout=20000)
-    wait_until(page, "getComputedStyle(document.querySelector('.teaser-landmarks')).opacity === '1'")
-    painting = _paint_report(_pixels(page.locator(".journey-teaser").screenshot(), x_from=0.52))
-
+    context, page = capable_home(browser, live_server, 1440, 900, held)
+    page.evaluate(FLY_TO, 0.05)
+    wait_until(page, "document.querySelector('.journey-painting img.world-loaded') !== null", 20000)
     elapsed = 0
     while "route" not in held and elapsed < 10000:
         page.wait_for_timeout(250)
         elapsed += 250
     assert "route" in held, "three.min.js was never requested on the live path"
+    # The stops run on scroll alone, before three.js arrives.
+    wait_until(page, "parseFloat(getComputedStyle(document.querySelector('.journey-card')).opacity) > 0.9", 10000)
+    before = page.evaluate(
+        """(() => ({
+          live: document.documentElement.classList.contains('journey-live'),
+          canvas: getComputedStyle(document.getElementById('journey-canvas')).opacity,
+          painting: getComputedStyle(document.querySelector('.journey-painting')).opacity,
+          card: getComputedStyle(document.querySelector('.journey-card')).opacity,
+          stage: JSON.stringify(document.querySelector('.journey-stage').getBoundingClientRect()),
+        }))()"""
+    )
+    assert before["live"] is False, before
+    assert before["canvas"] == "0" and before["painting"] == "1", before
+    assert float(before["card"]) > 0.9, f"the first stop must work before three.js arrives: {before}"
+
     held["route"].continue_()
-    _wait_live(page)
-    page.wait_for_timeout(300)
-    live = _paint_report(_pixels(page.locator(".journey-teaser").screenshot(), x_from=0.52))
-    _assert_painted(live, "teaser live island")
-    gap = math.dist(painting["mean_lab"], live["mean_lab"])
-    assert gap <= 8, f"live island drifts from its painting by dE {gap:.1f}: {painting['mean_lab']} vs {live['mean_lab']}"
-
-    grain = page.evaluate(
-        """(() => { const s = getComputedStyle(document.querySelector('.journey-teaser'), '::after');
-          return { image: s.backgroundImage, blend: s.mixBlendMode, opacity: parseFloat(s.opacity) }; })()"""
+    wait_until(page, "document.documentElement.classList.contains('journey-live')", 40000)
+    wait_until(
+        page,
+        "getComputedStyle(document.getElementById('journey-canvas')).opacity === '1'"
+        " && getComputedStyle(document.querySelector('.journey-painting')).opacity === '0'",
+        10000,
     )
-    assert "/static/img/grain.png" in grain["image"], grain
-    assert grain["blend"] == "multiply", grain
-    assert 0 < grain["opacity"] <= 0.2, grain
-    assert page.evaluate("document.getElementById('journey-teaser-canvas').dataset.fog") == _token(page, "--paint-mist")
-
+    after = page.evaluate("JSON.stringify(document.querySelector('.journey-stage').getBoundingClientRect())")
+    assert after == before["stage"], (before["stage"], after)
+    page.evaluate(WAIT_FRAMES, 30)
     _assert_legible(
-        text_over_art(page, ["#journey-teaser-title", ".journey-teaser-copy p"]), "teaser copy over the live island"
+        text_over_art(page, [".journey-card.is-active h3", ".journey-card.is-active p"]),
+        "the first stop over the live island",
     )
+    page.add_style_tag(content=HIDE_CHROME)
+    page.evaluate(WAIT_FRAMES, 5)
+    _assert_painted(_paint_report(_pixels(page.screenshot())), "live island under the first stop")
     context.close()
 
 
-def test_teaser_canvas_waits_for_the_swap_on_phones(browser, live_server):
-    """Phones used to show the canvas at 0.45 opacity before the swap (a
-    leftover from the pre-painting teaser), so the island ghosted over the
-    painting the moment it initialized. The canvas now stays hidden until
-    the swap, then takes exactly the painting's band."""
-    context, page = _teaser_page(browser, live_server, 390, 844)
-    assert not page.evaluate("document.querySelector('.journey-teaser').classList.contains('teaser-live')")
-    assert page.evaluate("getComputedStyle(document.getElementById('journey-teaser-canvas')).opacity") == "0"
-    _wait_live(page)
-    band = page.evaluate(
+def test_phone_canvas_waits_for_the_swap_and_fills_the_stage(browser, live_server):
+    """The canvas stays hidden until the island has a frame, then covers
+    exactly the stage the painting held."""
+    context, page = capable_home(browser, live_server, 390, 844)
+    assert page.evaluate("getComputedStyle(document.getElementById('journey-canvas')).opacity") == "0"
+    fly_live(page)
+    rects = page.evaluate(
         """(() => {
-          const c = document.getElementById('journey-teaser-canvas').getBoundingClientRect();
-          const p = document.querySelector('.teaser-painting').getBoundingClientRect();
-          return [Math.round(c.top), Math.round(c.height), Math.round(p.top), Math.round(p.height)];
+          const r = (el) => { const b = el.getBoundingClientRect(); return [Math.round(b.top), Math.round(b.left), Math.round(b.width), Math.round(b.height)]; };
+          return [r(document.getElementById('journey-canvas')), r(document.querySelector('.journey-stage')), r(document.querySelector('.journey-painting'))];
         })()"""
     )
-    assert band[0] == band[2] and band[1] == band[3], f"canvas band {band[:2]} vs painting band {band[2:]}"
+    assert rects[0] == rects[1] == rects[2], rects
+    assert rects[1][2] == 390 and rects[1][3] == 844, rects
     context.close()

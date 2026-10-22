@@ -70,7 +70,6 @@ TEMPLATE_PAGES = [
     "/browse/programs",
     "/scholarships/coca-cola-scholars",
     "/guides/essays",
-    "/journey",
     "/privacy",
     "/terms",
     "/scholarships/does-not-exist",
@@ -188,24 +187,14 @@ def _keyboard_focus(page, selector):
     "selector,band",
     [
         (".site-footer .footer-links a", ".site-footer"),
-        (".journey-teaser-cta", ".teaser-painting::after"),
     ],
 )
 def test_focus_ring_reads_on_dark_bands(page, selector, band):
-    """The brand-colored ring sat on the brand footer and the dusk teaser:
-    keyboard focus there was invisible (1.0:1 against the footer)."""
+    """The brand-colored ring sat on the brand footer: keyboard focus there
+    was invisible (1.0:1 against the footer)."""
     ring = _keyboard_focus(page, selector)
     assert ring["visible"] and ring["style"] != "none", ring
-    if band.endswith("::after"):
-        # The teaser CTA rides the dusk scrim, whose darkest stop is brand-strong.
-        backdrop = page.evaluate("getComputedStyle(document.documentElement).getPropertyValue('--brand-strong')")
-        backdrop = page.evaluate(
-            "(hex) => { const d = document.createElement('div'); d.style.color = hex;"
-            " document.body.appendChild(d); const c = getComputedStyle(d).color; d.remove(); return c; }",
-            backdrop.strip(),
-        )
-    else:
-        backdrop = page.evaluate(f"getComputedStyle(document.querySelector('{band}')).backgroundColor")
+    backdrop = page.evaluate(f"getComputedStyle(document.querySelector('{band}')).backgroundColor")
     ratio = contrast(ring["color"], backdrop)
     assert ratio >= 3, f"{selector} focus ring {ring['color']} on {backdrop}: {ratio:.2f}:1"
 
@@ -335,51 +324,17 @@ def _assert_legible(results, where):
 
 
 @pytest.mark.parametrize("width", [390, 820, 1440])
-def test_teaser_copy_reads_over_the_painting(browser, live_server, width):
-    """Mobile measured 1.1:1 (white copy on the pale overlook), tablet 2.8:1,
-    desktop's paragraph 4.0:1. Static painting mode (reduced motion)."""
+def test_journey_stops_read_over_the_painting(browser, live_server, width):
+    """How it works, static layout (reduced motion): the four stop cards rise
+    out of the overlook painting's lower mist and must read as paper."""
     ctx = _context(browser, width, height=900, reduced_motion="reduce")
     page = ctx.new_page()
     page.goto(live_server, wait_until="domcontentloaded")
-    page.evaluate("document.querySelector('.journey-teaser').scrollIntoView({block: 'center'})")
-    page.wait_for_selector(".teaser-painting img.world-loaded", state="attached", timeout=15000)
+    page.evaluate("document.querySelector('.journey-stops').scrollIntoView({block: 'center'})")
+    page.wait_for_selector(".journey-painting img.world-loaded", state="attached", timeout=15000)
     page.wait_for_timeout(700)
-    results = text_over_art(page, ["#journey-teaser-title", ".journey-teaser-copy p"])
-    _assert_legible(results, f"teaser at {width}px")
-    ctx.close()
-
-
-@pytest.mark.parametrize("width", [1100, 1440])
-def test_teaser_landmark_labels_ride_above_the_scrim(browser, live_server, width):
-    """The dusk scrim is for the painting, but it painted over the landmark
-    chips: the Profile label measured 3.1:1 once the scrim held past the copy
-    column. SVG text paints with fill, so the gate hides fill, not color."""
-    ctx = _context(browser, width, height=900, reduced_motion="reduce")
-    page = ctx.new_page()
-    page.goto(live_server, wait_until="domcontentloaded")
-    page.evaluate("document.querySelector('.journey-teaser').scrollIntoView({block: 'center'})")
-    page.wait_for_selector(".teaser-painting img.world-loaded", state="attached", timeout=15000)
-    page.wait_for_timeout(1000)
-    labels = page.evaluate(
-        "() => [...document.querySelectorAll('.teaser-landmark text')].map((t) => {"
-        " const r = t.getBoundingClientRect();"
-        " return [t.textContent, getComputedStyle(t).fill, r.left, r.top, r.width, r.height]; })"
-    )
-    assert len(labels) == 4, labels
-    page.add_style_tag(content=".teaser-landmark text { fill: transparent !important; }")
-    page.wait_for_timeout(150)
-    worst = {}
-    for name, fill, x, y, w, h in labels:
-        png = page.screenshot(clip={"x": x, "y": y, "width": w, "height": h})
-        cols, _rows, bpp, rows = _decode_png(png)
-        fg = _rgb(fill)
-        ratios = sorted(
-            contrast(fg, (row[k], row[k + 1], row[k + 2], 1.0))
-            for row in rows
-            for k in range(0, cols * bpp, bpp)
-        )
-        worst[name] = round(ratios[len(ratios) // 10], 2)
-    assert all(r >= 4.5 for r in worst.values()), f"landmark labels at {width}px: {worst}"
+    results = text_over_art(page, [".journey-card h3", ".journey-card p:not(.journey-card-step)", ".journey-card-step"])
+    _assert_legible(results, f"journey stops at {width}px")
     ctx.close()
 
 
@@ -418,18 +373,22 @@ def test_short_lane_header_reads_over_the_stage(page):
 
 
 @pytest.mark.parametrize("width", [390, 1440])
-def test_journey_rail_and_intro_read_over_the_flight(browser, live_server, width):
-    """Unreached rail stops sat at 0.55 opacity over the scene (2.2:1) and the
-    intro line rode the sky and the first island in muted grey (2.4-4.0:1)."""
+def test_journey_rail_and_stop_copy_read_over_the_flight(browser, live_server, width):
+    """Unreached rail stops sat at 0.55 opacity over the scene (2.2:1). The
+    live stop card rides the island on frosted paper."""
+    from tests.e2e.flight import CAPABLE, FLY_TO, WAIT_FRAMES, fly_live
+
     ctx = _context(browser, width, height=844)
+    ctx.add_init_script(CAPABLE)
     page = ctx.new_page()
-    page.goto(f"{live_server}/journey", wait_until="load")
-    page.wait_for_selector("html.journey-live", state="attached", timeout=15000)
-    page.wait_for_timeout(1500)
-    selectors = [".journey-head p"]
+    page.goto(live_server, wait_until="load")
+    fly_live(page)
+    page.evaluate(FLY_TO, 0.06)
+    page.evaluate(WAIT_FRAMES, 60)
+    selectors = [".journey-card.is-active h3", ".journey-card.is-active p:not(.journey-card-step)"]
     if width > 760:  # the rail is dots only on phones
         selectors.append(".journey-rail button:not(.is-active)")
-    _assert_legible(text_over_art(page, selectors), f"/journey at {width}px")
+    _assert_legible(text_over_art(page, selectors), f"the flight at {width}px")
     ctx.close()
 
 
@@ -604,26 +563,6 @@ def test_profile_form_face_is_plain_paper(page):
     distance = max(abs(mean[i] - target[i]) for i in range(3))
     # The film grain overlay keeps pixels within a few levels of the token.
     assert distance < 8, f"form face {tuple(round(v) for v in mean)} vs --surface {target[:3]}"
-
-
-@pytest.mark.parametrize("width", [390, 1440])
-def test_proof_photo_fills_its_paper_frame(browser, live_server, width):
-    ctx = _context(browser, width, reduced_motion="reduce")
-    page = ctx.new_page()
-    page.goto(live_server, wait_until="domcontentloaded")
-    page.evaluate("document.querySelector('.proof-band').scrollIntoView({block: 'center'})")
-    page.wait_for_function("document.querySelector('.proof-photo img').complete")
-    gap = page.evaluate(
-        """() => {
-          const frame = document.querySelector('.proof-photo');
-          // Layout sizes, not bounding boxes: the frame rests rotated.
-          const img = frame.querySelector('img');
-          const pad = parseFloat(getComputedStyle(frame).paddingTop);
-          return Math.round((frame.clientHeight - 2 * pad) - img.offsetHeight);
-        }"""
-    )
-    assert abs(gap) <= 2, f"photo stops {gap}px short of its frame at {width}px"
-    ctx.close()
 
 
 def test_card_details_follow_the_system(page):

@@ -12,7 +12,7 @@ from urllib.parse import parse_qs, urlsplit
 from dotenv import load_dotenv
 from fastapi import Depends, FastAPI, File, Form, Header, HTTPException, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse, PlainTextResponse, Response
+from fastapi.responses import HTMLResponse, PlainTextResponse, RedirectResponse, Response
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
 from starlette.middleware.base import BaseHTTPMiddleware
@@ -72,7 +72,7 @@ STATIC_DIR = Path(__file__).parent / "static"
 DEV_SESSION_SECRET = "dev-only-insecure-session-secret-change-me"
 
 _OG_IMAGE_PATH = "/static/og-image.png"
-_SITEMAP_PATHS = ("/", "/journey", "/privacy", "/terms")
+_SITEMAP_PATHS = ("/", "/privacy", "/terms")
 _SECURITY_HEADERS = {
     "X-Content-Type-Options": "nosniff",
     "X-Frame-Options": "DENY",
@@ -431,8 +431,10 @@ def _serve_static_page(filename: str, request: Request | None = None) -> HTMLRes
 
 
 @app.get("/journey")
-def serve_journey(request: Request) -> HTMLResponse:
-    return _serve_static_page("journey.html", request)
+def journey_moved() -> RedirectResponse:
+    """The Journey is the home page's How it works section now; old links,
+    bookmarks, and search results land on it."""
+    return RedirectResponse("/#how-it-works", status_code=301)
 
 
 @app.get("/privacy")
@@ -678,7 +680,7 @@ _SITE_HEADER = (
     "<a class='btn-ghost' href='/#matches'>Matches</a>"
     "<a class='btn-ghost' href='/#plan'>Plan</a>"
     "<a class='btn-ghost' href='/#browse'>Browse</a>"
-    "<a class='btn-ghost' href='/journey'>How it works</a>"
+    "<a class='btn-ghost' href='/#how-it-works'>How it works</a>"
     "</nav>"
     "<div class='account-nav'>"
     "<a class='btn-ghost btn-ghost-solid' href='/#profile-form'>Find my matches</a>"
