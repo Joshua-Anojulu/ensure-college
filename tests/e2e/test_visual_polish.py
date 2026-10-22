@@ -338,3 +338,64 @@ def test_plan_hides_panels_that_only_say_none(browser, live_server):
     assert plan["specialPanel"] and plan["specialCards"] >= 1, plan
     assert plan["specialStat"] == "1 to confirm", plan["specialStat"]
     ctx.close()
+
+
+# ------------------------------------------------------ 5. signed-in header
+#
+# Signed in on a 390px phone, the header dropped the EnsureCollege wordmark
+# (only the E tile showed) while the signed-out header kept it: a "Saved"
+# button crowded the account controls. "Saved" and the nav's "Plan" both
+# opened the plan view, so the header offered two controls for one place.
+
+HEADER = """() => {
+  const header = document.querySelector('.site-header');
+  const name = header.querySelector('.brand-name');
+  const box = name.getBoundingClientRect();
+  const visible = (el) => !el.closest('[hidden]') && el.getClientRects().length > 0
+    && getComputedStyle(el).visibility !== 'hidden';
+  const controls = Array.from(header.querySelectorAll('a, button')).filter(visible);
+  const plan = document.getElementById('nav-plan-btn');
+  const count = document.getElementById('saved-count');
+  return {
+    wordmark: [Math.round(box.width), Math.round(box.height), getComputedStyle(name).clipPath],
+    labels: controls.map((el) => el.innerText.replace(/\\s+/g, ' ').trim()),
+    planCount: plan.contains(count) && visible(count) ? count.textContent.trim() : null,
+    planName: plan.getAttribute('aria-label') || plan.innerText.trim(),
+    accountHeights: Array.from(document.querySelectorAll('#auth-logged-in button'))
+      .filter(visible).map((b) => Math.round(b.getBoundingClientRect().height)),
+    sideways: document.documentElement.scrollWidth - innerWidth,
+  };
+}"""
+
+
+@pytest.mark.parametrize("width", [390, 1440])
+def test_signed_in_header_keeps_the_wordmark_and_one_way_to_the_plan(browser, live_server, width):
+    from tests.e2e.test_e2e import signup
+
+    ctx = _context(browser, width, 844)
+    page = ctx.new_page()
+    page.goto(live_server, wait_until="domcontentloaded")
+    signup(page)
+    _save(page, "gates-scholarship")
+    _save(page, "burger-king-scholars")
+    _open_plan(page)
+    page.evaluate("window.scrollTo({top: 0, behavior: 'instant'})")
+    state = page.evaluate(HEADER)
+    where = f"{width}px"
+
+    w, h, clip = state["wordmark"]
+    assert w > 80 and h > 10 and clip == "none", f"{where}: signed-in header hides the wordmark: {state['wordmark']}"
+    # One control per destination: the saved count rides on Plan.
+    assert not [label for label in state["labels"] if label.startswith("Saved")], f"{where}: {state['labels']}"
+    assert state["labels"].count("Plan 2") == 1, f"{where}: {state['labels']}"
+    assert state["planCount"] == "2", state
+    assert state["planName"] == "Plan, 2 saved", state
+    assert state["sideways"] <= 0, f"{where}: header scrolls sideways by {state['sideways']}px"
+    assert state["accountHeights"] and max(state["accountHeights"]) < 48, state
+
+    # Plan still opens the plan, from anywhere on the page.
+    page.click("#nav-matches-btn")
+    page.wait_for_timeout(300)
+    page.click("#nav-plan-btn")
+    page.wait_for_selector("#saved-section:not([hidden])", timeout=15000)
+    ctx.close()

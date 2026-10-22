@@ -219,7 +219,7 @@
 
       <nav class="site-nav" aria-label="Sections">
         <button type="button" class="btn-ghost" id="nav-matches-btn">Matches</button>
-        <button type="button" class="btn-ghost" id="nav-plan-btn">Plan</button>
+        <button type="button" class="btn-ghost" id="nav-plan-btn">Plan<span id="saved-count" class="saved-count" hidden></span></button>
         <button type="button" class="btn-ghost" id="nav-browse-btn">Browse</button>
         <a class="btn-ghost" href="/journey">How it works</a>
       </nav>
@@ -230,9 +230,6 @@
           <button type="button" class="btn-ghost btn-ghost-solid" id="open-signup">Sign up</button>
         </div>
         <div id="auth-logged-in" class="auth-actions" hidden>
-          <button type="button" class="btn-ghost" id="show-saved-btn">
-            Saved <span id="saved-count" class="saved-count" hidden>0</span>
-          </button>
           <span id="account-email" class="account-email"></span>
           <button type="button" class="btn-ghost" id="open-settings">Settings</button>
           <button type="button" class="btn-ghost" id="logout-btn">Log out</button>

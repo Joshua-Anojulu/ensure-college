@@ -194,7 +194,8 @@ const openLoginBtn = document.getElementById("open-login");
 const openSignupBtn = document.getElementById("open-signup");
 const logoutBtn = document.getElementById("logout-btn");
 const accountEmail = document.getElementById("account-email");
-const showSavedBtn = document.getElementById("show-saved-btn");
+// The saved count rides on the nav's Plan button: one control per place.
+const navPlanBtn = document.getElementById("nav-plan-btn");
 const savedCountEl = document.getElementById("saved-count");
 
 const authModal = document.getElementById("auth-modal");
@@ -1529,7 +1530,6 @@ function wireAuthControls() {
   openLoginBtn.addEventListener("click", () => openAuthModal("login"));
   openSignupBtn.addEventListener("click", () => openAuthModal("signup"));
   logoutBtn.addEventListener("click", handleLogout);
-  showSavedBtn.addEventListener("click", toggleSavedView);
 
   authModalClose.addEventListener("click", closeAuthModal);
   authModal.addEventListener("click", (event) => {
@@ -1995,16 +1995,18 @@ function updateSavedCount() {
   const changed = savedCountEl.textContent !== String(count);
   savedCountEl.textContent = String(count);
   savedCountEl.hidden = count === 0;
+  // A bare "Plan 3" says nothing aloud; name the number.
+  if (count > 0) {
+    navPlanBtn.setAttribute("aria-label", `Plan, ${count} saved`);
+  } else {
+    navPlanBtn.removeAttribute("aria-label");
+  }
   if (changed && count > 0) {
     savedCountEl.classList.remove("count-pop");
     void savedCountEl.offsetWidth;
     savedCountEl.classList.add("count-pop");
   }
   updateOpportunityTabCounts();
-}
-
-async function toggleSavedView() {
-  await activateOpportunityView("saved", { scroll: true });
 }
 
 async function showSavedView(options = {}) {

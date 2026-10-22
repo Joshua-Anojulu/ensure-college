@@ -1590,18 +1590,6 @@ html.motion-ready .saved-count.count-pop { animation: count-pop 360ms var(--ease
   .results-header :is(h1, h2) { font-size: 2rem; }
 }
 
-@media (max-width: 420px) {
-  /* Signed in on a phone, the account buttons take the wordmark's room. */
-  .site-header:has(#auth-logged-in:not([hidden])) .brand-name {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
-  }
-}
-
 @media (max-width: 360px) {
   .header-inner { gap: 0.4rem; padding-inline: 0.75rem; }
   .brand-name { font-size: 1.05rem; }
