@@ -197,3 +197,122 @@ def test_in_page_deep_links_switch_views_without_a_reload(page):
     page.wait_for_selector("#catalog-section:not([hidden])", timeout=15000)
     assert page.evaluate("window.__sameDocument === true"), "the link reloaded the page"
     assert page.evaluate("location.hash") == ""
+
+
+# ------------------------------------------------------------- one footer
+
+FOOTER_LINKS = [
+    ["Browse all opportunities", "/#browse"],
+    ["Essay guides", "/guides/essays"],
+    ["Privacy", "/privacy"],
+    ["Terms", "/terms"],
+    ["Report an issue", "https://github.com/Joshua-Anojulu/scholarship-matcher/issues/new"],
+    ["Contact", "https://github.com/Joshua-Anojulu"],
+]
+
+FOOTER_PROBE = """() => {
+  const footer = document.querySelector('.site-footer');
+  const dusk = document.querySelector('.world-dusk');
+  const img = dusk.querySelector('img');
+  const size = (el) => { const b = el.getBoundingClientRect(); return [Math.round(b.width), Math.round(b.height)]; };
+  const pick = (el, props) => { const c = getComputedStyle(el); return props.map((p) => c.getPropertyValue(p)); };
+  return {
+    links: Array.from(footer.querySelectorAll('.footer-links a')).map((a) => [a.textContent.trim(), a.getAttribute('href')]),
+    copy: footer.querySelector(':scope > p:not(.footer-links)').innerText.trim(),
+    footer: pick(footer, ['background-color', 'color', 'padding-top', 'padding-left', 'font-size', 'text-align']),
+    link: pick(footer.querySelector('.footer-links a'), ['font-family', 'font-size', 'letter-spacing', 'text-transform', 'color']),
+    mark: pick(footer.querySelector('.footer-mark'), ['font-size', 'color', 'font-weight']),
+    footerWidth: size(footer)[0],
+    dusk: size(dusk),
+    duskShown: getComputedStyle(dusk).display !== 'none' && getComputedStyle(img).opacity === '1',
+    duskLoaded: img.complete && img.naturalWidth > 0 && img.currentSrc.includes('dusk-treeline'),
+    fireflies: dusk.querySelectorAll('.firefly').length,
+    duskBeforeFooter: dusk.nextElementSibling === footer,
+  };
+}"""
+
+
+def _wait_until(page, expression, timeout_ms=10000):
+    """Poll from Python: the CSP blocks the poller wait_for_function injects."""
+    elapsed = 0
+    while elapsed <= timeout_ms:
+        if page.evaluate(expression):
+            return
+        page.wait_for_timeout(200)
+        elapsed += 200
+    raise AssertionError(f"never became true within {timeout_ms}ms: {expression}")
+
+
+def _bottom_probe(page):
+    page.evaluate("window.scrollTo({top: document.documentElement.scrollHeight, behavior: 'instant'})")
+    _wait_until(
+        page,
+        "(() => { const i = document.querySelector('.world-dusk img');"
+        " return i.complete && i.naturalWidth > 0 && getComputedStyle(i).opacity === '1'; })()",
+    )
+    return page.evaluate(FOOTER_PROBE)
+
+
+@pytest.mark.parametrize("width,height", [(1440, 900), (390, 844)])
+def test_one_footer_with_the_dusk_band_on_every_surface(browser, live_server, width, height):
+    ctx = browser.new_context(viewport={"width": width, "height": height})
+    ctx.add_init_script(CONSENT)
+    page = ctx.new_page()
+    found = {}
+    page.goto(live_server, wait_until="load")
+    found["landing"] = _bottom_probe(page)
+    page.click("#nav-plan-btn")
+    page.wait_for_selector("#saved-section:not([hidden])")
+    found["plan"] = _bottom_probe(page)
+    for name, path in SERVER_SURFACES:
+        page.goto(f"{live_server}{path}", wait_until="load")
+        found[name] = _bottom_probe(page)
+    ctx.close()
+
+    reference = found["landing"]
+    assert reference["links"] == FOOTER_LINKS, reference["links"]
+    assert reference["duskShown"] and reference["duskLoaded"], reference
+    for name, probe in found.items():
+        for key in ("links", "copy", "footer", "link", "mark", "footerWidth", "dusk", "fireflies"):
+            assert probe[key] == reference[key], f"{width}px {name} footer {key}: {probe[key]} != {reference[key]}"
+        assert probe["duskShown"] and probe["duskLoaded"], f"{width}px {name}: dusk band not painted"
+        assert probe["duskBeforeFooter"], name
+
+
+def test_server_dusk_band_is_lazy(browser, live_server):
+    """The band is below the fold on a long page and waits for the scroll."""
+    ctx = browser.new_context(viewport={"width": 1440, "height": 900})
+    page = ctx.new_page()
+    dusk = []
+    page.on("request", lambda r: dusk.append(r.url) if "dusk-treeline" in r.url else None)
+    page.goto(f"{live_server}/browse/scholarships", wait_until="networkidle")
+    assert dusk == [], dusk
+    page.evaluate("window.scrollTo({top: document.documentElement.scrollHeight, behavior: 'instant'})")
+    _wait_until(page, "document.querySelector('.world-dusk img').complete")
+    assert len(dusk) == 1, dusk
+    ctx.close()
+
+
+@pytest.mark.parametrize(
+    "kwargs,paths",
+    [
+        # Per-request pages reflect the Save-Data header as html.save-data.
+        ({"extra_http_headers": {"Save-Data": "on"}}, ["/", "/privacy", "/journey", "/reminders/unsubscribe?token=x"]),
+        ({"forced_colors": "active"}, ["/", "/scholarships/coca-cola-scholars", "/terms"]),
+    ],
+    ids=["save-data", "forced-colors"],
+)
+def test_dusk_band_yields_to_save_data_and_forced_colors(browser, live_server, kwargs, paths):
+    ctx = browser.new_context(viewport={"width": 1440, "height": 900}, **kwargs)
+    ctx.add_init_script(CONSENT)
+    page = ctx.new_page()
+    dusk = []
+    page.on("request", lambda r: dusk.append(r.url) if "dusk-treeline" in r.url else None)
+    for path in paths:
+        page.goto(f"{live_server}{path}", wait_until="load")
+        page.evaluate("window.scrollTo({top: document.documentElement.scrollHeight, behavior: 'instant'})")
+        page.wait_for_timeout(600)
+        assert page.evaluate("getComputedStyle(document.querySelector('.world-dusk')).display") == "none", path
+        assert page.locator(".site-footer .footer-links a").count() == len(FOOTER_LINKS), path
+    assert dusk == [], dusk
+    ctx.close()

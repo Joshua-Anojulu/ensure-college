@@ -411,14 +411,22 @@ def sitemap_xml(request: Request) -> Response:
     )
 
 
+def _reflect_save_data(html_text: str, request: Request | None) -> str:
+    """Stamp html.save-data when the request carries Save-Data: on.
+
+    Only for per-request (uncached) pages: the edge-cached template family
+    cannot vary per header and relies on the prefers-reduced-data media
+    query instead. The world art's CSS yields to either signal.
+    """
+    if request is None or request.headers.get("save-data", "").lower() != "on":
+        return html_text
+    return re.sub(r"<html lang=(['\"])en\1>", '<html lang="en" class="save-data">', html_text, count=1)
+
+
 def _serve_static_page(filename: str, request: Request | None = None) -> HTMLResponse:
     html = (STATIC_DIR / filename).read_text(encoding="utf-8")
     html = html.replace("<!--__ANALYTICS__-->", analytics_tag())
-    # These responses are no-cache, so reflecting Save-Data per request is
-    # safe here (the edge-cached template family cannot do this and relies on
-    # the prefers-reduced-data media query in world.css instead).
-    if request is not None and request.headers.get("save-data", "").lower() == "on":
-        html = html.replace('<html lang="en">', '<html lang="en" class="save-data">', 1)
+    html = _reflect_save_data(html, request)
     return HTMLResponse(html, headers={"Cache-Control": "no-cache"})
 
 
@@ -677,6 +685,29 @@ _SITE_HEADER = (
     "</div></div></header>"
 )
 
+# The footer every page shares, painted dusk band included (lazy, decorative).
+_SITE_FOOTER = (
+    "<div class='world-dusk' aria-hidden='true'>"
+    "<img src='/static/img/world/dusk-treeline-760.d1d890d8bc.webp' "
+    "srcset='/static/img/world/dusk-treeline-760.d1d890d8bc.webp 760w, "
+    "/static/img/world/dusk-treeline-1376.8551cabfa9.webp 1376w' sizes='100vw' "
+    "width='1376' height='768' alt='' loading='lazy' decoding='async' fetchpriority='low'>"
+    "<div class='fireflies'>" + "<span class='firefly'></span>" * 7 + "</div></div>"
+    "<footer class='site-footer'>"
+    "<span class='footer-mark' aria-hidden='true'>EnsureCollege</span>"
+    "<p>EnsureCollege helps you plan your path to college. Confirm every deadline and "
+    "requirement on the official sponsor page before you apply.</p>"
+    "<p class='footer-links'>"
+    "<a href='/#browse'>Browse all opportunities</a>"
+    "<a href='/guides/essays'>Essay guides</a>"
+    "<a href='/privacy'>Privacy</a>"
+    "<a href='/terms'>Terms</a>"
+    "<a href='https://github.com/Joshua-Anojulu/scholarship-matcher/issues/new' target='_blank' "
+    "rel='noopener noreferrer'>Report an issue</a>"
+    "<a href='https://github.com/Joshua-Anojulu' target='_blank' rel='noopener noreferrer'>Contact</a>"
+    "</p></footer>"
+)
+
 
 def _reminder_page(title: str, body: str) -> str:
     """Wrap a reminder-settings page in the site's Forest Light chrome.
@@ -699,7 +730,9 @@ def _reminder_page(title: str, body: str) -> str:
         "<main id='main' class='main legal'><section class='panel legal-content'>"
         "<p class='eyebrow'>Reminder emails</p>"
         f"{body}"
-        "</section></main></body></html>"
+        "</section></main>"
+        f"{_SITE_FOOTER}"
+        "</body></html>"
     )
 
 
@@ -747,9 +780,9 @@ async def _unsubscribe_token_from_request(request: Request) -> str:
 
 
 @app.get("/reminders/unsubscribe", response_class=HTMLResponse)
-def reminders_unsubscribe(token: str = "") -> HTMLResponse:
+def reminders_unsubscribe(request: Request, token: str = "") -> HTMLResponse:
     """Render a confirmation page; scanners can follow GET without mutating."""
-    return HTMLResponse(_unsubscribe_confirmation_page(token))
+    return HTMLResponse(_reflect_save_data(_unsubscribe_confirmation_page(token), request))
 
 
 @app.post("/reminders/unsubscribe", response_class=HTMLResponse)
@@ -761,7 +794,7 @@ async def reminders_unsubscribe_post(
     token = await _unsubscribe_token_from_request(request)
     _disable_reminders_for_token(token, db)
     # Always show the same completion page, so the token is not a membership oracle.
-    return HTMLResponse(_unsubscribe_complete_page())
+    return HTMLResponse(_reflect_save_data(_unsubscribe_complete_page(), request))
 
 
 @app.get("/reminders/run")

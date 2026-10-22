@@ -175,3 +175,135 @@ def test_app_header_carries_the_same_brand_and_nav():
     assert [(item["id"], item["class"]) for item in solid] == [
         ("open-signup", "btn-ghost btn-ghost-solid")
     ]
+
+
+FOOTER_LINKS = [
+    ("Browse all opportunities", "/#browse"),
+    ("Essay guides", "/guides/essays"),
+    ("Privacy", "/privacy"),
+    ("Terms", "/terms"),
+    ("Report an issue", "https://github.com/Joshua-Anojulu/scholarship-matcher/issues/new"),
+    ("Contact", "https://github.com/Joshua-Anojulu"),
+]
+FOOTER_COPY = (
+    "EnsureCollege helps you plan your path to college. Confirm every deadline "
+    "and requirement on the official sponsor page before you apply."
+)
+DUSK_760 = "/static/img/world/dusk-treeline-760.d1d890d8bc.webp"
+DUSK_1376 = "/static/img/world/dusk-treeline-1376.8551cabfa9.webp"
+
+
+class FooterParser(HTMLParser):
+    """The dusk band's image and the site footer's mark, copy and links."""
+
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.in_dusk = 0
+        self.dusk_img = None
+        self.dusk_then_footer = False
+        self.in_footer = False
+        self.mark = []
+        self.copy = []
+        self.links = []
+        self._where = None
+        self._link = None
+        self._last_closed_dusk = False
+
+    def handle_starttag(self, tag, attrs):
+        attrs = dict(attrs)
+        classes = set((attrs.get("class") or "").split())
+        if "world-dusk" in classes:
+            self.in_dusk = 1
+            return
+        if self.in_dusk:
+            if tag == "img":
+                self.dusk_img = attrs
+            if tag == "div":
+                self.in_dusk += 1
+            return
+        if tag == "footer" and "site-footer" in classes:
+            self.in_footer = True
+            self.dusk_then_footer = self._last_closed_dusk
+            return
+        if not self.in_footer:
+            if tag not in ("script",):
+                self._last_closed_dusk = False
+            return
+        if "footer-mark" in classes:
+            self._where = "mark"
+        elif tag == "p" and "footer-links" not in classes:
+            self._where = "copy"
+        elif tag == "a":
+            self._link = {"href": attrs.get("href"), "target": attrs.get("target"), "text": []}
+
+    def handle_endtag(self, tag):
+        if self.in_dusk:
+            if tag == "div":
+                self.in_dusk -= 1
+                if not self.in_dusk:
+                    self._last_closed_dusk = True
+            return
+        if not self.in_footer:
+            return
+        if tag == "footer":
+            self.in_footer = False
+        elif tag == "a" and self._link is not None:
+            self.links.append((" ".join("".join(self._link["text"]).split()), self._link["href"]))
+            self._link = None
+        elif tag in ("span", "p"):
+            self._where = None
+
+    def handle_data(self, data):
+        if not self.in_footer:
+            return
+        if self._link is not None:
+            self._link["text"].append(data)
+        elif self._where == "mark":
+            self.mark.append(data)
+        elif self._where == "copy":
+            self.copy.append(data)
+
+
+def parse_footer(html):
+    parser = FooterParser()
+    parser.feed(html)
+    return parser
+
+
+def _assert_shared_footer(footer, where):
+    assert "".join(footer.mark).strip() == "EnsureCollege", where
+    assert " ".join(" ".join(footer.copy).split()) == FOOTER_COPY, where
+    assert footer.links == FOOTER_LINKS, where
+    assert footer.dusk_then_footer, f"{where}: the dusk band must sit right before the footer"
+
+
+@pytest.mark.parametrize("path", SERVER_PAGES)
+def test_server_pages_share_one_footer_with_a_lazy_dusk_band(client, path):
+    footer = parse_footer(client.get(path).text)
+    _assert_shared_footer(footer, path)
+    img = footer.dusk_img
+    assert img is not None, path
+    # No app.js on these pages: a native lazy image, never on the critical path.
+    assert img.get("loading") == "lazy" and img.get("fetchpriority") == "low", (path, img)
+    assert img.get("src") == DUSK_760, (path, img)
+    assert img.get("srcset") == f"{DUSK_760} 760w, {DUSK_1376} 1376w", (path, img)
+    assert img.get("alt") == "", path
+
+
+def test_app_footer_is_the_same_footer():
+    index = Path(__file__).resolve().parents[1] / "app" / "static" / "index.html"
+    footer = parse_footer(index.read_text(encoding="utf-8"))
+    _assert_shared_footer(footer, "index.html")
+    # The app hydrates its plates itself (Save-Data aware): inert data-src.
+    assert footer.dusk_img.get("data-src") == DUSK_1376
+    assert "src" not in footer.dusk_img
+
+
+def test_unsubscribe_pages_reflect_save_data(client):
+    for response in (
+        client.get("/reminders/unsubscribe?token=x", headers={"Save-Data": "on"}),
+        client.post("/reminders/unsubscribe", data={"token": "x"}, headers={"Save-Data": "on"}),
+    ):
+        assert response.text.startswith('<!DOCTYPE html><html lang="en" class="save-data">')
+    plain = client.get("/reminders/unsubscribe?token=x")
+    assert "save-data" not in plain.text

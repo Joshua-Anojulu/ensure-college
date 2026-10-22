@@ -3411,6 +3411,13 @@ body::after {
   transition: opacity 480ms var(--ease-out);
 }
 
+/* Server pages (no app.js) carry a native lazy <img>; it shows as it decodes. */
+.world-dusk img:not([data-src]) { opacity: 1; }
+
+/* The dusk band is decoration: it yields entirely (a lazy <img> under display:none is never fetched). */
+html.save-data .world-dusk { display: none; }
+@media (prefers-reduced-data: reduce), (forced-colors: active) { .world-dusk { display: none; } }
+
 .world-dusk + .site-footer { margin-top: 0; }
 
 .fireflies { position: absolute; inset: 0; }
