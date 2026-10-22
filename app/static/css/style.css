@@ -2939,21 +2939,90 @@ body.has-scrolled .site-header {
   --paint-dawn: #f3cea0;
   --paint-dawn-mist: #f5e6cc;
 }
-/* ---- end Journey and Teaser paint ---- */
 
-/* The live island fades in over the painting; the painting and its labels
-   yield underneath. Both layers occupy the same absolute box. */
+/* The live swap: the painting does not vanish, it recedes into the valley
+   mist (a veil over the plate, under the dusk scrim) while the island comes
+   forward on the canvas, and only the landmark labels yield. The copy keeps
+   its scrim; every layer shares the same absolute box. */
 #journey-teaser-canvas { opacity: 0; }
 
-.journey-teaser.teaser-live #journey-teaser-canvas {
+.teaser-painting::before,
+.journey-teaser::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+}
+
+/* The plate's own sun glow, where its flag hill stands, sits over the
+   painted flag so only the island's flag shows. */
+.teaser-painting::before {
+  background:
+    radial-gradient(12% 24% at 82% 31%, var(--paint-glow), transparent),
+    radial-gradient(
+      62% 78% at 68% 58%,
+      color-mix(in srgb, var(--paint-mist) 90%, transparent) 0%,
+      color-mix(in srgb, var(--paint-mist) 74%, transparent) 46%,
+      color-mix(in srgb, var(--paint-paper) 34%, transparent) 100%
+    );
+}
+
+/* Paper over the live canvas, as on the Journey: the grain tile, multiplied. */
+.journey-teaser::after {
+  z-index: 1;
+  mix-blend-mode: multiply;
+  background: url("/static/img/grain.png") 0 0 / 128px 128px;
+}
+
+.journey-teaser.teaser-live #journey-teaser-canvas,
+.journey-teaser.teaser-live .teaser-painting::before {
   opacity: 1;
   transition: opacity 1200ms var(--ease-out);
 }
 
-.journey-teaser.teaser-live .teaser-painting {
-  opacity: 0;
-  transition: opacity 1200ms var(--ease-out) 200ms;
+.journey-teaser.teaser-live::after {
+  opacity: 0.07;
+  transition: opacity 1200ms var(--ease-out);
 }
+
+.journey-teaser.teaser-live .teaser-painting .teaser-landmarks {
+  opacity: 0;
+  transition: opacity 900ms var(--ease-out);
+}
+
+/* The island sinks into the mist below its rim, and on desktop it melts
+   into the scrim before it can reach the copy column. */
+#journey-teaser-canvas {
+  -webkit-mask-image: linear-gradient(to bottom, #000 74%, transparent 97%);
+  mask-image: linear-gradient(to bottom, #000 74%, transparent 97%);
+}
+
+@media (min-width: 1024px) {
+  #journey-teaser-canvas {
+    -webkit-mask-image: linear-gradient(100deg, transparent 26%, #000 50%), linear-gradient(to bottom, #000 74%, transparent 97%);
+    -webkit-mask-composite: source-in;
+    mask-image: linear-gradient(100deg, transparent 26%, #000 50%), linear-gradient(to bottom, #000 74%, transparent 97%);
+    mask-composite: intersect;
+  }
+}
+
+@media (max-width: 767px) {
+  /* Phones: the painting is a band above the copy; the island takes the
+     same band and fades out the same way. */
+  #journey-teaser-canvas {
+    bottom: auto;
+    height: 60%;
+    -webkit-mask-image: linear-gradient(to bottom, #000 70%, transparent);
+    mask-image: linear-gradient(to bottom, #000 70%, transparent);
+  }
+}
+
+@media (forced-colors: active) {
+  .teaser-painting::before,
+  .journey-teaser::after { display: none; }
+}
+/* ---- end Journey and Teaser paint ---- */
 
 /* Craft details */
 ::selection {
@@ -2991,7 +3060,6 @@ body.has-scrolled .site-header {
   }
 
   .journey-teaser { min-height: 21rem; }
-  #journey-teaser-canvas { opacity: 0.45; }
 
   .profile-form::before {
     transform: rotate(-0.5deg) translate(-6px, 8px);
