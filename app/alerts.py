@@ -15,7 +15,21 @@ from datetime import date
 
 from sqlalchemy.orm import Session
 
-from app.auth.email import EmailDeliveryError, list_unsubscribe_headers, send_email
+from app.auth.email import (
+    EMAIL_BRAND,
+    EMAIL_FONT,
+    EMAIL_INK,
+    EMAIL_INK_SOFT,
+    EMAIL_LINE,
+    EMAIL_MARK_HTML,
+    EMAIL_MIST,
+    EMAIL_MUTED,
+    EMAIL_PAPER,
+    EmailDeliveryError,
+    email_button_html,
+    list_unsubscribe_headers,
+    send_email,
+)
 from app.db.models import User, UserProfile
 from app.matching.competition_matcher import match_competitions
 from app.matching.matcher import match_scholarships
@@ -85,36 +99,34 @@ def build_alert_email(new_refs: list[MatchRef], unsubscribe_token: str) -> tuple
     for r in new_refs:
         name = html.escape(r.name)
         name_cell = (
-            f'<a href="{html.escape(r.url)}" style="color:#1b2430; font-weight:700; text-decoration:none;">{name}</a>'
-            if r.url else f'<span style="color:#1b2430; font-weight:700;">{name}</span>'
+            f'<a href="{html.escape(r.url)}" style="color:{EMAIL_BRAND}; font-weight:700; text-decoration:none;">{name}</a>'
+            if r.url else f'<span style="color:{EMAIL_INK}; font-weight:700;">{name}</span>'
         )
         rows += (
-            '<tr><td style="padding:10px 0; border-bottom:1px solid #ece9df;">'
-            f'{name_cell}<div style="font-size:13px; color:#5c6069;">{html.escape(r.kind)}</div>'
+            f'<tr><td style="padding:10px 0; border-bottom:1px solid {EMAIL_LINE};">'
+            f'{name_cell}<div style="font-size:13px; color:{EMAIL_MUTED};">{html.escape(r.kind)}</div>'
             '</td></tr>'
         )
 
+    button = email_button_html(f"{html.escape(base)}/", "See my matches")
     html_body = f"""\
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8"><meta name="color-scheme" content="light">
 <meta name="viewport" content="width=device-width, initial-scale=1"></head>
-<body style="margin:0; background:#eae8e1;">
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#eae8e1;"><tr>
+<body style="margin:0; background:{EMAIL_MIST};">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="{EMAIL_MIST}" style="background:{EMAIL_MIST};"><tr>
 <td align="center" style="padding:32px 16px;">
-<table role="presentation" width="520" cellpadding="0" cellspacing="0" style="width:520px; max-width:520px; background:#fbfaf7; border:1px solid #ddd9cd; border-radius:14px;">
-<tr><td style="padding:30px 32px; font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
-<table role="presentation" cellpadding="0" cellspacing="0"><tr>
-<td width="34" height="34" align="center" valign="middle" bgcolor="#1b2430" style="width:34px; height:34px; border-radius:9px; color:#fbfaf7; font-family:Georgia,serif; font-size:19px; font-weight:bold; line-height:34px;">E</td>
-<td style="padding-left:10px; font-size:17px; font-weight:bold; color:#17181c;">EnsureCollege</td>
-</tr></table>
-<h1 style="margin:22px 0 6px; font-size:21px; color:#17181c;">New matches for you</h1>
-<p style="margin:0 0 16px; font-size:15px; line-height:1.55; color:#33373f;">We just added these, and they're a strong fit for your profile:</p>
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="font-family:'Segoe UI',Arial,sans-serif; font-size:15px;">{rows}</table>
-<div style="margin:22px 0 0;"><a href="{html.escape(base)}/" style="display:inline-block; padding:12px 26px; background:#1b2430; color:#fbfaf7; font-size:15px; font-weight:bold; text-decoration:none; border-radius:10px;">See my matches</a></div>
-<p style="margin:20px 0 0; font-size:13px; line-height:1.6; color:#5c6069;">Always confirm eligibility and the deadline on the official page.</p>
+<table role="presentation" width="520" cellpadding="0" cellspacing="0" bgcolor="{EMAIL_PAPER}" style="width:100%; max-width:520px; background:{EMAIL_PAPER}; border:1px solid {EMAIL_LINE}; border-radius:16px;">
+<tr><td style="padding:30px 32px; font-family:{EMAIL_FONT};">
+{EMAIL_MARK_HTML}
+<h1 style="margin:22px 0 6px; font-size:21px; color:{EMAIL_INK};">New matches for you</h1>
+<p style="margin:0 0 16px; font-size:15px; line-height:1.55; color:{EMAIL_INK_SOFT};">We just added these, and they're a strong fit for your profile:</p>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="font-family:{EMAIL_FONT}; font-size:15px;">{rows}</table>
+<div style="margin:22px 0 0;">{button}</div>
+<p style="margin:20px 0 0; font-size:13px; line-height:1.6; color:{EMAIL_MUTED};">Always confirm eligibility and the deadline on the official page.</p>
 </td></tr></table>
-<p style="margin:16px 0 0; font-family:'Segoe UI',Arial,sans-serif; font-size:12px; color:#83858c;">
-You saved a profile on EnsureCollege &middot; <a href="{html.escape(unsubscribe)}" style="color:#83858c;">turn off emails</a>
+<p style="margin:16px 0 0; font-family:{EMAIL_FONT}; font-size:12px; color:{EMAIL_MUTED};">
+You saved a profile on EnsureCollege &middot; <a href="{html.escape(unsubscribe)}" style="color:{EMAIL_MUTED};">turn off emails</a>
 </p>
 </td></tr></table></body></html>"""
     return subject, text_body, html_body

@@ -174,6 +174,9 @@ body {
 
 [hidden] { display: none !important; }
 
+/* Text for screen readers only (an empty matrix cell's "None"). */
+.visually-hidden { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip-path: inset(50%); border: 0; white-space: nowrap; }
+
 button, input, select, textarea { font: inherit; color: inherit; }
 button, a { -webkit-tap-highlight-color: transparent; }
 
@@ -943,12 +946,19 @@ html.motion-ready .fit-ring-value { stroke-dashoffset: var(--circ); animation: r
 .card-stats { display: flex; flex-wrap: wrap; gap: 0.6rem; }
 .stat { flex: 1 1 150px; min-width: 0; padding: 0.72rem 0.9rem; border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--surface-inset); }
 .stat-label { display: block; color: var(--muted); font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
-.stat-value { display: block; margin-top: 0.28rem; color: var(--ink); font-size: 1rem; font-weight: 700; line-height: 1.2; font-variant-numeric: tabular-nums; }
+.stat-value { display: block; margin-top: 0.28rem; color: var(--ink); font-size: 1rem; font-weight: 700; line-height: 1.2; font-variant-numeric: tabular-nums; overflow-wrap: break-word; }
 .stat-note { display: block; margin-top: 0.18rem; color: var(--muted); font-size: 0.72rem; font-weight: 500; line-height: 1.35; }
 .stat-award { border-color: var(--gold-line); background: var(--gold-tint); }
 .stat-award .stat-value { font-family: var(--font-display); font-size: 1.5rem; font-weight: 800; letter-spacing: 0; color: var(--gold); }
 .stat-deadline.stat-urgent { border-color: var(--amber-line); background: var(--amber-tint); }
 .stat-deadline.stat-urgent .stat-note { color: var(--amber-strong); font-weight: 700; }
+/* A stat box is built for a short figure ("$20,000", "Mar 1, 2027"). A value
+   over 24 characters (prize terms, a sentence of dates) is marked .stat-long
+   by app.js and detail.html: it reads at body size in a wider box, and its
+   row stops stretching short neighbours to its height. */
+.stat-long { flex: 3 1 18rem; }
+.stat-long .stat-value, .stat-award.stat-long .stat-value { color: var(--ink-soft); font-family: var(--font-body); font-size: 0.9rem; font-weight: 500; line-height: 1.5; }
+.card-stats:has(> .stat-long) { align-items: flex-start; }
 
 /* Chips + badges */
 .score-breakdown, .badge-row { display: flex; flex-wrap: wrap; gap: 0.38rem; }
@@ -1312,19 +1322,33 @@ html.has-site-consent .age-gate {
 /* =========================================================================
    Footer
    ========================================================================= */
-/* Ink footer band: one solid color block closes the page. */
+/* One compact ink band closes every page: a small wordmark, the sponsor
+   reminder, mono links, all starting on the content column's edge like the
+   header's brand. (2026-10-22: the display-scale ghost wordmark made the
+   page's ending most of a laptop screen.) */
 .site-footer {
+  position: relative;
   margin-top: 2.6rem;
-  padding: 2.1rem 1.5rem 2.5rem;
-  border-top: 1px solid color-mix(in srgb, var(--brand-ink) 16%, transparent);
+  padding: 1.6rem max(1.5rem, calc(50% - 590px + 1.5rem)) 1.5rem;
   color: color-mix(in srgb, var(--brand-ink) 74%, transparent);
   background: var(--brand);
   font-size: 0.8rem;
-  text-align: center;
+  text-align: left;
 }
-.site-footer p { max-width: 760px; margin: 0.25rem auto; }
-.footer-links { display: inline-flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 0.35rem 0.55rem; margin-top: 0.45rem; }
-.footer-links a { color: var(--brand-ink); font-weight: 600; }
+.footer-mark {
+  display: block;
+  margin: 0 0 0.35rem;
+  color: var(--brand-ink);
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 800;
+  line-height: 1.1;
+  user-select: none;
+}
+.site-footer > p { margin: 0 0 0.8rem; }
+.site-footer > .footer-links { display: flex; flex-wrap: wrap; gap: 0.5rem 1.4rem; margin: 0; }
+.footer-links a { color: var(--brand-ink); font-family: var(--font-mono); font-size: 0.72rem; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; }
+@media (max-width: 760px) { .site-footer { padding: 1.4rem 1rem 1.35rem; } }
 
 /* =========================================================================
    Motion (reserved for orientation, progress, new results)
@@ -1386,9 +1410,13 @@ html.motion-ready .saved-count.count-pop { animation: count-pop 360ms var(--ease
 /* =========================================================================
    SEO detail + browse pages (server-rendered, no JS)
    ========================================================================= */
-/* Short static pages: keep the ink footer pinned to the viewport bottom. */
-.page-static { position: relative; display: flex; min-height: 100vh; flex-direction: column; }
-.page-static .main { flex: 1 1 auto; width: 100%; }
+/* Short static pages fill the screen: the ink footer closes it at the bottom
+   edge (svh: phones measure without their toolbars), and a page that is one
+   lone panel (404, unsubscribe) centers it between the header and the band
+   instead of leaving an empty stretch below it. */
+.page-static { position: relative; display: flex; min-height: 100vh; min-height: 100svh; flex-direction: column; }
+.page-static .main { flex: 1 1 auto; width: 100%; padding-bottom: clamp(1.25rem, 2.5vw, 2.2rem); }
+.page-static .main > .panel:only-child { margin-block: auto; }
 .page-static .site-footer { margin-top: auto; }
 .detail-breadcrumb { margin: 0.4rem 0 0; color: var(--muted); font-size: 0.8rem; }
 .detail-breadcrumb a { color: var(--brand); font-weight: 600; }
@@ -1466,18 +1494,6 @@ html.motion-ready .saved-count.count-pop { animation: count-pop 360ms var(--ease
   .card-header { flex-direction: column; }
   .card-body { padding: 1.1rem; }
   .results-header :is(h1, h2) { font-size: 2rem; }
-}
-
-@media (max-width: 420px) {
-  /* Signed in on a phone, the account buttons take the wordmark's room. */
-  .site-header:has(#auth-logged-in:not([hidden])) .brand-name {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
-  }
 }
 
 @media (max-width: 360px) {
@@ -1679,7 +1695,6 @@ input:user-invalid, select:user-invalid, textarea:user-invalid { border-color: v
 .rec-letters-head h3 { margin: 0.1rem 0 0.2rem; font-size: clamp(1.3rem, 3vw, 1.7rem); }
 .rec-letters-intro { max-width: 62ch; margin: 0; color: var(--muted); font-size: 0.9rem; line-height: 1.55; }
 .rec-letters-list { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.9rem; }
-.rec-letters-empty { margin: 0.6rem 0 0; color: var(--muted); font-size: 0.88rem; }
 
 /* Settings: preference toggle (reminder emails). */
 .settings-pref { margin: 0 0 1rem; padding: 0.9rem 1rem; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
@@ -2462,45 +2477,6 @@ body.has-scrolled .site-header {
   color: var(--brand-ink);
 }
 
-/* Footer at display scale: ghost wordmark, asymmetric columns, mono links. */
-.site-footer {
-  position: relative;
-  overflow: hidden;
-  padding: clamp(2.6rem, 6vw, 4.5rem) clamp(1.2rem, 4vw, 4rem) clamp(1.8rem, 4vw, 3rem);
-  text-align: left;
-}
-
-.footer-mark {
-  display: block;
-  margin: 0 0 clamp(1rem, 2.5vw, 1.8rem);
-  font-family: var(--font-display);
-  font-size: clamp(2.8rem, 9vw, 7rem);
-  font-weight: 800;
-  line-height: 0.9;
-  letter-spacing: -0.02em;
-  color: color-mix(in srgb, var(--brand-ink) 16%, transparent);
-  user-select: none;
-}
-
-.site-footer > p {
-  max-width: 52ch;
-  margin: 0 0 1.1rem;
-}
-
-.footer-links {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  gap: 0.5rem 1.4rem;
-}
-
-.footer-links a {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-}
-
 /* Focus ring on the dark bands. */
 .site-footer :focus-visible {
   outline-color: var(--brand-ink);
@@ -3212,9 +3188,13 @@ body::after {
   .world-plate .world-leaves-img { display: block; }
 }
 
+/* A short band (2026-10-22: it was 300px on a laptop) showing a slice of the
+   painting. The flag's pole stands at 65% of the painting's height; pinning
+   that point to 65% of the band keeps the pennant and the treeline under it
+   in the slice at every width. */
 .world-dusk {
   position: relative;
-  height: clamp(160px, 26vw, 300px);
+  height: clamp(112px, 13vw, 220px);
   overflow: hidden;
   pointer-events: none;
 }
@@ -3223,10 +3203,19 @@ body::after {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: bottom;
+  object-position: 50% 65%;
   opacity: 0;
-  -webkit-mask-image: linear-gradient(transparent, #000 32%);
-  mask-image: linear-gradient(transparent, #000 32%);
+  -webkit-mask-image: linear-gradient(transparent, #000 20%);
+  mask-image: linear-gradient(transparent, #000 20%);
+}
+
+/* The treeline sinks into the footer's forest instead of stopping at a seam. */
+.world-dusk::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 30%;
+  background: linear-gradient(transparent, var(--brand));
 }
 
 .world-dusk img.world-loaded {

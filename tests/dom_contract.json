@@ -135,7 +135,6 @@
     "quick-applies-list",
     "quick-applies-panel",
     "rec-letters-count",
-    "rec-letters-empty",
     "rec-letters-list",
     "rec-letters-panel",
     "reminders-toggle",
@@ -166,7 +165,6 @@
     "settings-error",
     "settings-modal",
     "settings-success",
-    "show-saved-btn",
     "state",
     "step-back-btn",
     "step-next-btn",
@@ -372,6 +370,7 @@
     "stat-award",
     "stat-deadline",
     "stat-label",
+    "stat-long",
     "stat-note",
     "stat-urgent",
     "stat-value",
@@ -405,6 +404,7 @@
     "tracker-task-optional",
     "verification-source",
     "verification-stale",
-    "verification-stale-flag"
+    "verification-stale-flag",
+    "visually-hidden"
   ]
 }

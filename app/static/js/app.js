@@ -194,7 +194,8 @@ const openLoginBtn = document.getElementById("open-login");
 const openSignupBtn = document.getElementById("open-signup");
 const logoutBtn = document.getElementById("logout-btn");
 const accountEmail = document.getElementById("account-email");
-const showSavedBtn = document.getElementById("show-saved-btn");
+// The saved count rides on the nav's Plan button: one control per place.
+const navPlanBtn = document.getElementById("nav-plan-btn");
 const savedCountEl = document.getElementById("saved-count");
 
 const authModal = document.getElementById("auth-modal");
@@ -235,7 +236,6 @@ const savedContainer = document.getElementById("saved-container");
 const journeyMap = document.getElementById("journey-map");
 const recLettersPanel = document.getElementById("rec-letters-panel");
 const recLettersList = document.getElementById("rec-letters-list");
-const recLettersEmpty = document.getElementById("rec-letters-empty");
 const recLettersCount = document.getElementById("rec-letters-count");
 const quickAppliesPanel = document.getElementById("quick-applies-panel");
 const quickAppliesList = document.getElementById("quick-applies-list");
@@ -1530,7 +1530,6 @@ function wireAuthControls() {
   openLoginBtn.addEventListener("click", () => openAuthModal("login"));
   openSignupBtn.addEventListener("click", () => openAuthModal("signup"));
   logoutBtn.addEventListener("click", handleLogout);
-  showSavedBtn.addEventListener("click", toggleSavedView);
 
   authModalClose.addEventListener("click", closeAuthModal);
   authModal.addEventListener("click", (event) => {
@@ -1996,16 +1995,18 @@ function updateSavedCount() {
   const changed = savedCountEl.textContent !== String(count);
   savedCountEl.textContent = String(count);
   savedCountEl.hidden = count === 0;
+  // A bare "Plan 3" says nothing aloud; name the number.
+  if (count > 0) {
+    navPlanBtn.setAttribute("aria-label", `Plan, ${count} saved`);
+  } else {
+    navPlanBtn.removeAttribute("aria-label");
+  }
   if (changed && count > 0) {
     savedCountEl.classList.remove("count-pop");
     void savedCountEl.offsetWidth;
     savedCountEl.classList.add("count-pop");
   }
   updateOpportunityTabCounts();
-}
-
-async function toggleSavedView() {
-  await activateOpportunityView("saved", { scroll: true });
 }
 
 async function showSavedView(options = {}) {
@@ -2441,20 +2442,20 @@ function renderRecLettersRollup(items) {
   if (!recLettersPanel) {
     return;
   }
-  // With nothing saved, the saved-empty panel already explains the state;
-  // showing this panel's empty state too reads as two empty messages at once.
-  if (!items || items.length === 0) {
+  // The panel shows only when a saved item asks for a letter. With nothing
+  // saved the saved-empty panel explains the state, and with no letters the
+  // command center's Recommendations card and the matrix's Recs column
+  // already say so; a panel that only says "none" is noise.
+  const needs = collectRecLetterNeeds(items || []);
+  if (needs.length === 0) {
     recLettersPanel.hidden = true;
     return;
   }
-  const needs = collectRecLetterNeeds(items);
   recLettersPanel.hidden = false;
   recLettersList.innerHTML = "";
-  recLettersEmpty.hidden = needs.length > 0;
   if (recLettersCount) {
-    recLettersCount.textContent = needs.length
-      ? `${needs.length} recommendation letter${needs.length === 1 ? "" : "s"} across your saved items`
-      : "";
+    recLettersCount.textContent =
+      `${needs.length} recommendation letter${needs.length === 1 ? "" : "s"} across your saved items`;
   }
   for (const need of needs) {
     recLettersList.appendChild(buildRecLetterNeedRow(need));
@@ -2833,13 +2834,6 @@ function requirementMatrixForItem(item) {
   return matrix;
 }
 
-function formatRequirementProgress(progress) {
-  if (!progress.total) {
-    return "None";
-  }
-  return `${progress.complete}/${progress.total}`;
-}
-
 function buildRequirementMatrix(items) {
   const section = document.createElement("section");
   section.className = "plan-matrix";
@@ -2885,11 +2879,16 @@ function buildRequirementMatrix(items) {
     [...REQUIREMENT_GROUPS.map((group) => group.key), "other"].forEach((key) => {
       const td = document.createElement("td");
       const progress = matrix[key];
-      td.textContent = formatRequirementProgress(progress);
-      if (progress.total && progress.complete === progress.total) {
-        td.className = "is-complete";
-      } else if (progress.total) {
-        td.className = "has-work";
+      if (progress.total) {
+        td.textContent = `${progress.complete}/${progress.total}`;
+        td.className = progress.complete === progress.total ? "is-complete" : "has-work";
+      } else {
+        // No steps of this kind: a quiet cell on screen that still reads
+        // "None" to a screen reader, not the word in every empty cell.
+        const none = document.createElement("span");
+        none.className = "visually-hidden";
+        none.textContent = "None";
+        td.appendChild(none);
       }
       row.appendChild(td);
     });
@@ -3237,15 +3236,12 @@ function buildSpecialEligibilityPanel(items) {
     "<p>These are niche requirements like nomination, finalist status, membership, or sponsor affiliation.</p>";
   section.appendChild(head);
 
+  // Built only when a saved item carries a special check (see
+  // buildPlanGuidance); the command center's "Special checks" card states
+  // the count either way.
   const specialItems = items.filter((item) => savedOpportunitySpecialRequirements(item).length > 0);
   const wrap = document.createElement("div");
   wrap.className = "special-check-list";
-  if (!specialItems.length) {
-    const empty = document.createElement("p");
-    empty.className = "plan-empty-note";
-    empty.textContent = "No special eligibility checks detected in the opportunities you saved.";
-    wrap.appendChild(empty);
-  }
 
   for (const item of specialItems) {
     const card = document.createElement("article");
@@ -3438,7 +3434,9 @@ function buildPlanGuidance(items) {
   wrap.appendChild(actions);
   wrap.appendChild(buildRequirementMatrix(items));
   wrap.appendChild(buildEssayReuseMap(items));
-  wrap.appendChild(buildSpecialEligibilityPanel(items));
+  if (specialChecks.length) {
+    wrap.appendChild(buildSpecialEligibilityPanel(items));
+  }
   wrap.appendChild(buildDeadlineTimeline(items));
 
   return wrap;
@@ -5288,6 +5286,21 @@ function programStatValue(value) {
   return value;
 }
 
+// A stat box is built for a short figure ("$20,000", "Mar 1, 2027"). A
+// longer value (prize terms, a sentence of dates) is marked so it reads at
+// body size in a wider box; detail.html uses the same 24-character line.
+const LONG_STAT_CHARS = 24;
+
+function markLongStats(row) {
+  for (const stat of row.children) {
+    const value = Array.from(stat.children).find((el) => el.classList.contains("stat-value"));
+    if (value && value.textContent.trim().length > LONG_STAT_CHARS) {
+      stat.classList.add("stat-long");
+    }
+  }
+  return row;
+}
+
 function buildProgramStatRow(program) {
   const row = document.createElement("div");
   row.className = "card-stats";
@@ -5325,7 +5338,7 @@ function buildProgramStatRow(program) {
     (dl.note ? `<span class="stat-note">${escapeHtml(dl.note)}</span>` : "");
   row.appendChild(apply);
 
-  return row;
+  return markLongStats(row);
 }
 
 // A free competition just says "Free" on the card. The dataset keeps the full
@@ -5376,7 +5389,7 @@ function buildCompetitionStatRow(competition) {
     (dl.note ? `<span class="stat-note">${escapeHtml(dl.note)}</span>` : "");
   row.appendChild(apply);
 
-  return row;
+  return markLongStats(row);
 }
 
 function makeCardTitle(tag, kindPath, item) {
@@ -5889,7 +5902,7 @@ function buildStatRow(card) {
     (dl.note ? `<span class="stat-note">${escapeHtml(dl.note)}</span>` : "");
   row.appendChild(deadline);
 
-  return row;
+  return markLongStats(row);
 }
 
 // Humanized, scannable reasons. Long lists collapse to the top few with a

@@ -18,10 +18,56 @@ from urllib.request import Request, urlopen
 
 RESEND_EMAILS_URL = "https://api.resend.com/emails"
 
+# The site's Forest Light palette (tokens in app/static/css/style.css), shared
+# by every transactional email: the reset email here, the deadline reminder
+# (app/reminders.py) and the new-match alert (app/alerts.py). Email clients
+# ignore stylesheets and custom properties, so the hexes are inlined.
+EMAIL_MIST = "#eaece2"  # --paint-mist: the backdrop around the card
+EMAIL_PAPER = "#fbfcfa"  # --surface: the card, like the site's panels
+EMAIL_LINE = "#d9dfd6"  # --line
+EMAIL_INK = "#16211b"  # --ink: headings, dates
+EMAIL_INK_SOFT = "#2f4037"  # --ink-soft: body copy
+EMAIL_MUTED = "#59675f"  # --muted: small print (5.8:1 on paper, 5.0:1 on mist)
+EMAIL_BRAND = "#1e4034"  # --brand: the mark's tile, buttons and links
+EMAIL_BRAND_INK = "#fbfcfa"  # --brand-ink: text on the forest fill
+EMAIL_ACCENT = "#c98d2c"  # --accent: the mark's gold dot (decoration only)
+EMAIL_ACCENT_DEEP = "#8a5e14"  # --accent-deep: "in N days" (5.5:1 on paper)
+EMAIL_FONT = "'Segoe UI',Roboto,Helvetica,Arial,sans-serif"
+
+# The one "E" mark all three emails wear: the header's forest tile with a
+# light E and the gold dot of .brand-mark::before (and the favicon). The dot
+# is a period, so it renders in every client without images or positioning.
+EMAIL_MARK_HTML = (
+    '<table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>'
+    f'<td width="36" height="36" align="center" valign="middle" bgcolor="{EMAIL_BRAND}" '
+    f"style=\"width:36px; height:36px; border-radius:10px; color:{EMAIL_BRAND_INK}; font-family:{EMAIL_FONT}; "
+    'font-size:20px; font-weight:800; line-height:36px; mso-line-height-rule:exactly; text-align:center;">'
+    f'E<span style="color:{EMAIL_ACCENT}; font-size:30px; line-height:0;">.</span></td>'
+    f'<td style="padding-left:10px; font-family:{EMAIL_FONT}; font-size:17px; font-weight:800; '
+    f'color:{EMAIL_INK};">EnsureCollege</td>'
+    "</tr></table>"
+)
+
+
+def email_button_html(href: str, label: str) -> str:
+    """The forest call-to-action: a filled cell so Outlook keeps the color.
+
+    ``href`` and ``label`` must already be HTML-escaped.
+    """
+    return (
+        '<table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>'
+        f'<td align="center" bgcolor="{EMAIL_BRAND}" style="border-radius:8px;">'
+        f'<a href="{href}" style="display:inline-block; padding:13px 28px; font-family:{EMAIL_FONT}; '
+        f'font-size:15px; font-weight:bold; color:{EMAIL_BRAND_INK}; text-decoration:none; '
+        f'border-radius:8px;">{label}</a>'
+        "</td></tr></table>"
+    )
+
+
 # Branded HTML for the reset email. Email clients ignore <style>/<link> and
 # external fonts, so everything is table-based with inline styles and a system
 # font stack; color-scheme is pinned to light to avoid forced-dark inversion.
-_RESET_EMAIL_HTML = """\
+_RESET_EMAIL_HTML = f"""\
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -31,37 +77,26 @@ _RESET_EMAIL_HTML = """\
 <meta name="supported-color-schemes" content="light">
 <title>Reset your EnsureCollege password</title>
 </head>
-<body style="margin:0; padding:0; background-color:#eae8e1;">
+<body style="margin:0; padding:0; background-color:{EMAIL_MIST};">
 <div style="display:none; max-height:0; overflow:hidden; opacity:0;">Reset your EnsureCollege password. This link expires in one hour.</div>
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#eae8e1;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="{EMAIL_MIST}" style="background-color:{EMAIL_MIST};">
   <tr>
     <td align="center" style="padding:32px 16px;">
-      <table role="presentation" width="480" cellpadding="0" cellspacing="0" border="0" style="width:480px; max-width:480px; background-color:#fbfaf7; border:1px solid #ddd9cd; border-radius:14px;">
+      <table role="presentation" width="480" cellpadding="0" cellspacing="0" border="0" bgcolor="{EMAIL_PAPER}" style="width:100%; max-width:480px; background-color:{EMAIL_PAPER}; border:1px solid {EMAIL_LINE}; border-radius:16px;">
         <tr>
-          <td style="padding:32px; font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
-            <table role="presentation" cellpadding="0" cellspacing="0" border="0">
-              <tr>
-                <td width="36" height="36" align="center" valign="middle" bgcolor="#1b2430" style="width:36px; height:36px; border-radius:9px; color:#ffffff; font-family:'Segoe UI',Arial,sans-serif; font-size:20px; font-weight:bold; text-align:center; line-height:36px;">E</td>
-                <td style="padding-left:10px; font-size:17px; font-weight:bold; color:#17181c;">EnsureCollege</td>
-              </tr>
-            </table>
-            <h1 style="margin:26px 0 12px 0; font-size:22px; line-height:1.3; color:#17181c;">Reset your password</h1>
-            <p style="margin:0 0 22px 0; font-size:15px; line-height:1.6; color:#33373f;">We received a request to reset the password for your EnsureCollege account. Choose a new one with the button below.</p>
-            <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 24px 0;">
-              <tr>
-                <td align="center" bgcolor="#1b2430" style="border-radius:10px;">
-                  <a href="{RESET_URL}" style="display:inline-block; padding:13px 30px; font-family:'Segoe UI',Arial,sans-serif; font-size:15px; font-weight:bold; color:#ffffff; text-decoration:none; border-radius:10px;">Reset your password</a>
-                </td>
-              </tr>
-            </table>
-            <p style="margin:0 0 6px 0; font-size:13px; line-height:1.5; color:#5c6069;">Or paste this link into your browser:</p>
-            <p style="margin:0 0 24px 0; font-size:13px; line-height:1.5; word-break:break-all;"><a href="{RESET_URL}" style="color:#1b2430; text-decoration:underline;">{RESET_URL}</a></p>
-            <p style="margin:0 0 4px 0; font-size:13px; line-height:1.6; color:#5c6069;">This link expires in one hour.</p>
-            <p style="margin:0; font-size:13px; line-height:1.6; color:#5c6069;">If you didn't request this, you can safely ignore this email and your password will stay the same.</p>
+          <td style="padding:32px; font-family:{EMAIL_FONT};">
+            {EMAIL_MARK_HTML}
+            <h1 style="margin:26px 0 12px 0; font-size:22px; line-height:1.3; color:{EMAIL_INK};">Reset your password</h1>
+            <p style="margin:0 0 22px 0; font-size:15px; line-height:1.6; color:{EMAIL_INK_SOFT};">We received a request to reset the password for your EnsureCollege account. Choose a new one with the button below.</p>
+            <div style="margin:0 0 24px 0;">{email_button_html('{RESET_URL}', 'Reset your password')}</div>
+            <p style="margin:0 0 6px 0; font-size:13px; line-height:1.5; color:{EMAIL_MUTED};">Or paste this link into your browser:</p>
+            <p style="margin:0 0 24px 0; font-size:13px; line-height:1.5; word-break:break-all;"><a href="{{RESET_URL}}" style="color:{EMAIL_BRAND}; text-decoration:underline;">{{RESET_URL}}</a></p>
+            <p style="margin:0 0 4px 0; font-size:13px; line-height:1.6; color:{EMAIL_MUTED};">This link expires in one hour.</p>
+            <p style="margin:0; font-size:13px; line-height:1.6; color:{EMAIL_MUTED};">If you didn't request this, you can safely ignore this email and your password will stay the same.</p>
           </td>
         </tr>
       </table>
-      <p style="margin:18px 0 0 0; font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif; font-size:12px; color:#83858c;">EnsureCollege &middot; ensurecollege.com</p>
+      <p style="margin:18px 0 0 0; font-family:{EMAIL_FONT}; font-size:12px; color:{EMAIL_MUTED};">EnsureCollege &middot; ensurecollege.com</p>
     </td>
   </tr>
 </table>
