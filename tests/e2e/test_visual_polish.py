@@ -251,3 +251,90 @@ def test_match_cards_long_values_read_calmly(browser, live_server):
             rows = page.evaluate(STATS.replace("(root || document)", f"document.querySelector('{container}')"), None)
             _assert_long_values_read_calmly(rows, f"{where} {container}", width < 760)
         ctx.close()
+
+
+# ------------------------------------------ 4. plan panels that say "none"
+#
+# The signed-in plan showed a "Recommendation letters needed" panel whose
+# only content was "None of your saved items require recommendation
+# letters", a "Special eligibility checks" section that only said none were
+# detected, and the word "None" in every empty cell of the requirement
+# matrix (11 of 18 cells for three typical saves). The command center
+# ("What needs attention next") already reports both counts.
+
+PLAIN = ["gates-scholarship", "burger-king-scholars"]  # no letters, no special checks
+WITH_LETTERS = "dell-scholars"  # asks for a recommendation letter
+WITH_SPECIAL = "terry-foundation-scholarship"  # carries a special eligibility check
+
+PLAN = """() => {
+  const shown = (el) => Boolean(el) && !el.closest('[hidden]') && el.getClientRects().length > 0;
+  const cells = Array.from(document.querySelectorAll('.plan-table tbody td')).map((td) => {
+    const sr = td.querySelector('.visually-hidden');
+    const srBox = sr && sr.getBoundingClientRect();
+    return {
+      visible: (sr ? td.textContent.replace(sr.textContent, '') : td.textContent).trim(),
+      spoken: td.textContent.trim(),
+      srHidden: !sr || (srBox.width <= 1 && srBox.height <= 1),
+    };
+  });
+  const card = (title) => Array.from(document.querySelectorAll('.plan-card'))
+    .find((c) => c.querySelector('h4').textContent.trim() === title);
+  return {
+    recPanel: shown(document.getElementById('rec-letters-panel')),
+    recRows: document.querySelectorAll('#rec-letters-list .rec-letter-need').length,
+    specialPanel: shown(document.querySelector('.plan-special-panel')),
+    specialCards: document.querySelectorAll('.plan-special-panel .special-check-card').length,
+    specialStat: card('Special checks') ? card('Special checks').querySelector('p').textContent.trim() : null,
+    recommendations: card('Recommendations') ? card('Recommendations').querySelector('p').textContent.trim() : null,
+    cells,
+  };
+}"""
+
+
+def _save(page, scholarship_id):
+    status = page.evaluate(
+        "(id) => fetch('/account/saved/' + encodeURIComponent(id), {method: 'POST'}).then((r) => r.status)",
+        scholarship_id,
+    )
+    assert status in (200, 201), (scholarship_id, status)
+
+
+def _open_plan(page):
+    page.click("#nav-plan-btn")
+    page.wait_for_selector("#saved-container .plan-guidance", timeout=15000)
+    page.wait_for_timeout(300)
+    return page.evaluate(PLAN)
+
+
+def test_plan_hides_panels_that_only_say_none(browser, live_server):
+    from tests.e2e.test_e2e import signup
+
+    ctx = _context(browser, 1440, 900)
+    page = ctx.new_page()
+    page.goto(live_server, wait_until="domcontentloaded")
+    signup(page)
+    for scholarship_id in PLAIN:
+        _save(page, scholarship_id)
+    plan = _open_plan(page)
+
+    assert not plan["recPanel"], "the letters panel shows with no letters to ask for"
+    assert not plan["specialPanel"], "the special-checks section shows with nothing to check"
+    # Nothing is lost: the command center still states both.
+    assert plan["specialStat"] == "0 to confirm", plan["specialStat"]
+    assert plan["recommendations"] == "No unfinished recommendation steps detected.", plan["recommendations"]
+    # Empty matrix cells are quiet on screen and still read "None" aloud.
+    empty = [c for c in plan["cells"] if not c["visible"]]
+    assert empty, plan["cells"]
+    assert all(c["visible"] != "None" for c in plan["cells"]), "the matrix still prints None"
+    assert all(c["spoken"] == "None" and c["srHidden"] for c in empty), empty
+    assert any("/" in c["visible"] for c in plan["cells"]), "the step counts disappeared"
+
+    # Saving items that need a letter and a special check brings both back.
+    _save(page, WITH_LETTERS)
+    _save(page, WITH_SPECIAL)
+    page.click("#nav-matches-btn")
+    plan = _open_plan(page)
+    assert plan["recPanel"] and plan["recRows"] >= 1, plan
+    assert plan["specialPanel"] and plan["specialCards"] >= 1, plan
+    assert plan["specialStat"] == "1 to confirm", plan["specialStat"]
+    ctx.close()

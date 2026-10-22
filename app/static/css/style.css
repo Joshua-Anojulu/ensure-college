@@ -174,6 +174,9 @@ body {
 
 [hidden] { display: none !important; }
 
+/* Text for screen readers only (an empty matrix cell's "None"). */
+.visually-hidden { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip-path: inset(50%); border: 0; white-space: nowrap; }
+
 button, input, select, textarea { font: inherit; color: inherit; }
 button, a { -webkit-tap-highlight-color: transparent; }
 
@@ -1798,7 +1801,6 @@ input:user-invalid, select:user-invalid, textarea:user-invalid { border-color: v
 .rec-letters-head h3 { margin: 0.1rem 0 0.2rem; font-size: clamp(1.3rem, 3vw, 1.7rem); }
 .rec-letters-intro { max-width: 62ch; margin: 0; color: var(--muted); font-size: 0.9rem; line-height: 1.55; }
 .rec-letters-list { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.9rem; }
-.rec-letters-empty { margin: 0.6rem 0 0; color: var(--muted); font-size: 0.88rem; }
 
 /* Settings: preference toggle (reminder emails). */
 .settings-pref { margin: 0 0 1rem; padding: 0.9rem 1rem; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }

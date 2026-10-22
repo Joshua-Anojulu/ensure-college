@@ -235,7 +235,6 @@ const savedContainer = document.getElementById("saved-container");
 const journeyMap = document.getElementById("journey-map");
 const recLettersPanel = document.getElementById("rec-letters-panel");
 const recLettersList = document.getElementById("rec-letters-list");
-const recLettersEmpty = document.getElementById("rec-letters-empty");
 const recLettersCount = document.getElementById("rec-letters-count");
 const quickAppliesPanel = document.getElementById("quick-applies-panel");
 const quickAppliesList = document.getElementById("quick-applies-list");
@@ -2441,20 +2440,20 @@ function renderRecLettersRollup(items) {
   if (!recLettersPanel) {
     return;
   }
-  // With nothing saved, the saved-empty panel already explains the state;
-  // showing this panel's empty state too reads as two empty messages at once.
-  if (!items || items.length === 0) {
+  // The panel shows only when a saved item asks for a letter. With nothing
+  // saved the saved-empty panel explains the state, and with no letters the
+  // command center's Recommendations card and the matrix's Recs column
+  // already say so; a panel that only says "none" is noise.
+  const needs = collectRecLetterNeeds(items || []);
+  if (needs.length === 0) {
     recLettersPanel.hidden = true;
     return;
   }
-  const needs = collectRecLetterNeeds(items);
   recLettersPanel.hidden = false;
   recLettersList.innerHTML = "";
-  recLettersEmpty.hidden = needs.length > 0;
   if (recLettersCount) {
-    recLettersCount.textContent = needs.length
-      ? `${needs.length} recommendation letter${needs.length === 1 ? "" : "s"} across your saved items`
-      : "";
+    recLettersCount.textContent =
+      `${needs.length} recommendation letter${needs.length === 1 ? "" : "s"} across your saved items`;
   }
   for (const need of needs) {
     recLettersList.appendChild(buildRecLetterNeedRow(need));
@@ -2833,13 +2832,6 @@ function requirementMatrixForItem(item) {
   return matrix;
 }
 
-function formatRequirementProgress(progress) {
-  if (!progress.total) {
-    return "None";
-  }
-  return `${progress.complete}/${progress.total}`;
-}
-
 function buildRequirementMatrix(items) {
   const section = document.createElement("section");
   section.className = "plan-matrix";
@@ -2885,11 +2877,16 @@ function buildRequirementMatrix(items) {
     [...REQUIREMENT_GROUPS.map((group) => group.key), "other"].forEach((key) => {
       const td = document.createElement("td");
       const progress = matrix[key];
-      td.textContent = formatRequirementProgress(progress);
-      if (progress.total && progress.complete === progress.total) {
-        td.className = "is-complete";
-      } else if (progress.total) {
-        td.className = "has-work";
+      if (progress.total) {
+        td.textContent = `${progress.complete}/${progress.total}`;
+        td.className = progress.complete === progress.total ? "is-complete" : "has-work";
+      } else {
+        // No steps of this kind: a quiet cell on screen that still reads
+        // "None" to a screen reader, not the word in every empty cell.
+        const none = document.createElement("span");
+        none.className = "visually-hidden";
+        none.textContent = "None";
+        td.appendChild(none);
       }
       row.appendChild(td);
     });
@@ -3237,15 +3234,12 @@ function buildSpecialEligibilityPanel(items) {
     "<p>These are niche requirements like nomination, finalist status, membership, or sponsor affiliation.</p>";
   section.appendChild(head);
 
+  // Built only when a saved item carries a special check (see
+  // buildPlanGuidance); the command center's "Special checks" card states
+  // the count either way.
   const specialItems = items.filter((item) => savedOpportunitySpecialRequirements(item).length > 0);
   const wrap = document.createElement("div");
   wrap.className = "special-check-list";
-  if (!specialItems.length) {
-    const empty = document.createElement("p");
-    empty.className = "plan-empty-note";
-    empty.textContent = "No special eligibility checks detected in the opportunities you saved.";
-    wrap.appendChild(empty);
-  }
 
   for (const item of specialItems) {
     const card = document.createElement("article");
@@ -3438,7 +3432,9 @@ function buildPlanGuidance(items) {
   wrap.appendChild(actions);
   wrap.appendChild(buildRequirementMatrix(items));
   wrap.appendChild(buildEssayReuseMap(items));
-  wrap.appendChild(buildSpecialEligibilityPanel(items));
+  if (specialChecks.length) {
+    wrap.appendChild(buildSpecialEligibilityPanel(items));
+  }
   wrap.appendChild(buildDeadlineTimeline(items));
 
   return wrap;
