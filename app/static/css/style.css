@@ -2106,6 +2106,24 @@ body.has-scrolled .site-header {
   box-shadow: var(--shadow-sm);
 }
 
+/* One paper panel for every working surface over the World: the app's tool
+   views and the template cards share surface, edge, radius and lift. */
+.panel:not(.hero-demo), .match-card, .results-filters, .results-header, .loading, .results-empty, .plan-guidance, .guide-card {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow-md);
+}
+.results-header { padding: clamp(1.1rem, 2.4vw, 1.5rem) clamp(1.2rem, 2.6vw, 1.8rem); }
+
+/* Loose text between panels rides a paper chip (ADR 0001: legible over art). */
+.detail-breadcrumb, .tier-heading, .tier-note, .guides-footnote {
+  width: fit-content;
+  padding: 0.3rem 0.65rem;
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--surface) 90%, transparent);
+}
+
 .eyebrow {
   color: var(--accent-deep);
 }

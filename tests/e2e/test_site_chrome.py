@@ -316,3 +316,70 @@ def test_dusk_band_yields_to_save_data_and_forced_colors(browser, live_server, k
         assert page.locator(".site-footer .footer-links a").count() == len(FOOTER_LINKS), path
     assert dusk == [], dusk
     ctx.close()
+
+
+# ------------------------------------------------------- one panel system
+
+PANEL_PROBE = """(selectors) => selectors.map((s) => {
+  const el = document.querySelector(s);
+  if (!el) return [s, null];
+  const c = getComputedStyle(el);
+  const eyebrow = el.querySelector('.eyebrow');
+  const e = eyebrow && getComputedStyle(eyebrow);
+  return [s, {
+    surface: c.backgroundColor,
+    edge: [c.borderTopWidth, c.borderTopStyle, c.borderTopColor].join(' '),
+    radius: c.borderTopRightRadius,
+    shadow: c.boxShadow,
+    eyebrow: e ? [e.fontFamily, e.fontSize, e.fontWeight, e.color, e.letterSpacing, e.textTransform].join(' | ') : null,
+  }];
+})"""
+
+APP_PANELS = [
+    "#opportunity-tabs",  # lane chooser
+    "#results-filters",
+    "#results-section .results-header",
+    "#saved-section .results-header",
+    "#journey-map",
+    "#quick-applies-panel",
+    "#saved-container .plan-guidance",
+    "#rec-letters-panel",
+]
+TEMPLATE_PANELS = {
+    "/scholarships/coca-cola-scholars": [".detail-page"],
+    "/browse/scholarships": [".results-header", ".browse-list"],
+    "/browse": [".browse-kind-card"],
+    "/guides/essays/identity": [".results-header", ".guide-body"],
+    "/scholarships/does-not-exist": [".results-empty"],
+    "/privacy": [".legal-content"],
+    "/reminders/unsubscribe?token=e2e-panels": [".legal-content"],
+}
+
+
+def test_app_panels_and_template_cards_share_one_paper(page, live_server):
+    """Lane chooser, filters, lane headers, plan sections and the profile
+    form on the app; the facts card, Browse list and the other template
+    cards: one surface, one edge, one radius, one shadow, one eyebrow."""
+    found = dict(page.evaluate(PANEL_PROBE, ["#profile-form"]))
+    from tests.e2e.test_e2e import open_plan_with_one_saved
+
+    open_plan_with_one_saved(page)
+    page.click("#tab-scholarships")
+    page.wait_for_selector("#results-filters:not([hidden])")
+    page.click("#tab-saved")
+    page.wait_for_selector("#saved-container .plan-guidance", timeout=15000)
+    found.update(dict(page.evaluate(PANEL_PROBE, APP_PANELS)))
+    for path, selectors in TEMPLATE_PANELS.items():
+        page.goto(f"{live_server}{path}", wait_until="load")
+        found.update({f"{path} {s}": v for s, v in page.evaluate(PANEL_PROBE, selectors)})
+
+    missing = [name for name, probe in found.items() if probe is None]
+    assert not missing, missing
+    reference = found["#profile-form"]
+    assert reference["radius"] == "16px" and reference["shadow"] != "none", reference
+    for name, probe in found.items():
+        for key in ("surface", "edge", "radius", "shadow"):
+            assert probe[key] == reference[key], f"{name} {key}: {probe[key]} != profile form {reference[key]}"
+    eyebrows = {name: probe["eyebrow"] for name, probe in found.items() if probe["eyebrow"]}
+    assert len(eyebrows) >= 8, eyebrows
+    assert len(set(eyebrows.values())) == 1, eyebrows
