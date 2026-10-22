@@ -312,23 +312,25 @@ const LEGACY_GRADE_LABELS = {
   college_undergraduate: "College undergraduate (saved broad estimate)",
 };
 
+// /vocabulary feeds the option lists of both profile forms and can be slow on
+// a cold server. Each attempt is cut off and retried once, so the wait always
+// ends (about 17 s at worst) in the options or in an error with a retry.
+const FORM_OPTIONS_TIMEOUT_MS = 8000;
+const FORM_OPTIONS_RETRY_DELAY_MS = 1000;
+const FORM_OPTIONS_ERROR = "The form options did not load. Check your connection, then try again.";
+let formOptionsState = "loading"; // "loading" | "ready" | "failed"
+let formOptionsLoad = null; // the latest attempt; resolves true or false, never rejects
+const previewSubmit = document.getElementById("preview-submit");
+const previewSubmitLabel = previewSubmit.textContent;
+
 document.addEventListener("DOMContentLoaded", init);
 
 async function init() {
-  try {
-    const response = await fetch("/vocabulary");
-    if (!response.ok) {
-      throw new Error(`Vocabulary request failed (${response.status})`);
-    }
-    vocabulary = await response.json();
-    populateForm(vocabulary);
-  } catch (err) {
-    showFormError(
-      "The form options could not load. Refresh the page. If this keeps happening, check that the server is running."
-    );
-    submitBtn.disabled = true;
-    console.error(err);
-  }
+  // Start the options request first but never wait on it here: every control
+  // below is wired at once, and only the submits that need the options stay
+  // disabled until they arrive. Awaiting it left the whole page dead (no nav,
+  // no login, forms falling through to a native reload) on a slow request.
+  loadFormOptions();
 
   form.addEventListener("submit", handleSubmit);
   wireProfileProgress();
@@ -387,7 +389,11 @@ function updateProfileProgress() {
   profileProgressFill.style.width = `${percent}%`;
   profileProgressLabel.textContent = progressText;
   profileProgressStatus.textContent =
-    complete === essentials.length ? "Ready to see your matches" : "Add the essentials to continue";
+    formOptionsState === "loading"
+      ? "Loading form options..."
+      : complete === essentials.length
+      ? "Ready to see your matches"
+      : "Add the essentials to continue";
   form.classList.toggle("profile-ready", complete === essentials.length);
 }
 
@@ -1851,6 +1857,9 @@ async function loadProfileIntoForm() {
     }
     const data = await response.json();
     if (data.profile) {
+      // Saved answers need the option lists in the form first. That wait is
+      // bounded (loadFormOptions) and the auth controls already rendered.
+      await formOptionsLoad;
       prefillForm(data.profile);
       lastSubmittedProfile = data.profile;
     }
@@ -4053,6 +4062,98 @@ function goToFormStep(step) {
 }
 
 /* ---------- Form population (existing) ---------- */
+
+// Starts loading the option lists (at init, and again from the retry button).
+// The returned promise resolves true once they are in the form and false once
+// the last attempt failed; it never rejects.
+function loadFormOptions() {
+  if (formOptionsLoad && formOptionsState !== "failed") {
+    return formOptionsLoad;
+  }
+  setFormOptionsState("loading");
+  formOptionsLoad = (async () => {
+    try {
+      vocabulary = await fetchVocabulary();
+      populateForm(vocabulary);
+      setFormOptionsState("ready");
+      return true;
+    } catch (err) {
+      console.error(err);
+      setFormOptionsState("failed");
+      return false;
+    }
+  })();
+  return formOptionsLoad;
+}
+
+async function fetchVocabulary() {
+  try {
+    return await fetchVocabularyOnce();
+  } catch {
+    // One automatic retry: a cold start that timed out has usually warmed up.
+    await new Promise((resolve) => window.setTimeout(resolve, FORM_OPTIONS_RETRY_DELAY_MS));
+    return fetchVocabularyOnce();
+  }
+}
+
+async function fetchVocabularyOnce() {
+  // The abort also covers a body that stalls after the headers arrive.
+  const controller = new AbortController();
+  const timer = window.setTimeout(() => controller.abort(), FORM_OPTIONS_TIMEOUT_MS);
+  try {
+    const response = await fetch("/vocabulary", { signal: controller.signal });
+    if (!response.ok) {
+      throw new Error(`Vocabulary request failed (${response.status})`);
+    }
+    return await response.json();
+  } finally {
+    window.clearTimeout(timer);
+  }
+}
+
+function setFormOptionsState(state) {
+  formOptionsState = state;
+  const ready = state === "ready";
+  submitBtn.disabled = !ready;
+  previewSubmit.disabled = !ready;
+  previewSubmit.textContent = state === "loading" ? "Loading options..." : previewSubmitLabel;
+  updateProfileProgress();
+  if (state === "failed") {
+    showFormOptionsError();
+  } else {
+    hideFormError();
+    const previewError = document.getElementById("preview-error");
+    previewError.hidden = true;
+    previewError.textContent = "";
+  }
+}
+
+// Both forms say why their submit is unavailable, each with an in-place retry.
+function showFormOptionsError() {
+  const targets = [
+    [document.getElementById("preview-error"), document.getElementById("preview-gpa")],
+    [formError, document.getElementById("gpa")],
+  ];
+  for (const [errorEl, firstField] of targets) {
+    const retry = document.createElement("button");
+    retry.type = "button";
+    retry.className = "btn-secondary";
+    retry.textContent = "Try again";
+    retry.addEventListener("click", () => retryFormOptions(firstField));
+    errorEl.replaceChildren(`${FORM_OPTIONS_ERROR} `, retry);
+    errorEl.hidden = false;
+  }
+}
+
+async function retryFormOptions(firstField) {
+  // The retry button leaves with the error; keep keyboard focus in its form.
+  firstField.focus();
+  if ((await loadFormOptions()) && currentUser) {
+    // The signed-in prefill on page load found no options to select.
+    await loadProfileIntoForm();
+    await autoMatchFromSavedProfile();
+  }
+}
 
 function populateForm(vocab) {
   fillSelect("grade-level", vocab.grade_level);
@@ -6393,7 +6494,7 @@ async function handleProgramAdvice(programId, button, panel, loading, errorEl) {
     worldStageRequested = true;
     var link = document.createElement("link");
     link.rel = "stylesheet";
-    link.href = "/static/css/world.css?v=20260721-6";
+    link.href = "/static/css/world.css?v=20261017-1";
     link.addEventListener(
       "load",
       function () {

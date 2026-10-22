@@ -40,7 +40,7 @@
     boot();
   } else {
     const vendor = document.createElement("script");
-    vendor.src = "/static/js/vendor/three.min.js?v=20260721-6";
+    vendor.src = "/static/js/vendor/three.min.js?v=20261017-1";
     vendor.onload = boot;
     vendor.onerror = () => root.classList.add("journey-static");
     document.head.appendChild(vendor);
