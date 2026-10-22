@@ -941,6 +941,7 @@
   let t = 0;
   let skyDawn = -1;
   let fogHex = -1;
+  let lift = -1;
   const camPos = new T.Vector3();
   const lookPos = new T.Vector3();
 
@@ -959,6 +960,17 @@
     const max = track.offsetHeight - window.innerHeight;
     target = max > 0 ? Math.min(1, Math.max(0, (window.scrollY - track.offsetTop) / max)) : 0;
     t += (target - t) * 0.07;
+
+    // Past the end of the track the dusk band and footer scroll in. The
+    // fixed layers (sky, canvas, paper, cards) rise with the page by the
+    // same distance, so the flight's last frame sits on top of the dusk
+    // band instead of the gate card floating over the footer.
+    const trackBottom = track.offsetTop + track.offsetHeight - window.scrollY;
+    const over = Math.max(0, Math.round(window.innerHeight - trackBottom));
+    if (over !== lift) {
+      lift = over;
+      track.style.setProperty("--journey-lift", over + "px");
+    }
 
     camPath.getPointAt(t, camPos);
     lookPath.getPointAt(t, lookPos);

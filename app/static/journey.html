@@ -115,6 +115,17 @@
 
     .journey-card.is-active { pointer-events: auto; }
 
+    /* End of the flight: journey.js sets --journey-lift to how far the page
+       has scrolled past the track, and every fixed layer rises by that much,
+       so the last frame lands on the dusk band and no card covers the footer. */
+    #journey-canvas,
+    .journey-sky,
+    .journey-paper,
+    .journey-card,
+    .journey-rail {
+      translate: 0 calc(-1 * var(--journey-lift, 0px));
+    }
+
     .journey-card h1,
     .journey-card h2 {
       margin: 0 0 0.5rem;
