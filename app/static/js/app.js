@@ -230,6 +230,7 @@ const passwordResetBack = document.getElementById("password-reset-back");
 const savedSection = document.getElementById("saved-section");
 const savedSummary = document.getElementById("saved-summary");
 const savedEmpty = document.getElementById("saved-empty");
+const savedSignedOut = document.getElementById("saved-signed-out");
 const savedContainer = document.getElementById("saved-container");
 const journeyMap = document.getElementById("journey-map");
 const recLettersPanel = document.getElementById("rec-letters-panel");
@@ -603,7 +604,10 @@ async function activateOpportunityView(view, options = {}) {
     } else {
       savedSection.hidden = false;
       savedContainer.innerHTML = "";
-      savedEmpty.hidden = false;
+      // Signed out there is nothing to be empty of: the plan view says how
+      // to start one instead of "You have not saved anything yet".
+      savedEmpty.hidden = true;
+      if (savedSignedOut) savedSignedOut.hidden = false;
       savedSummary.textContent = "Log in to save scholarships, summer programs, and competitions to your application plan.";
       if (recLettersPanel) recLettersPanel.hidden = true;
     }
@@ -2598,6 +2602,7 @@ function renderSaved(scholarshipItems, programItems = [], competitionItems = [])
     ...(competitionItems || []),
   ];
   trackerItems = items;
+  if (savedSignedOut) savedSignedOut.hidden = true;
   renderJourneyMap();
   savedContainer.innerHTML = "";
   renderRecLettersRollup(items);
@@ -3353,7 +3358,7 @@ function buildPlanGuidance(items) {
       makePlanCard(
         "Do this next",
         nextRequired.requirement.label,
-        `${savedOpportunityKind(nextRequired.item)} - ${savedOpportunityName(nextRequired.item)}`,
+        `${savedOpportunityKind(nextRequired.item)} · ${savedOpportunityName(nextRequired.item)}`,
         "primary"
       )
     );
@@ -3449,6 +3454,10 @@ function buildTrackerControls(item, card, kind = "scholarship") {
   statusLabelEl.textContent = "Status";
   const select = document.createElement("select");
   select.className = "tracker-status";
+  // The visible "Status" / "Notes" captions are spans, not labels: name the
+  // controls, per card, so a screen reader hears which plan item they edit.
+  const itemName = savedOpportunityName(item);
+  select.setAttribute("aria-label", `Status: ${itemName}`);
   for (const opt of SAVED_STATUSES) {
     const option = document.createElement("option");
     option.value = opt.value;
@@ -3476,6 +3485,7 @@ function buildTrackerControls(item, card, kind = "scholarship") {
   notesLabelEl.textContent = "Notes";
   const notes = document.createElement("textarea");
   notes.className = "tracker-notes";
+  notes.setAttribute("aria-label", `Notes: ${itemName}`);
   notes.rows = 2;
   notes.maxLength = 2000;
   notes.value = item.notes || "";
@@ -3809,6 +3819,8 @@ function wirePreviewForm() {
   form.addEventListener("submit", handlePreviewSubmit);
   document.getElementById("preview-complete-btn")?.addEventListener("click", prefillFromPreview);
   document.getElementById("preview-account-pitch-btn")?.addEventListener("click", () => openAuthModal("signup"));
+  document.getElementById("saved-signup-btn")?.addEventListener("click", () => openAuthModal("signup"));
+  document.getElementById("saved-login-btn")?.addEventListener("click", () => openAuthModal("login"));
 }
 
 function updatePreviewAccountPitch() {
@@ -5754,7 +5766,9 @@ function deadlineParts(deadline, estimated) {
           note: `Last cycle closed ${formatMonthYear(estimated)}; check sponsor site`,
         };
       }
-      return { value: formatVerifiedDate(estimated), note: "Estimated; confirm on sponsor site" };
+      // CONTEXT.md: an estimate is always shown as one ("~Feb 15, 2027 ·
+      // Estimated; confirm on sponsor site"), on every surface.
+      return { value: `~${formatVerifiedDate(estimated)}`, note: "Estimated; confirm on sponsor site" };
     }
     return { value: "Not listed", note: "Confirm on sponsor site" };
   }
@@ -5800,7 +5814,7 @@ function buildFitRing(score, tierClass) {
   const wrap = document.createElement("div");
   wrap.className = "fit-ring";
   wrap.setAttribute("role", "img");
-  wrap.setAttribute("aria-label", `Fit score ${pct} out of 100 \u2014 ${label}`);
+  wrap.setAttribute("aria-label", `Fit score ${pct} out of 100: ${label}`);
   wrap.innerHTML =
     '<div class="fit-ring-dial">' +
     '<svg class="fit-ring-svg" viewBox="0 0 64 64" aria-hidden="true">' +
@@ -5834,9 +5848,13 @@ function buildStatRow(card) {
 
   const award = document.createElement("div");
   award.className = "stat stat-award";
+  // A VERIFY award is "we do not know": labeled like every other unknown
+  // stat, never shown as the raw placeholder.
+  const awardUnknown = programStatValue(card.award_amount) === "Not listed";
   award.innerHTML =
     '<span class="stat-label">Award</span>' +
-    `<span class="stat-value">${escapeHtml(formatAward(card.award_amount))}</span>`;
+    `<span class="stat-value">${escapeHtml(awardUnknown ? "Not listed" : formatAward(card.award_amount))}</span>` +
+    (awardUnknown ? '<span class="stat-note">Confirm on sponsor site</span>' : "");
   row.appendChild(award);
 
   const dl = deadlineParts(card.deadline, card.estimated_deadline);
@@ -6494,7 +6512,7 @@ async function handleProgramAdvice(programId, button, panel, loading, errorEl) {
     worldStageRequested = true;
     var link = document.createElement("link");
     link.rel = "stylesheet";
-    link.href = "/static/css/world.css?v=20261017-1";
+    link.href = "/static/css/world.css?v=20261017-2";
     link.addEventListener(
       "load",
       function () {

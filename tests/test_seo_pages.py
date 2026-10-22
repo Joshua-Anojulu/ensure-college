@@ -120,6 +120,67 @@ class TestScholarshipDetailPage:
         assert "View official source" in response.text
 
 
+class TestPlaceholderLabeling:
+    """A VERIFY placeholder means "we do not know": every surface labels it the
+    way the app's cards do, and none shows the raw token (some placeholders
+    carry a curator's research note after it, which is not a sponsor fact)."""
+
+    @staticmethod
+    def _fake(client, **fields):
+        import copy
+
+        state = client.app.state
+        fake = copy.deepcopy(state.scholarships_by_id["coca-cola-scholars"])
+        fake.id = "placeholder-test-entry"
+        for name, value in fields.items():
+            setattr(fake, name, value)
+        state.scholarships_by_id[fake.id] = fake
+        return fake
+
+    def _get(self, client):
+        try:
+            return client.get("/scholarships/placeholder-test-entry")
+        finally:
+            del client.app.state.scholarships_by_id["placeholder-test-entry"]
+
+    def test_placeholder_award_is_labeled_and_kept_out_of_the_title(self, client):
+        self._fake(client, award_amount="VERIFY")
+        response = self._get(client)
+        assert "VERIFY" not in response.text
+        assert "<title>Coca-Cola Scholars Program: scholarship | EnsureCollege</title>" in response.text
+        assert '<span class="stat-value">Not listed</span>' in response.text
+
+    def test_placeholder_recognition_note_never_renders(self, client):
+        entry = client.app.state.competitions_by_id["ncf-envirothon"]
+        assert entry.recognition.startswith("VERIFY")
+        response = client.get("/competitions/ncf-envirothon")
+        assert "VERIFY (" not in response.text
+        assert "this session" not in response.text
+        assert '<span class="stat-value">Not listed</span>' in response.text
+
+    def test_unknown_deadline_matches_the_app_label(self, client):
+        self._fake(client, deadline="VERIFY", estimated_deadline=None)
+        response = self._get(client)
+        assert '<span class="stat-value">Not listed</span>' in response.text
+        assert "Confirm on sponsor site" in response.text
+        # VERIFY is "we do not know"; the page must not claim the sponsor
+        # has not published a date.
+        assert "Not yet published" not in response.text
+
+    def test_past_estimate_reads_as_last_cycle(self, client):
+        self._fake(client, deadline="VERIFY", estimated_deadline="2025-02-15")
+        response = self._get(client)
+        assert "~Feb 15, 2025" not in response.text
+        assert "Not yet announced" in response.text
+        assert "Last cycle closed February 2025; check sponsor site" in response.text
+
+    def test_directory_meta_lowercases_labels(self, client):
+        response = client.get("/browse/competitions")
+        assert "deadline Not listed" not in response.text
+        assert "deadline Rolling" not in response.text
+        assert "VERIFY (" not in response.text
+
+
 class TestProgramAndCompetitionDetailPages:
     def test_program_detail_renders(self, client):
         program = client.app.state.programs[0]

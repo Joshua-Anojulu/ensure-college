@@ -2,117 +2,104 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700;9..144,800&family=Hanken+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<!-- Forest Light social card: the editable source of app/static/og-image.png.
+     Render at exactly 1200x630 in headless Chromium from the repo checkout
+     (fonts load from app/static/fonts by relative path) and save the
+     screenshot over app/static/og-image.png. Colors are the style.css
+     Forest Light tokens; the mark is app/static/favicon.svg. -->
 <style>
+  @font-face { font-family: "Cabinet Grotesk"; src: url("../../app/static/fonts/CabinetGrotesk-Extrabold.woff2") format("woff2"); font-weight: 800; }
+  @font-face { font-family: "Satoshi"; src: url("../../app/static/fonts/Satoshi-Medium.woff2") format("woff2"); font-weight: 500; }
+  @font-face { font-family: "JetBrains Mono"; src: url("../../app/static/fonts/JetBrainsMono-Regular.woff2") format("woff2"); font-weight: 400; }
+
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html, body { width: 1200px; height: 630px; overflow: hidden; }
-  body { background: #eae8e1; font-family: "Hanken Grotesk", system-ui, sans-serif; }
-  .card {
-    position: absolute;
-    inset: 24px;
-    background: #fbfaf7;
-    border: 2px solid #ddd9cd;
-    border-radius: 28px;
-    padding: 52px 62px;
-  }
-  .brand-row { display: flex; align-items: center; gap: 18px; }
-  .mark {
+  body {
     position: relative;
-    display: grid;
-    place-items: center;
-    width: 64px;
-    height: 64px;
-    border-radius: 16px;
-    background: #1b2430;
-    color: #fbfaf7;
-    font-family: "Fraunces", Georgia, serif;
-    font-size: 36px;
-    font-weight: 600;
-    line-height: 1;
+    background: #1e4034; /* --brand */
+    color: #fbfcfa; /* --brand-ink */
+    font-family: "Satoshi", Arial, sans-serif;
   }
-  .mark::before {
-    content: "";
+  .frame {
     position: absolute;
-    left: 11px;
-    right: 11px;
-    bottom: 10px;
-    height: 4.5px;
-    border-radius: 999px;
-    background: #e8a200;
+    inset: 52px 52px 52px;
+    border: 1px solid rgba(251, 252, 250, 0.18);
   }
+  .brand-row {
+    position: absolute;
+    top: 86px;
+    left: 82px;
+    display: flex;
+    align-items: center;
+    gap: 22px;
+  }
+  .mark { display: block; width: 76px; height: 76px; }
+  .mark svg { display: block; width: 100%; height: 100%; }
+  /* The tile shares the card's green, so a hairline keeps its edge. */
+  .mark rect { stroke: rgba(251, 252, 250, 0.28); stroke-width: 1.5; }
   .brand-name {
-    font-family: "Fraunces", Georgia, serif;
-    font-size: 34px;
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    color: #17181c;
-  }
-  .eyebrow {
-    margin-top: 7px;
-    font-family: "Space Mono", monospace;
-    font-size: 15px;
-    font-weight: 700;
-    letter-spacing: 0.14em;
-    color: #5c6069;
+    font-family: "Cabinet Grotesk", Arial, sans-serif;
+    font-size: 40px;
+    font-weight: 800;
+    letter-spacing: -0.01em;
   }
   h1 {
-    margin-top: 74px;
-    font-family: "Fraunces", Georgia, serif;
+    position: absolute;
+    top: 222px;
+    left: 82px;
+    max-width: 980px;
+    font-family: "Cabinet Grotesk", Arial, sans-serif;
     font-size: 84px;
-    font-weight: 600;
-    letter-spacing: -0.025em;
-    line-height: 1.06;
-    color: #17181c;
-  }
-  .marker {
-    background: linear-gradient(transparent 8%, rgba(240, 182, 22, 0.45) 8%, rgba(240, 182, 22, 0.45) 96%, transparent 96%);
-    padding: 0 6px;
-    margin: 0 -6px;
+    font-weight: 800;
+    line-height: 1.02;
+    letter-spacing: -0.015em;
   }
   .sub {
-    margin-top: 34px;
-    max-width: 900px;
-    font-size: 29px;
-    font-weight: 500;
-    line-height: 1.45;
-    color: #33373f;
-  }
-  .rule {
     position: absolute;
-    left: 62px;
+    top: 430px;
+    left: 82px;
+    font-size: 30px;
+    font-weight: 500;
+    color: rgba(251, 252, 250, 0.86);
+  }
+  .strip {
+    position: absolute;
+    left: 52px;
+    right: 52px;
     bottom: 52px;
     display: flex;
     align-items: center;
-    gap: 14px;
-    font-family: "Space Mono", monospace;
-    font-size: 16px;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    color: #83858c;
+    gap: 40px;
+    height: 72px;
+    padding: 0 30px;
+    background: #fbfcfa; /* --surface */
+    font-family: "JetBrains Mono", monospace;
+    font-size: 20px;
+    letter-spacing: 0.08em;
   }
-  .rule::before {
-    content: "";
-    width: 42px;
-    height: 4px;
-    border-radius: 999px;
-    background: #e8a200;
-  }
+  .strip .site { color: #8a5e14; /* --accent-deep */ }
+  .strip .what { color: #1e4034; /* --brand */ }
+  .strip .dot { width: 10px; height: 10px; border-radius: 50%; background: #c98d2c; /* --accent */ }
 </style>
 </head>
 <body>
-  <div class="card">
-    <div class="brand-row">
-      <div class="mark">E</div>
-      <div>
-        <div class="brand-name">EnsureCollege</div>
-        <div class="eyebrow">SCHOLARSHIPS &middot; PROGRAMS &middot; COMPETITIONS &middot; PLANNING</div>
-      </div>
-    </div>
-    <h1>Your whole college plan,<br><span class="marker">in one place.</span></h1>
-    <p class="sub">Scholarships, summer programs, and competitions &mdash; matched to you, with verified deadlines and a clear application plan.</p>
-    <div class="rule">ENSURECOLLEGE.COM</div>
+  <div class="frame" aria-hidden="true"></div>
+  <div class="brand-row">
+    <span class="mark" aria-hidden="true">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+        <rect width="64" height="64" rx="12" fill="#1e4034"/>
+        <path d="M14 15h36v7H24v9h22v7H24v10h27v7H14z" fill="#fbfcfa"/>
+        <circle cx="49" cy="16" r="5" fill="#c98d2c"/>
+      </svg>
+    </span>
+    <span class="brand-name">EnsureCollege</span>
+  </div>
+  <h1>Your whole college plan,<br>in one place.</h1>
+  <p class="sub">Scholarships, programs, competitions, and deadlines.</p>
+  <div class="strip">
+    <span class="site">ENSURECOLLEGE.COM</span>
+    <span class="dot" aria-hidden="true"></span>
+    <span class="what">MATCHES + APPLICATION PLAN</span>
   </div>
 </body>
 </html>

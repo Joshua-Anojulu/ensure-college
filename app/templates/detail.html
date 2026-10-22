@@ -20,7 +20,7 @@
       {% if award_text %}
       <div class="stat stat-award">
         <span class="stat-label">{{ kind.award_label }}</span>
-        <span class="stat-value">{{ award_text }}</span>
+        <span class="stat-value">{{ award_text }}</span>{% if award_note %}<span class="stat-note">{{ award_note }}</span>{% endif %}
       </div>
       {% endif %}
       <div class="stat">
