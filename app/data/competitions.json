@@ -188,8 +188,8 @@
       "participation_format": "individual",
       "location": "Administered in person at accredited schools, universities, math circles, and learning centers",
       "competition_dates": "AMC 10 A / AMC 12 A: November 5, 2026; AMC 10 B / AMC 12 B: November 13, 2026",
-      "deadline": "2026-10-28",
-      "estimated_deadline": null,
+      "deadline": "VERIFY",
+      "estimated_deadline": "2026-10-28",
       "eligibility": {
         "grade_levels": [
           "middle_school",
@@ -251,8 +251,8 @@
       "participation_format": "either",
       "location": "Online (judged district-by-district by Members of Congress)",
       "competition_dates": "Challenge launches in May; submissions close October 26, 2026; judging in November; winners announced in December",
-      "deadline": "2026-10-26",
-      "estimated_deadline": null,
+      "deadline": "VERIFY",
+      "estimated_deadline": "2026-10-26",
       "eligibility": {
         "grade_levels": [
           "middle_school",
@@ -764,8 +764,8 @@
       "participation_format": "team",
       "location": "Houston, TX — Innovation Summit held on-site at Space Center Houston; the program is administered by the Conrad Foundation in partnership with Space Center Houston.",
       "competition_dates": "2025-26 cycle (most recently confirmed): Activation Stage Aug 28-Oct 30, 2025; Innovation Stage Oct 31, 2025-Jan 8, 2026; Innovation Summit Apr 22-25, 2026. The 2026-27 cycle's dates are not yet announced.",
-      "deadline": "VERIFY",
-      "estimated_deadline": "2027-01-08",
+      "deadline": "2027-01-07",
+      "estimated_deadline": null,
       "eligibility": {
         "grade_levels": [
           "middle_school",
@@ -908,8 +908,8 @@
       "participation_format": "individual",
       "location": "Online submission; winner honored at the JFK Presidential Library in Boston, MA",
       "competition_dates": "Annual; most recent deadline January 12, 2026; winners notified by April 30, ceremony in May",
-      "deadline": "VERIFY",
-      "estimated_deadline": "2027-01-12",
+      "deadline": "2027-01-11",
+      "estimated_deadline": null,
       "eligibility": {
         "grade_levels": [
           "high_school"
@@ -980,7 +980,7 @@
       "participation_format": "individual",
       "location": "Open and Semifinal Exams administered online at registered schools/authorized USABO Test Centers nationwide. Check the USABO site for the 2027 National Finals location.",
       "competition_dates": "2027 cycle: Registration opens Aug 7, 2026; Practice Exam Jan 8-22, 2027; Open Exam Feb 3, 2027; Semifinal Exam Mar 2, 2027; National Finalists announced Mar 30, 2027; National Finals Jun 20-30, 2027; IBO Jul 18-25, 2027 (Warsaw, Poland).",
-      "deadline": "2026-10-30",
+      "deadline": "2026-11-22",
       "estimated_deadline": null,
       "eligibility": {
         "grade_levels": [
@@ -1465,8 +1465,8 @@
       "participation_format": "team",
       "location": "Online submission (US, US Territories, DoDEA schools abroad, or Canada); National Finalists travel to Washington, D.C. for Awards Week in June.",
       "competition_dates": "2025-2026 cycle (34th annual): entries due February 3, 2026; National Finalists' Awards Week trip to Washington, D.C. in June 2026. 2026-2027 (35th annual) cycle dates not yet published.",
-      "deadline": "VERIFY",
-      "estimated_deadline": "2027-02-03",
+      "deadline": "2027-01-27",
+      "estimated_deadline": null,
       "eligibility": {
         "grade_levels": [
           "middle_school",
@@ -2102,8 +2102,8 @@
       "participation_format": "team",
       "location": "Virtual (trading simulation, deliverables, and Semifinal presentations); Global Finale held in person (or virtually, per rules page) at the Wharton School, Philadelphia, PA, USA",
       "competition_dates": "Runs as a 10-week trading/strategy cycle; the just-concluded 2025-2026 cycle ran from registration in mid-2025 through a Global Finale on April 25-26, 2026. Exact 2026-2027 competition dates are not yet posted (registration opens August 2026).",
-      "deadline": "VERIFY",
-      "estimated_deadline": "2026-12-04",
+      "deadline": "2026-12-04",
+      "estimated_deadline": null,
       "eligibility": {
         "grade_levels": [
           "high_school_freshman",
@@ -2334,8 +2334,8 @@
       "participation_format": "team",
       "location": "Virtual/online; High School Tournament open to teams from the U.S. and ESA (European Space Agency) member states; Middle School Summer Program held at selected U.S. locations",
       "competition_dates": "VERIFY (most recent confirmed cycle: 2026 Middle School Program registration extended to May 22, 2026; 2026 High School Championship held February 21, 2026 -- both already past)",
-      "deadline": "VERIFY",
-      "estimated_deadline": "2026-02-13",
+      "deadline": "2026-12-16",
+      "estimated_deadline": null,
       "eligibility": {
         "grade_levels": [
           "middle_school",
