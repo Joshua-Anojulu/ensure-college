@@ -1860,8 +1860,8 @@
       "program_format": "residential",
       "location": "Philadelphia, PA",
       "program_dates": "Three weeks; multiple sessions June-August 2026",
-      "deadline": "VERIFY",
-      "estimated_deadline": "2026-03-18",
+      "deadline": "2027-03-19",
+      "estimated_deadline": null,
       "eligibility": {
         "min_gpa": 3.5,
         "fields_of_study": [
@@ -1904,8 +1904,8 @@
       "program_format": "residential",
       "location": "Philadelphia, PA",
       "program_dates": "July 5-25, 2026",
-      "deadline": "VERIFY",
-      "estimated_deadline": "2027-03-25",
+      "deadline": "2027-01-27",
+      "estimated_deadline": null,
       "eligibility": {
         "min_gpa": 3.5,
         "fields_of_study": [
@@ -2225,8 +2225,8 @@
       "program_format": "commuter",
       "location": "New York, NY",
       "program_dates": "Seven weeks in summer",
-      "deadline": "VERIFY",
-      "estimated_deadline": "2027-01-02",
+      "deadline": "2027-01-04",
+      "estimated_deadline": null,
       "eligibility": {
         "min_gpa": null,
         "fields_of_study": [
@@ -2587,8 +2587,8 @@
       "program_format": "residential",
       "location": "Philadelphia, PA",
       "program_dates": "Three weeks in summer",
-      "deadline": "VERIFY",
-      "estimated_deadline": "2026-03-18",
+      "deadline": "2027-03-19",
+      "estimated_deadline": null,
       "eligibility": {
         "min_gpa": null,
         "fields_of_study": [
@@ -2634,8 +2634,8 @@
       "program_format": "residential",
       "location": "Philadelphia, PA",
       "program_dates": "Two weeks in summer",
-      "deadline": "VERIFY",
-      "estimated_deadline": "2026-03-18",
+      "deadline": "2027-03-19",
+      "estimated_deadline": null,
       "eligibility": {
         "min_gpa": null,
         "fields_of_study": [
@@ -2681,7 +2681,7 @@
       "program_format": "hybrid",
       "location": "Cambridge, MA",
       "program_dates": "Four- or seven-week credit-bearing sessions",
-      "deadline": "VERIFY",
+      "deadline": "2027-03-31",
       "eligibility": {
         "min_gpa": null,
         "fields_of_study": [],
@@ -2709,7 +2709,8 @@
         "source_url": "https://summer.harvard.edu/programs/secondary-school-program/",
         "last_verified_at": "2026-06-21",
         "notes": "Official Harvard Summer School page: credit-bearing 4 or 7 weeks, age 16+ by Jun 20."
-      }
+      },
+      "estimated_deadline": null
     },
     {
       "id": "harvard-pre-college-program",
@@ -2723,7 +2724,7 @@
       "program_format": "residential",
       "location": "Cambridge, MA",
       "program_dates": "Two-week sessions: June 21–July 2, July 5–17, or July 19–31, 2026",
-      "deadline": "VERIFY",
+      "deadline": "2027-03-31",
       "eligibility": {
         "min_gpa": null,
         "fields_of_study": [],
@@ -2752,7 +2753,7 @@
         "last_verified_at": "2026-06-21",
         "notes": "Official Harvard Pre-College page: 2 weeks, $6,100, rising juniors/seniors; early deadline Jan 7 / regular Feb 11 2026 — est. 2027-01-07 next early deadline."
       },
-      "estimated_deadline": "2027-04-01"
+      "estimated_deadline": null
     },
     {
       "id": "stanford-summer-session-high-school",
@@ -2766,7 +2767,7 @@
       "program_format": "hybrid",
       "location": "Stanford, CA",
       "program_dates": "Eight-week session: June 20–August 16, 2026",
-      "deadline": "VERIFY",
+      "deadline": "2027-03-01",
       "eligibility": {
         "min_gpa": null,
         "fields_of_study": [],
@@ -2795,7 +2796,8 @@
         "source_url": "https://summer.stanford.edu/students/high-school",
         "last_verified_at": "2026-06-21",
         "notes": "Official Stanford Summer Session high school page: grades 10–12, 8 weeks Jun 20–Aug 16 2026, ages 16–19."
-      }
+      },
+      "estimated_deadline": null
     },
     {
       "id": "mdibl-biomedical-bootcamp",
@@ -3076,7 +3078,8 @@
         "source_url": "https://summercamps.dnalc.org/",
         "last_verified_at": "2026-06-21",
         "notes": "Official DNALC summer camps page: grades 6–12, paid camps typically $600–$700 per session."
-      }
+      },
+      "estimated_deadline": "2026-04-10"
     },
     {
       "id": "penn-summer-academies",
@@ -3164,7 +3167,8 @@
         "source_url": "https://summer.georgetown.edu/",
         "last_verified_at": "2026-06-21",
         "notes": "Official Georgetown summer.georgetown.edu: Hoya Summer High School Sessions, academies and college prep, application open for Summer 2026."
-      }
+      },
+      "estimated_deadline": "2026-05-31"
     },
     {
       "id": "kode-with-klossy",
@@ -3268,8 +3272,8 @@
       "program_format": "hybrid",
       "location": "Online (open worldwide) and in-person/residential at UC San Diego, San Diego, CA for Summer 2026 (in-person host campus rotates by year)",
       "program_dates": "Summer 2026 tracks: Online Entrepreneurship (Flagship) July 13-Aug 14, 2026; San Diego in-person Flagship July 12-Aug 8, 2026; plus shorter Innovation, Exploration, BootCamp, and Startup Experience tracks across June-August 2026",
-      "deadline": "VERIFY",
-      "estimated_deadline": "2027-03-04",
+      "deadline": "2027-03-31",
+      "estimated_deadline": null,
       "eligibility": {
         "min_gpa": "VERIFY",
         "fields_of_study": [
@@ -3454,8 +3458,8 @@
       "program_format": "residential",
       "location": "University of Iowa, Iowa City, IA",
       "program_dates": "June 17 - July 24, 2026 (five-and-a-half weeks)",
-      "deadline": "VERIFY",
-      "estimated_deadline": "2027-02-16",
+      "deadline": "2027-02-16",
+      "estimated_deadline": null,
       "eligibility": {
         "min_gpa": "VERIFY",
         "fields_of_study": [
@@ -3712,8 +3716,8 @@
       "program_format": "hybrid",
       "location": "Columbia University campus, New York City (Morningside Heights)",
       "program_dates": "Four-week residential summer seminar (approx. June 29 - July 24/25, 2026) followed by an academic-year civic leadership program (Sept 2026 - May 2027); ~11-month program overall",
-      "deadline": "VERIFY",
-      "estimated_deadline": "2027-03-30",
+      "deadline": "2027-03-30",
+      "estimated_deadline": null,
       "eligibility": {
         "min_gpa": "VERIFY",
         "fields_of_study": [
